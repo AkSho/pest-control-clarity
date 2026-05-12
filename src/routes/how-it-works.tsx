@@ -134,7 +134,13 @@ function HowItWorksPage() {
             title="Fewer babies. The population shrinks on its own."
             intro={
               <p>
-                Evolve is a bait made from cottonseed, developed by SenesTech.
+                <Link
+                  to="/evolve-rodent-birth-control"
+                  className="text-brand underline-offset-2 hover:underline"
+                >
+                  Evolve
+                </Link>{" "}
+                is a bait made from cottonseed, developed by SenesTech.
                 It doesn't kill rats. It changes how many babies they can
                 have — which is what actually stops the cycle.
               </p>
