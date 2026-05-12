@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/accordion";
 import { LeadForm } from "@/components/site/LeadForm";
 import heroFaq from "@/assets/hero-faq.jpg";
+import { Eyebrow } from "@/components/site/Eyebrow";
 
 const TITLE = "Common questions — Cloakd Removals";
 const DESCRIPTION =
@@ -121,9 +122,9 @@ function FAQPage() {
       {/* LEAD QUESTION */}
       <section className="bg-background py-20">
         <div className="container-site max-w-4xl">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+          <Eyebrow>
             Professional skepticism
-          </p>
+          </Eyebrow>
           <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
             My pest control company told me rat birth control doesn't work.
             Are they right?
@@ -175,9 +176,9 @@ function FAQPage() {
       {/* MORE QUESTIONS */}
       <section className="bg-surface py-20">
         <div className="container-site max-w-3xl">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+          <Eyebrow>
             More questions
-          </p>
+          </Eyebrow>
           <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
             Every question we get, answered directly.
           </h2>
@@ -199,9 +200,9 @@ function FAQPage() {
       {/* FIELD DATA */}
       <section className="bg-background py-16">
         <div className="container-site">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+          <Eyebrow>
             Field data
-          </p>
+          </Eyebrow>
           <h2 className="mt-4 max-w-3xl text-3xl font-extrabold leading-tight md:text-5xl">
             What the two-phase program produced in monitored urban
             deployments.

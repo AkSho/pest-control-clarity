@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { LeadForm } from "@/components/site/LeadForm";
 import { HeroTrustBadges } from "@/components/site/TrustBadges";
 import { getSolution, SOLUTIONS, type Solution } from "@/data/solutions";
+import { Eyebrow } from "@/components/site/Eyebrow";
 
 export const Route = createFileRoute("/solutions/$slug")({
   loader: ({ params }) => {
@@ -98,9 +99,9 @@ function SolutionPage() {
       <section className="bg-background py-20">
         <div className="container-site">
           <div className="mx-auto max-w-2xl text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+            <Eyebrow>
               The problem
-            </p>
+            </Eyebrow>
             <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
               Why your current program isn't ending it
             </h2>
@@ -125,9 +126,9 @@ function SolutionPage() {
       <section className="bg-surface py-20">
         <div className="container-site grid gap-10 md:grid-cols-[0.9fr_1.1fr] md:gap-16">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+            <Eyebrow>
               What we add
-            </p>
+            </Eyebrow>
             <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
               Layered onto what you already run
             </h2>
@@ -181,9 +182,9 @@ function SolutionPage() {
       <section className="bg-surface py-20">
         <div className="container-site">
           <div className="mx-auto max-w-2xl text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+            <Eyebrow>
               Also serving
-            </p>
+            </Eyebrow>
             <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-4xl">
               Other operators we work with
             </h2>

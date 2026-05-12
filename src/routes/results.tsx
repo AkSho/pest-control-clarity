@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { LeadForm } from "@/components/site/LeadForm";
 import { HeroTrustBadges } from "@/components/site/TrustBadges";
 import heroResults from "@/assets/hero-results.jpg";
+import { Eyebrow } from "@/components/site/Eyebrow";
 
 const TITLE = "Field results — Cloakd Removals";
 const DESCRIPTION =
@@ -135,9 +136,9 @@ function ResultsPage() {
       {/* LOCATION A */}
       <section className="bg-background py-20">
         <div className="container-site">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+          <Eyebrow>
             Location A — primary field study
-          </p>
+          </Eyebrow>
           <h2 className="mt-4 max-w-3xl text-3xl font-extrabold leading-tight md:text-5xl">
             Urban deployment, Aug 2025 to Jan 2026.
           </h2>
@@ -187,9 +188,9 @@ function ResultsPage() {
       {/* LOCATION B */}
       <section className="bg-surface py-20">
         <div className="container-site">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+          <Eyebrow>
             Location B
-          </p>
+          </Eyebrow>
           <h2 className="mt-4 max-w-3xl text-3xl font-extrabold leading-tight md:text-5xl">
             Independent 5-month deployment.
           </h2>
@@ -269,9 +270,9 @@ function ResultsPage() {
       {/* HONG KONG + SF */}
       <section className="bg-background py-20">
         <div className="container-site">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+          <Eyebrow>
             International deployments
-          </p>
+          </Eyebrow>
           <h2 className="mt-4 max-w-3xl text-3xl font-extrabold leading-tight md:text-5xl">
             The same mechanism, in other cities.
           </h2>
@@ -328,9 +329,9 @@ function ResultsPage() {
       {/* CITIES */}
       <section className="bg-background py-20">
         <div className="container-site">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+          <Eyebrow>
             City-level adoption
-          </p>
+          </Eyebrow>
           <h2 className="mt-4 max-w-3xl text-3xl font-extrabold leading-tight md:text-5xl">
             The same program running at scale.
           </h2>
@@ -364,9 +365,9 @@ function ResultsPage() {
       <section className="bg-surface py-20">
         <div className="container-site grid gap-10 md:grid-cols-[0.9fr_1.1fr] md:gap-16">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+            <Eyebrow>
               Monitoring methodology
-            </p>
+            </Eyebrow>
             <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
               How track counts work as a measurement standard.
             </h2>

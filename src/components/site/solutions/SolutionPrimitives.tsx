@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { LeadForm } from "@/components/site/LeadForm";
 import { HeroTrustBadges } from "@/components/site/TrustBadges";
 import { SOLUTIONS, type SolutionSlug } from "@/data/solutions";
+import { Eyebrow } from "@/components/site/Eyebrow";
 
 export function SolutionHero({
   eyebrow,
@@ -106,9 +107,9 @@ export function SectionHeader({
 }) {
   return (
     <div className={surface === "surface" ? "" : ""}>
-      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+      <Eyebrow>
         {eyebrow}
-      </p>
+      </Eyebrow>
       <h2 className="mt-4 max-w-3xl text-3xl font-extrabold leading-tight md:text-5xl">
         {title}
       </h2>
@@ -193,9 +194,9 @@ export function FieldDataTrio({
   return (
     <section className="bg-surface py-20">
       <div className="container-site">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+        <Eyebrow>
           Field data
-        </p>
+        </Eyebrow>
         <h2 className="mt-4 max-w-3xl text-3xl font-extrabold leading-tight md:text-5xl">
           Numbers from monitored urban deployments.
         </h2>
@@ -293,9 +294,9 @@ export function OtherSolutions({ current }: { current: SolutionSlug }) {
     <section className="bg-background py-20">
       <div className="container-site">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+          <Eyebrow>
             Also serving
-          </p>
+          </Eyebrow>
           <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-4xl">
             Other operators we work with
           </h2>

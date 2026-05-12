@@ -4,6 +4,7 @@ import { LeadForm } from "@/components/site/LeadForm";
 import { HeroTrustBadges } from "@/components/site/TrustBadges";
 import { FieldDataTrio, ClosingCta } from "@/components/site/solutions/SolutionPrimitives";
 import { REGIONS, getAreasByRegion } from "@/data/serviceAreas";
+import { Eyebrow } from "@/components/site/Eyebrow";
 
 const TITLE = "Service Areas — NYC, NJ & Bay Area | Cloakd Removals";
 const DESCRIPTION =
@@ -50,9 +51,9 @@ function AreasIndex() {
 
       <section className="bg-background py-20">
         <div className="container-site">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+          <Eyebrow>
             Coverage map
-          </p>
+          </Eyebrow>
           <h2 className="mt-4 max-w-3xl text-3xl font-extrabold leading-tight md:text-5xl">
             Three regions, one program.
           </h2>

@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import heroImg from "@/assets/compliance-nj-violation.jpg";
+import { Eyebrow } from "@/components/site/Eyebrow";
 import {
   ClosingCta,
   FieldDataTrio,
@@ -197,9 +198,9 @@ function NjPage() {
           />
           <div className="mt-10 grid gap-5 md:grid-cols-2">
             <div className="rounded-2xl border border-border bg-card p-7 shadow-[var(--shadow-card)]">
-              <div className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+              <Eyebrow>
                 New York City
-              </div>
+              </Eyebrow>
               <ul className="mt-5 space-y-3 text-sm leading-relaxed text-muted-foreground md:text-base">
                 {NYC_BULLETS.map((b) => (
                   <li key={b} className="flex items-start gap-2">
@@ -210,9 +211,9 @@ function NjPage() {
               </ul>
             </div>
             <div className="rounded-2xl border border-brand/40 bg-brand-soft p-7 shadow-[var(--shadow-card)]">
-              <div className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+              <Eyebrow>
                 New Jersey
-              </div>
+              </Eyebrow>
               <ul className="mt-5 space-y-3 text-sm leading-relaxed text-muted-foreground md:text-base">
                 {NJ_BULLETS.map((b) => (
                   <li key={b} className="flex items-start gap-2">

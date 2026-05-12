@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import heroImg from "@/assets/program-what-to-expect.jpg";
+import { Eyebrow } from "@/components/site/Eyebrow";
 import {
   ClosingCta,
   SectionHeader,
@@ -137,9 +138,9 @@ function WhatToExpectPage() {
                     <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand text-brand-foreground text-sm font-extrabold">
                       {i + 1}
                     </div>
-                    <div className="mt-3 text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+                    <Eyebrow className="mt-3">
                       {s.when}
-                    </div>
+                    </Eyebrow>
                   </div>
                   <div>
                     <h3 className="text-xl font-extrabold leading-tight md:text-2xl">
@@ -183,9 +184,9 @@ function WhatToExpectPage() {
                 key={r.title}
                 className="rounded-2xl border border-border bg-card p-7 shadow-[var(--shadow-card)]"
               >
-                <div className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+                <Eyebrow>
                   {r.when}
-                </div>
+                </Eyebrow>
                 <h3 className="mt-3 text-lg font-extrabold leading-tight">
                   {r.title}
                 </h3>
@@ -230,9 +231,9 @@ function WhatToExpectPage() {
       <section className="bg-surface py-20">
         <div className="container-site">
           <div className="rounded-2xl border border-brand/30 bg-brand-soft p-7 md:p-10">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+            <Eyebrow>
               Pricing
-            </p>
+            </Eyebrow>
             <h2 className="mt-3 text-2xl font-extrabold leading-tight md:text-4xl">
               Flat program fee, billed once. All visits and materials included.
             </h2>
