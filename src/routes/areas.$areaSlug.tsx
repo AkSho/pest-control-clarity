@@ -129,6 +129,37 @@ function AreaPage() {
         </div>
       </section>
 
+      {/* SOLUTIONS STRIP */}
+      <section className="bg-background py-16">
+        <div className="container-site">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+            Who we work with in {area.city}
+          </p>
+          <h2 className="mt-4 max-w-3xl text-2xl font-extrabold leading-tight md:text-4xl">
+            We run the program for these operators in {area.city}.
+          </h2>
+          <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {SOLUTIONS.slice(0, 4).map((s) => (
+              <Link
+                key={s.slug}
+                to="/solutions/$slug"
+                params={{ slug: s.slug }}
+                className="group flex flex-col rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)] transition hover:border-brand hover:bg-brand-soft"
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-soft text-brand">
+                  <s.icon className="h-5 w-5" />
+                </div>
+                <div className="mt-4 text-base font-bold">{s.audience}</div>
+                <div className="mt-1 text-sm text-muted-foreground line-clamp-2">{s.eyebrow}</div>
+                <div className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand">
+                  Explore solution <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* PROCESS */}
       <section className="bg-background py-16">
         <div className="container-site">
