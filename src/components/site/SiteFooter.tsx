@@ -6,7 +6,7 @@ import { SERVICE_AREAS } from "@/data/serviceAreas";
 export function SiteFooter() {
   return (
     <footer className="ink-section">
-      <div className="container-site grid gap-10 py-16 md:grid-cols-4">
+      <div className="container-site grid gap-10 py-16 md:grid-cols-5">
         <div className="md:col-span-1">
           <div className="flex items-center gap-2">
             <div className="flex h-9 w-9 items-center justify-center rounded-md bg-brand text-brand-foreground font-bold">
@@ -79,6 +79,24 @@ export function SiteFooter() {
                 </Link>
               </li>
             ))}
+          </ul>
+        </div>
+
+        <div>
+          <div className="text-xs font-semibold uppercase tracking-widest text-ink-muted">
+            Comparisons
+          </div>
+          <ul className="mt-4 space-y-2 text-sm">
+            <li><Link to="/vs/rat-poison" className="hover:text-brand">vs. Rat poison</Link></li>
+            <li><Link to="/vs/traditional-pest-control" className="hover:text-brand">vs. Traditional pest control</Link></li>
+            <li><Link to="/vs/snap-traps" className="hover:text-brand">vs. Snap traps</Link></li>
+            <li><Link to="/vs/diy-rat-birth-control" className="hover:text-brand">vs. DIY rat birth control</Link></li>
+            <li><Link to="/contrapest-vs-evolve" className="hover:text-brand">ContraPest vs. Evolve</Link></li>
+            <li><Link to="/vs/orkin" className="hover:text-brand">vs. Orkin</Link></li>
+            <li><Link to="/vs/assured-environments" className="hover:text-brand">vs. Assured Environments</Link></li>
+            <li><Link to="/vs/bell-environmental" className="hover:text-brand">vs. Bell Environmental</Link></li>
+            <li><Link to="/vs/viking-pest-control" className="hover:text-brand">vs. Viking Pest Control</Link></li>
+            <li><Link to="/vs/western-pest-services" className="hover:text-brand">vs. Western Pest Services</Link></li>
           </ul>
         </div>
 
