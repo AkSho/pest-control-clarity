@@ -25,7 +25,15 @@ import { Route as ContrapestVsEvolveRouteImport } from './routes/contrapest-vs-e
 import { Route as ContrapestRouteImport } from './routes/contrapest'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AreasIndexRouteImport } from './routes/areas.index'
+import { Route as VsWesternPestServicesRouteImport } from './routes/vs.western-pest-services'
+import { Route as VsVikingPestControlRouteImport } from './routes/vs.viking-pest-control'
+import { Route as VsTraditionalPestControlRouteImport } from './routes/vs.traditional-pest-control'
+import { Route as VsSnapTrapsRouteImport } from './routes/vs.snap-traps'
+import { Route as VsRatPoisonRouteImport } from './routes/vs.rat-poison'
+import { Route as VsOrkinRouteImport } from './routes/vs.orkin'
 import { Route as VsDiyRatBirthControlRouteImport } from './routes/vs.diy-rat-birth-control'
+import { Route as VsBellEnvironmentalRouteImport } from './routes/vs.bell-environmental'
+import { Route as VsAssuredEnvironmentsRouteImport } from './routes/vs.assured-environments'
 import { Route as SolutionsRestaurantsRouteImport } from './routes/solutions.restaurants'
 import { Route as SolutionsResidentialRouteImport } from './routes/solutions.residential'
 import { Route as SolutionsPropertyManagersRouteImport } from './routes/solutions.property-managers'
@@ -117,9 +125,50 @@ const AreasIndexRoute = AreasIndexRouteImport.update({
   path: '/areas/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VsWesternPestServicesRoute = VsWesternPestServicesRouteImport.update({
+  id: '/vs/western-pest-services',
+  path: '/vs/western-pest-services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VsVikingPestControlRoute = VsVikingPestControlRouteImport.update({
+  id: '/vs/viking-pest-control',
+  path: '/vs/viking-pest-control',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VsTraditionalPestControlRoute =
+  VsTraditionalPestControlRouteImport.update({
+    id: '/vs/traditional-pest-control',
+    path: '/vs/traditional-pest-control',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const VsSnapTrapsRoute = VsSnapTrapsRouteImport.update({
+  id: '/vs/snap-traps',
+  path: '/vs/snap-traps',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VsRatPoisonRoute = VsRatPoisonRouteImport.update({
+  id: '/vs/rat-poison',
+  path: '/vs/rat-poison',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VsOrkinRoute = VsOrkinRouteImport.update({
+  id: '/vs/orkin',
+  path: '/vs/orkin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VsDiyRatBirthControlRoute = VsDiyRatBirthControlRouteImport.update({
   id: '/vs/diy-rat-birth-control',
   path: '/vs/diy-rat-birth-control',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VsBellEnvironmentalRoute = VsBellEnvironmentalRouteImport.update({
+  id: '/vs/bell-environmental',
+  path: '/vs/bell-environmental',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VsAssuredEnvironmentsRoute = VsAssuredEnvironmentsRouteImport.update({
+  id: '/vs/assured-environments',
+  path: '/vs/assured-environments',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SolutionsRestaurantsRoute = SolutionsRestaurantsRouteImport.update({
@@ -195,7 +244,15 @@ export interface FileRoutesByFullPath {
   '/solutions/property-managers': typeof SolutionsPropertyManagersRoute
   '/solutions/residential': typeof SolutionsResidentialRoute
   '/solutions/restaurants': typeof SolutionsRestaurantsRoute
+  '/vs/assured-environments': typeof VsAssuredEnvironmentsRoute
+  '/vs/bell-environmental': typeof VsBellEnvironmentalRoute
   '/vs/diy-rat-birth-control': typeof VsDiyRatBirthControlRoute
+  '/vs/orkin': typeof VsOrkinRoute
+  '/vs/rat-poison': typeof VsRatPoisonRoute
+  '/vs/snap-traps': typeof VsSnapTrapsRoute
+  '/vs/traditional-pest-control': typeof VsTraditionalPestControlRoute
+  '/vs/viking-pest-control': typeof VsVikingPestControlRoute
+  '/vs/western-pest-services': typeof VsWesternPestServicesRoute
   '/areas/': typeof AreasIndexRoute
 }
 export interface FileRoutesByTo {
@@ -223,7 +280,15 @@ export interface FileRoutesByTo {
   '/solutions/property-managers': typeof SolutionsPropertyManagersRoute
   '/solutions/residential': typeof SolutionsResidentialRoute
   '/solutions/restaurants': typeof SolutionsRestaurantsRoute
+  '/vs/assured-environments': typeof VsAssuredEnvironmentsRoute
+  '/vs/bell-environmental': typeof VsBellEnvironmentalRoute
   '/vs/diy-rat-birth-control': typeof VsDiyRatBirthControlRoute
+  '/vs/orkin': typeof VsOrkinRoute
+  '/vs/rat-poison': typeof VsRatPoisonRoute
+  '/vs/snap-traps': typeof VsSnapTrapsRoute
+  '/vs/traditional-pest-control': typeof VsTraditionalPestControlRoute
+  '/vs/viking-pest-control': typeof VsVikingPestControlRoute
+  '/vs/western-pest-services': typeof VsWesternPestServicesRoute
   '/areas': typeof AreasIndexRoute
 }
 export interface FileRoutesById {
@@ -252,7 +317,15 @@ export interface FileRoutesById {
   '/solutions/property-managers': typeof SolutionsPropertyManagersRoute
   '/solutions/residential': typeof SolutionsResidentialRoute
   '/solutions/restaurants': typeof SolutionsRestaurantsRoute
+  '/vs/assured-environments': typeof VsAssuredEnvironmentsRoute
+  '/vs/bell-environmental': typeof VsBellEnvironmentalRoute
   '/vs/diy-rat-birth-control': typeof VsDiyRatBirthControlRoute
+  '/vs/orkin': typeof VsOrkinRoute
+  '/vs/rat-poison': typeof VsRatPoisonRoute
+  '/vs/snap-traps': typeof VsSnapTrapsRoute
+  '/vs/traditional-pest-control': typeof VsTraditionalPestControlRoute
+  '/vs/viking-pest-control': typeof VsVikingPestControlRoute
+  '/vs/western-pest-services': typeof VsWesternPestServicesRoute
   '/areas/': typeof AreasIndexRoute
 }
 export interface FileRouteTypes {
@@ -282,7 +355,15 @@ export interface FileRouteTypes {
     | '/solutions/property-managers'
     | '/solutions/residential'
     | '/solutions/restaurants'
+    | '/vs/assured-environments'
+    | '/vs/bell-environmental'
     | '/vs/diy-rat-birth-control'
+    | '/vs/orkin'
+    | '/vs/rat-poison'
+    | '/vs/snap-traps'
+    | '/vs/traditional-pest-control'
+    | '/vs/viking-pest-control'
+    | '/vs/western-pest-services'
     | '/areas/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -310,7 +391,15 @@ export interface FileRouteTypes {
     | '/solutions/property-managers'
     | '/solutions/residential'
     | '/solutions/restaurants'
+    | '/vs/assured-environments'
+    | '/vs/bell-environmental'
     | '/vs/diy-rat-birth-control'
+    | '/vs/orkin'
+    | '/vs/rat-poison'
+    | '/vs/snap-traps'
+    | '/vs/traditional-pest-control'
+    | '/vs/viking-pest-control'
+    | '/vs/western-pest-services'
     | '/areas'
   id:
     | '__root__'
@@ -338,7 +427,15 @@ export interface FileRouteTypes {
     | '/solutions/property-managers'
     | '/solutions/residential'
     | '/solutions/restaurants'
+    | '/vs/assured-environments'
+    | '/vs/bell-environmental'
     | '/vs/diy-rat-birth-control'
+    | '/vs/orkin'
+    | '/vs/rat-poison'
+    | '/vs/snap-traps'
+    | '/vs/traditional-pest-control'
+    | '/vs/viking-pest-control'
+    | '/vs/western-pest-services'
     | '/areas/'
   fileRoutesById: FileRoutesById
 }
@@ -367,7 +464,15 @@ export interface RootRouteChildren {
   SolutionsPropertyManagersRoute: typeof SolutionsPropertyManagersRoute
   SolutionsResidentialRoute: typeof SolutionsResidentialRoute
   SolutionsRestaurantsRoute: typeof SolutionsRestaurantsRoute
+  VsAssuredEnvironmentsRoute: typeof VsAssuredEnvironmentsRoute
+  VsBellEnvironmentalRoute: typeof VsBellEnvironmentalRoute
   VsDiyRatBirthControlRoute: typeof VsDiyRatBirthControlRoute
+  VsOrkinRoute: typeof VsOrkinRoute
+  VsRatPoisonRoute: typeof VsRatPoisonRoute
+  VsSnapTrapsRoute: typeof VsSnapTrapsRoute
+  VsTraditionalPestControlRoute: typeof VsTraditionalPestControlRoute
+  VsVikingPestControlRoute: typeof VsVikingPestControlRoute
+  VsWesternPestServicesRoute: typeof VsWesternPestServicesRoute
   AreasIndexRoute: typeof AreasIndexRoute
 }
 
@@ -485,11 +590,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AreasIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/vs/western-pest-services': {
+      id: '/vs/western-pest-services'
+      path: '/vs/western-pest-services'
+      fullPath: '/vs/western-pest-services'
+      preLoaderRoute: typeof VsWesternPestServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vs/viking-pest-control': {
+      id: '/vs/viking-pest-control'
+      path: '/vs/viking-pest-control'
+      fullPath: '/vs/viking-pest-control'
+      preLoaderRoute: typeof VsVikingPestControlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vs/traditional-pest-control': {
+      id: '/vs/traditional-pest-control'
+      path: '/vs/traditional-pest-control'
+      fullPath: '/vs/traditional-pest-control'
+      preLoaderRoute: typeof VsTraditionalPestControlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vs/snap-traps': {
+      id: '/vs/snap-traps'
+      path: '/vs/snap-traps'
+      fullPath: '/vs/snap-traps'
+      preLoaderRoute: typeof VsSnapTrapsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vs/rat-poison': {
+      id: '/vs/rat-poison'
+      path: '/vs/rat-poison'
+      fullPath: '/vs/rat-poison'
+      preLoaderRoute: typeof VsRatPoisonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vs/orkin': {
+      id: '/vs/orkin'
+      path: '/vs/orkin'
+      fullPath: '/vs/orkin'
+      preLoaderRoute: typeof VsOrkinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/vs/diy-rat-birth-control': {
       id: '/vs/diy-rat-birth-control'
       path: '/vs/diy-rat-birth-control'
       fullPath: '/vs/diy-rat-birth-control'
       preLoaderRoute: typeof VsDiyRatBirthControlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vs/bell-environmental': {
+      id: '/vs/bell-environmental'
+      path: '/vs/bell-environmental'
+      fullPath: '/vs/bell-environmental'
+      preLoaderRoute: typeof VsBellEnvironmentalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vs/assured-environments': {
+      id: '/vs/assured-environments'
+      path: '/vs/assured-environments'
+      fullPath: '/vs/assured-environments'
+      preLoaderRoute: typeof VsAssuredEnvironmentsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/solutions/restaurants': {
@@ -583,7 +744,15 @@ const rootRouteChildren: RootRouteChildren = {
   SolutionsPropertyManagersRoute: SolutionsPropertyManagersRoute,
   SolutionsResidentialRoute: SolutionsResidentialRoute,
   SolutionsRestaurantsRoute: SolutionsRestaurantsRoute,
+  VsAssuredEnvironmentsRoute: VsAssuredEnvironmentsRoute,
+  VsBellEnvironmentalRoute: VsBellEnvironmentalRoute,
   VsDiyRatBirthControlRoute: VsDiyRatBirthControlRoute,
+  VsOrkinRoute: VsOrkinRoute,
+  VsRatPoisonRoute: VsRatPoisonRoute,
+  VsSnapTrapsRoute: VsSnapTrapsRoute,
+  VsTraditionalPestControlRoute: VsTraditionalPestControlRoute,
+  VsVikingPestControlRoute: VsVikingPestControlRoute,
+  VsWesternPestServicesRoute: VsWesternPestServicesRoute,
   AreasIndexRoute: AreasIndexRoute,
 }
 export const routeTree = rootRouteImport
