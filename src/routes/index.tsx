@@ -211,7 +211,7 @@ function HomePage() {
             backgroundPosition: "center",
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/95 to-ink/85" />
+        <div className="absolute inset-0 bg-gradient-to-r from-ink/80 via-ink/70 to-ink/40" />
         <div className="container-site relative grid gap-10 py-16 md:grid-cols-[1.1fr_0.9fr] md:py-24">
           <div>
             <HeroTrustBadges />
