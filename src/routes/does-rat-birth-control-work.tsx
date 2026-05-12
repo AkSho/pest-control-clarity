@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import heroImg from "@/assets/program-bryant-park.jpg";
 import {
   ClosingCta,
@@ -83,13 +83,20 @@ function BirthControlPage() {
             intro={
               <>
                 <p>
-                  The Bryant Park pilot used liquid ContraPest in an open
-                  public space. NYC Norway rats (Rattus norvegicus) have
-                  arguably the most abundant competing food supply of any
-                  urban rat population on earth. Without containerized trash
-                  and a prior knockdown reducing the existing population, the
-                  rats had no reason to consume the bait at the concentration
-                  needed to affect reproduction.
+                  The Bryant Park pilot used liquid{" "}
+                  <Link
+                    to="/contrapest"
+                    className="text-brand underline-offset-2 hover:underline"
+                  >
+                    ContraPest
+                  </Link>{" "}
+                  in an open public space. NYC Norway rats (Rattus
+                  norvegicus) have arguably the most abundant competing
+                  food supply of any urban rat population on earth. Without
+                  containerized trash and a prior knockdown reducing the
+                  existing population, the rats had no reason to consume
+                  the bait at the concentration needed to affect
+                  reproduction.
                 </p>
                 <p>
                   This is the same failure pattern across every documented
@@ -136,9 +143,15 @@ function BirthControlPage() {
             intro={
               <p>
                 SenesTech published field results from two independent urban
-                deployments in February 2026. Both used Evolve in managed
-                bait stations, deployed after a Phase 1 knockdown, with
-                monthly track count monitoring.
+                deployments in February 2026. Both used{" "}
+                <Link
+                  to="/evolve-rodent-birth-control"
+                  className="text-brand underline-offset-2 hover:underline"
+                >
+                  Evolve
+                </Link>{" "}
+                in managed bait stations, deployed after a Phase 1
+                knockdown, with monthly track count monitoring.
               </p>
             }
           />
@@ -290,6 +303,14 @@ function BirthControlPage() {
               </ul>
             </div>
           </div>
+          <p className="mt-6 text-sm">
+            <Link
+              to="/contrapest-vs-evolve"
+              className="font-semibold text-brand underline-offset-2 hover:underline"
+            >
+              See the full comparison →
+            </Link>
+          </p>
         </div>
       </section>
 

@@ -11,16 +11,21 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WhyItKeepsComingBackRouteImport } from './routes/why-it-keeps-coming-back'
 import { Route as WhatToExpectRouteImport } from './routes/what-to-expect'
+import { Route as RodentFertilityControlRouteImport } from './routes/rodent-fertility-control'
 import { Route as ResultsRouteImport } from './routes/results'
 import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as NjRodentViolationRouteImport } from './routes/nj-rodent-violation'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as GetStartedRouteImport } from './routes/get-started'
 import { Route as FaqRouteImport } from './routes/faq'
+import { Route as EvolveRodentBirthControlRouteImport } from './routes/evolve-rodent-birth-control'
 import { Route as DohmhRodentViolationNycRouteImport } from './routes/dohmh-rodent-violation-nyc'
 import { Route as DoesRatBirthControlWorkRouteImport } from './routes/does-rat-birth-control-work'
+import { Route as ContrapestVsEvolveRouteImport } from './routes/contrapest-vs-evolve'
+import { Route as ContrapestRouteImport } from './routes/contrapest'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AreasIndexRouteImport } from './routes/areas.index'
+import { Route as VsDiyRatBirthControlRouteImport } from './routes/vs.diy-rat-birth-control'
 import { Route as SolutionsRestaurantsRouteImport } from './routes/solutions.restaurants'
 import { Route as SolutionsResidentialRouteImport } from './routes/solutions.residential'
 import { Route as SolutionsPropertyManagersRouteImport } from './routes/solutions.property-managers'
@@ -39,6 +44,11 @@ const WhyItKeepsComingBackRoute = WhyItKeepsComingBackRouteImport.update({
 const WhatToExpectRoute = WhatToExpectRouteImport.update({
   id: '/what-to-expect',
   path: '/what-to-expect',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RodentFertilityControlRoute = RodentFertilityControlRouteImport.update({
+  id: '/rodent-fertility-control',
+  path: '/rodent-fertility-control',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResultsRoute = ResultsRouteImport.update({
@@ -71,6 +81,12 @@ const FaqRoute = FaqRouteImport.update({
   path: '/faq',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EvolveRodentBirthControlRoute =
+  EvolveRodentBirthControlRouteImport.update({
+    id: '/evolve-rodent-birth-control',
+    path: '/evolve-rodent-birth-control',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const DohmhRodentViolationNycRoute = DohmhRodentViolationNycRouteImport.update({
   id: '/dohmh-rodent-violation-nyc',
   path: '/dohmh-rodent-violation-nyc',
@@ -81,6 +97,16 @@ const DoesRatBirthControlWorkRoute = DoesRatBirthControlWorkRouteImport.update({
   path: '/does-rat-birth-control-work',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContrapestVsEvolveRoute = ContrapestVsEvolveRouteImport.update({
+  id: '/contrapest-vs-evolve',
+  path: '/contrapest-vs-evolve',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContrapestRoute = ContrapestRouteImport.update({
+  id: '/contrapest',
+  path: '/contrapest',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -89,6 +115,11 @@ const IndexRoute = IndexRouteImport.update({
 const AreasIndexRoute = AreasIndexRouteImport.update({
   id: '/areas/',
   path: '/areas/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VsDiyRatBirthControlRoute = VsDiyRatBirthControlRouteImport.update({
+  id: '/vs/diy-rat-birth-control',
+  path: '/vs/diy-rat-birth-control',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SolutionsRestaurantsRoute = SolutionsRestaurantsRouteImport.update({
@@ -141,14 +172,18 @@ const AreasAreaSlugRoute = AreasAreaSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/contrapest': typeof ContrapestRoute
+  '/contrapest-vs-evolve': typeof ContrapestVsEvolveRoute
   '/does-rat-birth-control-work': typeof DoesRatBirthControlWorkRoute
   '/dohmh-rodent-violation-nyc': typeof DohmhRodentViolationNycRoute
+  '/evolve-rodent-birth-control': typeof EvolveRodentBirthControlRoute
   '/faq': typeof FaqRoute
   '/get-started': typeof GetStartedRoute
   '/how-it-works': typeof HowItWorksRoute
   '/nj-rodent-violation': typeof NjRodentViolationRoute
   '/resources': typeof ResourcesRoute
   '/results': typeof ResultsRoute
+  '/rodent-fertility-control': typeof RodentFertilityControlRoute
   '/what-to-expect': typeof WhatToExpectRoute
   '/why-it-keeps-coming-back': typeof WhyItKeepsComingBackRoute
   '/areas/$areaSlug': typeof AreasAreaSlugRoute
@@ -160,18 +195,23 @@ export interface FileRoutesByFullPath {
   '/solutions/property-managers': typeof SolutionsPropertyManagersRoute
   '/solutions/residential': typeof SolutionsResidentialRoute
   '/solutions/restaurants': typeof SolutionsRestaurantsRoute
+  '/vs/diy-rat-birth-control': typeof VsDiyRatBirthControlRoute
   '/areas/': typeof AreasIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/contrapest': typeof ContrapestRoute
+  '/contrapest-vs-evolve': typeof ContrapestVsEvolveRoute
   '/does-rat-birth-control-work': typeof DoesRatBirthControlWorkRoute
   '/dohmh-rodent-violation-nyc': typeof DohmhRodentViolationNycRoute
+  '/evolve-rodent-birth-control': typeof EvolveRodentBirthControlRoute
   '/faq': typeof FaqRoute
   '/get-started': typeof GetStartedRoute
   '/how-it-works': typeof HowItWorksRoute
   '/nj-rodent-violation': typeof NjRodentViolationRoute
   '/resources': typeof ResourcesRoute
   '/results': typeof ResultsRoute
+  '/rodent-fertility-control': typeof RodentFertilityControlRoute
   '/what-to-expect': typeof WhatToExpectRoute
   '/why-it-keeps-coming-back': typeof WhyItKeepsComingBackRoute
   '/areas/$areaSlug': typeof AreasAreaSlugRoute
@@ -183,19 +223,24 @@ export interface FileRoutesByTo {
   '/solutions/property-managers': typeof SolutionsPropertyManagersRoute
   '/solutions/residential': typeof SolutionsResidentialRoute
   '/solutions/restaurants': typeof SolutionsRestaurantsRoute
+  '/vs/diy-rat-birth-control': typeof VsDiyRatBirthControlRoute
   '/areas': typeof AreasIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/contrapest': typeof ContrapestRoute
+  '/contrapest-vs-evolve': typeof ContrapestVsEvolveRoute
   '/does-rat-birth-control-work': typeof DoesRatBirthControlWorkRoute
   '/dohmh-rodent-violation-nyc': typeof DohmhRodentViolationNycRoute
+  '/evolve-rodent-birth-control': typeof EvolveRodentBirthControlRoute
   '/faq': typeof FaqRoute
   '/get-started': typeof GetStartedRoute
   '/how-it-works': typeof HowItWorksRoute
   '/nj-rodent-violation': typeof NjRodentViolationRoute
   '/resources': typeof ResourcesRoute
   '/results': typeof ResultsRoute
+  '/rodent-fertility-control': typeof RodentFertilityControlRoute
   '/what-to-expect': typeof WhatToExpectRoute
   '/why-it-keeps-coming-back': typeof WhyItKeepsComingBackRoute
   '/areas/$areaSlug': typeof AreasAreaSlugRoute
@@ -207,20 +252,25 @@ export interface FileRoutesById {
   '/solutions/property-managers': typeof SolutionsPropertyManagersRoute
   '/solutions/residential': typeof SolutionsResidentialRoute
   '/solutions/restaurants': typeof SolutionsRestaurantsRoute
+  '/vs/diy-rat-birth-control': typeof VsDiyRatBirthControlRoute
   '/areas/': typeof AreasIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/contrapest'
+    | '/contrapest-vs-evolve'
     | '/does-rat-birth-control-work'
     | '/dohmh-rodent-violation-nyc'
+    | '/evolve-rodent-birth-control'
     | '/faq'
     | '/get-started'
     | '/how-it-works'
     | '/nj-rodent-violation'
     | '/resources'
     | '/results'
+    | '/rodent-fertility-control'
     | '/what-to-expect'
     | '/why-it-keeps-coming-back'
     | '/areas/$areaSlug'
@@ -232,18 +282,23 @@ export interface FileRouteTypes {
     | '/solutions/property-managers'
     | '/solutions/residential'
     | '/solutions/restaurants'
+    | '/vs/diy-rat-birth-control'
     | '/areas/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/contrapest'
+    | '/contrapest-vs-evolve'
     | '/does-rat-birth-control-work'
     | '/dohmh-rodent-violation-nyc'
+    | '/evolve-rodent-birth-control'
     | '/faq'
     | '/get-started'
     | '/how-it-works'
     | '/nj-rodent-violation'
     | '/resources'
     | '/results'
+    | '/rodent-fertility-control'
     | '/what-to-expect'
     | '/why-it-keeps-coming-back'
     | '/areas/$areaSlug'
@@ -255,18 +310,23 @@ export interface FileRouteTypes {
     | '/solutions/property-managers'
     | '/solutions/residential'
     | '/solutions/restaurants'
+    | '/vs/diy-rat-birth-control'
     | '/areas'
   id:
     | '__root__'
     | '/'
+    | '/contrapest'
+    | '/contrapest-vs-evolve'
     | '/does-rat-birth-control-work'
     | '/dohmh-rodent-violation-nyc'
+    | '/evolve-rodent-birth-control'
     | '/faq'
     | '/get-started'
     | '/how-it-works'
     | '/nj-rodent-violation'
     | '/resources'
     | '/results'
+    | '/rodent-fertility-control'
     | '/what-to-expect'
     | '/why-it-keeps-coming-back'
     | '/areas/$areaSlug'
@@ -278,19 +338,24 @@ export interface FileRouteTypes {
     | '/solutions/property-managers'
     | '/solutions/residential'
     | '/solutions/restaurants'
+    | '/vs/diy-rat-birth-control'
     | '/areas/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ContrapestRoute: typeof ContrapestRoute
+  ContrapestVsEvolveRoute: typeof ContrapestVsEvolveRoute
   DoesRatBirthControlWorkRoute: typeof DoesRatBirthControlWorkRoute
   DohmhRodentViolationNycRoute: typeof DohmhRodentViolationNycRoute
+  EvolveRodentBirthControlRoute: typeof EvolveRodentBirthControlRoute
   FaqRoute: typeof FaqRoute
   GetStartedRoute: typeof GetStartedRoute
   HowItWorksRoute: typeof HowItWorksRoute
   NjRodentViolationRoute: typeof NjRodentViolationRoute
   ResourcesRoute: typeof ResourcesRoute
   ResultsRoute: typeof ResultsRoute
+  RodentFertilityControlRoute: typeof RodentFertilityControlRoute
   WhatToExpectRoute: typeof WhatToExpectRoute
   WhyItKeepsComingBackRoute: typeof WhyItKeepsComingBackRoute
   AreasAreaSlugRoute: typeof AreasAreaSlugRoute
@@ -302,6 +367,7 @@ export interface RootRouteChildren {
   SolutionsPropertyManagersRoute: typeof SolutionsPropertyManagersRoute
   SolutionsResidentialRoute: typeof SolutionsResidentialRoute
   SolutionsRestaurantsRoute: typeof SolutionsRestaurantsRoute
+  VsDiyRatBirthControlRoute: typeof VsDiyRatBirthControlRoute
   AreasIndexRoute: typeof AreasIndexRoute
 }
 
@@ -319,6 +385,13 @@ declare module '@tanstack/react-router' {
       path: '/what-to-expect'
       fullPath: '/what-to-expect'
       preLoaderRoute: typeof WhatToExpectRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rodent-fertility-control': {
+      id: '/rodent-fertility-control'
+      path: '/rodent-fertility-control'
+      fullPath: '/rodent-fertility-control'
+      preLoaderRoute: typeof RodentFertilityControlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/results': {
@@ -363,6 +436,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FaqRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/evolve-rodent-birth-control': {
+      id: '/evolve-rodent-birth-control'
+      path: '/evolve-rodent-birth-control'
+      fullPath: '/evolve-rodent-birth-control'
+      preLoaderRoute: typeof EvolveRodentBirthControlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dohmh-rodent-violation-nyc': {
       id: '/dohmh-rodent-violation-nyc'
       path: '/dohmh-rodent-violation-nyc'
@@ -377,6 +457,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DoesRatBirthControlWorkRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contrapest-vs-evolve': {
+      id: '/contrapest-vs-evolve'
+      path: '/contrapest-vs-evolve'
+      fullPath: '/contrapest-vs-evolve'
+      preLoaderRoute: typeof ContrapestVsEvolveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contrapest': {
+      id: '/contrapest'
+      path: '/contrapest'
+      fullPath: '/contrapest'
+      preLoaderRoute: typeof ContrapestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -389,6 +483,13 @@ declare module '@tanstack/react-router' {
       path: '/areas'
       fullPath: '/areas/'
       preLoaderRoute: typeof AreasIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vs/diy-rat-birth-control': {
+      id: '/vs/diy-rat-birth-control'
+      path: '/vs/diy-rat-birth-control'
+      fullPath: '/vs/diy-rat-birth-control'
+      preLoaderRoute: typeof VsDiyRatBirthControlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/solutions/restaurants': {
@@ -459,14 +560,18 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ContrapestRoute: ContrapestRoute,
+  ContrapestVsEvolveRoute: ContrapestVsEvolveRoute,
   DoesRatBirthControlWorkRoute: DoesRatBirthControlWorkRoute,
   DohmhRodentViolationNycRoute: DohmhRodentViolationNycRoute,
+  EvolveRodentBirthControlRoute: EvolveRodentBirthControlRoute,
   FaqRoute: FaqRoute,
   GetStartedRoute: GetStartedRoute,
   HowItWorksRoute: HowItWorksRoute,
   NjRodentViolationRoute: NjRodentViolationRoute,
   ResourcesRoute: ResourcesRoute,
   ResultsRoute: ResultsRoute,
+  RodentFertilityControlRoute: RodentFertilityControlRoute,
   WhatToExpectRoute: WhatToExpectRoute,
   WhyItKeepsComingBackRoute: WhyItKeepsComingBackRoute,
   AreasAreaSlugRoute: AreasAreaSlugRoute,
@@ -478,6 +583,7 @@ const rootRouteChildren: RootRouteChildren = {
   SolutionsPropertyManagersRoute: SolutionsPropertyManagersRoute,
   SolutionsResidentialRoute: SolutionsResidentialRoute,
   SolutionsRestaurantsRoute: SolutionsRestaurantsRoute,
+  VsDiyRatBirthControlRoute: VsDiyRatBirthControlRoute,
   AreasIndexRoute: AreasIndexRoute,
 }
 export const routeTree = rootRouteImport
