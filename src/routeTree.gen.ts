@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WhyItKeepsComingBackRouteImport } from './routes/why-it-keeps-coming-back'
 import { Route as WhatToExpectRouteImport } from './routes/what-to-expect'
+import { Route as RodentFertilityControlRouteImport } from './routes/rodent-fertility-control'
 import { Route as ResultsRouteImport } from './routes/results'
 import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as NjRodentViolationRouteImport } from './routes/nj-rodent-violation'
@@ -42,6 +43,11 @@ const WhyItKeepsComingBackRoute = WhyItKeepsComingBackRouteImport.update({
 const WhatToExpectRoute = WhatToExpectRouteImport.update({
   id: '/what-to-expect',
   path: '/what-to-expect',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RodentFertilityControlRoute = RodentFertilityControlRouteImport.update({
+  id: '/rodent-fertility-control',
+  path: '/rodent-fertility-control',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResultsRoute = ResultsRouteImport.update({
@@ -171,6 +177,7 @@ export interface FileRoutesByFullPath {
   '/nj-rodent-violation': typeof NjRodentViolationRoute
   '/resources': typeof ResourcesRoute
   '/results': typeof ResultsRoute
+  '/rodent-fertility-control': typeof RodentFertilityControlRoute
   '/what-to-expect': typeof WhatToExpectRoute
   '/why-it-keeps-coming-back': typeof WhyItKeepsComingBackRoute
   '/areas/$areaSlug': typeof AreasAreaSlugRoute
@@ -197,6 +204,7 @@ export interface FileRoutesByTo {
   '/nj-rodent-violation': typeof NjRodentViolationRoute
   '/resources': typeof ResourcesRoute
   '/results': typeof ResultsRoute
+  '/rodent-fertility-control': typeof RodentFertilityControlRoute
   '/what-to-expect': typeof WhatToExpectRoute
   '/why-it-keeps-coming-back': typeof WhyItKeepsComingBackRoute
   '/areas/$areaSlug': typeof AreasAreaSlugRoute
@@ -224,6 +232,7 @@ export interface FileRoutesById {
   '/nj-rodent-violation': typeof NjRodentViolationRoute
   '/resources': typeof ResourcesRoute
   '/results': typeof ResultsRoute
+  '/rodent-fertility-control': typeof RodentFertilityControlRoute
   '/what-to-expect': typeof WhatToExpectRoute
   '/why-it-keeps-coming-back': typeof WhyItKeepsComingBackRoute
   '/areas/$areaSlug': typeof AreasAreaSlugRoute
@@ -252,6 +261,7 @@ export interface FileRouteTypes {
     | '/nj-rodent-violation'
     | '/resources'
     | '/results'
+    | '/rodent-fertility-control'
     | '/what-to-expect'
     | '/why-it-keeps-coming-back'
     | '/areas/$areaSlug'
@@ -278,6 +288,7 @@ export interface FileRouteTypes {
     | '/nj-rodent-violation'
     | '/resources'
     | '/results'
+    | '/rodent-fertility-control'
     | '/what-to-expect'
     | '/why-it-keeps-coming-back'
     | '/areas/$areaSlug'
@@ -304,6 +315,7 @@ export interface FileRouteTypes {
     | '/nj-rodent-violation'
     | '/resources'
     | '/results'
+    | '/rodent-fertility-control'
     | '/what-to-expect'
     | '/why-it-keeps-coming-back'
     | '/areas/$areaSlug'
@@ -331,6 +343,7 @@ export interface RootRouteChildren {
   NjRodentViolationRoute: typeof NjRodentViolationRoute
   ResourcesRoute: typeof ResourcesRoute
   ResultsRoute: typeof ResultsRoute
+  RodentFertilityControlRoute: typeof RodentFertilityControlRoute
   WhatToExpectRoute: typeof WhatToExpectRoute
   WhyItKeepsComingBackRoute: typeof WhyItKeepsComingBackRoute
   AreasAreaSlugRoute: typeof AreasAreaSlugRoute
@@ -359,6 +372,13 @@ declare module '@tanstack/react-router' {
       path: '/what-to-expect'
       fullPath: '/what-to-expect'
       preLoaderRoute: typeof WhatToExpectRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rodent-fertility-control': {
+      id: '/rodent-fertility-control'
+      path: '/rodent-fertility-control'
+      fullPath: '/rodent-fertility-control'
+      preLoaderRoute: typeof RodentFertilityControlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/results': {
@@ -531,6 +551,7 @@ const rootRouteChildren: RootRouteChildren = {
   NjRodentViolationRoute: NjRodentViolationRoute,
   ResourcesRoute: ResourcesRoute,
   ResultsRoute: ResultsRoute,
+  RodentFertilityControlRoute: RodentFertilityControlRoute,
   WhatToExpectRoute: WhatToExpectRoute,
   WhyItKeepsComingBackRoute: WhyItKeepsComingBackRoute,
   AreasAreaSlugRoute: AreasAreaSlugRoute,
