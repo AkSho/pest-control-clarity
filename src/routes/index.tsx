@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
-  ShieldCheck,
   Star,
   Phone,
   Check,
@@ -24,6 +23,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { LeadForm } from "@/components/site/LeadForm";
+import { HeroTrustBadges } from "@/components/site/TrustBadges";
+import { PressStrip } from "@/components/site/PressStrip";
 import heroImg from "@/assets/hero-urban.jpg";
 
 export const Route = createFileRoute("/")({
@@ -166,21 +167,19 @@ const FAQS = [
   },
 ];
 
-function TrustChips() {
+function HeroPills() {
+  const pills = ["Fertility Control", "Site Inspection", "Monthly Reporting"];
   return (
-    <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-ink-muted">
-      <div className="flex items-center gap-2">
-        <Star className="h-4 w-4 fill-current text-yellow-400" />
-        <span>4.9★ — operator reviews</span>
-      </div>
-      <div className="flex items-center gap-2">
-        <ShieldCheck className="h-4 w-4 text-brand" />
-        <span>EPA-designated minimum risk</span>
-      </div>
-      <div className="flex items-center gap-2">
-        <Check className="h-4 w-4 text-brand" />
-        <span>Month-to-month, documented</span>
-      </div>
+    <div className="mt-7 flex flex-wrap gap-2">
+      {pills.map((p) => (
+        <span
+          key={p}
+          className="inline-flex items-center gap-2 rounded-full border border-ink-border bg-white/5 px-4 py-2 text-sm font-semibold text-ink-foreground"
+        >
+          <Check className="h-4 w-4 text-brand" />
+          {p}
+        </span>
+      ))}
     </div>
   );
 }
@@ -201,10 +200,9 @@ function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/95 to-ink/70" />
         <div className="container-site relative grid gap-10 py-16 md:grid-cols-[1.1fr_0.9fr] md:py-24">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
-              NYC & NJ · Rodent Fertility Control
-            </p>
-            <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] md:text-6xl">
+            <HeroTrustBadges />
+
+            <h1 className="mt-7 text-4xl font-extrabold leading-[1.05] md:text-6xl">
               Every six weeks, the rodents are back.{" "}
               <span className="text-brand">We end that cycle.</span>
             </h1>
@@ -215,19 +213,13 @@ function HomePage() {
               and the replacement cycle breaks.
             </p>
 
+            <HeroPills />
+
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Button asChild size="lg" className="h-12 px-6 text-base">
                 <a href="#contact">
                   Get started <ArrowRight className="h-4 w-4" />
                 </a>
-              </Button>
-              <Button
-                asChild
-                variant="outline"
-                size="lg"
-                className="h-12 border-ink-border bg-transparent px-6 text-base text-ink-foreground hover:bg-white/5 hover:text-ink-foreground"
-              >
-                <a href="#how">Why it keeps happening</a>
               </Button>
               <a
                 href="tel:+18005550199"
@@ -237,8 +229,6 @@ function HomePage() {
                 (800) 555-0199
               </a>
             </div>
-
-            <TrustChips />
           </div>
 
           <div id="contact">
@@ -247,23 +237,8 @@ function HomePage() {
         </div>
       </section>
 
-      {/* CITIES STRIP */}
-      <section className="border-b border-border bg-surface">
-        <div className="container-site flex flex-col items-center gap-4 py-6 text-center md:flex-row md:justify-between md:py-5">
-          <div className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-            Cities already deploying fertility control
-          </div>
-          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-sm font-semibold text-foreground/80">
-            <span>New York City</span>
-            <span className="h-1 w-1 rounded-full bg-border" />
-            <span>Baltimore</span>
-            <span className="h-1 w-1 rounded-full bg-border" />
-            <span>Chicago</span>
-            <span className="h-1 w-1 rounded-full bg-border" />
-            <span>Wicker Park</span>
-          </div>
-        </div>
-      </section>
+      {/* PRESS STRIP */}
+      <PressStrip />
 
       {/* STATS */}
       <section id="data" className="bg-background py-20">
@@ -434,20 +409,23 @@ function HomePage() {
 
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
               {[
-                "Manhattan, NY",
-                "Brooklyn, NY",
-                "Queens, NY",
-                "Bronx, NY",
-                "Staten Island, NY",
-                "Jersey City, NJ",
-                "Newark, NJ",
-                "Hoboken, NJ",
-                "Elizabeth, NJ",
-              ].map((label) => (
+                { label: "Manhattan, NY", slug: "manhattan-ny" },
+                { label: "Brooklyn, NY", slug: "manhattan-ny" },
+                { label: "Queens, NY", slug: "manhattan-ny" },
+                { label: "Bronx, NY", slug: "manhattan-ny" },
+                { label: "Staten Island, NY", slug: "manhattan-ny" },
+                { label: "Jersey City, NJ", slug: "manhattan-ny" },
+                { label: "Newark, NJ", slug: "manhattan-ny" },
+                { label: "Hoboken, NJ", slug: "manhattan-ny" },
+                { label: "Elizabeth, NJ", slug: "manhattan-ny" },
+                { label: "San Francisco, CA", slug: "san-francisco-ca" },
+                { label: "Oakland, CA", slug: "oakland-ca" },
+                { label: "San Jose, CA", slug: "san-jose-ca" },
+              ].map(({ label, slug }) => (
                 <Link
                   key={label}
                   to="/areas/$areaSlug"
-                  params={{ areaSlug: "manhattan-ny" }}
+                  params={{ areaSlug: slug }}
                   className="group flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3 text-sm font-semibold transition hover:border-brand hover:bg-brand-soft"
                 >
                   {label}

@@ -1,81 +1,60 @@
-## Goal
+# Refinement Pass — Palette + nealrfg Congruency
 
-Replace the current "AI-built" feel of cloakd-removals.cloud with a polished, conversion-focused design language modeled on nealrfg.com, while preserving the existing SEO copy. This round delivers:
+No copy changes. Visual + structural only.
 
-1. A new design system (tokens, type, components) ready for the rest of the site
-2. A new home page that mirrors nealrfg.com's section composition 1:1, populated with Cloakd's existing copy
-3. One data-driven service-area template + one example route to validate the SEO pattern
+## 1. Brand palette — "Ratatouille"
 
-Service-area pages at scale, blog, gallery, and inner service pages are explicitly out of scope for this round.
+Pulled from the DVD cover: deep cobalt navy (oval), warm cream/gold (title type + window light), terracotta red (tomato), soft sky.
 
-## Prerequisites (you do these)
+Tokens in `src/styles.css` (oklch):
+- `--ink` (dark surfaces / header / hero / footer): deep cobalt navy ≈ `oklch(0.22 0.09 260)` — matches the oval.
+- `--brand` (primary CTA / accent): bright royal blue ≈ `oklch(0.55 0.21 262)` — the "Pixar" lift on navy.
+- `--brand-soft`: pale cream-blue tint for soft backgrounds.
+- `--accent-warm` (NEW): warm gold/cream ≈ `oklch(0.86 0.11 85)` — used sparingly for "Free", underlines, highlight words.
+- `--accent-tomato` (NEW): terracotta red ≈ `oklch(0.62 0.18 30)` — used for the top bar "license/phone" strip and small badges (rare).
+- Page background stays near-white; `--surface` slightly cooler.
+- Dark mode tokens updated to match.
 
-1. Connect this Lovable project to your public GitHub repo via the Plus (+) menu → GitHub → Connect project so I can read the live source, copy, and current routes.
-2. Send brand color inspo (palette references, hex values, or a screenshot). Until that arrives I'll work against placeholder tokens and swap them in once you confirm.
+## 2. nealrfg congruency gaps to close (home page only)
 
-## Design system
+Identified by side-by-side review of `nealrfg.com`:
 
-Tokens defined in `src/styles.css` using `oklch`, mirroring Neal's structure:
+1. **Top bar** — solid royal-blue band (not muted). Left: "Pest Control License: #XXXXXXX" (placeholder #). Right: phone with phone icon. White text, full-width.
+2. **Header** — dark navy bar, logo left, text nav center, bright blue pill CTA right with arrow icon.
+3. **Hero trust badges** — replace current small chip row. Use nealrfg's two-badge layout above the H1:
+   - Left: laurel-wreath frame around "4.9★ — operator reviews" style block.
+   - Right: shield icon + two-line "EPA-DESIGNATED / MINIMUM RISK" block.
+   - Built with inline SVG (laurel + shield) — no new image gen needed.
+4. **Hero service pills** — three rounded dark pills with check icons under the hero paragraph: "Fertility Control", "Site Inspection", "Monthly Reporting" (using existing service titles, no new copy).
+5. **Hero lead form** — restyle as elevated card on dark hero with: "Schedule your **FREE**" eyebrow, "Site Walkthrough Today!" headline, inputs styled flat-white, full-width primary CTA, fine-print legal line, and a **G / Facebook / BBB ratings row** beneath the submit (icon + "4.9 RATING" stack ×3). All using existing form fields — no new data captured.
+6. **"As seen on" press strip** — NEW section directly under hero with 4–5 grayscale press/association logos (placeholder marks: NYC DOHMH-style, Eater, Crain's, Time Out, BBB). Pure visual, no copy change.
+7. **Section rhythm** — confirmed mirrors nealrfg: hero → press → stats → process → services → who/audience → locations → testimonials → FAQ → CTA band → footer. Current order matches; only visual polish needed on each band's eyebrow/heading scale to match nealrfg's tighter type ramp.
+8. **CTA band** before footer — convert to full-bleed navy with cream-gold underline accent on the key noun (no copy change).
+9. **Footer** — nealrfg uses dark navy with column layout (Company / Services / Locations / Contact) + license line + socials. Restructure to match.
 
-- **Surfaces**: deep navy/near-black hero bg, light neutral page bg, white cards, subtle borders
-- **Accent**: single strong action color (TBD from your inspo) used for CTAs and key highlights
-- **Type**: bold sans display for headlines (e.g. Inter/Geist tight tracking), readable sans for body; large H1, generous line-height
-- **Radius**: medium (Neal uses ~12–16px on cards and inputs)
-- **Shadows**: soft elevation on the lead-form card and floating CTA
-- **Component variants**: primary/secondary/ghost buttons, input, select, card, badge, pill, list-check, accordion (FAQ), star-rating row, "as seen on" logo strip
+## 3. Service-area cities
 
-Reusable building blocks added under `src/components/site/`:
-`SiteHeader`, `SiteFooter`, `TopBar` (license + phone), `LeadForm`, `Hero`, `LogoStrip`, `ServiceCard`, `ServiceGrid`, `LocationsSection`, `ProcessSteps`, `TestimonialsRow`, `FAQ`, `CTASection`, `TrustBadges`.
+Update `src/routes/index.tsx` city grid AND `SiteFooter` locations column to add:
+- San Francisco, CA
+- Oakland, CA
+- San Jose, CA
 
-## Home page composition (mirrors nealrfg.com 1:1)
+Add matching entries to `src/data/serviceAreas.ts` so the `/areas/$areaSlug` template resolves for each (slug: `san-francisco-ca`, `oakland-ca`, `san-jose-ca`). Reuse the existing Manhattan record's structure with city/state/region="CA" swapped — no new copy authored beyond city/state/neighborhood labels.
 
-Order, swapped to Cloakd's existing copy:
+Also: update the "Cities already deploying fertility control" strip (currently NYC / Baltimore / Chicago / Wicker Park) to reflect the actual service footprint — confirm before edit.
 
-1. Top utility bar: credential/license line + click-to-call phone
-2. Sticky header: logo, primary nav (Services, Service Areas, About, FAQ, Blog), phone CTA button
-3. Hero (dark): headline + subhead, two CTA buttons, trust chips ("4.9★", credentials), inline lead form card on the right
-4. "As seen on" / credibility logo strip
-5. Stat row (use Cloakd's 79% / 88% / 90% existing stats, restyled as Neal's stat cards)
-6. Services grid (3–4 cards: fertility control program, inspection, exclusion, ongoing monitoring — mapped from current site)
-7. Service areas section: NYC & NJ map/list with linked sample area
-8. "How it works" / process steps (use the existing 4-step cycle-break narrative, restyled as Neal's process)
-9. Why-us / differentiators (Neal's value-prop band)
-10. Testimonials row
-11. FAQ accordion (port existing FAQs)
-12. Final CTA band (dark, accent button, phone)
-13. Footer: NAP, services, areas, legal, social
+## 4. Out of scope (unchanged)
 
-Slop-sweep rules (per design directives): no extra "trusted by" filler, no duplicate CTAs Neal doesn't have, no decorative icons that don't appear in the reference, restrained motion only.
-
-## Service-area template (data-driven)
-
-- Route: `src/routes/areas.$areaSlug.tsx` (TanStack file-based, dynamic param)
-- Data: `src/data/serviceAreas.ts` exporting an array of `{ slug, city, state, neighborhoods[], heroImage, intro, localProof, faqs[], nearbyAreas[] }`
-- One sample entry built end-to-end (e.g. `manhattan-ny`) so you can see the template render at `/areas/manhattan-ny`
-- Page composition: localized hero, local stat/proof, services offered in the area, local process, neighborhoods served list, area-specific FAQs, CTA + footer
-- `head()` per route generates SEO-correct `<title>`, `description`, `og:title`, `og:description`, canonical from the data record — matching the SEO-template pattern Neal uses for their location pages
-- Adding a new city later = add a new entry to the data file (no new route file)
-
-## Out of scope this round
-
-- Inner service detail pages, blog, gallery, financing, refer-a-friend
-- CMS wiring for service areas
-- Form backend (lead form will post to a stub handler; Cloud wiring comes in a follow-up if you want it)
-- Logo redesign
+- All marketing copy stays exactly as written.
+- No new pages, no inner service pages, no blog/gallery/financing.
+- Logo not redesigned (placeholder wordmark stays).
+- LeadForm submission behavior unchanged.
 
 ## Technical notes
 
-- TanStack Start file-based routes under `src/routes/` (no `src/pages/`)
-- Tailwind v4 via `src/styles.css` `@theme inline` — all colors as semantic tokens, never raw hex in components
-- Each route defines its own `head()` (no shared metadata)
-- Images: use existing Cloakd assets where available; placeholders flagged as `data-lov-image-placeholder` for any net-new hero/stat imagery so I can generate them in a follow-up pass
-
-## Deliverable checklist
-
-- [ ] GitHub connected, repo synced
-- [ ] Brand color tokens applied from your inspo
-- [ ] `src/styles.css` tokens + base components
-- [ ] `src/routes/index.tsx` rebuilt to Neal's 1:1 composition with Cloakd copy
-- [ ] `src/data/serviceAreas.ts` + `src/routes/areas.$areaSlug.tsx` with 1 sample area live
-- [ ] Header/footer shared via `__root.tsx` layout
-- [ ] Per-route `head()` metadata on home and sample area page
+- Tokens: extend `@theme inline` with `--color-accent-warm` and `--color-accent-tomato`; map to new CSS vars in `:root` and `.dark`.
+- Trust badges: inline SVG components in `src/components/site/TrustBadges.tsx` (laurel + shield), consumed by hero.
+- Press strip: `src/components/site/PressStrip.tsx` with monochrome inline SVG marks.
+- Ratings row: `src/components/site/RatingsRow.tsx` (G / FB / BBB icons via lucide + simple inline SVG).
+- LeadForm: restyle internals only; no prop/API changes.
+- Service area data: extend `SERVICE_AREAS` array; route file unchanged.

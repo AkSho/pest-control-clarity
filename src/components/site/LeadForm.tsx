@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Check } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
+import { RatingsRow } from "./RatingsRow";
 
 export function LeadForm({ compact = false }: { compact?: boolean }) {
   const [submitted, setSubmitted] = useState(false);
@@ -27,14 +28,15 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
         e.preventDefault();
         setSubmitted(true);
       }}
-      className="rounded-2xl bg-card p-6 shadow-[var(--shadow-elevated)] md:p-7"
+      className="rounded-2xl bg-card p-6 shadow-[var(--shadow-elevated)] md:p-8"
     >
       <div className="text-center">
         <p className="text-sm text-muted-foreground">
-          Schedule your <span className="font-bold underline underline-offset-2 text-foreground">FREE</span>
+          Schedule your{" "}
+          <span className="font-bold underline underline-offset-2 text-foreground">FREE</span>
         </p>
-        <h3 className="mt-1 text-lg font-bold leading-tight md:text-xl">
-          Site Walkthrough & Program Estimate
+        <h3 className="mt-1 text-xl font-extrabold leading-tight md:text-2xl">
+          Site Walkthrough &amp; Program Estimate
         </h3>
       </div>
 
@@ -65,8 +67,12 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
       </p>
 
       <Button type="submit" className="mt-4 h-12 w-full text-base">
-        Request Walkthrough
+        Schedule Free Walkthrough <ArrowRight className="h-4 w-4" />
       </Button>
+
+      <div className="mt-5">
+        <RatingsRow />
+      </div>
     </form>
   );
 }
