@@ -51,6 +51,8 @@ export function SiteFooter() {
             <li><Link to="/results" className="hover:text-brand">Results</Link></li>
             <li><Link to="/faq" className="hover:text-brand">FAQ</Link></li>
             <li><Link to="/resources" className="hover:text-brand">Resources</Link></li>
+            <li><Link to="/dohmh-rodent-violation-nyc" className="hover:text-brand">DOHMH violation (NYC)</Link></li>
+            <li><Link to="/nj-rodent-violation" className="hover:text-brand">NJ rodent violation</Link></li>
             <li><Link to="/get-started" className="hover:text-brand">Get Started</Link></li>
           </ul>
         </div>
