@@ -57,44 +57,36 @@ export function Eyebrow({
 }
 
 function Laurel({ side }: { side: "left" | "right" }) {
-  // Left-facing branch: curved spine sweeping up-and-left, with paired leaves.
-  // Right side mirrors via -scale-x-100.
+  // Single half-laurel curving up & to the right from a base on the right side.
+  // The element is mirrored for the right side via -scale-x-100.
   return (
     <svg
-      viewBox="0 0 40 28"
-      width="34"
-      height="22"
+      viewBox="0 0 48 36"
+      width="40"
+      height="30"
       fill="currentColor"
       aria-hidden="true"
       className={cn("shrink-0 opacity-90", side === "right" && "-scale-x-100")}
     >
-      {/* Spine */}
+      {/* Curved spine arching up from bottom-right to top-left */}
       <path
-        d="M38 14 C 30 4, 16 4, 4 12"
+        d="M46 30 C 36 30, 18 24, 6 6"
         fill="none"
         stroke="currentColor"
         strokeWidth="1.4"
         strokeLinecap="round"
       />
-      <path
-        d="M38 14 C 30 24, 16 24, 4 16"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-      />
-      {/* Upper leaves (each is a rotated ellipse) */}
-      <ellipse cx="32" cy="9" rx="3.2" ry="1.4" transform="rotate(-30 32 9)" />
-      <ellipse cx="25" cy="6.5" rx="3.4" ry="1.4" transform="rotate(-20 25 6.5)" />
-      <ellipse cx="18" cy="5.5" rx="3.4" ry="1.4" transform="rotate(-10 18 5.5)" />
-      <ellipse cx="11" cy="6.2" rx="3.2" ry="1.3" transform="rotate(0 11 6.2)" />
-      <ellipse cx="5.5" cy="8.5" rx="2.8" ry="1.2" transform="rotate(15 5.5 8.5)" />
-      {/* Lower leaves */}
-      <ellipse cx="32" cy="19" rx="3.2" ry="1.4" transform="rotate(30 32 19)" />
-      <ellipse cx="25" cy="21.5" rx="3.4" ry="1.4" transform="rotate(20 25 21.5)" />
-      <ellipse cx="18" cy="22.5" rx="3.4" ry="1.4" transform="rotate(10 18 22.5)" />
-      <ellipse cx="11" cy="21.8" rx="3.2" ry="1.3" transform="rotate(0 11 21.8)" />
-      <ellipse cx="5.5" cy="19.5" rx="2.8" ry="1.2" transform="rotate(-15 5.5 19.5)" />
+      {/* Outer leaves (above the spine) — long axis points up-and-out */}
+      <ellipse cx="40" cy="24" rx="4.5" ry="1.8" transform="rotate(-55 40 24)" />
+      <ellipse cx="32" cy="18" rx="5"   ry="1.9" transform="rotate(-65 32 18)" />
+      <ellipse cx="24" cy="13" rx="5"   ry="1.9" transform="rotate(-75 24 13)" />
+      <ellipse cx="16" cy="9"  rx="4.5" ry="1.8" transform="rotate(-85 16 9)"  />
+      <ellipse cx="9"  cy="6"  rx="3.8" ry="1.6" transform="rotate(-95 9 6)"   />
+      {/* Inner leaves (below the spine) — fewer, smaller */}
+      <ellipse cx="36" cy="29" rx="3.6" ry="1.5" transform="rotate(-25 36 29)" />
+      <ellipse cx="28" cy="24" rx="4"   ry="1.6" transform="rotate(-35 28 24)" />
+      <ellipse cx="20" cy="19" rx="4"   ry="1.6" transform="rotate(-45 20 19)" />
+      <ellipse cx="13" cy="14" rx="3.6" ry="1.5" transform="rotate(-55 13 14)" />
     </svg>
   );
 }
