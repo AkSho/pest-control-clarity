@@ -303,6 +303,14 @@ function BirthControlPage() {
               </ul>
             </div>
           </div>
+          <p className="mt-6 text-sm">
+            <Link
+              to="/contrapest-vs-evolve"
+              className="font-semibold text-brand underline-offset-2 hover:underline"
+            >
+              See the full comparison →
+            </Link>
+          </p>
         </div>
       </section>
 
