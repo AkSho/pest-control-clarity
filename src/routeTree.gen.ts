@@ -10,10 +10,13 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WhyItKeepsComingBackRouteImport } from './routes/why-it-keeps-coming-back'
+import { Route as WhatToExpectRouteImport } from './routes/what-to-expect'
 import { Route as ResultsRouteImport } from './routes/results'
 import { Route as ResourcesRouteImport } from './routes/resources'
+import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as GetStartedRouteImport } from './routes/get-started'
 import { Route as FaqRouteImport } from './routes/faq'
+import { Route as DoesRatBirthControlWorkRouteImport } from './routes/does-rat-birth-control-work'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SolutionsRestaurantsRouteImport } from './routes/solutions.restaurants'
 import { Route as SolutionsResidentialRouteImport } from './routes/solutions.residential'
@@ -30,6 +33,11 @@ const WhyItKeepsComingBackRoute = WhyItKeepsComingBackRouteImport.update({
   path: '/why-it-keeps-coming-back',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WhatToExpectRoute = WhatToExpectRouteImport.update({
+  id: '/what-to-expect',
+  path: '/what-to-expect',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResultsRoute = ResultsRouteImport.update({
   id: '/results',
   path: '/results',
@@ -40,6 +48,11 @@ const ResourcesRoute = ResourcesRouteImport.update({
   path: '/resources',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HowItWorksRoute = HowItWorksRouteImport.update({
+  id: '/how-it-works',
+  path: '/how-it-works',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GetStartedRoute = GetStartedRouteImport.update({
   id: '/get-started',
   path: '/get-started',
@@ -48,6 +61,11 @@ const GetStartedRoute = GetStartedRouteImport.update({
 const FaqRoute = FaqRouteImport.update({
   id: '/faq',
   path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DoesRatBirthControlWorkRoute = DoesRatBirthControlWorkRouteImport.update({
+  id: '/does-rat-birth-control-work',
+  path: '/does-rat-birth-control-work',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -105,10 +123,13 @@ const AreasAreaSlugRoute = AreasAreaSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/does-rat-birth-control-work': typeof DoesRatBirthControlWorkRoute
   '/faq': typeof FaqRoute
   '/get-started': typeof GetStartedRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/resources': typeof ResourcesRoute
   '/results': typeof ResultsRoute
+  '/what-to-expect': typeof WhatToExpectRoute
   '/why-it-keeps-coming-back': typeof WhyItKeepsComingBackRoute
   '/areas/$areaSlug': typeof AreasAreaSlugRoute
   '/solutions/$slug': typeof SolutionsSlugRoute
@@ -122,10 +143,13 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/does-rat-birth-control-work': typeof DoesRatBirthControlWorkRoute
   '/faq': typeof FaqRoute
   '/get-started': typeof GetStartedRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/resources': typeof ResourcesRoute
   '/results': typeof ResultsRoute
+  '/what-to-expect': typeof WhatToExpectRoute
   '/why-it-keeps-coming-back': typeof WhyItKeepsComingBackRoute
   '/areas/$areaSlug': typeof AreasAreaSlugRoute
   '/solutions/$slug': typeof SolutionsSlugRoute
@@ -140,10 +164,13 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/does-rat-birth-control-work': typeof DoesRatBirthControlWorkRoute
   '/faq': typeof FaqRoute
   '/get-started': typeof GetStartedRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/resources': typeof ResourcesRoute
   '/results': typeof ResultsRoute
+  '/what-to-expect': typeof WhatToExpectRoute
   '/why-it-keeps-coming-back': typeof WhyItKeepsComingBackRoute
   '/areas/$areaSlug': typeof AreasAreaSlugRoute
   '/solutions/$slug': typeof SolutionsSlugRoute
@@ -159,10 +186,13 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/does-rat-birth-control-work'
     | '/faq'
     | '/get-started'
+    | '/how-it-works'
     | '/resources'
     | '/results'
+    | '/what-to-expect'
     | '/why-it-keeps-coming-back'
     | '/areas/$areaSlug'
     | '/solutions/$slug'
@@ -176,10 +206,13 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/does-rat-birth-control-work'
     | '/faq'
     | '/get-started'
+    | '/how-it-works'
     | '/resources'
     | '/results'
+    | '/what-to-expect'
     | '/why-it-keeps-coming-back'
     | '/areas/$areaSlug'
     | '/solutions/$slug'
@@ -193,10 +226,13 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/does-rat-birth-control-work'
     | '/faq'
     | '/get-started'
+    | '/how-it-works'
     | '/resources'
     | '/results'
+    | '/what-to-expect'
     | '/why-it-keeps-coming-back'
     | '/areas/$areaSlug'
     | '/solutions/$slug'
@@ -211,10 +247,13 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DoesRatBirthControlWorkRoute: typeof DoesRatBirthControlWorkRoute
   FaqRoute: typeof FaqRoute
   GetStartedRoute: typeof GetStartedRoute
+  HowItWorksRoute: typeof HowItWorksRoute
   ResourcesRoute: typeof ResourcesRoute
   ResultsRoute: typeof ResultsRoute
+  WhatToExpectRoute: typeof WhatToExpectRoute
   WhyItKeepsComingBackRoute: typeof WhyItKeepsComingBackRoute
   AreasAreaSlugRoute: typeof AreasAreaSlugRoute
   SolutionsSlugRoute: typeof SolutionsSlugRoute
@@ -236,6 +275,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WhyItKeepsComingBackRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/what-to-expect': {
+      id: '/what-to-expect'
+      path: '/what-to-expect'
+      fullPath: '/what-to-expect'
+      preLoaderRoute: typeof WhatToExpectRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/results': {
       id: '/results'
       path: '/results'
@@ -250,6 +296,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResourcesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/how-it-works': {
+      id: '/how-it-works'
+      path: '/how-it-works'
+      fullPath: '/how-it-works'
+      preLoaderRoute: typeof HowItWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/get-started': {
       id: '/get-started'
       path: '/get-started'
@@ -262,6 +315,13 @@ declare module '@tanstack/react-router' {
       path: '/faq'
       fullPath: '/faq'
       preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/does-rat-birth-control-work': {
+      id: '/does-rat-birth-control-work'
+      path: '/does-rat-birth-control-work'
+      fullPath: '/does-rat-birth-control-work'
+      preLoaderRoute: typeof DoesRatBirthControlWorkRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -339,10 +399,13 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DoesRatBirthControlWorkRoute: DoesRatBirthControlWorkRoute,
   FaqRoute: FaqRoute,
   GetStartedRoute: GetStartedRoute,
+  HowItWorksRoute: HowItWorksRoute,
   ResourcesRoute: ResourcesRoute,
   ResultsRoute: ResultsRoute,
+  WhatToExpectRoute: WhatToExpectRoute,
   WhyItKeepsComingBackRoute: WhyItKeepsComingBackRoute,
   AreasAreaSlugRoute: AreasAreaSlugRoute,
   SolutionsSlugRoute: SolutionsSlugRoute,

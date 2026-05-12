@@ -19,6 +19,24 @@ const NAV: { label: string; to: string }[] = [
   { label: "Resources", to: "/resources" },
 ];
 
+const PROGRAM_LINKS: { label: string; to: string; eyebrow: string }[] = [
+  {
+    label: "How it works",
+    to: "/how-it-works",
+    eyebrow: "The 90-day program in plain language",
+  },
+  {
+    label: "Does rat birth control work?",
+    to: "/does-rat-birth-control-work",
+    eyebrow: "Bryant Park failed. Here's what's different.",
+  },
+  {
+    label: "What to expect",
+    to: "/what-to-expect",
+    eyebrow: "Every step before you commit to anything",
+  },
+];
+
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [mobileSolutionsOpen, setMobileSolutionsOpen] = useState(false);
@@ -50,6 +68,31 @@ export function SiteHeader() {
                     The Problem
                   </Link>
                 </NavigationMenuLink>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="!bg-transparent text-ink-foreground/85 hover:!bg-white/5 hover:!text-ink-foreground data-[state=open]:!bg-white/5 data-[state=open]:!text-ink-foreground">
+                  Program
+                </NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid w-[420px] gap-1 p-3">
+                    {PROGRAM_LINKS.map((p) => (
+                      <li key={p.to}>
+                        <NavigationMenuLink asChild>
+                          <Link
+                            to={p.to}
+                            className="block rounded-md p-3 text-sm leading-none text-foreground transition hover:bg-accent hover:text-accent-foreground"
+                          >
+                            <div className="font-semibold">{p.label}</div>
+                            <div className="mt-1 line-clamp-2 text-xs text-muted-foreground">
+                              {p.eyebrow}
+                            </div>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
               </NavigationMenuItem>
 
               <NavigationMenuItem>
@@ -124,6 +167,17 @@ export function SiteHeader() {
             >
               The Problem
             </Link>
+
+            {PROGRAM_LINKS.map((p) => (
+              <Link
+                key={p.to}
+                to={p.to}
+                onClick={() => setOpen(false)}
+                className="rounded-md px-3 py-2 text-sm font-medium text-ink-foreground hover:bg-white/5"
+              >
+                {p.label}
+              </Link>
+            ))}
 
             <button
               onClick={() => setMobileSolutionsOpen((v) => !v)}
