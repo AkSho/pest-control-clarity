@@ -8,7 +8,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { LeadForm } from "@/components/site/LeadForm";
-import { getServiceArea, SERVICE_AREAS, type ServiceArea } from "@/data/serviceAreas";
+import { getServiceArea, getJurisdiction, SERVICE_AREAS, type ServiceArea } from "@/data/serviceAreas";
+import { SOLUTIONS } from "@/data/solutions";
 
 export const Route = createFileRoute("/areas/$areaSlug")({
   loader: ({ params }) => {
@@ -66,9 +67,9 @@ function AreaPage() {
               <MapPin className="h-3.5 w-3.5" />
               {area.region} · {area.city}, {area.state}
             </div>
-            <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] md:text-5xl">
+            <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] text-white md:text-5xl">
               Rodent Fertility Control in{" "}
-              <span className="text-brand">
+              <span className="text-accent-warm">
                 {area.city}, {area.state}
               </span>
             </h1>
@@ -128,6 +129,37 @@ function AreaPage() {
         </div>
       </section>
 
+      {/* SOLUTIONS STRIP */}
+      <section className="bg-background py-16">
+        <div className="container-site">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+            Who we work with in {area.city}
+          </p>
+          <h2 className="mt-4 max-w-3xl text-2xl font-extrabold leading-tight md:text-4xl">
+            We run the program for these operators in {area.city}.
+          </h2>
+          <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {SOLUTIONS.slice(0, 4).map((s) => (
+              <Link
+                key={s.slug}
+                to="/solutions/$slug"
+                params={{ slug: s.slug }}
+                className="group flex flex-col rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)] transition hover:border-brand hover:bg-brand-soft"
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-soft text-brand">
+                  <s.icon className="h-5 w-5" />
+                </div>
+                <div className="mt-4 text-base font-bold">{s.audience}</div>
+                <div className="mt-1 text-sm text-muted-foreground line-clamp-2">{s.eyebrow}</div>
+                <div className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand">
+                  Explore solution <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* PROCESS */}
       <section className="bg-background py-16">
         <div className="container-site">
@@ -156,6 +188,43 @@ function AreaPage() {
                 </div>
                 <h3 className="mt-4 text-base font-bold">{p.t}</h3>
                 <p className="mt-1 text-sm text-muted-foreground leading-relaxed">{p.b}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* WHY CITY */}
+      <section className="bg-background py-16">
+        <div className="container-site">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+            Why {area.city} operators choose Cloakd
+          </p>
+          <h2 className="mt-4 max-w-3xl text-2xl font-extrabold leading-tight md:text-4xl">
+            Built for {area.city}'s replacement cycle.
+          </h2>
+          <div className="mt-10 grid gap-5 md:grid-cols-3">
+            {[
+              {
+                t: `Local pressure data, not a national average`,
+                b: `We baseline your block, then track the decline cycle by cycle. The numbers reflect your address — not a study somewhere else.`,
+              },
+              {
+                t: `Layered onto your existing vendor`,
+                b: `No contract switch in ${area.city}. Whatever pest control you already pay for keeps doing knockdown. We add the fertility layer on top.`,
+              },
+              {
+                t: `Documented for ${getJurisdiction(area)}`,
+                b: `Monthly reports formatted to show ${getJurisdiction(area)} inspectors, ownership, or franchise corporate. The numbers are yours to use.`,
+              },
+            ].map((r) => (
+              <div
+                key={r.t}
+                className="rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-card)]"
+              >
+                <Check className="h-5 w-5 text-brand" />
+                <h3 className="mt-4 text-base font-bold leading-tight">{r.t}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{r.b}</p>
               </div>
             ))}
           </div>

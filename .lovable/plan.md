@@ -1,64 +1,59 @@
-## Chunk: Service Areas (/areas/*)
+## Chunk: Areas pages — contrast fix + Neal-style optimizations
 
-The dynamic `/areas/$areaSlug` template already exists and renders cleanly. The live cloakd-removals.cloud site has no `/areas/*` pages, so this chunk is original content that **expands** the live footprint to reflect three real service regions: NYC, NJ, and the Bay Area.
+### 1. Heading contrast fix (the real bug)
 
-### 1. Fix region tags in `src/data/serviceAreas.ts`
+The `<h1>` on `/areas/$areaSlug` highlights `{city}, {state}` with `text-brand` on the dark `ink-section` hero. `text-brand` is the same teal-ish hue as the dark background tint and reads as low-contrast — same problem we already solved on the home page hero by switching the highlight span to `text-accent-warm` (warm yellow). The base `<h1>` text also lacks an explicit light color and is relying on inheritance.
 
-Currently SF / Oakland / San Jose are tagged `region: "NYC"` — clearly a typo. Widen the union and correct the tags.
+Fix in `src/routes/areas.$areaSlug.tsx`:
+- `<h1 className="... text-white">` (match home + solution heroes)
+- `<span className="text-accent-warm">{city}, {state}</span>` (replace `text-brand`)
+- Hero `<p>` keep `text-ink-muted` (already correct)
 
-```ts
-region: "NYC" | "NJ" | "Bay Area";
+The `/areas` index hero already uses `text-white` + `text-accent-warm` correctly — leave it alone.
+
+### 2. Reference review: nealrfg.com/locations/{city}-fl
+
+Neal Roofing's location-page pattern (their SEO is well-tuned for local landing pages):
+
+```
+1. Hero (form + city-name H1 + trust badges)
+2. Services grid for that city — 4 cards, each linking to /{city}/{service}
+3. Trust strip (4.9★, warranty)
+4. "Why choose us in {city}" — 3 local-reason cards w/ check icons
+5. "The Neal Advantage" — 3 more reasons w/ supporting image
+6. FAQ accordion
+7. Contact form
+8. "Service Area" map / blurb at bottom
+9. External link to authoritative city site (e.g. myboca.us) for SEO trust
 ```
 
-- `manhattan-ny` → NYC
-- `san-francisco-ca`, `oakland-ca`, `san-jose-ca` → Bay Area
+Our current page already has: hero, local proof, 4-step process, neighborhoods grid, FAQ, nearby areas, CTA. The two clear gaps vs Neal are **(a) a per-city Solutions cards strip** and **(b) a "Why {city} operators choose Cloakd" three-reason block** with explicit local hooks.
 
-### 2. Expand SERVICE_AREAS
+### 3. Add a per-city Solutions strip
 
-Add the missing cities. Each entry follows the existing shape (`intro`, `localProof`, `neighborhoods`, `faqs`, `nearbyAreas`). Re-use the standard 4-FAQ block with light city-specific edits.
+Insert after Local Proof, before Process. Renders 3–4 `SOLUTIONS` cards cross-linked to `/solutions/$slug`, framed as "We run the program for these operators in {city}." Reuses the existing `SOLUTIONS` data and styling pattern from `OtherSolutions`. No new components.
 
-NYC region (add):
-- `brooklyn-ny` — Brooklyn, NY (Williamsburg, Bushwick, DUMBO, Park Slope, Crown Heights, Bed-Stuy, Sunset Park, Bay Ridge)
-- `queens-ny` — Queens, NY (LIC, Astoria, Jackson Heights, Flushing, Forest Hills, Ridgewood)
-- `bronx-ny` — Bronx, NY (Mott Haven, Fordham, Riverdale, Hunts Point)
-- `staten-island-ny` — Staten Island, NY (St. George, Stapleton, Tottenville)
+### 4. Add a "Why {city} operators choose Cloakd" three-reason block
 
-NJ region (add):
-- `jersey-city-nj` — Downtown, Journal Square, Heights, Greenville
-- `hoboken-nj`
-- `newark-nj` — Ironbound, Downtown, University Heights
-- `bayonne-nj`
+Insert between Process and Neighborhoods. Three local-flavored reasons mirroring Neal's pattern:
+- **Local pressure data** — we measure your block, not a national average
+- **Layered onto your existing vendor** — no contract switch in {city}
+- **Documented for {jurisdiction}** — DOHMH (NYC) / local NJ health / local CA health
 
-Bay Area is already covered (SF / Oakland / San Jose).
+Pulls jurisdiction string from the existing FAQ helper logic — extend `ServiceArea` with an optional `jurisdiction: string` field (defaulting to "your local health inspector") so the card text is correct per region. Backfill all 13 cities.
 
-Also fix the existing `manhattan-ny.nearbyAreas` entries — they currently all point to `slug: "manhattan-ny"` (broken). Wire them to the new Brooklyn / Queens / Jersey City slugs.
+### 5. Optional: external authoritative city link
 
-### 3. New `/areas` index route
+Neal links to the official city government / chamber site in their "Customer-Centric Approach" copy. We can mirror this lightly by adding an optional `cityOfficialUrl` to `ServiceArea` and rendering "Serving the city of {city}" with that link in the local-proof section. **Skipping this** unless you ask for it — it requires sourcing 13 correct URLs and adds little to conversion.
 
-`src/routes/areas.index.tsx` — coverage hub.
+### 6. Out of scope
 
-Layout:
-- `SolutionHero`-style header: "Where Cloakd runs the program" + intro + LeadForm (compact)
-- Three region columns: **NYC**, **New Jersey**, **Bay Area** — each lists its cities as `<Link to="/areas/$areaSlug">` cards
-- `FieldDataTrio` (79% / 88% / 90%)
-- `ClosingCta` ("Don't see your city? We're expanding — tell us where.")
+- Per-city service deep pages (`/areas/{city}/restaurants`, etc.) — Neal has these but for our smaller area set, the per-city Solutions strip linking to the existing `/solutions/$slug` pages covers the same SEO ground without route explosion.
+- Service-area map at bottom — would need a static map asset per city; defer.
+- The `/areas` index page is fine as-is.
 
-`head()` with a coverage-focused title + description.
+### Files touched
 
-### 4. Nav + cross-linking
-
-- `SiteHeader.tsx` — add an "Areas" dropdown listing the three regions and an "All service areas" link to `/areas`. Keep mobile drawer in sync.
-- `SiteFooter.tsx` — add an "Areas" column with the region groups.
-- `index.tsx` (home) — if there's a "Service Areas" or footer-adjacent strip, add the new cities; otherwise leave alone.
-
-### 5. Out of scope (handled in later chunks)
-
-- `/get-started` rewrite to match live (will need its own chunk — currently diverges in steps + form).
-- `/home-audit` residential funnel — separate chunk.
-
-### Technical notes
-
-- All work in `src/data/serviceAreas.ts`, `src/routes/areas.index.tsx`, `src/components/site/SiteHeader.tsx`, `src/components/site/SiteFooter.tsx`. No new shared primitives — reuse `SolutionHero`, `FieldDataTrio`, `ClosingCta` from `SolutionPrimitives`.
-- The dynamic route file `areas.$areaSlug.tsx` needs no changes; it already loads from `getServiceArea()` and renders region/city correctly once data is fixed.
-- No new images required — `/areas` index is text + cards.
-- `routeTree.gen.ts` regenerates automatically when `areas.index.tsx` is added.
+- `src/routes/areas.$areaSlug.tsx` — contrast fix + 2 new sections
+- `src/data/serviceAreas.ts` — add optional `jurisdiction` field + backfill
+- No new components; reuse `SOLUTIONS` cards inline.
