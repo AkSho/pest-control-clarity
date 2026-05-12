@@ -20,6 +20,7 @@ import { Route as FaqRouteImport } from './routes/faq'
 import { Route as EvolveRodentBirthControlRouteImport } from './routes/evolve-rodent-birth-control'
 import { Route as DohmhRodentViolationNycRouteImport } from './routes/dohmh-rodent-violation-nyc'
 import { Route as DoesRatBirthControlWorkRouteImport } from './routes/does-rat-birth-control-work'
+import { Route as ContrapestVsEvolveRouteImport } from './routes/contrapest-vs-evolve'
 import { Route as ContrapestRouteImport } from './routes/contrapest'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AreasIndexRouteImport } from './routes/areas.index'
@@ -89,6 +90,11 @@ const DoesRatBirthControlWorkRoute = DoesRatBirthControlWorkRouteImport.update({
   path: '/does-rat-birth-control-work',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContrapestVsEvolveRoute = ContrapestVsEvolveRouteImport.update({
+  id: '/contrapest-vs-evolve',
+  path: '/contrapest-vs-evolve',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContrapestRoute = ContrapestRouteImport.update({
   id: '/contrapest',
   path: '/contrapest',
@@ -155,6 +161,7 @@ const AreasAreaSlugRoute = AreasAreaSlugRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/contrapest': typeof ContrapestRoute
+  '/contrapest-vs-evolve': typeof ContrapestVsEvolveRoute
   '/does-rat-birth-control-work': typeof DoesRatBirthControlWorkRoute
   '/dohmh-rodent-violation-nyc': typeof DohmhRodentViolationNycRoute
   '/evolve-rodent-birth-control': typeof EvolveRodentBirthControlRoute
@@ -180,6 +187,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/contrapest': typeof ContrapestRoute
+  '/contrapest-vs-evolve': typeof ContrapestVsEvolveRoute
   '/does-rat-birth-control-work': typeof DoesRatBirthControlWorkRoute
   '/dohmh-rodent-violation-nyc': typeof DohmhRodentViolationNycRoute
   '/evolve-rodent-birth-control': typeof EvolveRodentBirthControlRoute
@@ -206,6 +214,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/contrapest': typeof ContrapestRoute
+  '/contrapest-vs-evolve': typeof ContrapestVsEvolveRoute
   '/does-rat-birth-control-work': typeof DoesRatBirthControlWorkRoute
   '/dohmh-rodent-violation-nyc': typeof DohmhRodentViolationNycRoute
   '/evolve-rodent-birth-control': typeof EvolveRodentBirthControlRoute
@@ -233,6 +242,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/contrapest'
+    | '/contrapest-vs-evolve'
     | '/does-rat-birth-control-work'
     | '/dohmh-rodent-violation-nyc'
     | '/evolve-rodent-birth-control'
@@ -258,6 +268,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/contrapest'
+    | '/contrapest-vs-evolve'
     | '/does-rat-birth-control-work'
     | '/dohmh-rodent-violation-nyc'
     | '/evolve-rodent-birth-control'
@@ -283,6 +294,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/contrapest'
+    | '/contrapest-vs-evolve'
     | '/does-rat-birth-control-work'
     | '/dohmh-rodent-violation-nyc'
     | '/evolve-rodent-birth-control'
@@ -309,6 +321,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ContrapestRoute: typeof ContrapestRoute
+  ContrapestVsEvolveRoute: typeof ContrapestVsEvolveRoute
   DoesRatBirthControlWorkRoute: typeof DoesRatBirthControlWorkRoute
   DohmhRodentViolationNycRoute: typeof DohmhRodentViolationNycRoute
   EvolveRodentBirthControlRoute: typeof EvolveRodentBirthControlRoute
@@ -411,6 +424,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DoesRatBirthControlWorkRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contrapest-vs-evolve': {
+      id: '/contrapest-vs-evolve'
+      path: '/contrapest-vs-evolve'
+      fullPath: '/contrapest-vs-evolve'
+      preLoaderRoute: typeof ContrapestVsEvolveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contrapest': {
       id: '/contrapest'
       path: '/contrapest'
@@ -501,6 +521,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ContrapestRoute: ContrapestRoute,
+  ContrapestVsEvolveRoute: ContrapestVsEvolveRoute,
   DoesRatBirthControlWorkRoute: DoesRatBirthControlWorkRoute,
   DohmhRodentViolationNycRoute: DohmhRodentViolationNycRoute,
   EvolveRodentBirthControlRoute: EvolveRodentBirthControlRoute,
