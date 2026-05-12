@@ -2,6 +2,7 @@ import {
   Building2,
   ChefHat,
   Home as HomeIcon,
+  MousePointer2,
   UtensilsCrossed,
   Users,
   Warehouse,
@@ -14,7 +15,8 @@ export type SolutionSlug =
   | "ghost-kitchens"
   | "food-storage"
   | "residential"
-  | "hoas";
+  | "hoas"
+  | "mouse-violations";
 
 export type Solution = {
   slug: SolutionSlug;
