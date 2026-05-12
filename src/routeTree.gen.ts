@@ -15,6 +15,13 @@ import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as GetStartedRouteImport } from './routes/get-started'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SolutionsRestaurantsRouteImport } from './routes/solutions.restaurants'
+import { Route as SolutionsResidentialRouteImport } from './routes/solutions.residential'
+import { Route as SolutionsPropertyManagersRouteImport } from './routes/solutions.property-managers'
+import { Route as SolutionsMouseViolationsRouteImport } from './routes/solutions.mouse-violations'
+import { Route as SolutionsHoasRouteImport } from './routes/solutions.hoas'
+import { Route as SolutionsGhostKitchensRouteImport } from './routes/solutions.ghost-kitchens'
+import { Route as SolutionsFoodStorageRouteImport } from './routes/solutions.food-storage'
 import { Route as SolutionsSlugRouteImport } from './routes/solutions.$slug'
 import { Route as AreasAreaSlugRouteImport } from './routes/areas.$areaSlug'
 
@@ -48,6 +55,43 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SolutionsRestaurantsRoute = SolutionsRestaurantsRouteImport.update({
+  id: '/solutions/restaurants',
+  path: '/solutions/restaurants',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SolutionsResidentialRoute = SolutionsResidentialRouteImport.update({
+  id: '/solutions/residential',
+  path: '/solutions/residential',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SolutionsPropertyManagersRoute =
+  SolutionsPropertyManagersRouteImport.update({
+    id: '/solutions/property-managers',
+    path: '/solutions/property-managers',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const SolutionsMouseViolationsRoute =
+  SolutionsMouseViolationsRouteImport.update({
+    id: '/solutions/mouse-violations',
+    path: '/solutions/mouse-violations',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const SolutionsHoasRoute = SolutionsHoasRouteImport.update({
+  id: '/solutions/hoas',
+  path: '/solutions/hoas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SolutionsGhostKitchensRoute = SolutionsGhostKitchensRouteImport.update({
+  id: '/solutions/ghost-kitchens',
+  path: '/solutions/ghost-kitchens',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SolutionsFoodStorageRoute = SolutionsFoodStorageRouteImport.update({
+  id: '/solutions/food-storage',
+  path: '/solutions/food-storage',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SolutionsSlugRoute = SolutionsSlugRouteImport.update({
   id: '/solutions/$slug',
   path: '/solutions/$slug',
@@ -68,6 +112,13 @@ export interface FileRoutesByFullPath {
   '/why-it-keeps-coming-back': typeof WhyItKeepsComingBackRoute
   '/areas/$areaSlug': typeof AreasAreaSlugRoute
   '/solutions/$slug': typeof SolutionsSlugRoute
+  '/solutions/food-storage': typeof SolutionsFoodStorageRoute
+  '/solutions/ghost-kitchens': typeof SolutionsGhostKitchensRoute
+  '/solutions/hoas': typeof SolutionsHoasRoute
+  '/solutions/mouse-violations': typeof SolutionsMouseViolationsRoute
+  '/solutions/property-managers': typeof SolutionsPropertyManagersRoute
+  '/solutions/residential': typeof SolutionsResidentialRoute
+  '/solutions/restaurants': typeof SolutionsRestaurantsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -78,6 +129,13 @@ export interface FileRoutesByTo {
   '/why-it-keeps-coming-back': typeof WhyItKeepsComingBackRoute
   '/areas/$areaSlug': typeof AreasAreaSlugRoute
   '/solutions/$slug': typeof SolutionsSlugRoute
+  '/solutions/food-storage': typeof SolutionsFoodStorageRoute
+  '/solutions/ghost-kitchens': typeof SolutionsGhostKitchensRoute
+  '/solutions/hoas': typeof SolutionsHoasRoute
+  '/solutions/mouse-violations': typeof SolutionsMouseViolationsRoute
+  '/solutions/property-managers': typeof SolutionsPropertyManagersRoute
+  '/solutions/residential': typeof SolutionsResidentialRoute
+  '/solutions/restaurants': typeof SolutionsRestaurantsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -89,6 +147,13 @@ export interface FileRoutesById {
   '/why-it-keeps-coming-back': typeof WhyItKeepsComingBackRoute
   '/areas/$areaSlug': typeof AreasAreaSlugRoute
   '/solutions/$slug': typeof SolutionsSlugRoute
+  '/solutions/food-storage': typeof SolutionsFoodStorageRoute
+  '/solutions/ghost-kitchens': typeof SolutionsGhostKitchensRoute
+  '/solutions/hoas': typeof SolutionsHoasRoute
+  '/solutions/mouse-violations': typeof SolutionsMouseViolationsRoute
+  '/solutions/property-managers': typeof SolutionsPropertyManagersRoute
+  '/solutions/residential': typeof SolutionsResidentialRoute
+  '/solutions/restaurants': typeof SolutionsRestaurantsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -101,6 +166,13 @@ export interface FileRouteTypes {
     | '/why-it-keeps-coming-back'
     | '/areas/$areaSlug'
     | '/solutions/$slug'
+    | '/solutions/food-storage'
+    | '/solutions/ghost-kitchens'
+    | '/solutions/hoas'
+    | '/solutions/mouse-violations'
+    | '/solutions/property-managers'
+    | '/solutions/residential'
+    | '/solutions/restaurants'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -111,6 +183,13 @@ export interface FileRouteTypes {
     | '/why-it-keeps-coming-back'
     | '/areas/$areaSlug'
     | '/solutions/$slug'
+    | '/solutions/food-storage'
+    | '/solutions/ghost-kitchens'
+    | '/solutions/hoas'
+    | '/solutions/mouse-violations'
+    | '/solutions/property-managers'
+    | '/solutions/residential'
+    | '/solutions/restaurants'
   id:
     | '__root__'
     | '/'
@@ -121,6 +200,13 @@ export interface FileRouteTypes {
     | '/why-it-keeps-coming-back'
     | '/areas/$areaSlug'
     | '/solutions/$slug'
+    | '/solutions/food-storage'
+    | '/solutions/ghost-kitchens'
+    | '/solutions/hoas'
+    | '/solutions/mouse-violations'
+    | '/solutions/property-managers'
+    | '/solutions/residential'
+    | '/solutions/restaurants'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -132,6 +218,13 @@ export interface RootRouteChildren {
   WhyItKeepsComingBackRoute: typeof WhyItKeepsComingBackRoute
   AreasAreaSlugRoute: typeof AreasAreaSlugRoute
   SolutionsSlugRoute: typeof SolutionsSlugRoute
+  SolutionsFoodStorageRoute: typeof SolutionsFoodStorageRoute
+  SolutionsGhostKitchensRoute: typeof SolutionsGhostKitchensRoute
+  SolutionsHoasRoute: typeof SolutionsHoasRoute
+  SolutionsMouseViolationsRoute: typeof SolutionsMouseViolationsRoute
+  SolutionsPropertyManagersRoute: typeof SolutionsPropertyManagersRoute
+  SolutionsResidentialRoute: typeof SolutionsResidentialRoute
+  SolutionsRestaurantsRoute: typeof SolutionsRestaurantsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -178,6 +271,55 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/solutions/restaurants': {
+      id: '/solutions/restaurants'
+      path: '/solutions/restaurants'
+      fullPath: '/solutions/restaurants'
+      preLoaderRoute: typeof SolutionsRestaurantsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/solutions/residential': {
+      id: '/solutions/residential'
+      path: '/solutions/residential'
+      fullPath: '/solutions/residential'
+      preLoaderRoute: typeof SolutionsResidentialRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/solutions/property-managers': {
+      id: '/solutions/property-managers'
+      path: '/solutions/property-managers'
+      fullPath: '/solutions/property-managers'
+      preLoaderRoute: typeof SolutionsPropertyManagersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/solutions/mouse-violations': {
+      id: '/solutions/mouse-violations'
+      path: '/solutions/mouse-violations'
+      fullPath: '/solutions/mouse-violations'
+      preLoaderRoute: typeof SolutionsMouseViolationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/solutions/hoas': {
+      id: '/solutions/hoas'
+      path: '/solutions/hoas'
+      fullPath: '/solutions/hoas'
+      preLoaderRoute: typeof SolutionsHoasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/solutions/ghost-kitchens': {
+      id: '/solutions/ghost-kitchens'
+      path: '/solutions/ghost-kitchens'
+      fullPath: '/solutions/ghost-kitchens'
+      preLoaderRoute: typeof SolutionsGhostKitchensRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/solutions/food-storage': {
+      id: '/solutions/food-storage'
+      path: '/solutions/food-storage'
+      fullPath: '/solutions/food-storage'
+      preLoaderRoute: typeof SolutionsFoodStorageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/solutions/$slug': {
       id: '/solutions/$slug'
       path: '/solutions/$slug'
@@ -204,6 +346,13 @@ const rootRouteChildren: RootRouteChildren = {
   WhyItKeepsComingBackRoute: WhyItKeepsComingBackRoute,
   AreasAreaSlugRoute: AreasAreaSlugRoute,
   SolutionsSlugRoute: SolutionsSlugRoute,
+  SolutionsFoodStorageRoute: SolutionsFoodStorageRoute,
+  SolutionsGhostKitchensRoute: SolutionsGhostKitchensRoute,
+  SolutionsHoasRoute: SolutionsHoasRoute,
+  SolutionsMouseViolationsRoute: SolutionsMouseViolationsRoute,
+  SolutionsPropertyManagersRoute: SolutionsPropertyManagersRoute,
+  SolutionsResidentialRoute: SolutionsResidentialRoute,
+  SolutionsRestaurantsRoute: SolutionsRestaurantsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
