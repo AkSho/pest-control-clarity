@@ -143,9 +143,15 @@ function BirthControlPage() {
             intro={
               <p>
                 SenesTech published field results from two independent urban
-                deployments in February 2026. Both used Evolve in managed
-                bait stations, deployed after a Phase 1 knockdown, with
-                monthly track count monitoring.
+                deployments in February 2026. Both used{" "}
+                <Link
+                  to="/evolve-rodent-birth-control"
+                  className="text-brand underline-offset-2 hover:underline"
+                >
+                  Evolve
+                </Link>{" "}
+                in managed bait stations, deployed after a Phase 1
+                knockdown, with monthly track count monitoring.
               </p>
             }
           />
