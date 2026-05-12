@@ -1,11 +1,18 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowRight, Check } from "lucide-react";
 import { RatingsRow } from "./RatingsRow";
 
-export function LeadForm({ compact = false }: { compact?: boolean }) {
+export function LeadForm({
+  compact = false,
+  extended = false,
+}: {
+  compact?: boolean;
+  extended?: boolean;
+}) {
   const [submitted, setSubmitted] = useState(false);
 
   if (submitted) {
@@ -16,7 +23,9 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
         </div>
         <h3 className="mt-4 text-lg font-bold">Request received</h3>
         <p className="mt-2 text-sm text-muted-foreground">
-          We'll reach out within one business day to schedule a site walkthrough.
+          {extended
+            ? "We'll be in touch within one business day."
+            : "We'll reach out within one business day to schedule a site walkthrough."}
         </p>
       </div>
     );
@@ -31,16 +40,31 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
       className="rounded-2xl bg-card p-6 shadow-[var(--shadow-elevated)] md:p-8"
     >
       <div className="text-center">
-        <p className="text-sm text-ink/70">
-          Schedule your{" "}
-          <span className="font-bold underline underline-offset-2 text-ink">FREE</span>
-        </p>
-        <h3 className="mt-1 text-xl font-extrabold leading-tight text-ink md:text-2xl">
-          Site Walkthrough &amp; Program Estimate
-        </h3>
+        {extended ? (
+          <>
+            <p className="text-sm text-ink/70">Tell us about your property</p>
+            <h3 className="mt-1 text-xl font-extrabold leading-tight text-ink md:text-2xl">
+              Start the program
+            </h3>
+          </>
+        ) : (
+          <>
+            <p className="text-sm text-ink/70">
+              Schedule your{" "}
+              <span className="font-bold underline underline-offset-2 text-ink">FREE</span>
+            </p>
+            <h3 className="mt-1 text-xl font-extrabold leading-tight text-ink md:text-2xl">
+              Site Walkthrough &amp; Program Estimate
+            </h3>
+          </>
+        )}
       </div>
 
       <div className="mt-5 space-y-3">
+        <Input required placeholder="Your name*" className="h-11 bg-secondary" />
+        {extended && (
+          <Input placeholder="Business name" className="h-11 bg-secondary" />
+        )}
         <Select defaultValue="">
           <SelectTrigger className="h-11 bg-secondary">
             <SelectValue placeholder="Property type*" />
@@ -50,14 +74,22 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
             <SelectItem value="property-mgr">Property manager</SelectItem>
             <SelectItem value="ghost-kitchen">Ghost kitchen</SelectItem>
             <SelectItem value="cold-chain">Food storage / cold chain</SelectItem>
-            <SelectItem value="hoa">HOA / co-op</SelectItem>
             <SelectItem value="residential">Residential</SelectItem>
+            <SelectItem value="hoa">HOA or co-op</SelectItem>
+            <SelectItem value="other">Other</SelectItem>
           </SelectContent>
         </Select>
         <Input required placeholder="Property address*" className="h-11 bg-secondary" />
-        <Input required placeholder="Name*" className="h-11 bg-secondary" />
-        {!compact && <Input type="email" placeholder="Email" className="h-11 bg-secondary" />}
+        {(!compact || extended) && (
+          <Input type="email" placeholder="Email" className="h-11 bg-secondary" />
+        )}
         <Input required type="tel" placeholder="Phone number*" className="h-11 bg-secondary" />
+        {extended && (
+          <Textarea
+            placeholder="Anything we should know"
+            className="min-h-[88px] bg-secondary"
+          />
+        )}
       </div>
 
       <p className="mt-4 text-[11px] leading-relaxed text-muted-foreground">
@@ -70,12 +102,21 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
         type="submit"
         className="mt-4 h-12 w-full bg-brand text-base font-bold text-white hover:bg-brand/90"
       >
-        Schedule Free Walkthrough <ArrowRight className="h-4 w-4" />
+        {extended
+          ? "Submit — we'll be in touch within one business day"
+          : "Schedule Free Walkthrough"}{" "}
+        <ArrowRight className="h-4 w-4" />
       </Button>
 
-      <div className="mt-5">
-        <RatingsRow />
-      </div>
+      {extended ? (
+        <p className="mt-4 text-center text-[11px] text-muted-foreground">
+          NYC, NJ, &amp; Bay Area. No commitment required to submit.
+        </p>
+      ) : (
+        <div className="mt-5">
+          <RatingsRow />
+        </div>
+      )}
     </form>
   );
 }

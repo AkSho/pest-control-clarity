@@ -1,11 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Check, Phone } from "lucide-react";
 import { LeadForm } from "@/components/site/LeadForm";
-import { HeroTrustBadges } from "@/components/site/TrustBadges";
+import { FieldDataTrio } from "@/components/site/solutions/SolutionPrimitives";
 
 const TITLE = "Get Started — Cloakd Removals";
 const DESCRIPTION =
-  "Schedule a free site walkthrough and program estimate. Month-to-month rodent fertility control layered onto your existing pest contract. Serving NYC, NJ, and the Bay Area.";
+  "The rodent cycle ends here. Tell us about your property — we'll review your situation, put together the program, and respond within one business day. NYC, NJ & Bay Area.";
 
 export const Route = createFileRoute("/get-started")({
   head: () => ({
@@ -22,19 +22,32 @@ export const Route = createFileRoute("/get-started")({
 const STEPS = [
   {
     n: "1",
-    title: "Quick call (10 min)",
-    body: "We learn your property type, current pest contract, and what you're seeing. Same-day or next business day.",
+    title: "We review your property",
+    body: "Address, property type, and current pest control setup. We assess whether the program is a fit.",
   },
   {
     n: "2",
-    title: "Site walkthrough",
-    body: "We assess pressure, harborage, and existing station placement. You get a written estimate and a station plan.",
+    title: "You get a program outline",
+    body: "Phase 1 coordination with your existing vendor, Phase 2 bait station placement, and a 90-day monitoring schedule.",
   },
   {
     n: "3",
-    title: "First deployment",
-    body: "Stations installed, baseline track plates set. Monthly reporting starts the next cycle.",
+    title: "Deployment and tracking",
+    body: "Program runs with monthly check-ins and documented activity tracking throughout.",
   },
+  {
+    n: "4",
+    title: "Results at 90 days",
+    body: "Full comparison against baseline. Track counts, activity levels, documented decline.",
+  },
+];
+
+const WHO_WE_WORK_WITH = [
+  "Restaurants and food service operators",
+  "Property managers with multiple addresses",
+  "Ghost kitchen facilities",
+  "Food storage and cold chain operations",
+  "Residential buildings and HOAs",
 ];
 
 function GetStartedPage() {
@@ -43,33 +56,17 @@ function GetStartedPage() {
       <section className="relative ink-section">
         <div className="container-site grid gap-10 py-16 md:grid-cols-[1fr_1fr] md:py-24">
           <div>
-            <HeroTrustBadges />
-            <p className="mt-7 text-xs font-semibold uppercase tracking-[0.25em] text-accent-warm">
-              Get started
+            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-accent-warm">
+              Start the program
             </p>
             <h1 className="mt-4 text-4xl font-extrabold leading-[1.05] text-white md:text-6xl">
-              Schedule a{" "}
-              <span className="text-accent-warm">free site walkthrough.</span>
+              The rodent cycle ends here.{" "}
+              <span className="text-accent-warm">Tell us about your property.</span>
             </h1>
             <p className="mt-6 max-w-xl text-base leading-relaxed text-white/85 md:text-lg">
-              Tell us about your property. We'll come walk it, write you an
-              estimate, and show you exactly where the fertility-control layer
-              fits on top of whatever pest program you already run.
+              We'll review your situation and put together the program. First
+              response within one business day.
             </p>
-
-            <ul className="mt-8 space-y-3 text-sm text-ink-foreground">
-              {[
-                "Free walkthrough and written estimate",
-                "Layered onto your existing pest contract",
-                "Month-to-month, no long contracts",
-                "Documented monthly reporting",
-              ].map((b) => (
-                <li key={b} className="flex items-start gap-2">
-                  <Check className="mt-0.5 h-4 w-4 text-brand" />
-                  {b}
-                </li>
-              ))}
-            </ul>
 
             <div className="mt-8 flex items-center gap-3 text-sm text-ink-foreground/85">
               <Phone className="h-4 w-4" />
@@ -84,7 +81,7 @@ function GetStartedPage() {
           </div>
 
           <div>
-            <LeadForm />
+            <LeadForm extended />
           </div>
         </div>
       </section>
@@ -97,10 +94,10 @@ function GetStartedPage() {
               What happens next
             </p>
             <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
-              Three steps from inquiry to first deployment
+              Four steps from inquiry to documented results
             </h2>
           </div>
-          <ol className="mt-12 grid gap-5 md:grid-cols-3">
+          <ol className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {STEPS.map((s) => (
               <li
                 key={s.n}
@@ -116,6 +113,37 @@ function GetStartedPage() {
               </li>
             ))}
           </ol>
+        </div>
+      </section>
+
+      <FieldDataTrio />
+
+      {/* WHO WE WORK WITH */}
+      <section className="bg-background py-20">
+        <div className="container-site grid gap-10 md:grid-cols-[0.9fr_1.1fr] md:gap-16">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+              Who we work with
+            </p>
+            <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-4xl">
+              The program runs at addresses like yours.
+            </h2>
+            <p className="mt-5 text-muted-foreground leading-relaxed">
+              NYC, NJ, &amp; Bay Area. Operators across food service, multifamily,
+              and residential. The mechanism doesn't change with the address.
+            </p>
+          </div>
+          <ul className="space-y-3">
+            {WHO_WE_WORK_WITH.map((w) => (
+              <li
+                key={w}
+                className="flex items-start gap-3 rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)]"
+              >
+                <Check className="mt-0.5 h-5 w-5 shrink-0 text-brand" />
+                <span className="text-sm font-medium md:text-base">{w}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
     </>
