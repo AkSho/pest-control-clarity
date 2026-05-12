@@ -5,7 +5,7 @@ export type ServiceArea = {
   city: string;
   state: string;
   region: Region;
-  jurisdiction: string;
+  jurisdiction?: string;
   intro: string;
   localProof: string;
   neighborhoods: string[];
@@ -354,6 +354,10 @@ export const SERVICE_AREAS: ServiceArea[] = [
     ],
   },
 ];
+
+export function getJurisdiction(area: ServiceArea) {
+  return area.jurisdiction ?? JURISDICTION[area.region];
+}
 
 export function getServiceArea(slug: string) {
   return SERVICE_AREAS.find((a) => a.slug === slug);
