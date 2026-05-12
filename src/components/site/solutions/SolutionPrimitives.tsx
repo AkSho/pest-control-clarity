@@ -156,7 +156,7 @@ export function PhaseCards({
   return (
     <div className="mt-10 grid gap-5 md:grid-cols-2">
       {[
-        { ...phase1, n: "Phase 1" },
+        { ...phase1, n: "Phase 1", accent: false },
         { ...phase2, n: "Phase 2", accent: true },
       ].map((p) => (
         <div
