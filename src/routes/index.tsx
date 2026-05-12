@@ -201,10 +201,9 @@ function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/95 to-ink/70" />
         <div className="container-site relative grid gap-10 py-16 md:grid-cols-[1.1fr_0.9fr] md:py-24">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
-              NYC & NJ · Rodent Fertility Control
-            </p>
-            <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] md:text-6xl">
+            <HeroTrustBadges />
+
+            <h1 className="mt-7 text-4xl font-extrabold leading-[1.05] md:text-6xl">
               Every six weeks, the rodents are back.{" "}
               <span className="text-brand">We end that cycle.</span>
             </h1>
@@ -215,19 +214,13 @@ function HomePage() {
               and the replacement cycle breaks.
             </p>
 
+            <HeroPills />
+
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Button asChild size="lg" className="h-12 px-6 text-base">
                 <a href="#contact">
                   Get started <ArrowRight className="h-4 w-4" />
                 </a>
-              </Button>
-              <Button
-                asChild
-                variant="outline"
-                size="lg"
-                className="h-12 border-ink-border bg-transparent px-6 text-base text-ink-foreground hover:bg-white/5 hover:text-ink-foreground"
-              >
-                <a href="#how">Why it keeps happening</a>
               </Button>
               <a
                 href="tel:+18005550199"
@@ -237,8 +230,6 @@ function HomePage() {
                 (800) 555-0199
               </a>
             </div>
-
-            <TrustChips />
           </div>
 
           <div id="contact">
@@ -247,23 +238,8 @@ function HomePage() {
         </div>
       </section>
 
-      {/* CITIES STRIP */}
-      <section className="border-b border-border bg-surface">
-        <div className="container-site flex flex-col items-center gap-4 py-6 text-center md:flex-row md:justify-between md:py-5">
-          <div className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-            Cities already deploying fertility control
-          </div>
-          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-sm font-semibold text-foreground/80">
-            <span>New York City</span>
-            <span className="h-1 w-1 rounded-full bg-border" />
-            <span>Baltimore</span>
-            <span className="h-1 w-1 rounded-full bg-border" />
-            <span>Chicago</span>
-            <span className="h-1 w-1 rounded-full bg-border" />
-            <span>Wicker Park</span>
-          </div>
-        </div>
-      </section>
+      {/* PRESS STRIP */}
+      <PressStrip />
 
       {/* STATS */}
       <section id="data" className="bg-background py-20">
