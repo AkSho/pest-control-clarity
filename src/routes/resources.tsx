@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import heroResources from "@/assets/hero-resources.jpg";
+import { Eyebrow } from "@/components/site/Eyebrow";
 
 const TITLE = "Resources — Cloakd Removals";
 const DESCRIPTION =
@@ -247,9 +248,9 @@ function ResourcesPage() {
         />
         <div className="relative container-site py-16 md:py-24">
           <div className="mx-auto max-w-3xl text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-accent-warm">
+            <Eyebrow tone="dark" className="text-accent-warm">
               Resources
-            </p>
+            </Eyebrow>
             <h1 className="mt-4 text-4xl font-extrabold leading-[1.05] text-white md:text-6xl">
               How urban rodent control{" "}
               <span className="text-accent-warm">actually works.</span>
@@ -266,9 +267,9 @@ function ResourcesPage() {
       {/* START HERE */}
       <section className="bg-background py-20">
         <div className="container-site">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+          <Eyebrow>
             Start here
-          </p>
+          </Eyebrow>
           <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
             The three reads that explain the program.
           </h2>
@@ -283,9 +284,9 @@ function ResourcesPage() {
       {/* BY TOPIC */}
       <section className="bg-surface py-20">
         <div className="container-site">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+          <Eyebrow>
             By topic
-          </p>
+          </Eyebrow>
           <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
             Field data, comparisons, compliance.
           </h2>

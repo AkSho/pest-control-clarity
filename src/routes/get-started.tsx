@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Check, Phone } from "lucide-react";
 import { LeadForm } from "@/components/site/LeadForm";
 import { FieldDataTrio } from "@/components/site/solutions/SolutionPrimitives";
+import { Eyebrow } from "@/components/site/Eyebrow";
 
 const TITLE = "Get Started — Cloakd Removals";
 const DESCRIPTION =
@@ -56,9 +57,9 @@ function GetStartedPage() {
       <section className="relative ink-section">
         <div className="container-site grid gap-10 py-16 md:grid-cols-[1fr_1fr] md:py-24">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-accent-warm">
+            <Eyebrow tone="dark" className="text-accent-warm">
               Start the program
-            </p>
+            </Eyebrow>
             <h1 className="mt-4 text-4xl font-extrabold leading-[1.05] text-white md:text-6xl">
               The rodent cycle ends here.{" "}
               <span className="text-accent-warm">Tell us about your property.</span>
@@ -90,9 +91,9 @@ function GetStartedPage() {
       <section className="bg-background py-20">
         <div className="container-site">
           <div className="mx-auto max-w-2xl text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+            <Eyebrow>
               What happens next
-            </p>
+            </Eyebrow>
             <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
               Four steps from inquiry to documented results
             </h2>
@@ -122,9 +123,9 @@ function GetStartedPage() {
       <section className="bg-background py-20">
         <div className="container-site grid gap-10 md:grid-cols-[0.9fr_1.1fr] md:gap-16">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+            <Eyebrow>
               Who we work with
-            </p>
+            </Eyebrow>
             <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-4xl">
               The program runs at addresses like yours.
             </h2>
