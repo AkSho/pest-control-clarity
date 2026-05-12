@@ -1,29 +1,36 @@
-import { Star, Home } from "lucide-react";
-import { REVIEWS, type ReviewSource } from "@/data/reviews";
+import { Star, Sprout } from "lucide-react";
+import { REVIEWS, type LogoKey, type Review } from "@/data/reviews";
 import walmartLogo from "@/assets/reviews/walmart.png";
 import amazonLogo from "@/assets/reviews/amazon.png";
 import southCountyLogo from "@/assets/reviews/south-county.png";
 import fiveOFarmLogo from "@/assets/reviews/five-o-farm.png";
 import wildhorseLogo from "@/assets/reviews/wildhorse.png";
 
-const LOGOS: Partial<Record<ReviewSource, string>> = {
+const LOGOS: Record<LogoKey, string> = {
   walmart: walmartLogo,
   amazon: amazonLogo,
-  "pest-control": southCountyLogo,
-  agricultural: fiveOFarmLogo,
-  sanctuary: wildhorseLogo,
+  "south-county": southCountyLogo,
+  "five-o-farm": fiveOFarmLogo,
+  wildhorse: wildhorseLogo,
 };
 
-function SourceLogo({ source }: { source: ReviewSource }) {
+const SOURCE_TO_LOGO: Partial<Record<Review["source"], LogoKey>> = {
+  walmart: "walmart",
+  amazon: "amazon",
+  "pest-control": "south-county",
+  sanctuary: "wildhorse",
+};
+
+function SourceLogo({ review }: { review: Review }) {
   const wrap =
     "flex h-14 w-14 items-center justify-center rounded-xl bg-white shadow-[0_2px_10px_rgba(0,0,0,0.08)] ring-1 ring-border overflow-hidden";
 
-  const logo = LOGOS[source];
-  if (logo) {
+  const key = review.logoKey ?? SOURCE_TO_LOGO[review.source];
+  if (key) {
     return (
       <div className={wrap}>
         <img
-          src={logo}
+          src={LOGOS[key]}
           alt=""
           className="h-full w-full object-contain p-1.5"
           loading="lazy"
@@ -34,7 +41,7 @@ function SourceLogo({ source }: { source: ReviewSource }) {
 
   return (
     <div className={wrap}>
-      <Home className="h-7 w-7 text-brand" />
+      <Sprout className="h-7 w-7 text-brand" />
     </div>
   );
 }
@@ -48,7 +55,7 @@ export function ReviewsGrid() {
           className="rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-card)]"
         >
           <div className="flex items-center justify-between">
-            <SourceLogo source={r.source} />
+            <SourceLogo review={r} />
             <div className="flex gap-1 text-accent-warm">
               {Array.from({ length: 5 }).map((_, idx) => (
                 <Star key={idx} className="h-4 w-4 fill-current" />

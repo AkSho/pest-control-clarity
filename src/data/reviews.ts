@@ -6,12 +6,15 @@ export type ReviewSource =
   | "pest-control"
   | "residential";
 
+export type LogoKey = "walmart" | "amazon" | "south-county" | "five-o-farm" | "wildhorse";
+
 export type Review = {
   source: ReviewSource;
   sourceLabel: string;
   body: string;
   org: string;
   name: string;
+  logoKey?: LogoKey;
 };
 
 export const REVIEWS: Review[] = [
@@ -42,6 +45,7 @@ export const REVIEWS: Review[] = [
     body: "We have been using Evolve at our farm (in combination with poison). It definitely works. The first couple months we went through a LOT of product but kept after it and now our rodent problem isn't a problem. Definitely worth it. Before we started treatment we lost 5 litters of rabbits. Give it a try. Definitely worth the investment if used according to directions.",
     org: "Rural User",
     name: "5-0 Farm Hawaii",
+    logoKey: "five-o-farm",
   },
   {
     source: "pest-control",
