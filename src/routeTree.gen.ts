@@ -9,12 +9,48 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WhyItKeepsComingBackRouteImport } from './routes/why-it-keeps-coming-back'
+import { Route as ResultsRouteImport } from './routes/results'
+import { Route as ResourcesRouteImport } from './routes/resources'
+import { Route as GetStartedRouteImport } from './routes/get-started'
+import { Route as FaqRouteImport } from './routes/faq'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SolutionsSlugRouteImport } from './routes/solutions.$slug'
 import { Route as AreasAreaSlugRouteImport } from './routes/areas.$areaSlug'
 
+const WhyItKeepsComingBackRoute = WhyItKeepsComingBackRouteImport.update({
+  id: '/why-it-keeps-coming-back',
+  path: '/why-it-keeps-coming-back',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResultsRoute = ResultsRouteImport.update({
+  id: '/results',
+  path: '/results',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResourcesRoute = ResourcesRouteImport.update({
+  id: '/resources',
+  path: '/resources',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GetStartedRoute = GetStartedRouteImport.update({
+  id: '/get-started',
+  path: '/get-started',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SolutionsSlugRoute = SolutionsSlugRouteImport.update({
+  id: '/solutions/$slug',
+  path: '/solutions/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AreasAreaSlugRoute = AreasAreaSlugRouteImport.update({
@@ -25,37 +61,128 @@ const AreasAreaSlugRoute = AreasAreaSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/faq': typeof FaqRoute
+  '/get-started': typeof GetStartedRoute
+  '/resources': typeof ResourcesRoute
+  '/results': typeof ResultsRoute
+  '/why-it-keeps-coming-back': typeof WhyItKeepsComingBackRoute
   '/areas/$areaSlug': typeof AreasAreaSlugRoute
+  '/solutions/$slug': typeof SolutionsSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/faq': typeof FaqRoute
+  '/get-started': typeof GetStartedRoute
+  '/resources': typeof ResourcesRoute
+  '/results': typeof ResultsRoute
+  '/why-it-keeps-coming-back': typeof WhyItKeepsComingBackRoute
   '/areas/$areaSlug': typeof AreasAreaSlugRoute
+  '/solutions/$slug': typeof SolutionsSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/faq': typeof FaqRoute
+  '/get-started': typeof GetStartedRoute
+  '/resources': typeof ResourcesRoute
+  '/results': typeof ResultsRoute
+  '/why-it-keeps-coming-back': typeof WhyItKeepsComingBackRoute
   '/areas/$areaSlug': typeof AreasAreaSlugRoute
+  '/solutions/$slug': typeof SolutionsSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/areas/$areaSlug'
+  fullPaths:
+    | '/'
+    | '/faq'
+    | '/get-started'
+    | '/resources'
+    | '/results'
+    | '/why-it-keeps-coming-back'
+    | '/areas/$areaSlug'
+    | '/solutions/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/areas/$areaSlug'
-  id: '__root__' | '/' | '/areas/$areaSlug'
+  to:
+    | '/'
+    | '/faq'
+    | '/get-started'
+    | '/resources'
+    | '/results'
+    | '/why-it-keeps-coming-back'
+    | '/areas/$areaSlug'
+    | '/solutions/$slug'
+  id:
+    | '__root__'
+    | '/'
+    | '/faq'
+    | '/get-started'
+    | '/resources'
+    | '/results'
+    | '/why-it-keeps-coming-back'
+    | '/areas/$areaSlug'
+    | '/solutions/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  FaqRoute: typeof FaqRoute
+  GetStartedRoute: typeof GetStartedRoute
+  ResourcesRoute: typeof ResourcesRoute
+  ResultsRoute: typeof ResultsRoute
+  WhyItKeepsComingBackRoute: typeof WhyItKeepsComingBackRoute
   AreasAreaSlugRoute: typeof AreasAreaSlugRoute
+  SolutionsSlugRoute: typeof SolutionsSlugRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/why-it-keeps-coming-back': {
+      id: '/why-it-keeps-coming-back'
+      path: '/why-it-keeps-coming-back'
+      fullPath: '/why-it-keeps-coming-back'
+      preLoaderRoute: typeof WhyItKeepsComingBackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/results': {
+      id: '/results'
+      path: '/results'
+      fullPath: '/results'
+      preLoaderRoute: typeof ResultsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/resources': {
+      id: '/resources'
+      path: '/resources'
+      fullPath: '/resources'
+      preLoaderRoute: typeof ResourcesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/get-started': {
+      id: '/get-started'
+      path: '/get-started'
+      fullPath: '/get-started'
+      preLoaderRoute: typeof GetStartedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/solutions/$slug': {
+      id: '/solutions/$slug'
+      path: '/solutions/$slug'
+      fullPath: '/solutions/$slug'
+      preLoaderRoute: typeof SolutionsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/areas/$areaSlug': {
@@ -70,7 +197,13 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  FaqRoute: FaqRoute,
+  GetStartedRoute: GetStartedRoute,
+  ResourcesRoute: ResourcesRoute,
+  ResultsRoute: ResultsRoute,
+  WhyItKeepsComingBackRoute: WhyItKeepsComingBackRoute,
   AreasAreaSlugRoute: AreasAreaSlugRoute,
+  SolutionsSlugRoute: SolutionsSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
