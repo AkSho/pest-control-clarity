@@ -1,19 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Phone, Mail, MapPin } from "lucide-react";
-
-const NY_NJ = [
-  { slug: "manhattan-ny", label: "Manhattan, NY" },
-  { slug: "manhattan-ny", label: "Brooklyn, NY" },
-  { slug: "manhattan-ny", label: "Queens, NY" },
-  { slug: "manhattan-ny", label: "Jersey City, NJ" },
-  { slug: "manhattan-ny", label: "Newark, NJ" },
-];
-
-const CA = [
-  { slug: "san-francisco-ca", label: "San Francisco, CA" },
-  { slug: "oakland-ca", label: "Oakland, CA" },
-  { slug: "san-jose-ca", label: "San Jose, CA" },
-];
+import { SOLUTIONS } from "@/data/solutions";
 
 export function SiteFooter() {
   return (
@@ -57,22 +44,27 @@ export function SiteFooter() {
             Program
           </div>
           <ul className="mt-4 space-y-2 text-sm">
-            <li><a href="#how" className="hover:text-brand">How it works</a></li>
-            <li><a href="#data" className="hover:text-brand">Field data</a></li>
-            <li><a href="#who" className="hover:text-brand">Who we serve</a></li>
-            <li><a href="#faq" className="hover:text-brand">FAQ</a></li>
+            <li><Link to="/why-it-keeps-coming-back" className="hover:text-brand">The Problem</Link></li>
+            <li><Link to="/results" className="hover:text-brand">Results</Link></li>
+            <li><Link to="/faq" className="hover:text-brand">FAQ</Link></li>
+            <li><Link to="/resources" className="hover:text-brand">Resources</Link></li>
+            <li><Link to="/get-started" className="hover:text-brand">Get Started</Link></li>
           </ul>
         </div>
 
         <div>
           <div className="text-xs font-semibold uppercase tracking-widest text-ink-muted">
-            NY &amp; NJ
+            Solutions
           </div>
           <ul className="mt-4 space-y-2 text-sm">
-            {NY_NJ.map((a) => (
-              <li key={a.label}>
-                <Link to="/areas/$areaSlug" params={{ areaSlug: a.slug }} className="hover:text-brand">
-                  {a.label}
+            {SOLUTIONS.map((s) => (
+              <li key={s.slug}>
+                <Link
+                  to="/solutions/$slug"
+                  params={{ slug: s.slug }}
+                  className="hover:text-brand"
+                >
+                  {s.audience}
                 </Link>
               </li>
             ))}
@@ -81,16 +73,15 @@ export function SiteFooter() {
 
         <div>
           <div className="text-xs font-semibold uppercase tracking-widest text-ink-muted">
-            Bay Area
+            Service areas
           </div>
           <ul className="mt-4 space-y-2 text-sm">
-            {CA.map((a) => (
-              <li key={a.label}>
-                <Link to="/areas/$areaSlug" params={{ areaSlug: a.slug }} className="hover:text-brand">
-                  {a.label}
-                </Link>
-              </li>
-            ))}
+            <li><Link to="/areas/$areaSlug" params={{ areaSlug: "manhattan-ny" }} className="hover:text-brand">Manhattan, NY</Link></li>
+            <li><Link to="/areas/$areaSlug" params={{ areaSlug: "manhattan-ny" }} className="hover:text-brand">Brooklyn, NY</Link></li>
+            <li><Link to="/areas/$areaSlug" params={{ areaSlug: "manhattan-ny" }} className="hover:text-brand">Jersey City, NJ</Link></li>
+            <li><Link to="/areas/$areaSlug" params={{ areaSlug: "san-francisco-ca" }} className="hover:text-brand">San Francisco, CA</Link></li>
+            <li><Link to="/areas/$areaSlug" params={{ areaSlug: "oakland-ca" }} className="hover:text-brand">Oakland, CA</Link></li>
+            <li><Link to="/areas/$areaSlug" params={{ areaSlug: "san-jose-ca" }} className="hover:text-brand">San Jose, CA</Link></li>
           </ul>
         </div>
       </div>
