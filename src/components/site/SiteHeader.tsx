@@ -168,6 +168,17 @@ export function SiteHeader() {
               The Problem
             </Link>
 
+            {PROGRAM_LINKS.map((p) => (
+              <Link
+                key={p.to}
+                to={p.to}
+                onClick={() => setOpen(false)}
+                className="rounded-md px-3 py-2 text-sm font-medium text-ink-foreground hover:bg-white/5"
+              >
+                {p.label}
+              </Link>
+            ))}
+
             <button
               onClick={() => setMobileSolutionsOpen((v) => !v)}
               className="flex items-center justify-between rounded-md px-3 py-2 text-left text-sm font-medium text-ink-foreground hover:bg-white/5"
