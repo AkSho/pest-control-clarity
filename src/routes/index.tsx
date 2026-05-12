@@ -325,6 +325,9 @@ function HomePage() {
         </div>
       </section>
 
+      {/* ABOUT */}
+      <AboutSection />
+
       {/* SERVICES */}
       <section className="bg-background py-20">
         <div className="container-site">
@@ -409,7 +412,7 @@ function HomePage() {
                 Service areas
               </p>
               <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
-                Serving food-service operators and managed properties across NYC & NJ
+                Serving food-service operators and managed properties across NYC, NJ, &amp; CA
               </h2>
               <p className="mt-5 text-muted-foreground">
                 Month-to-month coverage, documented every cycle. Pick your area
@@ -459,39 +462,7 @@ function HomePage() {
             </h2>
           </div>
 
-          <div className="mt-12 grid gap-5 md:grid-cols-3">
-            {[
-              {
-                name: "Restaurant GM, Midtown",
-                body: "Our health inspector saw the trend reports and stopped flagging us on rodent activity. We hadn't gone three quarters clean in years before this.",
-              },
-              {
-                name: "Property manager, Brooklyn",
-                body: "Tenant complaints across two of my buildings dropped to almost zero by month four. I'm rolling this out to the rest of the portfolio.",
-              },
-              {
-                name: "Ghost kitchen operator, Queens",
-                body: "We never had a real pest contract before. The monthly reporting alone is worth what we pay them — operators in the building stopped fighting.",
-              },
-            ].map((t) => (
-              <figure
-                key={t.name}
-                className="rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-card)]"
-              >
-                <div className="flex gap-1 text-yellow-400">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-current" />
-                  ))}
-                </div>
-                <blockquote className="mt-4 text-sm leading-relaxed text-foreground">
-                  "{t.body}"
-                </blockquote>
-                <figcaption className="mt-5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  {t.name}
-                </figcaption>
-              </figure>
-            ))}
-          </div>
+          <ReviewsGrid />
         </div>
       </section>
 
@@ -536,8 +507,13 @@ function HomePage() {
               Start the program. Break the cycle.
             </h2>
             <p className="mt-5 max-w-xl text-ink-muted md:text-lg">
-              First visit covers walkthrough and setup. Monthly management and
-              documented reporting run from there. Month-to-month, NYC & NJ.
+              The first visit covers setup, with monthly management and
+              documented reporting running from there. The numbers are yours to
+              show any regulator or property owner who asks.
+            </p>
+            <p className="mt-4 max-w-xl text-ink-muted md:text-lg">
+              Serving food service operators and property managers across NYC
+              and NJ, month-to-month, with results documented every cycle.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Button asChild size="lg" className="h-12 px-6 text-base">
