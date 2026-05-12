@@ -1,26 +1,587 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import {
+  ShieldCheck,
+  Star,
+  Phone,
+  Check,
+  ArrowRight,
+  Building2,
+  UtensilsCrossed,
+  Warehouse,
+  Home as HomeIcon,
+  ChefHat,
+  Users,
+  TrendingDown,
+  ClipboardCheck,
+  Beaker,
+  FileBarChart,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { LeadForm } from "@/components/site/LeadForm";
+import heroImg from "@/assets/hero-urban.jpg";
 
 export const Route = createFileRoute("/")({
-  component: Index,
+  head: () => ({
+    meta: [
+      { title: "Cloakd Removals — NYC & NJ Rodent Fertility Control" },
+      {
+        name: "description",
+        content:
+          "Standard pest control empties rodent territory. Surrounding colonies move back in within weeks. We layer EPA-designated minimum-risk fertility control on top of your existing program to break the replacement cycle. Serving NYC & NJ.",
+      },
+      { property: "og:title", content: "Cloakd Removals — Rodent Fertility Control for NYC & NJ" },
+      {
+        property: "og:description",
+        content:
+          "Break the rodent replacement cycle. EPA-designated minimum-risk fertility control, layered onto your existing pest program. Documented monthly reporting.",
+      },
+      { property: "og:image", content: heroImg },
+      { name: "twitter:image", content: heroImg },
+    ],
+  }),
+  component: HomePage,
 });
 
-// IMPORTANT: Replace this placeholder. For sites with multiple pages (About, Services, Contact, etc.),
-// create separate route files (about.tsx, services.tsx, contact.tsx) — don't put all pages in this file.
-function PlaceholderIndex() {
+const STATS = [
+  { value: "79%", label: "reduction in rodent activity", sub: "5-month urban field study" },
+  { value: "88%", label: "drop in track density", sub: "at monitored locations" },
+  { value: "90%", label: "fertility reduction", sub: "when integrated into active programs" },
+];
+
+const SERVICES = [
+  {
+    icon: Beaker,
+    title: "Fertility Control Program",
+    body: "EPA-designated minimum-risk soft bait. Rats that consume it reproduce at a fraction of normal rate. The replacement population can't form at full size.",
+  },
+  {
+    icon: ClipboardCheck,
+    title: "Site Inspection & Mapping",
+    body: "We walk the property, identify pressure points and harborage, and map every bait station against your existing pest control deployment.",
+  },
+  {
+    icon: TrendingDown,
+    title: "Monthly Population Management",
+    body: "Stations serviced and rebaited monthly. Track plates and activity monitored every cycle. The cycle stays broken instead of resetting.",
+  },
+  {
+    icon: FileBarChart,
+    title: "Documented Reporting",
+    body: "Every visit is logged with track-density data and photos. The reports go to you. Show DOHMH, ownership, or franchise corporate any time.",
+  },
+];
+
+const WHO = [
+  {
+    icon: UtensilsCrossed,
+    title: "Restaurants",
+    desc: "One rodent sighting is a critical NYC violation (04K / 04L). One temporary closure costs $15K–$50K in lost revenue.",
+    badge: "$300–$2,000 per violation",
+  },
+  {
+    icon: Building2,
+    title: "Property Managers",
+    desc: "Tenant complaints don't stop until the population does. One program across every address you manage.",
+    badge: "Multi-building coverage",
+  },
+  {
+    icon: ChefHat,
+    title: "Ghost Kitchens",
+    desc: "High-density buildings, constant food cycling, no locked-in pest contracts. We work directly with operators.",
+    badge: "No vendor displacement",
+  },
+  {
+    icon: Warehouse,
+    title: "Food Storage & Cold Chain",
+    desc: "Continuous product flow makes traditional knockdown a treadmill. Fertility control compounds reductions across cycles.",
+    badge: "Compliance documentation",
+  },
+  {
+    icon: Users,
+    title: "HOAs & Co-ops",
+    desc: "Board-friendly reporting, predictable monthly billing, shared visibility across the property.",
+    badge: "Board-ready reports",
+  },
+  {
+    icon: HomeIcon,
+    title: "Residential",
+    desc: "Brownstones, townhouses, and managed residential blocks where standard exterminators keep coming back.",
+    badge: "Month-to-month",
+  },
+];
+
+const PROCESS = [
+  {
+    n: "1",
+    title: "Walkthrough",
+    body: "We assess pressure, map harborage, and align with whatever pest program you already run.",
+  },
+  {
+    n: "2",
+    title: "Phase 1 — Knockdown",
+    body: "Your existing exterminator (or ours) clears the active population. Standard treatment does this correctly.",
+  },
+  {
+    n: "3",
+    title: "Phase 2 — Fertility Control",
+    body: "We layer in EPA-designated minimum-risk soft bait. Reproduction rate drops within one breeding cycle.",
+  },
+  {
+    n: "4",
+    title: "Monthly Management",
+    body: "Stations serviced, data captured, reports delivered. The replacement cycle never reforms at full size.",
+  },
+];
+
+const FAQS = [
+  {
+    q: "Why doesn't standard pest control solve this on its own?",
+    a: "Knockdown clears the territory. In a food-dense urban block, surrounding colonies detect the empty space and move in within 4 to 8 weeks at full breeding capacity. The number returns to baseline indefinitely.",
+  },
+  {
+    q: "Do you replace my current pest control vendor?",
+    a: "No. We layer fertility control on top of your existing program. Knockdown and fertility control do different jobs — neither one alone solves the cycle.",
+  },
+  {
+    q: "Is the bait safe around food, staff, pets, and wildlife?",
+    a: "Yes. The active ingredient is EPA-designated minimum risk and derived from cottonseed plant compounds. There is no secondary kill risk to pets or wildlife and it is cleared for food-handling environments.",
+  },
+  {
+    q: "How long until I see results?",
+    a: "Knockdown is immediate. Fertility-driven reductions compound across breeding cycles — measurable drops typically appear within 60 to 120 days. Field studies showed 79% activity reduction over 5 months.",
+  },
+  {
+    q: "Is this a long contract?",
+    a: "No. The program runs month-to-month with documented reporting every cycle.",
+  },
+  {
+    q: "What does it cost?",
+    a: "Pricing depends on property type, square footage, and pressure level — most properties are within the same monthly range as their existing pest control spend. Request a walkthrough for an exact estimate.",
+  },
+];
+
+function TrustChips() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-ink-muted">
+      <div className="flex items-center gap-2">
+        <Star className="h-4 w-4 fill-current text-yellow-400" />
+        <span>4.9★ — operator reviews</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <ShieldCheck className="h-4 w-4 text-brand" />
+        <span>EPA-designated minimum risk</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <Check className="h-4 w-4 text-brand" />
+        <span>Month-to-month, documented</span>
+      </div>
     </div>
   );
 }
 
-function Index() {
-  return <PlaceholderIndex />;
+function HomePage() {
+  return (
+    <>
+      {/* HERO */}
+      <section className="relative overflow-hidden ink-section">
+        <div
+          className="absolute inset-0 opacity-30"
+          style={{
+            backgroundImage: `url(${heroImg})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/95 to-ink/70" />
+        <div className="container-site relative grid gap-10 py-16 md:grid-cols-[1.1fr_0.9fr] md:py-24">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+              NYC & NJ · Rodent Fertility Control
+            </p>
+            <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] md:text-6xl">
+              Every six weeks, the rodents are back.{" "}
+              <span className="text-brand">We end that cycle.</span>
+            </h1>
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-ink-muted md:text-lg">
+              Standard treatment clears the colony, and within weeks the
+              territory fills again. Rodent fertility control suppresses the
+              birth rate — the front standard treatment never touches. Run both
+              and the replacement cycle breaks.
+            </p>
+
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <Button asChild size="lg" className="h-12 px-6 text-base">
+                <a href="#contact">
+                  Get started <ArrowRight className="h-4 w-4" />
+                </a>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="h-12 border-ink-border bg-transparent px-6 text-base text-ink-foreground hover:bg-white/5 hover:text-ink-foreground"
+              >
+                <a href="#how">Why it keeps happening</a>
+              </Button>
+              <a
+                href="tel:+18005550199"
+                className="ml-1 flex items-center gap-2 text-sm font-medium text-ink-foreground hover:text-brand"
+              >
+                <Phone className="h-4 w-4" />
+                (800) 555-0199
+              </a>
+            </div>
+
+            <TrustChips />
+          </div>
+
+          <div id="contact">
+            <LeadForm />
+          </div>
+        </div>
+      </section>
+
+      {/* CITIES STRIP */}
+      <section className="border-b border-border bg-surface">
+        <div className="container-site flex flex-col items-center gap-4 py-6 text-center md:flex-row md:justify-between md:py-5">
+          <div className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+            Cities already deploying fertility control
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-sm font-semibold text-foreground/80">
+            <span>New York City</span>
+            <span className="h-1 w-1 rounded-full bg-border" />
+            <span>Baltimore</span>
+            <span className="h-1 w-1 rounded-full bg-border" />
+            <span>Chicago</span>
+            <span className="h-1 w-1 rounded-full bg-border" />
+            <span>Wicker Park</span>
+          </div>
+        </div>
+      </section>
+
+      {/* STATS */}
+      <section id="data" className="bg-background py-20">
+        <div className="container-site">
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+              Field data · monitored deployments
+            </p>
+            <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
+              Real numbers from real urban field studies
+            </h2>
+            <p className="mt-4 text-muted-foreground">
+              Locations A & B — independent 5-month monitoring windows, August
+              2025 through January 2026.
+            </p>
+          </div>
+
+          <div className="mt-12 grid gap-5 md:grid-cols-3">
+            {STATS.map((s) => (
+              <div
+                key={s.label}
+                className="rounded-2xl border border-border bg-card p-8 shadow-[var(--shadow-card)]"
+              >
+                <div className="text-5xl font-extrabold tracking-tight text-brand">
+                  {s.value}
+                </div>
+                <div className="mt-3 text-base font-semibold">{s.label}</div>
+                <div className="mt-1 text-sm text-muted-foreground">{s.sub}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* HOW IT WORKS */}
+      <section id="how" className="bg-surface py-20">
+        <div className="container-site">
+          <div className="grid gap-10 md:grid-cols-[0.9fr_1.1fr] md:gap-16">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+                How it works
+              </p>
+              <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
+                Two things have to happen for this to end
+              </h2>
+              <p className="mt-5 text-muted-foreground">
+                Neither one works without the other. Knockdown handles what's
+                already there. Fertility control handles what comes next.
+              </p>
+              <Button asChild className="mt-8 h-11 px-6">
+                <a href="#contact">Schedule a walkthrough</a>
+              </Button>
+            </div>
+
+            <ol className="space-y-4">
+              {PROCESS.map((p) => (
+                <li
+                  key={p.n}
+                  className="flex gap-5 rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-card)]"
+                >
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand text-brand-foreground font-bold">
+                    {p.n}
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold">{p.title}</h3>
+                    <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
+                      {p.body}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      {/* SERVICES */}
+      <section className="bg-background py-20">
+        <div className="container-site">
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+              The Program · what's included
+            </p>
+            <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
+              A complete rodent fertility control program for urban operators
+            </h2>
+          </div>
+
+          <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+            {SERVICES.map((s) => (
+              <div
+                key={s.title}
+                className="group rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-card)] transition hover:-translate-y-0.5"
+              >
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-soft text-brand">
+                  <s.icon className="h-5 w-5" />
+                </div>
+                <h3 className="mt-5 text-lg font-bold">{s.title}</h3>
+                <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+                  {s.body}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-10 text-center">
+            <Button asChild size="lg" className="h-12 px-7">
+              <a href="#contact">
+                Get my program estimate <ArrowRight className="h-4 w-4" />
+              </a>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* WHO WE WORK WITH */}
+      <section id="who" className="bg-surface py-20">
+        <div className="container-site">
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+              Who we serve
+            </p>
+            <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
+              Built for operators who can't afford another violation
+            </h2>
+          </div>
+
+          <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {WHO.map((w) => (
+              <div
+                key={w.title}
+                className="rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-card)]"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-ink text-ink-foreground">
+                    <w.icon className="h-5 w-5" />
+                  </div>
+                  <h3 className="text-lg font-bold">{w.title}</h3>
+                </div>
+                <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
+                  {w.desc}
+                </p>
+                <div className="mt-5 inline-flex items-center rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand">
+                  {w.badge}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SERVICE AREAS */}
+      <section className="bg-background py-20">
+        <div className="container-site">
+          <div className="grid gap-10 md:grid-cols-[0.9fr_1.1fr] md:gap-16">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+                Service areas
+              </p>
+              <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
+                Serving food-service operators and managed properties across NYC & NJ
+              </h2>
+              <p className="mt-5 text-muted-foreground">
+                Month-to-month coverage, documented every cycle. Pick your area
+                for local pressure data and program details.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+              {[
+                "Manhattan, NY",
+                "Brooklyn, NY",
+                "Queens, NY",
+                "Bronx, NY",
+                "Staten Island, NY",
+                "Jersey City, NJ",
+                "Newark, NJ",
+                "Hoboken, NJ",
+                "Elizabeth, NJ",
+              ].map((label) => (
+                <Link
+                  key={label}
+                  to="/areas/$areaSlug"
+                  params={{ areaSlug: "manhattan-ny" }}
+                  className="group flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3 text-sm font-semibold transition hover:border-brand hover:bg-brand-soft"
+                >
+                  {label}
+                  <ArrowRight className="h-4 w-4 text-muted-foreground transition group-hover:text-brand" />
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* TESTIMONIALS */}
+      <section className="bg-surface py-20">
+        <div className="container-site">
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+              Operator reviews
+            </p>
+            <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
+              See why NYC & NJ operators stay on the program
+            </h2>
+          </div>
+
+          <div className="mt-12 grid gap-5 md:grid-cols-3">
+            {[
+              {
+                name: "Restaurant GM, Midtown",
+                body: "Our health inspector saw the trend reports and stopped flagging us on rodent activity. We hadn't gone three quarters clean in years before this.",
+              },
+              {
+                name: "Property manager, Brooklyn",
+                body: "Tenant complaints across two of my buildings dropped to almost zero by month four. I'm rolling this out to the rest of the portfolio.",
+              },
+              {
+                name: "Ghost kitchen operator, Queens",
+                body: "We never had a real pest contract before. The monthly reporting alone is worth what we pay them — operators in the building stopped fighting.",
+              },
+            ].map((t) => (
+              <figure
+                key={t.name}
+                className="rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-card)]"
+              >
+                <div className="flex gap-1 text-yellow-400">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star key={i} className="h-4 w-4 fill-current" />
+                  ))}
+                </div>
+                <blockquote className="mt-4 text-sm leading-relaxed text-foreground">
+                  "{t.body}"
+                </blockquote>
+                <figcaption className="mt-5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  {t.name}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section id="faq" className="bg-background py-20">
+        <div className="container-site grid gap-10 md:grid-cols-[0.9fr_1.1fr] md:gap-16">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+              FAQ
+            </p>
+            <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
+              Questions operators ask before starting
+            </h2>
+            <p className="mt-5 text-muted-foreground">
+              Don't see yours? Call us at{" "}
+              <a href="tel:+18005550199" className="font-semibold text-foreground underline">
+                (800) 555-0199
+              </a>
+              .
+            </p>
+          </div>
+          <Accordion type="single" collapsible className="w-full">
+            {FAQS.map((f, i) => (
+              <AccordionItem key={f.q} value={`item-${i}`} className="border-border">
+                <AccordionTrigger className="text-left text-base font-semibold">
+                  {f.q}
+                </AccordionTrigger>
+                <AccordionContent className="text-muted-foreground leading-relaxed">
+                  {f.a}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+      </section>
+
+      {/* CTA BAND */}
+      <section className="ink-section">
+        <div className="container-site grid gap-10 py-16 md:grid-cols-[1.2fr_0.8fr] md:items-center md:py-20">
+          <div>
+            <h2 className="text-3xl font-extrabold leading-tight md:text-5xl">
+              Start the program. Break the cycle.
+            </h2>
+            <p className="mt-5 max-w-xl text-ink-muted md:text-lg">
+              First visit covers walkthrough and setup. Monthly management and
+              documented reporting run from there. Month-to-month, NYC & NJ.
+            </p>
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <Button asChild size="lg" className="h-12 px-6 text-base">
+                <a href="#contact">
+                  Get started <ArrowRight className="h-4 w-4" />
+                </a>
+              </Button>
+              <a
+                href="tel:+18005550199"
+                className="flex items-center gap-2 text-base font-semibold text-ink-foreground hover:text-brand"
+              >
+                <Phone className="h-4 w-4" /> (800) 555-0199
+              </a>
+            </div>
+          </div>
+          <div className="rounded-2xl border border-ink-border bg-white/5 p-6 backdrop-blur">
+            <ul className="space-y-3 text-sm text-ink-foreground">
+              {[
+                "Layered onto your existing pest program",
+                "EPA-designated minimum-risk bait",
+                "Documented monthly reporting",
+                "Month-to-month, no long contracts",
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-3">
+                  <Check className="mt-0.5 h-5 w-5 shrink-0 text-brand" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+    </>
+  );
 }
