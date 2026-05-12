@@ -61,8 +61,8 @@ function Laurel({ side }: { side: "left" | "right" }) {
   return (
     <svg
       viewBox="0 0 80 120"
-      width="14"
-      height="21"
+      width="11"
+      height="16"
       fill="currentColor"
       aria-hidden="true"
       className={cn("shrink-0 opacity-90", side === "right" && "-scale-x-100")}
