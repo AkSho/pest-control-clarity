@@ -6,6 +6,8 @@ import {
   SectionHeader,
   SolutionHero,
 } from "@/components/site/solutions/SolutionPrimitives";
+import { InlineFigure } from "@/components/site/InlineFigure";
+import evolveSoftBait from "@/assets/inline/evolve-soft-bait.jpg";
 
 const TITLE =
   "Rat Poison vs. Fertility Management: What Each Layer Actually Does | Cloakd";
@@ -203,6 +205,11 @@ function RatPoisonVsPage() {
               </tbody>
             </table>
           </div>
+          <InlineFigure
+            src={evolveSoftBait}
+            alt="Evolve soft bait pieces beside their tub packaging"
+            caption="Evolve is a contraceptive soft bait — non-lethal, no anticoagulants."
+          />
           <p className="mt-6 max-w-3xl text-base leading-relaxed text-muted-foreground md:text-lg">
             The 90-day program uses both. Phase 1 clears the current
             colony with whatever treatment is already in place. Phase 2

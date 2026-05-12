@@ -5,6 +5,8 @@ import {
   SectionHeader,
   SolutionHero,
 } from "@/components/site/solutions/SolutionPrimitives";
+import { InlineFigure } from "@/components/site/InlineFigure";
+import pcoOperator from "@/assets/inline/pco-operator-field.jpg";
 
 const TITLE =
   "DIY Rat Birth Control vs. a Managed Evolve Program: What Changes | Cloakd";
@@ -156,6 +158,11 @@ function DiyComparePage() {
               </tbody>
             </table>
           </div>
+          <InlineFigure
+            src={pcoOperator}
+            alt="Professional pest control operator servicing an outdoor bait station"
+            caption="Scheduled professional service — placement, dosing, and reporting."
+          />
         </div>
       </section>
 

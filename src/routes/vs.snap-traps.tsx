@@ -7,6 +7,8 @@ import {
   SolutionHero,
   StatCard,
 } from "@/components/site/solutions/SolutionPrimitives";
+import { InlineFigure } from "@/components/site/InlineFigure";
+import restaurantSnapTrap from "@/assets/inline/restaurant-snap-trap.jpg";
 
 const TITLE =
   "Snap Traps vs. Fertility Management: Why Trapping Can't Win Alone | Cloakd";
@@ -166,6 +168,11 @@ function SnapTrapsVsPage() {
               </tbody>
             </table>
           </div>
+          <InlineFigure
+            src={restaurantSnapTrap}
+            alt="Snap trap placed on a restaurant back-of-house floor mat"
+            caption="Snap traps remove individuals one at a time; fertility control reduces the next generation."
+          />
         </div>
       </section>
 
