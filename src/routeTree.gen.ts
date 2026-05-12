@@ -13,6 +13,7 @@ import { Route as WhyItKeepsComingBackRouteImport } from './routes/why-it-keeps-
 import { Route as WhatToExpectRouteImport } from './routes/what-to-expect'
 import { Route as ResultsRouteImport } from './routes/results'
 import { Route as ResourcesRouteImport } from './routes/resources'
+import { Route as NjRodentViolationRouteImport } from './routes/nj-rodent-violation'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as GetStartedRouteImport } from './routes/get-started'
 import { Route as FaqRouteImport } from './routes/faq'
@@ -47,6 +48,11 @@ const ResultsRoute = ResultsRouteImport.update({
 const ResourcesRoute = ResourcesRouteImport.update({
   id: '/resources',
   path: '/resources',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NjRodentViolationRoute = NjRodentViolationRouteImport.update({
+  id: '/nj-rodent-violation',
+  path: '/nj-rodent-violation',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HowItWorksRoute = HowItWorksRouteImport.update({
@@ -134,6 +140,7 @@ export interface FileRoutesByFullPath {
   '/faq': typeof FaqRoute
   '/get-started': typeof GetStartedRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/nj-rodent-violation': typeof NjRodentViolationRoute
   '/resources': typeof ResourcesRoute
   '/results': typeof ResultsRoute
   '/what-to-expect': typeof WhatToExpectRoute
@@ -155,6 +162,7 @@ export interface FileRoutesByTo {
   '/faq': typeof FaqRoute
   '/get-started': typeof GetStartedRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/nj-rodent-violation': typeof NjRodentViolationRoute
   '/resources': typeof ResourcesRoute
   '/results': typeof ResultsRoute
   '/what-to-expect': typeof WhatToExpectRoute
@@ -177,6 +185,7 @@ export interface FileRoutesById {
   '/faq': typeof FaqRoute
   '/get-started': typeof GetStartedRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/nj-rodent-violation': typeof NjRodentViolationRoute
   '/resources': typeof ResourcesRoute
   '/results': typeof ResultsRoute
   '/what-to-expect': typeof WhatToExpectRoute
@@ -200,6 +209,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/get-started'
     | '/how-it-works'
+    | '/nj-rodent-violation'
     | '/resources'
     | '/results'
     | '/what-to-expect'
@@ -221,6 +231,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/get-started'
     | '/how-it-works'
+    | '/nj-rodent-violation'
     | '/resources'
     | '/results'
     | '/what-to-expect'
@@ -242,6 +253,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/get-started'
     | '/how-it-works'
+    | '/nj-rodent-violation'
     | '/resources'
     | '/results'
     | '/what-to-expect'
@@ -264,6 +276,7 @@ export interface RootRouteChildren {
   FaqRoute: typeof FaqRoute
   GetStartedRoute: typeof GetStartedRoute
   HowItWorksRoute: typeof HowItWorksRoute
+  NjRodentViolationRoute: typeof NjRodentViolationRoute
   ResourcesRoute: typeof ResourcesRoute
   ResultsRoute: typeof ResultsRoute
   WhatToExpectRoute: typeof WhatToExpectRoute
@@ -307,6 +320,13 @@ declare module '@tanstack/react-router' {
       path: '/resources'
       fullPath: '/resources'
       preLoaderRoute: typeof ResourcesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/nj-rodent-violation': {
+      id: '/nj-rodent-violation'
+      path: '/nj-rodent-violation'
+      fullPath: '/nj-rodent-violation'
+      preLoaderRoute: typeof NjRodentViolationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/how-it-works': {
@@ -424,6 +444,7 @@ const rootRouteChildren: RootRouteChildren = {
   FaqRoute: FaqRoute,
   GetStartedRoute: GetStartedRoute,
   HowItWorksRoute: HowItWorksRoute,
+  NjRodentViolationRoute: NjRodentViolationRoute,
   ResourcesRoute: ResourcesRoute,
   ResultsRoute: ResultsRoute,
   WhatToExpectRoute: WhatToExpectRoute,
