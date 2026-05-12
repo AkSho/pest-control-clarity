@@ -1,29 +1,29 @@
 import { Link } from "@tanstack/react-router";
-import { Phone, Menu, X } from "lucide-react";
+import { Phone, Menu, X, ArrowRight, ShieldCheck } from "lucide-react";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 
 const NAV = [
-  { to: "/", label: "How it works" },
-  { to: "/", label: "Who we serve", hash: "#who" },
-  { to: "/", label: "Field data", hash: "#data" },
-  { to: "/areas/manhattan-ny", label: "Service areas" },
-  { to: "/", label: "FAQ", hash: "#faq" },
+  { label: "How it works", href: "#how" },
+  { label: "Field data", href: "#data" },
+  { label: "Who we serve", href: "#who" },
+  { label: "Service areas", href: "#areas" },
+  { label: "FAQ", href: "#faq" },
 ];
+
+const PHONE = "(800) 555-0199";
+const PHONE_HREF = "tel:+18005550199";
 
 export function TopBar() {
   return (
-    <div className="ink-section text-xs">
-      <div className="container-site flex h-9 items-center justify-between">
-        <span className="text-ink-muted">
-          NYC & NJ · EPA-designated minimum-risk fertility control
+    <div className="bg-brand text-brand-foreground text-xs">
+      <div className="container-site flex h-9 items-center justify-center gap-6">
+        <span className="hidden items-center gap-2 sm:flex">
+          <ShieldCheck className="h-3.5 w-3.5" />
+          Licensed & insured · NYC DOHMH program-aware
         </span>
-        <a
-          href="tel:+18005550199"
-          className="flex items-center gap-2 font-medium text-ink-foreground hover:text-brand"
-        >
+        <a href={PHONE_HREF} className="flex items-center gap-2 font-semibold">
           <Phone className="h-3.5 w-3.5" />
-          (800) 555-0199
+          {PHONE}
         </a>
       </div>
     </div>
@@ -33,16 +33,16 @@ export function TopBar() {
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur">
+    <header className="sticky top-0 z-40 ink-section border-b border-ink-border">
       <div className="container-site flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-ink text-ink-foreground font-bold">
+          <div className="flex h-9 w-9 items-center justify-center rounded-md bg-brand text-brand-foreground font-extrabold">
             C
           </div>
           <div className="leading-tight">
-            <div className="text-sm font-bold tracking-tight">Cloakd Removals</div>
-            <div className="text-[10px] uppercase tracking-widest text-muted-foreground">
-              Rodent fertility control
+            <div className="text-sm font-bold tracking-tight">CLOAKD</div>
+            <div className="text-[10px] uppercase tracking-widest text-ink-muted">
+              Rodent Fertility Control
             </div>
           </div>
         </Link>
@@ -51,25 +51,24 @@ export function SiteHeader() {
           {NAV.map((item) => (
             <a
               key={item.label}
-              href={item.hash ? item.hash : item.to}
-              className="text-sm font-medium text-foreground/80 transition hover:text-foreground"
+              href={item.href}
+              className="text-sm font-medium text-ink-foreground/85 transition hover:text-brand"
             >
               {item.label}
             </a>
           ))}
         </nav>
 
-        <div className="hidden md:block">
-          <Button asChild>
-            <a href="tel:+18005550199">
-              <Phone className="h-4 w-4" />
-              (800) 555-0199
-            </a>
-          </Button>
-        </div>
+        <a
+          href={PHONE_HREF}
+          className="hidden items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-brand-foreground transition hover:opacity-90 md:inline-flex"
+        >
+          {PHONE}
+          <ArrowRight className="h-4 w-4" />
+        </a>
 
         <button
-          className="md:hidden"
+          className="text-ink-foreground md:hidden"
           onClick={() => setOpen(!open)}
           aria-label="Menu"
         >
@@ -78,21 +77,24 @@ export function SiteHeader() {
       </div>
 
       {open && (
-        <div className="border-t border-border bg-background md:hidden">
-          <div className="container-site flex flex-col gap-2 py-4">
+        <div className="border-t border-ink-border md:hidden">
+          <div className="container-site flex flex-col gap-1 py-4">
             {NAV.map((item) => (
               <a
                 key={item.label}
-                href={item.hash ? item.hash : item.to}
+                href={item.href}
                 onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-2 text-sm font-medium hover:bg-accent"
+                className="rounded-md px-3 py-2 text-sm font-medium text-ink-foreground hover:bg-white/5"
               >
                 {item.label}
               </a>
             ))}
-            <Button asChild className="mt-2">
-              <a href="tel:+18005550199">Call (800) 555-0199</a>
-            </Button>
+            <a
+              href={PHONE_HREF}
+              className="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-brand px-5 py-3 text-sm font-semibold text-brand-foreground"
+            >
+              <Phone className="h-4 w-4" /> {PHONE}
+            </a>
           </div>
         </div>
       )}
