@@ -1,59 +1,53 @@
-## Chunk: Program / Education pages
+## Chunk: Compliance pages (NYC + NJ violations)
 
-Build three new dedicated routes with reference-site (nealrfg) layout patterns and verbatim copy from cloakd-removals.cloud. Same approach as previous chunks.
+Note: there are no `/vs/*` pages on the live cloakd-removals.cloud site (404). Scoping this chunk to the two compliance pages, which are the high-intent search/landing pages for restaurant + property operators who got cited.
 
 ### Routes to create
 
-1. `src/routes/how-it-works.tsx` — `/how-it-works`
-2. `src/routes/does-rat-birth-control-work.tsx` — `/does-rat-birth-control-work`
-3. `src/routes/what-to-expect.tsx` — `/what-to-expect`
+1. `src/routes/dohmh-rodent-violation-nyc.tsx` — `/dohmh-rodent-violation-nyc`
+2. `src/routes/nj-rodent-violation.tsx` — `/nj-rodent-violation`
 
 ### Page structures (verbatim copy from live site)
 
-**how-it-works**
-- Hero: "You keep paying for treatment. The rats keep coming back." + lead intro + LeadForm
-- Section 1 "Why the cycle doesn't stop": narrative + 5-step `TimelineStrip` (Treatment week → Week 2 → Week 3–4 → Week 5–6 → Week 7–8 → Next treatment)
-- Section 2 "Fertility management mechanism": 3-card grid (In males / In females / Over 90 days) + "Why it's safe for food environments" callout band
-- Section 3 "The 90-day program": `PhaseCards` (Phase 1 / Phase 2 / Monitoring) — already have primitive
-- Section 4 "What the program is and isn't": two-column "handles / doesn't replace" comparison
-- ClosingCta band
+**dohmh-rodent-violation-nyc**
+- `SolutionHero`: "You got a DOHMH rodent violation. Here's what it means for your NYC restaurant — and what actually closes it." + intro + LeadForm
+- "Codes 04K and 04L": 2-card grid (04K rats / 04L mice) + `StatCard` trio (5+ pts, 14 pts = B, fine range) + narrative paragraph on fine amounts
+- "How inspections are triggered": narrative band
+- "Inspectors don't need to see a live rat": 6-card grid (live rats / dead rats / fresh droppings / gnaw marks / burrows / grease marks)
+- "Closing the violation is different from closing the vulnerability": two-column "standard treatment / 90-day program adds" comparison (reuse the PhaseCards split-column pattern)
+- `FieldDataTrio` (79% / 88% / 90%) + SenesTech source link
+- `ClosingCta`: "Start before the next unannounced visit."
 
-**does-rat-birth-control-work**
-- Hero: "Does rat birth control work? NYC tried it in Bryant Park. It failed." + intro + LeadForm
-- Section "Why Bryant Park failed": narrative + 4-card grid (No Phase 1 knockdown / Open outdoor / Competing attractants / No monitoring)
-- Section "What the field data shows": `FieldDataTrio` (reuse — 79% / 88% / 50%+) with Location A/B labels + source citation + June 2025 follow-up note
-- Section "What makes deployment succeed": numbered 4-up grid (1–4) with the four factors
-- Section "ContraPest vs. Evolve": two-column comparison cards
-- ClosingCta
-
-**what-to-expect**
-- Hero: "You've been pitched before…" + intro + LeadForm
-- "Program timeline" `TimelineStrip` (Week 1 / Weeks 1–3 / Week 3–4 / Monthly months 2–3) — each step expanded with You/Us split
-- "What you receive": 3-card grid (Baseline report / Month 2 report / 90-day summary)
-- "What we need from you": numbered 3-up (Existing PCO / Access / Compliance history)
-- "Pricing" callout band + 3 FAQ-style Q&A blocks (covered? / after 90 days / multi-unit)
-- ClosingCta
+**nj-rodent-violation**
+- `SolutionHero`: "An NJ rodent violation has no letter grade in the window. The exposure is still real." + intro + LeadForm
+- "Local health departments. State sanitary code.": narrative + 4-card grid (Inspection trigger / Violation classification / Reinspection requirement / Public record)
+- "Closure authority without the grade system warning": narrative band (NJ restaurants)
+- "Tenant complaints route to local health": narrative band (NJ property managers)
+- "NJ vs NYC enforcement": two-column comparison cards (NYC bullets / NJ bullets) — reuse PhaseCards primitive
+- "Same two-phase structure": `PhaseCards` (Phase 1 your existing NJ exterminator / Phase 2 Cloakd fertility management)
+- `FieldDataTrio` (79% / 88% / 90%) + SenesTech source link
+- `ClosingCta`: "NJ operators: tell us about your property."
 
 ### Shared work
 
-- Reuse existing `SolutionPrimitives` (`SolutionHero`, `TimelineStrip`, `PhaseCards`, `FieldDataTrio`, `ClosingCta`). Generalize imports if needed; no new tokens.
-- Add small inline helpers per page for the unique blocks (you/us split, comparison columns, Q&A) — kept local to each route, not a new shared file unless reused twice.
+- Reuse `SolutionPrimitives` (`SolutionHero`, `StatCard`, `PhaseCards`, `FieldDataTrio`, `ClosingCta`). No new shared primitives.
+- Small inline components per page for unique blocks (the 6-up "active rat signs" grid on NYC, the 4-up enforcement-detail cards on NJ).
 - `head()` on each route with route-specific title, description, og:title, og:description, og:image (hero).
 
 ### Assets
 
-- `src/assets/program-how-it-works.jpg` — empty NYC alley, fading rat trails motif (neutral, photographic)
-- `src/assets/program-bryant-park.jpg` — empty urban park bench at dusk (Bryant-Park-evocative, no logos)
-- `src/assets/program-what-to-expect.jpg` — clean utility/basement corridor with bait station perimeter
+- `src/assets/compliance-dohmh-nyc.jpg` — NYC restaurant kitchen pass / inspector clipboard motif (neutral, photographic)
+- `src/assets/compliance-nj-violation.jpg` — NJ municipal storefront / public-records evocative scene (no logos)
 
-All 1536×1024, generated via imagegen `fast`.
+Both 1536×1024, generated via imagegen `fast`.
 
 ### Nav / cross-linking
 
-- Add the three routes into `SiteHeader` (likely under a "Program" group) and `SiteFooter`. Will check current nav structure and keep grouping consistent with what's already there (no nav redesign).
+- Add both routes to `SiteHeader` — likely under a new "Compliance" group (or extend the existing "Program" dropdown). Keep mobile drawer in sync.
+- Add both routes to `SiteFooter` link list.
+- Cross-link from the restaurants and property-managers solution pages where compliance language already references 04K/04L and NJ exposure.
 
-### Out of scope (next chunks)
+### Out of scope (no live source pages exist)
 
-- `/vs/*` comparison pages
-- `/dohmh-rodent-violation-nyc`, `/nj-rodent-violation`
-- areas / home audit / get-started edits
+- `/vs/*` comparison pages — confirmed 404 on live site. Skip this chunk.
+- `/areas/*`, `/home-audit`, `/get-started` edits — separate chunk.
