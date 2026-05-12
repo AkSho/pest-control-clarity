@@ -1,84 +1,67 @@
-## Scope
-Home page only. No copy changes except the two specific edits you called out (Field Data intro paragraph, "NYC & NJ" → "NYC, NJ, & CA"). All other copy stays exactly as it is on cloakd-removals.cloud.
+# Refinement plan
 
-## 1. Above the fold
+## 1. Fix "Site Walkthrough & Program Estimate" contrast
 
-- **Eyebrow badges**: Rebuild `TrustBadges.tsx` to match your screenshot — laurel wreaths sit *outside* a translucent purple/violet pill. Inside the pill, two stacked lines: "4.9—STAR RATED BY" / "OPERATORS". Replace the current EPA shield badge with a second pill in the same visual treatment ("EPA-DESIGNATED / MINIMUM RISK"). Switch wreath SVG to a fuller, denser laurel that visually matches the reference (more leaves, thicker stroke).
-- **Hero text contrast**:
-  - Strengthen the hero background overlay (darker gradient over `hero-urban.jpg`) so all white text reads cleanly.
-  - "We end that cycle." — bump to near-white (`text-white/95`) instead of muted.
-  - All hero body copy → near-white.
-- **Lead form card**:
-  - Submit button label "Site Walkthrough & Program Estimate" — change button bg to brand royal-blue with white text (currently white/white = invisible).
-  - Keep card white, inputs flat, ratings row beneath.
+Cause: the heading uses `text-foreground`. The form sits on `bg-card`, but currently the `--foreground` and `--card` tokens both resolve close to white in this section, making text invisible.
 
-## 2. As Seen On (PressStrip)
+Fix in `src/components/site/LeadForm.tsx`:
+- Change the heading to `text-ink` (dark cobalt) so it's legible on the white card regardless of theme inheritance.
+- Apply the same to the "Schedule your FREE" line (use `text-ink/70`) and the "FREE" emphasis (`text-ink`).
+- Verify in preview after edit.
 
-- Replace text wordmarks with real logos from:
-  - mypmp.net (Pest Management Professional)
-  - pctonline.com (Pest Control Technology)
-  - fox32chicago.com (Fox 32 Chicago)
-  - nypost.com (NY Post)
-  - agriculture.com (Successful Farming)
-- Use `fetch_website` with `screenshot` + `html` to extract each site's logo asset URL, download to `src/assets/press/`, render as `<img>` with grayscale + opacity hover treatment matching nealrfg.
+No global token changes — scoped fix only.
 
-## 3. Field Data section — revert to original
+## 2. Hero eyebrow badges → match reference screenshot
 
-Restore the exact 4 stats and copy from cloakd-removals.cloud Field Data block, omitting the last "90%" stat. Match section eyebrow + heading from the live site verbatim. (I'll fetch the live page in build phase to copy strings 1:1.)
+Rebuild `src/components/site/TrustBadges.tsx`:
+- Remove the violet/blurred pill background entirely.
+- Render plain bold white uppercase text directly on the hero, flanked by white laurel SVGs (cleaner, fuller leaves like the screenshot).
+- Two badges side by side:
+  - Laurels + "4.9—STAR RATED BY / OPERATORS"
+  - Shield-check icon + "EPA-DESIGNATED / MINIMUM RISK" (replace second laurel pair with a shield to mirror the reference's mixed badge styles)
+- Tighter typography: `font-display`, `font-extrabold`, `tracking-tight`, two stacked lines.
 
-## 4. CTA band copy edit (the only intentional copy change)
+## 3. Review cards — logo on the left, larger
 
-Replace current text with:
+Update `src/components/site/ReviewsGrid.tsx`:
+- Move platform logo from top-right to top-left of each card.
+- Increase logo size (≈48–56px square chip) so it reads as a proper brand mark, not a tiny badge.
+- Keep the 5-star row, quote, and name/role layout below.
 
-> **Start the program. Break the cycle.**
-> The first visit covers setup, with monthly management and documented reporting running from there. The numbers are yours to show any regulator or property owner who asks.
-> Serving food service operators and property managers across NYC and NJ, month-to-month, with results documented every cycle.
+## 4. "Who We Serve" image grid (new section, replacing existing icon-only WHO grid)
 
-## 5. Service-area subhead
+Mirror nealrfg's services grid: large photo cards with a label and short description overlaid or beneath.
 
-"Serving food-service operators and managed properties across NYC & NJ" → "Serving food-service operators and managed properties across NYC, NJ, & CA"
+Copy uploaded images into `src/assets/who/`:
+- `Restaurants.png` → restaurants.jpg
+- `Ghost_Kitchens.png` → ghost-kitchens.jpg
+- `Food_Storage_Cold_Chain.png` → cold-chain.jpg
+- `Residential.png` → residential.jpg
+- `Property_Managers.png` → property-managers.jpg
 
-## 6. New About section (mirrors nealrfg structure)
+Create `src/components/site/WhoWeServeGrid.tsx`:
+- Responsive grid (1 col mobile / 2 col tablet / 3 col desktop).
+- Each card: tall image (aspect ~4:3), dark gradient overlay at bottom, white title + one-line tagline. Hover: slight zoom on image.
+- Pull existing copy from current `WHO` array (no copy changes) — just match titles to images. Keep HOAs & Co-ops as a 6th card using a placeholder/neutral image OR omit until user provides one.
 
-Insert between Process and Service Grid (matching nealrfg's flow). Two-column layout:
-- **Left**: cinematic photo of operator/technician in NYC alley setting (AI-generated).
-- **Right**: eyebrow ("ABOUT CLOAKD"), H2, 2 paragraphs, 3-bullet checklist, CTA button.
-- All copy pulled verbatim from existing Cloakd "About"/"Why Cloakd" content already on the live site — I'll scrape and reuse, no rewriting.
+Replace the existing WHO section in `src/routes/index.tsx` with the new component. Keep the section heading/eyebrow as-is.
 
-## 7. Reviews section — new component
+## 5. Open item
 
-Build `ReviewsGrid.tsx` using the 7 uploaded screenshots' **content** (quote, name, role/company) re-typed as React cards. Card layout matches nealrfg:
-- White card, rounded, subtle shadow.
-- **Top-right corner**: small platform logo (Walmart Marketplace, Amazon, generic farm/sanctuary/operator badges as icons).
-- 5-star row in brand gold.
-- Quote body.
-- Name (bold) + role/company (muted) at bottom.
+HOAs & Co-ops currently has no uploaded image. Plan: render it as a card with a neutral dark gradient + icon (no photo) until you provide an image. The user said "more shortly," so this stays a placeholder card matching the others' dimensions.
 
-Platform logos: fetch Walmart and Amazon official wordmarks; the "Agricultural Customer / Sanctuary Operator / Pest Control Operator" badges become small inline SVG icon chips in brand colors.
+## Files
 
-## 8. Imagery plan (AI-generated, cinematic, consistent style)
+Edit:
+- `src/components/site/LeadForm.tsx`
+- `src/components/site/TrustBadges.tsx`
+- `src/components/site/ReviewsGrid.tsx`
+- `src/routes/index.tsx`
 
-Following nealrfg's image cadence, I'll generate:
-
-| Slot | Image |
-|---|---|
-| Hero bg | Already exists (`hero-urban.jpg`) — regenerate slightly darker for contrast |
-| About section | Operator with clipboard inspecting commercial kitchen line at dusk |
-| Process section | Three small support images (inspection / deployment / reporting) OR one wide band image |
-| Field Data band | Subtle dark texture/pattern background |
-| CTA band | NYC skyline at blue hour, heavy darken |
-| Service area cards | One reusable cityscape per region (NYC, NJ, Bay Area) — used as card thumbnails |
-
-All images: cinematic, low-key, navy/cobalt/warm-gold color grading consistent with the Ratatouille palette.
-
-## Technical notes
-
-- Files to edit: `TrustBadges.tsx`, `LeadForm.tsx`, `PressStrip.tsx`, `routes/index.tsx`, `styles.css` (overlay tweak), `SiteFooter.tsx` (NYC/NJ/CA wording if mirrored).
-- Files to create: `src/components/site/AboutSection.tsx`, `src/components/site/ReviewsGrid.tsx`, `src/assets/press/*.{svg,png}`, `src/assets/about-operator.jpg`, `src/assets/cta-skyline.jpg`, plus process/area images.
-- Logo fetching: `fetch_website` for HTML, then `curl` to download each `<img>` src; fall back to homepage screenshot crop if a clean asset isn't linkable.
-- Reviews data: typed array in `src/data/reviews.ts`.
+Create:
+- `src/components/site/WhoWeServeGrid.tsx`
+- `src/assets/who/*.jpg` (5 copied uploads)
 
 ## Out of scope
-- No copy rewrites beyond the two listed edits.
-- No new pages, no service-area template changes, no logo/brand mark changes.
-- No backend.
+
+No copy changes, no new routes, no other section restructures, no token/theme rewrites.
