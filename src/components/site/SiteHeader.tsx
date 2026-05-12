@@ -296,6 +296,14 @@ export function SiteHeader() {
               </Link>
             ))}
 
+            <Link
+              to="/areas"
+              onClick={() => setOpen(false)}
+              className="rounded-md px-3 py-2 text-sm font-medium text-ink-foreground hover:bg-white/5"
+            >
+              Service areas
+            </Link>
+
             {NAV.slice(1).map((item) => (
               <Link
                 key={item.label}
