@@ -83,13 +83,20 @@ function BirthControlPage() {
             intro={
               <>
                 <p>
-                  The Bryant Park pilot used liquid ContraPest in an open
-                  public space. NYC Norway rats (Rattus norvegicus) have
-                  arguably the most abundant competing food supply of any
-                  urban rat population on earth. Without containerized trash
-                  and a prior knockdown reducing the existing population, the
-                  rats had no reason to consume the bait at the concentration
-                  needed to affect reproduction.
+                  The Bryant Park pilot used liquid{" "}
+                  <Link
+                    to="/contrapest"
+                    className="text-brand underline-offset-2 hover:underline"
+                  >
+                    ContraPest
+                  </Link>{" "}
+                  in an open public space. NYC Norway rats (Rattus
+                  norvegicus) have arguably the most abundant competing
+                  food supply of any urban rat population on earth. Without
+                  containerized trash and a prior knockdown reducing the
+                  existing population, the rats had no reason to consume
+                  the bait at the concentration needed to affect
+                  reproduction.
                 </p>
                 <p>
                   This is the same failure pattern across every documented
