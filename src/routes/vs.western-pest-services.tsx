@@ -1,0 +1,177 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import heroImg from "@/assets/hero-urban.jpg";
+import {
+  ClosingCta,
+  FieldDataTrio,
+  SectionHeader,
+  SolutionHero,
+} from "@/components/site/solutions/SolutionPrimitives";
+
+const TITLE = "Western Pest Services vs. Cloakd: Adding Fertility Management to IPM | Cloakd";
+const DESCRIPTION =
+  "Western Pest Services runs an integrated pest management program across NJ and NYC. IPM treats the colony. Fertility management addresses the layer IPM doesn't reach. Here's how they fit together.";
+
+export const Route = createFileRoute("/vs/western-pest-services")({
+  head: () => ({
+    meta: [
+      { title: TITLE },
+      { name: "description", content: DESCRIPTION },
+      { property: "og:title", content: TITLE },
+      { property: "og:description", content: DESCRIPTION },
+      { property: "og:image", content: heroImg },
+    ],
+  }),
+  component: WesternVsPage,
+});
+
+const ROWS = [
+  { label: "Treatment method", a: "IPM — exclusion, harborage elimination, targeted treatment with minimum pesticide use", b: "Evolve fertility management — gossypol-based bait that reduces reproductive output alongside existing IPM" },
+  { label: "Expert backing", a: "Board Certified Entomologists", b: "SenesTech field data — 79% reduction in track presence over 5 months in urban building deployments" },
+  { label: "Monitoring", a: "Scheduled visit reports per IPM protocol", b: "Monthly track count plates — documented declining trend for compliance record" },
+  { label: "Replacement cycle", a: "Cleared at treatment, rebuilds 4–8 weeks later", b: "Replacement population forms at reduced rate — density declines continuously" },
+  { label: "Compliance record", a: "Licensed PMP documentation for NJ and NYC inspections", b: "Written monthly monitoring reports — 90-day trend line for municipal health officer or DOHMH inspector" },
+  { label: "Works with existing vendor", a: "Is your existing vendor", b: "Yes — Western handles the IPM foundation, Cloakd adds fertility management on top" },
+];
+
+function WesternVsPage() {
+  return (
+    <>
+      <SolutionHero
+        eyebrow="vs. Western Pest Services"
+        headline="Western runs an IPM program across NJ and NYC. Here's the one layer integrated pest management doesn't include."
+        lede="Western Pest Services — backed by Board Certified Entomologists and operating across NJ, NY, PA, DE, MD, and CT — runs one of the most technically rigorous standard pest management programs in the region. Their integrated pest management approach reduces pesticide use and addresses structural conditions. It doesn't reduce the fertility of the replacement colony that forms after each treatment. Fertility management is what addresses that layer."
+        image={heroImg}
+        ctaLabel="Start the program"
+      />
+
+      <section className="bg-background py-20">
+        <div className="container-site">
+          <SectionHeader
+            eyebrow="What Western's IPM program covers"
+            title="Decades of pest management. One biology problem standard IPM can't solve."
+            intro={
+              <>
+                <p>
+                  Western Pest Services' integrated pest management
+                  approach uses the minimum necessary pesticide
+                  intervention — relying on structural exclusion,
+                  harborage elimination, and targeted treatment to reduce
+                  rodent populations across NJ and NYC. Board Certified
+                  Entomologists back the program. Technicians are
+                  licensed and certified. For NJ operators under the NJ
+                  Food Code (NJ Administrative Code 8:24), their
+                  documentation satisfies municipal health department
+                  requirements.
+                </p>
+                <p>
+                  IPM reduces pesticide use by relying on the
+                  environment working against the pest. The problem:
+                  empty territory in a dense urban or suburban block is
+                  itself an environmental signal. Norway rats from
+                  surrounding harborage detect vacancy and move in. The
+                  IPM approach removes what's there — it doesn't change
+                  the fertility of what comes next.
+                </p>
+                <p>
+                  Fertility management is a layer that IPM programs
+                  haven't traditionally included because the product
+                  category is relatively new. It doesn't replace the IPM
+                  foundation — it adds the one mechanism that reduces
+                  how fast the replacement population reaches detectable
+                  density.
+                </p>
+              </>
+            }
+          />
+        </div>
+      </section>
+
+      <section className="bg-surface py-20">
+        <div className="container-site">
+          <SectionHeader
+            eyebrow="Side-by-side comparison"
+            title="Western Pest Services vs. Cloakd 90-day program."
+          />
+          <div className="mt-10 overflow-x-auto rounded-2xl border border-border bg-card shadow-[var(--shadow-card)]">
+            <table className="w-full min-w-[640px] border-collapse text-left text-sm md:text-base">
+              <thead>
+                <tr className="border-b border-border bg-surface">
+                  <th className="px-5 py-4 font-semibold text-muted-foreground">&nbsp;</th>
+                  <th className="px-5 py-4 font-extrabold">Western Pest Services</th>
+                  <th className="px-5 py-4 font-extrabold text-brand">Cloakd (added layer)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {ROWS.map((r) => (
+                  <tr key={r.label} className="border-b border-border last:border-0">
+                    <td className="px-5 py-4 align-top text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">{r.label}</td>
+                    <td className="px-5 py-4 align-top text-muted-foreground">{r.a}</td>
+                    <td className="px-5 py-4 align-top text-foreground">{r.b}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="mt-6 max-w-3xl text-sm text-muted-foreground">
+            Western Pest Services is a registered trademark of its
+            respective owner. Comparison is for informational purposes;
+            Cloakd is not affiliated with or endorsed by Western Pest
+            Services.
+          </p>
+        </div>
+      </section>
+
+      <FieldDataTrio
+        intro="IPM foundation plus fertility management. A different 90-day outcome."
+        footnote={
+          <>
+            Source:{" "}
+            <a className="underline underline-offset-2 hover:text-brand" href="https://www.prnewswire.com/news-releases/senestech-reports-significant-reductions-in-rodent-activity-following-evolve-deployments-in-urban-field-studies-302691116.html" target="_blank" rel="noreferrer">
+              SenesTech, Inc. — February 18, 2026
+            </a>
+          </>
+        }
+      />
+
+      <section className="bg-background py-20">
+        <div className="container-site">
+          <SectionHeader
+            eyebrow="How to think about it"
+            title="Western handles the IPM foundation. Cloakd handles the replacement cycle."
+          />
+          <div className="mt-10 grid gap-5 md:grid-cols-2">
+            <div className="rounded-2xl border border-border bg-card p-7 shadow-[var(--shadow-card)]">
+              <h3 className="text-lg font-extrabold leading-tight">Western alone is sufficient if</h3>
+              <ul className="mt-4 space-y-3 text-sm leading-relaxed text-muted-foreground md:text-base">
+                <li>You have a single active infestation with no recurring NJ or NYC violation history</li>
+                <li>Your property responds well to standard IPM — no persistent replacement pressure</li>
+                <li>You need licensed treatment and entomologist-backed compliance documentation</li>
+                <li>Inspection timing has consistently been favorable post-treatment</li>
+              </ul>
+            </div>
+            <div className="rounded-2xl border border-brand/40 bg-brand-soft p-7 shadow-[var(--shadow-card)]">
+              <h3 className="text-lg font-extrabold leading-tight">Add Cloakd if</h3>
+              <ul className="mt-4 space-y-3 text-sm leading-relaxed text-muted-foreground md:text-base">
+                <li>You have recurring rodent violations in NJ or NYC despite consistent service</li>
+                <li>You need a documented 90-day population trend for a health department re-inspection</li>
+                <li>The replacement cycle keeps resetting between scheduled IPM visits</li>
+                <li>Your inspector wants evidence of declining activity, not just IPM compliance records</li>
+              </ul>
+            </div>
+          </div>
+          <p className="mt-8 text-sm text-muted-foreground">
+            Related: <Link to="/vs/viking-pest-control" className="text-brand underline-offset-2 hover:underline">vs. Viking Pest Control</Link> ·{" "}
+            <Link to="/vs/orkin" className="text-brand underline-offset-2 hover:underline">vs. Orkin</Link>
+          </p>
+        </div>
+      </section>
+
+      <ClosingCta
+        title="Western stays. The fertility management layer goes on top."
+        body="Tell us about your NJ or NYC property and what the recurring problem looks like. We'll outline what the 90-day program adds on top of your existing IPM service."
+        primary={{ label: "Start the program", to: "/get-started" }}
+        secondary={{ label: "How Evolve works", to: "/evolve-rodent-birth-control" }}
+      />
+    </>
+  );
+}
