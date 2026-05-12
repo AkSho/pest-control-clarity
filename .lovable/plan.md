@@ -1,60 +1,84 @@
-# Refinement Pass — Palette + nealrfg Congruency
+## Scope
+Home page only. No copy changes except the two specific edits you called out (Field Data intro paragraph, "NYC & NJ" → "NYC, NJ, & CA"). All other copy stays exactly as it is on cloakd-removals.cloud.
 
-No copy changes. Visual + structural only.
+## 1. Above the fold
 
-## 1. Brand palette — "Ratatouille"
+- **Eyebrow badges**: Rebuild `TrustBadges.tsx` to match your screenshot — laurel wreaths sit *outside* a translucent purple/violet pill. Inside the pill, two stacked lines: "4.9—STAR RATED BY" / "OPERATORS". Replace the current EPA shield badge with a second pill in the same visual treatment ("EPA-DESIGNATED / MINIMUM RISK"). Switch wreath SVG to a fuller, denser laurel that visually matches the reference (more leaves, thicker stroke).
+- **Hero text contrast**:
+  - Strengthen the hero background overlay (darker gradient over `hero-urban.jpg`) so all white text reads cleanly.
+  - "We end that cycle." — bump to near-white (`text-white/95`) instead of muted.
+  - All hero body copy → near-white.
+- **Lead form card**:
+  - Submit button label "Site Walkthrough & Program Estimate" — change button bg to brand royal-blue with white text (currently white/white = invisible).
+  - Keep card white, inputs flat, ratings row beneath.
 
-Pulled from the DVD cover: deep cobalt navy (oval), warm cream/gold (title type + window light), terracotta red (tomato), soft sky.
+## 2. As Seen On (PressStrip)
 
-Tokens in `src/styles.css` (oklch):
-- `--ink` (dark surfaces / header / hero / footer): deep cobalt navy ≈ `oklch(0.22 0.09 260)` — matches the oval.
-- `--brand` (primary CTA / accent): bright royal blue ≈ `oklch(0.55 0.21 262)` — the "Pixar" lift on navy.
-- `--brand-soft`: pale cream-blue tint for soft backgrounds.
-- `--accent-warm` (NEW): warm gold/cream ≈ `oklch(0.86 0.11 85)` — used sparingly for "Free", underlines, highlight words.
-- `--accent-tomato` (NEW): terracotta red ≈ `oklch(0.62 0.18 30)` — used for the top bar "license/phone" strip and small badges (rare).
-- Page background stays near-white; `--surface` slightly cooler.
-- Dark mode tokens updated to match.
+- Replace text wordmarks with real logos from:
+  - mypmp.net (Pest Management Professional)
+  - pctonline.com (Pest Control Technology)
+  - fox32chicago.com (Fox 32 Chicago)
+  - nypost.com (NY Post)
+  - agriculture.com (Successful Farming)
+- Use `fetch_website` with `screenshot` + `html` to extract each site's logo asset URL, download to `src/assets/press/`, render as `<img>` with grayscale + opacity hover treatment matching nealrfg.
 
-## 2. nealrfg congruency gaps to close (home page only)
+## 3. Field Data section — revert to original
 
-Identified by side-by-side review of `nealrfg.com`:
+Restore the exact 4 stats and copy from cloakd-removals.cloud Field Data block, omitting the last "90%" stat. Match section eyebrow + heading from the live site verbatim. (I'll fetch the live page in build phase to copy strings 1:1.)
 
-1. **Top bar** — solid royal-blue band (not muted). Left: "Pest Control License: #XXXXXXX" (placeholder #). Right: phone with phone icon. White text, full-width.
-2. **Header** — dark navy bar, logo left, text nav center, bright blue pill CTA right with arrow icon.
-3. **Hero trust badges** — replace current small chip row. Use nealrfg's two-badge layout above the H1:
-   - Left: laurel-wreath frame around "4.9★ — operator reviews" style block.
-   - Right: shield icon + two-line "EPA-DESIGNATED / MINIMUM RISK" block.
-   - Built with inline SVG (laurel + shield) — no new image gen needed.
-4. **Hero service pills** — three rounded dark pills with check icons under the hero paragraph: "Fertility Control", "Site Inspection", "Monthly Reporting" (using existing service titles, no new copy).
-5. **Hero lead form** — restyle as elevated card on dark hero with: "Schedule your **FREE**" eyebrow, "Site Walkthrough Today!" headline, inputs styled flat-white, full-width primary CTA, fine-print legal line, and a **G / Facebook / BBB ratings row** beneath the submit (icon + "4.9 RATING" stack ×3). All using existing form fields — no new data captured.
-6. **"As seen on" press strip** — NEW section directly under hero with 4–5 grayscale press/association logos (placeholder marks: NYC DOHMH-style, Eater, Crain's, Time Out, BBB). Pure visual, no copy change.
-7. **Section rhythm** — confirmed mirrors nealrfg: hero → press → stats → process → services → who/audience → locations → testimonials → FAQ → CTA band → footer. Current order matches; only visual polish needed on each band's eyebrow/heading scale to match nealrfg's tighter type ramp.
-8. **CTA band** before footer — convert to full-bleed navy with cream-gold underline accent on the key noun (no copy change).
-9. **Footer** — nealrfg uses dark navy with column layout (Company / Services / Locations / Contact) + license line + socials. Restructure to match.
+## 4. CTA band copy edit (the only intentional copy change)
 
-## 3. Service-area cities
+Replace current text with:
 
-Update `src/routes/index.tsx` city grid AND `SiteFooter` locations column to add:
-- San Francisco, CA
-- Oakland, CA
-- San Jose, CA
+> **Start the program. Break the cycle.**
+> The first visit covers setup, with monthly management and documented reporting running from there. The numbers are yours to show any regulator or property owner who asks.
+> Serving food service operators and property managers across NYC and NJ, month-to-month, with results documented every cycle.
 
-Add matching entries to `src/data/serviceAreas.ts` so the `/areas/$areaSlug` template resolves for each (slug: `san-francisco-ca`, `oakland-ca`, `san-jose-ca`). Reuse the existing Manhattan record's structure with city/state/region="CA" swapped — no new copy authored beyond city/state/neighborhood labels.
+## 5. Service-area subhead
 
-Also: update the "Cities already deploying fertility control" strip (currently NYC / Baltimore / Chicago / Wicker Park) to reflect the actual service footprint — confirm before edit.
+"Serving food-service operators and managed properties across NYC & NJ" → "Serving food-service operators and managed properties across NYC, NJ, & CA"
 
-## 4. Out of scope (unchanged)
+## 6. New About section (mirrors nealrfg structure)
 
-- All marketing copy stays exactly as written.
-- No new pages, no inner service pages, no blog/gallery/financing.
-- Logo not redesigned (placeholder wordmark stays).
-- LeadForm submission behavior unchanged.
+Insert between Process and Service Grid (matching nealrfg's flow). Two-column layout:
+- **Left**: cinematic photo of operator/technician in NYC alley setting (AI-generated).
+- **Right**: eyebrow ("ABOUT CLOAKD"), H2, 2 paragraphs, 3-bullet checklist, CTA button.
+- All copy pulled verbatim from existing Cloakd "About"/"Why Cloakd" content already on the live site — I'll scrape and reuse, no rewriting.
+
+## 7. Reviews section — new component
+
+Build `ReviewsGrid.tsx` using the 7 uploaded screenshots' **content** (quote, name, role/company) re-typed as React cards. Card layout matches nealrfg:
+- White card, rounded, subtle shadow.
+- **Top-right corner**: small platform logo (Walmart Marketplace, Amazon, generic farm/sanctuary/operator badges as icons).
+- 5-star row in brand gold.
+- Quote body.
+- Name (bold) + role/company (muted) at bottom.
+
+Platform logos: fetch Walmart and Amazon official wordmarks; the "Agricultural Customer / Sanctuary Operator / Pest Control Operator" badges become small inline SVG icon chips in brand colors.
+
+## 8. Imagery plan (AI-generated, cinematic, consistent style)
+
+Following nealrfg's image cadence, I'll generate:
+
+| Slot | Image |
+|---|---|
+| Hero bg | Already exists (`hero-urban.jpg`) — regenerate slightly darker for contrast |
+| About section | Operator with clipboard inspecting commercial kitchen line at dusk |
+| Process section | Three small support images (inspection / deployment / reporting) OR one wide band image |
+| Field Data band | Subtle dark texture/pattern background |
+| CTA band | NYC skyline at blue hour, heavy darken |
+| Service area cards | One reusable cityscape per region (NYC, NJ, Bay Area) — used as card thumbnails |
+
+All images: cinematic, low-key, navy/cobalt/warm-gold color grading consistent with the Ratatouille palette.
 
 ## Technical notes
 
-- Tokens: extend `@theme inline` with `--color-accent-warm` and `--color-accent-tomato`; map to new CSS vars in `:root` and `.dark`.
-- Trust badges: inline SVG components in `src/components/site/TrustBadges.tsx` (laurel + shield), consumed by hero.
-- Press strip: `src/components/site/PressStrip.tsx` with monochrome inline SVG marks.
-- Ratings row: `src/components/site/RatingsRow.tsx` (G / FB / BBB icons via lucide + simple inline SVG).
-- LeadForm: restyle internals only; no prop/API changes.
-- Service area data: extend `SERVICE_AREAS` array; route file unchanged.
+- Files to edit: `TrustBadges.tsx`, `LeadForm.tsx`, `PressStrip.tsx`, `routes/index.tsx`, `styles.css` (overlay tweak), `SiteFooter.tsx` (NYC/NJ/CA wording if mirrored).
+- Files to create: `src/components/site/AboutSection.tsx`, `src/components/site/ReviewsGrid.tsx`, `src/assets/press/*.{svg,png}`, `src/assets/about-operator.jpg`, `src/assets/cta-skyline.jpg`, plus process/area images.
+- Logo fetching: `fetch_website` for HTML, then `curl` to download each `<img>` src; fall back to homepage screenshot crop if a clean asset isn't linkable.
+- Reviews data: typed array in `src/data/reviews.ts`.
+
+## Out of scope
+- No copy rewrites beyond the two listed edits.
+- No new pages, no service-area template changes, no logo/brand mark changes.
+- No backend.
