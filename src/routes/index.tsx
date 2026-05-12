@@ -204,7 +204,7 @@ function HomePage() {
       {/* HERO */}
       <section className="relative overflow-hidden ink-section">
         <div
-          className="absolute inset-0 opacity-60"
+          className="absolute inset-0 opacity-80"
           style={{
             backgroundImage: `url(${heroImg})`,
             backgroundSize: "cover",
