@@ -410,20 +410,23 @@ function HomePage() {
 
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
               {[
-                "Manhattan, NY",
-                "Brooklyn, NY",
-                "Queens, NY",
-                "Bronx, NY",
-                "Staten Island, NY",
-                "Jersey City, NJ",
-                "Newark, NJ",
-                "Hoboken, NJ",
-                "Elizabeth, NJ",
-              ].map((label) => (
+                { label: "Manhattan, NY", slug: "manhattan-ny" },
+                { label: "Brooklyn, NY", slug: "manhattan-ny" },
+                { label: "Queens, NY", slug: "manhattan-ny" },
+                { label: "Bronx, NY", slug: "manhattan-ny" },
+                { label: "Staten Island, NY", slug: "manhattan-ny" },
+                { label: "Jersey City, NJ", slug: "manhattan-ny" },
+                { label: "Newark, NJ", slug: "manhattan-ny" },
+                { label: "Hoboken, NJ", slug: "manhattan-ny" },
+                { label: "Elizabeth, NJ", slug: "manhattan-ny" },
+                { label: "San Francisco, CA", slug: "san-francisco-ca" },
+                { label: "Oakland, CA", slug: "oakland-ca" },
+                { label: "San Jose, CA", slug: "san-jose-ca" },
+              ].map(({ label, slug }) => (
                 <Link
                   key={label}
                   to="/areas/$areaSlug"
-                  params={{ areaSlug: "manhattan-ny" }}
+                  params={{ areaSlug: slug }}
                   className="group flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3 text-sm font-semibold transition hover:border-brand hover:bg-brand-soft"
                 >
                   {label}
