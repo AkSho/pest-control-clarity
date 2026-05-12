@@ -166,44 +166,21 @@ const FAQS = [
   },
 ];
 
-function TrustBadges() {
+function TrustChips() {
   return (
-    <div className="flex flex-wrap items-center gap-x-10 gap-y-4">
-      <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-brand">
-          <Star className="h-5 w-5 fill-current" />
-        </div>
-        <div className="text-[11px] uppercase tracking-[0.18em] leading-tight">
-          <div className="text-ink-foreground font-bold">4.9★ Rated by</div>
-          <div className="text-ink-muted">800+ Operators</div>
-        </div>
+    <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-ink-muted">
+      <div className="flex items-center gap-2">
+        <Star className="h-4 w-4 fill-current text-yellow-400" />
+        <span>4.9★ — operator reviews</span>
       </div>
-      <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-brand">
-          <ShieldCheck className="h-5 w-5" />
-        </div>
-        <div className="text-[11px] uppercase tracking-[0.18em] leading-tight">
-          <div className="text-ink-foreground font-bold">EPA Minimum-Risk</div>
-          <div className="text-ink-muted">Documented Program</div>
-        </div>
+      <div className="flex items-center gap-2">
+        <ShieldCheck className="h-4 w-4 text-brand" />
+        <span>EPA-designated minimum risk</span>
       </div>
-    </div>
-  );
-}
-
-function ServicePills() {
-  const items = ["Fertility Control", "Knockdown Integration", "Monthly Reporting"];
-  return (
-    <div className="mt-8 flex flex-wrap gap-3">
-      {items.map((label) => (
-        <div
-          key={label}
-          className="inline-flex items-center gap-2 rounded-full border border-ink-border bg-white/5 px-4 py-2 text-sm font-semibold text-ink-foreground"
-        >
-          <Check className="h-4 w-4 text-brand" />
-          {label}
-        </div>
-      ))}
+      <div className="flex items-center gap-2">
+        <Check className="h-4 w-4 text-brand" />
+        <span>Month-to-month, documented</span>
+      </div>
     </div>
   );
 }
@@ -224,10 +201,12 @@ function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/95 to-ink/70" />
         <div className="container-site relative grid gap-10 py-16 md:grid-cols-[1.1fr_0.9fr] md:py-24">
           <div>
-            <TrustBadges />
-            <h1 className="mt-7 text-4xl font-extrabold leading-[1.05] md:text-6xl">
-              #1 Rated Rodent Fertility Control{" "}
-              <span className="text-brand">in NYC, NJ & the Bay Area</span>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+              NYC & NJ · Rodent Fertility Control
+            </p>
+            <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] md:text-6xl">
+              Every six weeks, the rodents are back.{" "}
+              <span className="text-brand">We end that cycle.</span>
             </h1>
             <p className="mt-6 max-w-xl text-base leading-relaxed text-ink-muted md:text-lg">
               Standard treatment clears the colony, and within weeks the
@@ -236,7 +215,30 @@ function HomePage() {
               and the replacement cycle breaks.
             </p>
 
-            <ServicePills />
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <Button asChild size="lg" className="h-12 px-6 text-base">
+                <a href="#contact">
+                  Get started <ArrowRight className="h-4 w-4" />
+                </a>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="h-12 border-ink-border bg-transparent px-6 text-base text-ink-foreground hover:bg-white/5 hover:text-ink-foreground"
+              >
+                <a href="#how">Why it keeps happening</a>
+              </Button>
+              <a
+                href="tel:+18005550199"
+                className="ml-1 flex items-center gap-2 text-sm font-medium text-ink-foreground hover:text-brand"
+              >
+                <Phone className="h-4 w-4" />
+                (800) 555-0199
+              </a>
+            </div>
+
+            <TrustChips />
           </div>
 
           <div id="contact">
@@ -245,21 +247,20 @@ function HomePage() {
         </div>
       </section>
 
-      {/* AS SEEN ON */}
-      <section className="bg-background border-b border-border">
-        <div className="container-site py-10">
-          <div className="text-center text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-            As featured in / works alongside
+      {/* CITIES STRIP */}
+      <section className="border-b border-border bg-surface">
+        <div className="container-site flex flex-col items-center gap-4 py-6 text-center md:flex-row md:justify-between md:py-5">
+          <div className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+            Cities already deploying fertility control
           </div>
-          <div className="mt-6 grid grid-cols-2 items-center gap-6 sm:grid-cols-3 md:grid-cols-5">
-            {["NYC DOHMH", "NPMA", "Pestworld", "BBB Accredited", "EPA Reg."].map((label) => (
-              <div
-                key={label}
-                className="flex h-14 items-center justify-center rounded-md border border-border bg-card text-xs font-bold uppercase tracking-wider text-muted-foreground"
-              >
-                {label}
-              </div>
-            ))}
+          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-sm font-semibold text-foreground/80">
+            <span>New York City</span>
+            <span className="h-1 w-1 rounded-full bg-border" />
+            <span>Baltimore</span>
+            <span className="h-1 w-1 rounded-full bg-border" />
+            <span>Chicago</span>
+            <span className="h-1 w-1 rounded-full bg-border" />
+            <span>Wicker Park</span>
           </div>
         </div>
       </section>
@@ -415,7 +416,7 @@ function HomePage() {
       </section>
 
       {/* SERVICE AREAS */}
-      <section id="areas" className="bg-background py-20">
+      <section className="bg-background py-20">
         <div className="container-site">
           <div className="grid gap-10 md:grid-cols-[0.9fr_1.1fr] md:gap-16">
             <div>
@@ -423,7 +424,7 @@ function HomePage() {
                 Service areas
               </p>
               <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
-                Serving food-service operators and managed properties across NYC, NJ & the Bay Area
+                Serving food-service operators and managed properties across NYC & NJ
               </h2>
               <p className="mt-5 text-muted-foreground">
                 Month-to-month coverage, documented every cycle. Pick your area
@@ -433,23 +434,20 @@ function HomePage() {
 
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
               {[
-                { label: "Manhattan, NY", slug: "manhattan-ny" },
-                { label: "Brooklyn, NY", slug: "manhattan-ny" },
-                { label: "Queens, NY", slug: "manhattan-ny" },
-                { label: "Bronx, NY", slug: "manhattan-ny" },
-                { label: "Staten Island, NY", slug: "manhattan-ny" },
-                { label: "Jersey City, NJ", slug: "manhattan-ny" },
-                { label: "Newark, NJ", slug: "manhattan-ny" },
-                { label: "Hoboken, NJ", slug: "manhattan-ny" },
-                { label: "Elizabeth, NJ", slug: "manhattan-ny" },
-                { label: "San Francisco, CA", slug: "san-francisco-ca" },
-                { label: "Oakland, CA", slug: "oakland-ca" },
-                { label: "San Jose, CA", slug: "san-jose-ca" },
-              ].map(({ label, slug }) => (
+                "Manhattan, NY",
+                "Brooklyn, NY",
+                "Queens, NY",
+                "Bronx, NY",
+                "Staten Island, NY",
+                "Jersey City, NJ",
+                "Newark, NJ",
+                "Hoboken, NJ",
+                "Elizabeth, NJ",
+              ].map((label) => (
                 <Link
                   key={label}
                   to="/areas/$areaSlug"
-                  params={{ areaSlug: slug }}
+                  params={{ areaSlug: "manhattan-ny" }}
                   className="group flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3 text-sm font-semibold transition hover:border-brand hover:bg-brand-soft"
                 >
                   {label}
@@ -460,7 +458,6 @@ function HomePage() {
           </div>
         </div>
       </section>
-
 
       {/* TESTIMONIALS */}
       <section className="bg-surface py-20">

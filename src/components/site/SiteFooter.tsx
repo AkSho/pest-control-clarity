@@ -23,8 +23,12 @@ export function SiteFooter() {
             documented, monthly, month-to-month.
           </p>
           <div className="mt-6 space-y-2 text-sm">
-            <a href="tel:+18005550199" className="flex items-center gap-2 hover:text-brand"><Phone className="h-4 w-4" /><span>(800) 555-0199</span></a>
-            <a href="mailto:hello@cloakd-removals.cloud" className="flex items-center gap-2 hover:text-brand"><Mail className="h-4 w-4" /><span>hello@cloakd-removals.cloud</span></a>
+            <a href="tel:+18005550199" className="flex items-center gap-2 hover:text-brand">
+              <Phone className="h-4 w-4" /> (800) 555-0199
+            </a>
+            <a href="mailto:hello@cloakd-removals.cloud" className="flex items-center gap-2 hover:text-brand">
+              <Mail className="h-4 w-4" /> hello@cloakd-removals.cloud
+            </a>
             <div className="flex items-center gap-2 text-ink-muted">
               <MapPin className="h-4 w-4" /> Serving NYC & NJ
             </div>
