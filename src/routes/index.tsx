@@ -28,7 +28,6 @@ import { AboutSection } from "@/components/site/AboutSection";
 import { ReviewsGrid } from "@/components/site/ReviewsGrid";
 import { WhoWeServeGrid } from "@/components/site/WhoWeServeGrid";
 import heroImg from "@/assets/hero-bait-station.jpg";
-import { Eyebrow } from "@/components/site/Eyebrow";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -259,9 +258,9 @@ function HomePage() {
       <section id="data" className="bg-background py-20">
         <div className="container-site">
           <div className="mx-auto max-w-2xl text-center">
-            <Eyebrow>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
               Field data
-            </Eyebrow>
+            </p>
             <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
               Real numbers from monitored deployments
             </h2>
@@ -289,9 +288,9 @@ function HomePage() {
         <div className="container-site">
           <div className="grid gap-10 md:grid-cols-[0.9fr_1.1fr] md:gap-16">
             <div>
-              <Eyebrow>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
                 How it works
-              </Eyebrow>
+              </p>
               <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
                 Two things have to happen for this to end
               </h2>
@@ -333,9 +332,9 @@ function HomePage() {
       <section className="bg-background py-20">
         <div className="container-site">
           <div className="mx-auto max-w-2xl text-center">
-            <Eyebrow>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
               The Program · what's included
-            </Eyebrow>
+            </p>
             <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
               A complete rodent fertility control program for urban operators
             </h2>
@@ -372,9 +371,9 @@ function HomePage() {
       <section id="who" className="bg-surface py-20">
         <div className="container-site">
           <div className="mx-auto max-w-2xl text-center">
-            <Eyebrow>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
               Who we serve
-            </Eyebrow>
+            </p>
             <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
               Built for operators who can't afford another violation
             </h2>
@@ -389,9 +388,9 @@ function HomePage() {
         <div className="container-site">
           <div className="grid gap-10 md:grid-cols-[0.9fr_1.1fr] md:gap-16">
             <div>
-              <Eyebrow>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
                 Service areas
-              </Eyebrow>
+              </p>
               <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
                 Serving food-service operators and managed properties across NYC, NJ, &amp; CA
               </h2>
@@ -435,9 +434,9 @@ function HomePage() {
       <section className="bg-surface py-20">
         <div className="container-site">
           <div className="mx-auto max-w-2xl text-center">
-            <Eyebrow>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
               Operator reviews
-            </Eyebrow>
+            </p>
             <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
               See why operators stay on the program
             </h2>
@@ -451,9 +450,9 @@ function HomePage() {
       <section id="faq" className="bg-background py-20">
         <div className="container-site grid gap-10 md:grid-cols-[0.9fr_1.1fr] md:gap-16">
           <div>
-            <Eyebrow>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
               FAQ
-            </Eyebrow>
+            </p>
             <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
               Questions operators ask before starting
             </h2>

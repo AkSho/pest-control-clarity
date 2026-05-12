@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Check, X } from "lucide-react";
 import heroImg from "@/assets/program-how-it-works.jpg";
-import { Eyebrow } from "@/components/site/Eyebrow";
 import {
   ClosingCta,
   PhaseCards,
@@ -147,9 +146,9 @@ function HowItWorksPage() {
                 key={m.title}
                 className="rounded-2xl border border-border bg-card p-7 shadow-[var(--shadow-card)]"
               >
-                <Eyebrow>
+                <div className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
                   {m.title}
-                </Eyebrow>
+                </div>
                 <p className="mt-4 text-base leading-relaxed text-muted-foreground">
                   {m.body}
                 </p>

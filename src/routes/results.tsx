@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { LeadForm } from "@/components/site/LeadForm";
 import { HeroTrustBadges } from "@/components/site/TrustBadges";
 import heroResults from "@/assets/hero-results.jpg";
-import { Eyebrow } from "@/components/site/Eyebrow";
 
 const TITLE = "Field results — Cloakd Removals";
 const DESCRIPTION =
@@ -104,9 +103,9 @@ function ResultsPage() {
         <div className="relative container-site grid gap-10 py-16 md:grid-cols-[1.1fr_0.9fr] md:py-24">
           <div>
             <HeroTrustBadges />
-            <Eyebrow tone="dark" className="text-accent-warm mt-7">
+            <p className="mt-7 text-xs font-semibold uppercase tracking-[0.25em] text-accent-warm">
               Field data
-            </Eyebrow>
+            </p>
             <h1 className="mt-4 text-4xl font-extrabold leading-[1.05] text-white md:text-6xl">
               Two buildings. Five months.{" "}
               <span className="text-accent-warm">
@@ -136,9 +135,9 @@ function ResultsPage() {
       {/* LOCATION A */}
       <section className="bg-background py-20">
         <div className="container-site">
-          <Eyebrow>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
             Location A — primary field study
-          </Eyebrow>
+          </p>
           <h2 className="mt-4 max-w-3xl text-3xl font-extrabold leading-tight md:text-5xl">
             Urban deployment, Aug 2025 to Jan 2026.
           </h2>
@@ -188,9 +187,9 @@ function ResultsPage() {
       {/* LOCATION B */}
       <section className="bg-surface py-20">
         <div className="container-site">
-          <Eyebrow>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
             Location B
-          </Eyebrow>
+          </p>
           <h2 className="mt-4 max-w-3xl text-3xl font-extrabold leading-tight md:text-5xl">
             Independent 5-month deployment.
           </h2>
@@ -230,9 +229,9 @@ function ResultsPage() {
       <section className="ink-section py-20">
         <div className="container-site grid gap-10 md:grid-cols-[1.1fr_0.9fr] md:items-center">
           <div>
-            <Eyebrow tone="dark" className="text-accent-warm">
+            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-accent-warm">
               Fertility reduction
-            </Eyebrow>
+            </p>
             <h2 className="mt-4 text-3xl font-extrabold leading-tight text-white md:text-5xl">
               Up to 90% fertility reduction potential.
             </h2>
@@ -270,9 +269,9 @@ function ResultsPage() {
       {/* HONG KONG + SF */}
       <section className="bg-background py-20">
         <div className="container-site">
-          <Eyebrow>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
             International deployments
-          </Eyebrow>
+          </p>
           <h2 className="mt-4 max-w-3xl text-3xl font-extrabold leading-tight md:text-5xl">
             The same mechanism, in other cities.
           </h2>
@@ -329,9 +328,9 @@ function ResultsPage() {
       {/* CITIES */}
       <section className="bg-background py-20">
         <div className="container-site">
-          <Eyebrow>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
             City-level adoption
-          </Eyebrow>
+          </p>
           <h2 className="mt-4 max-w-3xl text-3xl font-extrabold leading-tight md:text-5xl">
             The same program running at scale.
           </h2>
@@ -365,9 +364,9 @@ function ResultsPage() {
       <section className="bg-surface py-20">
         <div className="container-site grid gap-10 md:grid-cols-[0.9fr_1.1fr] md:gap-16">
           <div>
-            <Eyebrow>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
               Monitoring methodology
-            </Eyebrow>
+            </p>
             <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
               How track counts work as a measurement standard.
             </h2>

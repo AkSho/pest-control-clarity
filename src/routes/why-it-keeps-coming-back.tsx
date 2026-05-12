@@ -10,7 +10,6 @@ import {
 import { LeadForm } from "@/components/site/LeadForm";
 import { HeroTrustBadges } from "@/components/site/TrustBadges";
 import heroProblem from "@/assets/hero-problem.jpg";
-import { Eyebrow } from "@/components/site/Eyebrow";
 
 const TITLE =
   "Why it keeps coming back — Cloakd Removals";
@@ -124,9 +123,9 @@ function ProblemPage() {
         <div className="relative container-site grid gap-10 py-16 md:grid-cols-[1.1fr_0.9fr] md:py-24">
           <div>
             <HeroTrustBadges />
-            <Eyebrow tone="dark" className="text-accent-warm mt-7">
+            <p className="mt-7 text-xs font-semibold uppercase tracking-[0.25em] text-accent-warm">
               Why it keeps coming back
-            </Eyebrow>
+            </p>
             <h1 className="mt-4 text-4xl font-extrabold leading-[1.05] text-white md:text-6xl">
               You paid for the treatment.{" "}
               <span className="text-accent-warm">
@@ -164,9 +163,9 @@ function ProblemPage() {
       <section className="bg-background py-20">
         <div className="container-site grid gap-10 md:grid-cols-[0.9fr_1.1fr] md:gap-16">
           <div>
-            <Eyebrow>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
               What's actually happening
-            </Eyebrow>
+            </p>
             <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
               City rats are territorial. Treatment removes the occupant. The
               territory stays.
@@ -250,9 +249,9 @@ function ProblemPage() {
             })}
           </div>
           <div>
-            <Eyebrow>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
               Why NYC and NJ hit harder
-            </Eyebrow>
+            </p>
             <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
               A single city block can sustain hundreds of rats. Treatment at
               one address doesn't touch that.
@@ -281,9 +280,9 @@ function ProblemPage() {
       <section className="ink-section py-20">
         <div className="container-site">
           <div className="mx-auto max-w-3xl text-center">
-            <Eyebrow tone="dark" className="text-accent-warm">
+            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-accent-warm">
               The full cycle
-            </Eyebrow>
+            </p>
             <h2 className="mt-4 text-3xl font-extrabold leading-tight text-white md:text-5xl">
               Standard treatment every six weeks. The cycle runs every six
               weeks.
@@ -312,9 +311,9 @@ function ProblemPage() {
       <section className="bg-background py-20">
         <div className="container-site grid gap-10 md:grid-cols-[0.9fr_1.1fr] md:gap-16">
           <div>
-            <Eyebrow>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
               What actually breaks the cycle
-            </Eyebrow>
+            </p>
             <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
               Reduce how many rats the colony produces. The replacement can't
               form at full size.
@@ -354,9 +353,9 @@ function ProblemPage() {
       {/* STAT STRIP */}
       <section className="bg-surface py-16">
         <div className="container-site">
-          <Eyebrow align="center">
+          <p className="text-center text-xs font-semibold uppercase tracking-[0.2em] text-brand">
             What the field data shows
-          </Eyebrow>
+          </p>
           <div className="mt-8 grid gap-5 md:grid-cols-3">
             {STATS.map((s) => (
               <div
@@ -377,9 +376,9 @@ function ProblemPage() {
       {/* FAQ */}
       <section className="bg-background py-20">
         <div className="container-site max-w-3xl">
-          <Eyebrow>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
             Common questions
-          </Eyebrow>
+          </p>
           <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
             Questions we hear a lot.
           </h2>

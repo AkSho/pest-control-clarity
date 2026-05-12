@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Check, X } from "lucide-react";
 import heroImg from "@/assets/compliance-dohmh-nyc.jpg";
-import { Eyebrow } from "@/components/site/Eyebrow";
 import {
   ClosingCta,
   FieldDataTrio,
@@ -107,9 +106,9 @@ function DohmhPage() {
                 key={c.code}
                 className="rounded-2xl border border-border bg-card p-7 shadow-[var(--shadow-card)]"
               >
-                <Eyebrow>
+                <div className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
                   {c.code}
-                </Eyebrow>
+                </div>
                 <h3 className="mt-3 text-xl font-extrabold leading-tight">
                   {c.title}
                 </h3>

@@ -1,7 +1,6 @@
 import { Check, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import aboutImg from "@/assets/about-operator.jpg";
-import { Eyebrow } from "@/components/site/Eyebrow";
 
 const POINTS = [
   "Layered onto your existing pest program — no vendor displacement",
@@ -31,9 +30,9 @@ export function AboutSection() {
         </div>
 
         <div>
-          <Eyebrow>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
             About Cloakd Removals
-          </Eyebrow>
+          </p>
           <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
             Removal handles what's there. We handle what comes next.
           </h2>

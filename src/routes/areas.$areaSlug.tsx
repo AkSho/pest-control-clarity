@@ -10,7 +10,6 @@ import {
 import { LeadForm } from "@/components/site/LeadForm";
 import { getServiceArea, getJurisdiction, SERVICE_AREAS, type ServiceArea } from "@/data/serviceAreas";
 import { SOLUTIONS } from "@/data/solutions";
-import { Eyebrow } from "@/components/site/Eyebrow";
 
 export const Route = createFileRoute("/areas/$areaSlug")({
   loader: ({ params }) => {
@@ -64,9 +63,10 @@ function AreaPage() {
       <section className="ink-section">
         <div className="container-site grid gap-10 py-16 md:grid-cols-[1.1fr_0.9fr] md:py-20">
           <div>
-            <Eyebrow tone="dark" icon={MapPin}>
+            <div className="inline-flex items-center gap-2 rounded-full border border-ink-border bg-white/5 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+              <MapPin className="h-3.5 w-3.5" />
               {area.region} · {area.city}, {area.state}
-            </Eyebrow>
+            </div>
             <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] text-white md:text-5xl">
               Rodent Fertility Control in{" "}
               <span className="text-accent-warm">
@@ -111,9 +111,9 @@ function AreaPage() {
       <section className="bg-surface py-16">
         <div className="container-site grid gap-10 md:grid-cols-3">
           <div className="md:col-span-2">
-            <Eyebrow>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
               Local context
-            </Eyebrow>
+            </p>
             <h2 className="mt-4 text-2xl font-extrabold leading-tight md:text-4xl">
               Why {area.city}'s pest cycle is different — and what actually breaks it
             </h2>
@@ -132,9 +132,9 @@ function AreaPage() {
       {/* SOLUTIONS STRIP */}
       <section className="bg-background py-16">
         <div className="container-site">
-          <Eyebrow>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
             Who we work with in {area.city}
-          </Eyebrow>
+          </p>
           <h2 className="mt-4 max-w-3xl text-2xl font-extrabold leading-tight md:text-4xl">
             We run the program for these operators in {area.city}.
           </h2>
@@ -164,9 +164,9 @@ function AreaPage() {
       <section className="bg-background py-16">
         <div className="container-site">
           <div className="mx-auto max-w-2xl text-center">
-            <Eyebrow>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
               How the program runs in {area.city}
-            </Eyebrow>
+            </p>
             <h2 className="mt-4 text-2xl font-extrabold leading-tight md:text-4xl">
               Same two phases. Local pressure data.
             </h2>
@@ -197,9 +197,9 @@ function AreaPage() {
       {/* WHY CITY */}
       <section className="bg-background py-16">
         <div className="container-site">
-          <Eyebrow>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
             Why {area.city} operators choose Cloakd
-          </Eyebrow>
+          </p>
           <h2 className="mt-4 max-w-3xl text-2xl font-extrabold leading-tight md:text-4xl">
             Built for {area.city}'s replacement cycle.
           </h2>
@@ -234,9 +234,9 @@ function AreaPage() {
       {/* NEIGHBORHOODS */}
       <section className="bg-surface py-16">
         <div className="container-site">
-          <Eyebrow>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
             Neighborhoods we cover in {area.city}
-          </Eyebrow>
+          </p>
           <h2 className="mt-4 text-2xl font-extrabold md:text-4xl">
             Coverage across {area.city}
           </h2>
@@ -258,9 +258,9 @@ function AreaPage() {
       <section className="bg-background py-16">
         <div className="container-site grid gap-10 md:grid-cols-[0.9fr_1.1fr] md:gap-16">
           <div>
-            <Eyebrow>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
               FAQ — {area.city}
-            </Eyebrow>
+            </p>
             <h2 className="mt-4 text-2xl font-extrabold md:text-4xl">
               What {area.city} operators ask first
             </h2>
@@ -284,9 +284,9 @@ function AreaPage() {
       {area.nearbyAreas.length > 0 && (
         <section className="bg-surface py-12">
           <div className="container-site">
-            <Eyebrow>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
               Nearby service areas
-            </Eyebrow>
+            </p>
             <div className="mt-5 flex flex-wrap gap-3">
               {area.nearbyAreas.map((n) => (
                 <Link

@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/accordion";
 import { LeadForm } from "@/components/site/LeadForm";
 import heroFaq from "@/assets/hero-faq.jpg";
-import { Eyebrow } from "@/components/site/Eyebrow";
 
 const TITLE = "Common questions — Cloakd Removals";
 const DESCRIPTION =
@@ -101,9 +100,9 @@ function FAQPage() {
         />
         <div className="relative container-site py-16 md:py-24">
           <div className="mx-auto max-w-3xl text-center">
-            <Eyebrow tone="dark" className="text-accent-warm">
+            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-accent-warm">
               Common questions
-            </Eyebrow>
+            </p>
             <h1 className="mt-4 text-4xl font-extrabold leading-[1.05] text-white md:text-6xl">
               Your exterminator has probably seen this fail.{" "}
               <span className="text-accent-warm">Here's what went wrong.</span>
@@ -122,9 +121,9 @@ function FAQPage() {
       {/* LEAD QUESTION */}
       <section className="bg-background py-20">
         <div className="container-site max-w-4xl">
-          <Eyebrow>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
             Professional skepticism
-          </Eyebrow>
+          </p>
           <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
             My pest control company told me rat birth control doesn't work.
             Are they right?
@@ -176,9 +175,9 @@ function FAQPage() {
       {/* MORE QUESTIONS */}
       <section className="bg-surface py-20">
         <div className="container-site max-w-3xl">
-          <Eyebrow>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
             More questions
-          </Eyebrow>
+          </p>
           <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
             Every question we get, answered directly.
           </h2>
@@ -200,9 +199,9 @@ function FAQPage() {
       {/* FIELD DATA */}
       <section className="bg-background py-16">
         <div className="container-site">
-          <Eyebrow>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
             Field data
-          </Eyebrow>
+          </p>
           <h2 className="mt-4 max-w-3xl text-3xl font-extrabold leading-tight md:text-5xl">
             What the two-phase program produced in monitored urban
             deployments.

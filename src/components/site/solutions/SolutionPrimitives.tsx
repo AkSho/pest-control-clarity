@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { LeadForm } from "@/components/site/LeadForm";
 import { HeroTrustBadges } from "@/components/site/TrustBadges";
 import { SOLUTIONS, type SolutionSlug } from "@/data/solutions";
-import { Eyebrow } from "@/components/site/Eyebrow";
 
 export function SolutionHero({
   eyebrow,
@@ -37,9 +36,9 @@ export function SolutionHero({
       <div className="relative container-site grid gap-10 py-16 md:grid-cols-[1.1fr_0.9fr] md:py-24">
         <div>
           <HeroTrustBadges />
-          <Eyebrow tone="dark" className="text-accent-warm mt-7">
+          <p className="mt-7 text-xs font-semibold uppercase tracking-[0.25em] text-accent-warm">
             {eyebrow}
-          </Eyebrow>
+          </p>
           <h1 className="mt-4 text-4xl font-extrabold leading-[1.05] text-white md:text-6xl">
             {headline}{" "}
             {highlight && (
@@ -107,9 +106,9 @@ export function SectionHeader({
 }) {
   return (
     <div className={surface === "surface" ? "" : ""}>
-      <Eyebrow>
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
         {eyebrow}
-      </Eyebrow>
+      </p>
       <h2 className="mt-4 max-w-3xl text-3xl font-extrabold leading-tight md:text-5xl">
         {title}
       </h2>
@@ -194,9 +193,9 @@ export function FieldDataTrio({
   return (
     <section className="bg-surface py-20">
       <div className="container-site">
-        <Eyebrow>
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
           Field data
-        </Eyebrow>
+        </p>
         <h2 className="mt-4 max-w-3xl text-3xl font-extrabold leading-tight md:text-5xl">
           Numbers from monitored urban deployments.
         </h2>
@@ -294,9 +293,9 @@ export function OtherSolutions({ current }: { current: SolutionSlug }) {
     <section className="bg-background py-20">
       <div className="container-site">
         <div className="mx-auto max-w-2xl text-center">
-          <Eyebrow>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
             Also serving
-          </Eyebrow>
+          </p>
           <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-4xl">
             Other operators we work with
           </h2>

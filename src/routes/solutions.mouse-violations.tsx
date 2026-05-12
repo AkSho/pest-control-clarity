@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import heroImg from "@/assets/solutions-mouse-violations.jpg";
-import { Eyebrow } from "@/components/site/Eyebrow";
 import {
   ClosingCta,
   FieldDataTrio,
@@ -215,9 +214,9 @@ function MouseViolationsPage() {
           />
           <div className="mt-10 overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-card)]">
             <div className="bg-brand-soft px-6 py-4">
-              <Eyebrow>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
                 Point math — combined rodent violations
-              </Eyebrow>
+              </p>
             </div>
             <ul className="divide-y divide-border">
               {POINT_MATH.map((row) => (
