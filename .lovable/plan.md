@@ -1,103 +1,84 @@
-# SEO expansion: 8 comparison (`/vs/*`) pages
+# Inline image audit — recommendations only
 
-## Goal
+Every key page already has a hero photo. The gap is **inline imagery** that breaks up long text columns, anchors comparison tables, and gives operators something concrete to look at mid-scroll. Below are the pages that would meaningfully benefit, grouped by priority. The home page is excluded per your note. Pages already image-rich (`/results`, `/why-it-keeps-coming-back`) and short utility pages (`/get-started`, `/faq`, `/areas`) are skipped.
 
-Mirror the live site's eight `/vs/*` comparison pages onto this project, adapted to Cloakd's existing TanStack Start route conventions, design tokens, and primitives. Same SEO play as the prior Evolve / ContraPest batch — capture branded competitor and category search traffic.
+For each recommendation: **section anchor → image concept → role**. Style cue throughout: match the existing `hero-bait-station.jpg` / `program-bryant-park.jpg` look — natural light, real urban/operational settings, no stock-photo gloss.
 
-## Pages to create (8 total)
+---
 
-Three category comparisons + five named-competitor comparisons. Live URLs are at `https://cloakd-removals.cloud/vs/<slug>`.
+## Tier 1 — Highest ROI (long, text-heavy SEO pages)
 
-| Route | Source URL | Type |
-|---|---|---|
-| `/vs/rat-poison` | `cloakd-removals.cloud/vs/rat-poison` | Category |
-| `/vs/traditional-pest-control` | `cloakd-removals.cloud/vs/traditional-pest-control` | Category |
-| `/vs/snap-traps` | `cloakd-removals.cloud/vs/snap-traps` | Category |
-| `/vs/assured-environments` | `cloakd-removals.cloud/vs/assured-environments` | Competitor |
-| `/vs/orkin` | `cloakd-removals.cloud/vs/orkin` | Competitor |
-| `/vs/bell-environmental` | `cloakd-removals.cloud/vs/bell-environmental` | Competitor |
-| `/vs/viking-pest-control` | `cloakd-removals.cloud/vs/viking-pest-control` | Competitor |
-| `/vs/western-pest-services` | `cloakd-removals.cloud/vs/western-pest-services` | Competitor |
+### `/evolve-rodent-birth-control` (381 lines, all text after hero)
+1. **"A cottonseed-derived bait that suppresses rat fertility"** → close-up of Evolve soft-bait block in a bait station, lid open. Anchors the product claim.
+2. **"Same product. Different structure. Different results."** (ContraPest vs Evolve split) → side-by-side: ContraPest liquid reservoir vs Evolve soft-bait block. Visual diff for the comparison.
+3. **"Municipal and independent urban deployments, 2025–2026."** → wide street-level photo of an NYC mitigation zone or a tagged station on a sidewalk. Grounds the field-data section.
 
-The existing `/vs/diy-rat-birth-control` route remains; not rebuilding it.
+### `/contrapest` (330 lines)
+1. **"Designated mitigation zones, run by the city"** → NYC street sign / mitigation-zone signage or a city-installed liquid station. Establishes the municipal context.
+2. **"Different formulations from the same maker"** → same liquid-vs-soft-bait diptych as above (reusable asset).
+3. **"Cloakd deploys Evolve, not ContraPest liquid"** → operator-hands shot placing an Evolve block in a building's bait station. Sells the managed-program framing.
 
-## Sourcing approach
+### `/contrapest-vs-evolve` (350 lines)
+1. **"The differences that matter for deployment"** → annotated comparison still: liquid reservoir vs soft-bait block, both in their typical housings.
+2. **"Liquid bait competes with everything liquid in a city"** → photo of street puddles / open dumpster water / AC condensate near a station. Visualizes the competition problem.
+3. **"Field results, sourced"** → urban rooftop or alley station photo with a building backdrop. Same role as the Evolve field-data anchor.
 
-For each page:
+### `/does-rat-birth-control-work` (324 lines)
+1. **"The deployment structure was wrong before the bait went in"** → photo of a poorly placed / overgrown / inaccessible station as a "what failure looks like" visual.
+2. **"Two independent urban building deployments. Five months."** → exterior of a multifamily building with a discreet station at the foundation line. Anchors the case-study section.
+3. **"Four things that separate the programs that work"** → operator clipboard / tablet next to a station during a service visit. Shows the "managed" part.
 
-1. Fetch live URL with `code--fetch_website` (markdown). Already verified working on `/vs/orkin`. No Firecrawl connector required for one-time content collection (per the Firecrawl skill note: use `lov-fetch-website` when collecting info to build the app).
-2. Preserve the live copy's structure and substantive claims verbatim where possible.
-3. **Soften competitor pages** per your instruction:
-   - Strip any disparaging language about a named competitor.
-   - Keep only factually verifiable statements (services they publicly offer, public service area, public reputation markers from their own marketing).
-   - Frame Cloakd's offer as additive ("layered onto your existing vendor"), not as superior to the named competitor.
-   - Keep trademark mentions to nominative use only ("comparison with Orkin", not "Orkin's program is worse").
-4. Adapt copy voice to match existing Cloakd pages (`/how-it-works`, `/results`).
+### `/how-it-works` (297 lines)
+1. **"Two phases. Your existing vendor stays."** → split image: traditional snap-trap/bait setup on one side, Evolve station on the other, both inside the same property. Visualizes the layering claim.
+2. **"It's a second layer. It runs on top of what you already have."** → same operator-clipboard-at-station shot, or a service-route photo. Reinforces "managed."
 
-## Page structure (shared template)
+---
 
-Modeled after nealrfg.com section rhythm + the patterns already established in `/contrapest-vs-evolve` and `/vs/diy-rat-birth-control`:
+## Tier 2 — Comparison `/vs/*` pages (currently table-heavy, zero inline imagery)
 
-1. `SolutionHero` — eyebrow ("vs. Orkin" / "vs. Rat poison"), H1, lede.
-2. **What [competitor / method] covers** — factual section, public-source bullets.
-3. **The structural gap** — what standard treatment / poison / snap traps don't change (the replacement-cycle thesis from existing pages).
-4. **Side-by-side comparison table** — `<table>` styled with Cloakd tokens. Columns: feature · [Their approach] · Cloakd's managed Evolve program. (For category pages, columns are method vs. fertility-control program.)
-5. **Where each one fits** — when their approach is the right tool, when fertility control is needed alongside it.
-6. **Cross-link block** — links to `/evolve-rodent-birth-control`, `/rodent-fertility-control`, `/how-it-works`.
-7. `ClosingCta` — primary "Start the program" → `/get-started`, secondary varies (e.g. "How Evolve works").
+These pages are dense tables and bullets. One mid-page image each is enough to break the wall.
 
-Each page gets its own `head()` with route-specific `title`, `description`, `og:title`, `og:description`, and reuses `program-how-it-works.jpg` or `program-bryant-park.jpg` from `src/assets/` as `og:image`. No FAQ JSON-LD.
+- **`/vs/rat-poison`** → at "Killing the colony makes the territory available": photo of a freshly cleared alley/back-of-house area (the "vacuum" concept).
+- **`/vs/traditional-pest-control`** → at "Your exterminator stays. We add what their treatment can't do": same vendor-coexistence diptych proposed for `/how-it-works` (reusable).
+- **`/vs/snap-traps`** → at "Trapping removes individuals": photo of a snap trap next to an Evolve station in the same utility room. One-shot version of the tradeoff.
+- **`/vs/orkin`**, **`/vs/assured-environments`**, **`/vs/bell-environmental`**, **`/vs/viking-pest-control`**, **`/vs/western-pest-services`** → one shared "additive layer" image at the "Add Cloakd if / Keep your vendor" section. A single reusable photo (operator placing an Evolve block in an existing third-party station) covers all five competitor pages — do not generate per-competitor variants.
 
-## Cross-linking + nav
+### `/vs/diy-rat-birth-control` (already has structure)
+- One image at the "managed program" comparison block: scheduled-service visual (operator + station + clipboard). Same asset as the `/how-it-works` Phase-2 recommendation.
 
-- **Footer (`SiteFooter.tsx`)**: add a new "Comparisons" column listing all `/vs/*` pages (the existing `vs/diy-rat-birth-control` plus the 8 new ones). Header nav unchanged.
-- **`/contrapest-vs-evolve`** and **`/contrapest`**: add a "More comparisons" link block pointing to the new vs pages.
-- **`/rodent-fertility-control`**: add a section linking to the category vs pages (rat poison, traditional pest control, snap traps).
-- **`/evolve-rodent-birth-control`**: link to `/vs/rat-poison` from the deployment-structure section.
+---
 
-## Technical details
+## Tier 3 — Worth one image, low urgency
 
-- Route filenames use TanStack flat dot-notation: `vs.rat-poison.tsx`, `vs.orkin.tsx`, etc. → resolves to `/vs/<slug>`.
-- All pages reuse primitives from `src/components/site/solutions/SolutionPrimitives.tsx` (`SolutionHero`, `SectionHeader`, `ClosingCta`). Comparison tables follow the exact pattern from `vs.diy-rat-birth-control.tsx`.
-- Cross-links use `<Link to="/...">` (typed router); no string interpolation.
-- No FAQ schema. No new components. No backend changes. No design-token additions.
-- Asset reuse only — no new image generation in this pass.
+- **`/rodent-fertility-control`** (195 lines): one image at "Same product. Different structure. Different outcome." — reuse the liquid-vs-soft-bait diptych.
+- **`/what-to-expect`** (276 lines): at "The program runs in four stages over 90 days" — a small photo of a monitoring report / printed trend chart on a clipboard. Sells the "documented trend line" deliverable.
+- **`/dohmh-rodent-violation-nyc`** and **`/nj-rodent-violation`** (~330 lines each): one mid-page image of the actual violation notice / inspector-at-property scene. Compliance pages benefit from a "this is what the document looks like" visual. (Existing `compliance-*.jpg` assets may already cover this — confirm before generating.)
 
-## Execution order
+---
 
-1. Fetch all 8 live pages in parallel via `code--fetch_website`.
-2. Write the 5 competitor `vs.*.tsx` files (softened copy).
-3. Write the 3 category `vs.*.tsx` files (verbatim where appropriate).
-4. Update `SiteFooter.tsx` to add the Comparisons column.
-5. Add cross-link blocks to `evolve-rodent-birth-control.tsx`, `contrapest.tsx`, `contrapest-vs-evolve.tsx`, `rodent-fertility-control.tsx`.
+## Skip / no inline image needed
 
-## Files created
+- `/` (home) — per your note.
+- `/results`, `/why-it-keeps-coming-back` — already use multiple inline images.
+- `/faq`, `/get-started`, `/areas`, `/areas/$areaSlug`, `/resources` — utility/index pages, text-light or list-driven.
+- `/solutions/*` — each already has a dedicated hero asset and the body is short enough that adding inline imagery would feel padded.
 
-```
-src/routes/vs.rat-poison.tsx
-src/routes/vs.traditional-pest-control.tsx
-src/routes/vs.snap-traps.tsx
-src/routes/vs.assured-environments.tsx
-src/routes/vs.orkin.tsx
-src/routes/vs.bell-environmental.tsx
-src/routes/vs.viking-pest-control.tsx
-src/routes/vs.western-pest-services.tsx
-```
+---
 
-## Files edited
+## Reusable assets to plan for
 
-```
-src/components/site/SiteFooter.tsx
-src/routes/evolve-rodent-birth-control.tsx
-src/routes/contrapest.tsx
-src/routes/contrapest-vs-evolve.tsx
-src/routes/rodent-fertility-control.tsx
-```
+Several recommendations collapse into a small shared asset library. If you generate these once, they cover most of the audit:
 
-## Out of scope
+1. **Evolve soft-bait close-up** (in-station, lid open) — used on `/evolve-rodent-birth-control`, possibly `/contrapest`.
+2. **Liquid-vs-soft-bait diptych** — `/evolve-rodent-birth-control`, `/contrapest`, `/contrapest-vs-evolve`, `/rodent-fertility-control`.
+3. **Operator-at-station service shot** (clipboard/tablet) — `/does-rat-birth-control-work`, `/how-it-works`, `/contrapest`, `/vs/diy-rat-birth-control`, `/what-to-expect`.
+4. **Vendor-coexistence diptych** (snap trap + Evolve station in same space) — `/how-it-works`, `/vs/traditional-pest-control`, `/vs/snap-traps`.
+5. **"Additive layer" shot** (Evolve block being placed into an existing third-party station) — all 5 competitor `/vs/*` pages.
+6. **NYC mitigation-zone street scene** — `/contrapest`, `/evolve-rodent-birth-control` field-data section.
+7. **Monitoring report on clipboard** — `/what-to-expect`, optionally `/does-rat-birth-control-work`.
 
-- Header navigation changes.
-- New images / OG asset generation.
-- Schema.org markup.
-- Updating the live site or pushing to GitHub.
-- Rebuilding the existing `/vs/diy-rat-birth-control` page.
+Seven distinct images cover ~20 placement opportunities across 14 pages.
+
+---
+
+Reply with which tiers (or specific pages) you want to move forward on, and I'll wait on your generated images before writing the placement implementation plan.
