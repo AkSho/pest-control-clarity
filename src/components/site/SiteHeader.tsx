@@ -19,6 +19,24 @@ const NAV: { label: string; to: string }[] = [
   { label: "Resources", to: "/resources" },
 ];
 
+const PROGRAM_LINKS: { label: string; to: string; eyebrow: string }[] = [
+  {
+    label: "How it works",
+    to: "/how-it-works",
+    eyebrow: "The 90-day program in plain language",
+  },
+  {
+    label: "Does rat birth control work?",
+    to: "/does-rat-birth-control-work",
+    eyebrow: "Bryant Park failed. Here's what's different.",
+  },
+  {
+    label: "What to expect",
+    to: "/what-to-expect",
+    eyebrow: "Every step before you commit to anything",
+  },
+];
+
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [mobileSolutionsOpen, setMobileSolutionsOpen] = useState(false);
