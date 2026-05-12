@@ -31,11 +31,11 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
       className="rounded-2xl bg-card p-6 shadow-[var(--shadow-elevated)] md:p-8"
     >
       <div className="text-center">
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-ink/70">
           Schedule your{" "}
-          <span className="font-bold underline underline-offset-2 text-foreground">FREE</span>
+          <span className="font-bold underline underline-offset-2 text-ink">FREE</span>
         </p>
-        <h3 className="mt-1 text-xl font-extrabold leading-tight md:text-2xl">
+        <h3 className="mt-1 text-xl font-extrabold leading-tight text-ink md:text-2xl">
           Site Walkthrough &amp; Program Estimate
         </h3>
       </div>

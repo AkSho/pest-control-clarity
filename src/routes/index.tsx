@@ -26,6 +26,7 @@ import { HeroTrustBadges } from "@/components/site/TrustBadges";
 import { PressStrip } from "@/components/site/PressStrip";
 import { AboutSection } from "@/components/site/AboutSection";
 import { ReviewsGrid } from "@/components/site/ReviewsGrid";
+import { WhoWeServeGrid } from "@/components/site/WhoWeServeGrid";
 import heroImg from "@/assets/hero-urban.jpg";
 
 export const Route = createFileRoute("/")({
@@ -378,27 +379,7 @@ function HomePage() {
             </h2>
           </div>
 
-          <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {WHO.map((w) => (
-              <div
-                key={w.title}
-                className="rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-card)]"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-ink text-ink-foreground">
-                    <w.icon className="h-5 w-5" />
-                  </div>
-                  <h3 className="text-lg font-bold">{w.title}</h3>
-                </div>
-                <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
-                  {w.desc}
-                </p>
-                <div className="mt-5 inline-flex items-center rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand">
-                  {w.badge}
-                </div>
-              </div>
-            ))}
-          </div>
+          <WhoWeServeGrid />
         </div>
       </section>
 
