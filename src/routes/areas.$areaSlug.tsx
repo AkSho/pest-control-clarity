@@ -101,7 +101,7 @@ function AreaPage() {
             </div>
           </div>
           <div id="contact">
-            <LeadForm compact />
+            <LeadForm />
           </div>
         </div>
       </section>
