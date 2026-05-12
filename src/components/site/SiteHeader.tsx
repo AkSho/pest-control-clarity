@@ -11,6 +11,7 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { SOLUTIONS } from "@/data/solutions";
+import { REGIONS, getAreasByRegion } from "@/data/serviceAreas";
 
 const NAV: { label: string; to: string }[] = [
   { label: "The Problem", to: "/why-it-keeps-coming-back" },
