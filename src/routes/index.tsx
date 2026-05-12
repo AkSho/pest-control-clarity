@@ -26,6 +26,7 @@ import { HeroTrustBadges } from "@/components/site/TrustBadges";
 import { PressStrip } from "@/components/site/PressStrip";
 import { AboutSection } from "@/components/site/AboutSection";
 import { ReviewsGrid } from "@/components/site/ReviewsGrid";
+import { WhoWeServeGrid } from "@/components/site/WhoWeServeGrid";
 import heroImg from "@/assets/hero-urban.jpg";
 
 export const Route = createFileRoute("/")({
