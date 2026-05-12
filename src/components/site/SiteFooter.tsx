@@ -81,12 +81,14 @@ export function SiteFooter() {
             Service areas
           </div>
           <ul className="mt-4 space-y-2 text-sm">
-            <li><Link to="/areas/$areaSlug" params={{ areaSlug: "manhattan-ny" }} className="hover:text-brand">Manhattan, NY</Link></li>
-            <li><Link to="/areas/$areaSlug" params={{ areaSlug: "manhattan-ny" }} className="hover:text-brand">Brooklyn, NY</Link></li>
-            <li><Link to="/areas/$areaSlug" params={{ areaSlug: "manhattan-ny" }} className="hover:text-brand">Jersey City, NJ</Link></li>
-            <li><Link to="/areas/$areaSlug" params={{ areaSlug: "san-francisco-ca" }} className="hover:text-brand">San Francisco, CA</Link></li>
-            <li><Link to="/areas/$areaSlug" params={{ areaSlug: "oakland-ca" }} className="hover:text-brand">Oakland, CA</Link></li>
-            <li><Link to="/areas/$areaSlug" params={{ areaSlug: "san-jose-ca" }} className="hover:text-brand">San Jose, CA</Link></li>
+            <li><Link to="/areas" className="hover:text-brand font-semibold">All service areas →</Link></li>
+            {SERVICE_AREAS.map((a) => (
+              <li key={a.slug}>
+                <Link to="/areas/$areaSlug" params={{ areaSlug: a.slug }} className="hover:text-brand">
+                  {a.city}, {a.state}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
       </div>

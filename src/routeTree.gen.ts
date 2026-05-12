@@ -20,6 +20,7 @@ import { Route as FaqRouteImport } from './routes/faq'
 import { Route as DohmhRodentViolationNycRouteImport } from './routes/dohmh-rodent-violation-nyc'
 import { Route as DoesRatBirthControlWorkRouteImport } from './routes/does-rat-birth-control-work'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AreasIndexRouteImport } from './routes/areas.index'
 import { Route as SolutionsRestaurantsRouteImport } from './routes/solutions.restaurants'
 import { Route as SolutionsResidentialRouteImport } from './routes/solutions.residential'
 import { Route as SolutionsPropertyManagersRouteImport } from './routes/solutions.property-managers'
@@ -83,6 +84,11 @@ const DoesRatBirthControlWorkRoute = DoesRatBirthControlWorkRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AreasIndexRoute = AreasIndexRouteImport.update({
+  id: '/areas/',
+  path: '/areas/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SolutionsRestaurantsRoute = SolutionsRestaurantsRouteImport.update({
@@ -154,6 +160,7 @@ export interface FileRoutesByFullPath {
   '/solutions/property-managers': typeof SolutionsPropertyManagersRoute
   '/solutions/residential': typeof SolutionsResidentialRoute
   '/solutions/restaurants': typeof SolutionsRestaurantsRoute
+  '/areas/': typeof AreasIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -176,6 +183,7 @@ export interface FileRoutesByTo {
   '/solutions/property-managers': typeof SolutionsPropertyManagersRoute
   '/solutions/residential': typeof SolutionsResidentialRoute
   '/solutions/restaurants': typeof SolutionsRestaurantsRoute
+  '/areas': typeof AreasIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -199,6 +207,7 @@ export interface FileRoutesById {
   '/solutions/property-managers': typeof SolutionsPropertyManagersRoute
   '/solutions/residential': typeof SolutionsResidentialRoute
   '/solutions/restaurants': typeof SolutionsRestaurantsRoute
+  '/areas/': typeof AreasIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -223,6 +232,7 @@ export interface FileRouteTypes {
     | '/solutions/property-managers'
     | '/solutions/residential'
     | '/solutions/restaurants'
+    | '/areas/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -245,6 +255,7 @@ export interface FileRouteTypes {
     | '/solutions/property-managers'
     | '/solutions/residential'
     | '/solutions/restaurants'
+    | '/areas'
   id:
     | '__root__'
     | '/'
@@ -267,6 +278,7 @@ export interface FileRouteTypes {
     | '/solutions/property-managers'
     | '/solutions/residential'
     | '/solutions/restaurants'
+    | '/areas/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -290,6 +302,7 @@ export interface RootRouteChildren {
   SolutionsPropertyManagersRoute: typeof SolutionsPropertyManagersRoute
   SolutionsResidentialRoute: typeof SolutionsResidentialRoute
   SolutionsRestaurantsRoute: typeof SolutionsRestaurantsRoute
+  AreasIndexRoute: typeof AreasIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -369,6 +382,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/areas/': {
+      id: '/areas/'
+      path: '/areas'
+      fullPath: '/areas/'
+      preLoaderRoute: typeof AreasIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/solutions/restaurants': {
@@ -458,7 +478,18 @@ const rootRouteChildren: RootRouteChildren = {
   SolutionsPropertyManagersRoute: SolutionsPropertyManagersRoute,
   SolutionsResidentialRoute: SolutionsResidentialRoute,
   SolutionsRestaurantsRoute: SolutionsRestaurantsRoute,
+  AreasIndexRoute: AreasIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
