@@ -8,7 +8,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { LeadForm } from "@/components/site/LeadForm";
-import { getServiceArea, SERVICE_AREAS, type ServiceArea } from "@/data/serviceAreas";
+import { getServiceArea, getJurisdiction, SERVICE_AREAS, type ServiceArea } from "@/data/serviceAreas";
+import { SOLUTIONS } from "@/data/solutions";
 
 export const Route = createFileRoute("/areas/$areaSlug")({
   loader: ({ params }) => {
@@ -66,9 +67,9 @@ function AreaPage() {
               <MapPin className="h-3.5 w-3.5" />
               {area.region} · {area.city}, {area.state}
             </div>
-            <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] md:text-5xl">
+            <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] text-white md:text-5xl">
               Rodent Fertility Control in{" "}
-              <span className="text-brand">
+              <span className="text-accent-warm">
                 {area.city}, {area.state}
               </span>
             </h1>
