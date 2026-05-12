@@ -1,53 +1,64 @@
-## Chunk: Compliance pages (NYC + NJ violations)
+## Chunk: Service Areas (/areas/*)
 
-Note: there are no `/vs/*` pages on the live cloakd-removals.cloud site (404). Scoping this chunk to the two compliance pages, which are the high-intent search/landing pages for restaurant + property operators who got cited.
+The dynamic `/areas/$areaSlug` template already exists and renders cleanly. The live cloakd-removals.cloud site has no `/areas/*` pages, so this chunk is original content that **expands** the live footprint to reflect three real service regions: NYC, NJ, and the Bay Area.
 
-### Routes to create
+### 1. Fix region tags in `src/data/serviceAreas.ts`
 
-1. `src/routes/dohmh-rodent-violation-nyc.tsx` — `/dohmh-rodent-violation-nyc`
-2. `src/routes/nj-rodent-violation.tsx` — `/nj-rodent-violation`
+Currently SF / Oakland / San Jose are tagged `region: "NYC"` — clearly a typo. Widen the union and correct the tags.
 
-### Page structures (verbatim copy from live site)
+```ts
+region: "NYC" | "NJ" | "Bay Area";
+```
 
-**dohmh-rodent-violation-nyc**
-- `SolutionHero`: "You got a DOHMH rodent violation. Here's what it means for your NYC restaurant — and what actually closes it." + intro + LeadForm
-- "Codes 04K and 04L": 2-card grid (04K rats / 04L mice) + `StatCard` trio (5+ pts, 14 pts = B, fine range) + narrative paragraph on fine amounts
-- "How inspections are triggered": narrative band
-- "Inspectors don't need to see a live rat": 6-card grid (live rats / dead rats / fresh droppings / gnaw marks / burrows / grease marks)
-- "Closing the violation is different from closing the vulnerability": two-column "standard treatment / 90-day program adds" comparison (reuse the PhaseCards split-column pattern)
-- `FieldDataTrio` (79% / 88% / 90%) + SenesTech source link
-- `ClosingCta`: "Start before the next unannounced visit."
+- `manhattan-ny` → NYC
+- `san-francisco-ca`, `oakland-ca`, `san-jose-ca` → Bay Area
 
-**nj-rodent-violation**
-- `SolutionHero`: "An NJ rodent violation has no letter grade in the window. The exposure is still real." + intro + LeadForm
-- "Local health departments. State sanitary code.": narrative + 4-card grid (Inspection trigger / Violation classification / Reinspection requirement / Public record)
-- "Closure authority without the grade system warning": narrative band (NJ restaurants)
-- "Tenant complaints route to local health": narrative band (NJ property managers)
-- "NJ vs NYC enforcement": two-column comparison cards (NYC bullets / NJ bullets) — reuse PhaseCards primitive
-- "Same two-phase structure": `PhaseCards` (Phase 1 your existing NJ exterminator / Phase 2 Cloakd fertility management)
-- `FieldDataTrio` (79% / 88% / 90%) + SenesTech source link
-- `ClosingCta`: "NJ operators: tell us about your property."
+### 2. Expand SERVICE_AREAS
 
-### Shared work
+Add the missing cities. Each entry follows the existing shape (`intro`, `localProof`, `neighborhoods`, `faqs`, `nearbyAreas`). Re-use the standard 4-FAQ block with light city-specific edits.
 
-- Reuse `SolutionPrimitives` (`SolutionHero`, `StatCard`, `PhaseCards`, `FieldDataTrio`, `ClosingCta`). No new shared primitives.
-- Small inline components per page for unique blocks (the 6-up "active rat signs" grid on NYC, the 4-up enforcement-detail cards on NJ).
-- `head()` on each route with route-specific title, description, og:title, og:description, og:image (hero).
+NYC region (add):
+- `brooklyn-ny` — Brooklyn, NY (Williamsburg, Bushwick, DUMBO, Park Slope, Crown Heights, Bed-Stuy, Sunset Park, Bay Ridge)
+- `queens-ny` — Queens, NY (LIC, Astoria, Jackson Heights, Flushing, Forest Hills, Ridgewood)
+- `bronx-ny` — Bronx, NY (Mott Haven, Fordham, Riverdale, Hunts Point)
+- `staten-island-ny` — Staten Island, NY (St. George, Stapleton, Tottenville)
 
-### Assets
+NJ region (add):
+- `jersey-city-nj` — Downtown, Journal Square, Heights, Greenville
+- `hoboken-nj`
+- `newark-nj` — Ironbound, Downtown, University Heights
+- `bayonne-nj`
 
-- `src/assets/compliance-dohmh-nyc.jpg` — NYC restaurant kitchen pass / inspector clipboard motif (neutral, photographic)
-- `src/assets/compliance-nj-violation.jpg` — NJ municipal storefront / public-records evocative scene (no logos)
+Bay Area is already covered (SF / Oakland / San Jose).
 
-Both 1536×1024, generated via imagegen `fast`.
+Also fix the existing `manhattan-ny.nearbyAreas` entries — they currently all point to `slug: "manhattan-ny"` (broken). Wire them to the new Brooklyn / Queens / Jersey City slugs.
 
-### Nav / cross-linking
+### 3. New `/areas` index route
 
-- Add both routes to `SiteHeader` — likely under a new "Compliance" group (or extend the existing "Program" dropdown). Keep mobile drawer in sync.
-- Add both routes to `SiteFooter` link list.
-- Cross-link from the restaurants and property-managers solution pages where compliance language already references 04K/04L and NJ exposure.
+`src/routes/areas.index.tsx` — coverage hub.
 
-### Out of scope (no live source pages exist)
+Layout:
+- `SolutionHero`-style header: "Where Cloakd runs the program" + intro + LeadForm (compact)
+- Three region columns: **NYC**, **New Jersey**, **Bay Area** — each lists its cities as `<Link to="/areas/$areaSlug">` cards
+- `FieldDataTrio` (79% / 88% / 90%)
+- `ClosingCta` ("Don't see your city? We're expanding — tell us where.")
 
-- `/vs/*` comparison pages — confirmed 404 on live site. Skip this chunk.
-- `/areas/*`, `/home-audit`, `/get-started` edits — separate chunk.
+`head()` with a coverage-focused title + description.
+
+### 4. Nav + cross-linking
+
+- `SiteHeader.tsx` — add an "Areas" dropdown listing the three regions and an "All service areas" link to `/areas`. Keep mobile drawer in sync.
+- `SiteFooter.tsx` — add an "Areas" column with the region groups.
+- `index.tsx` (home) — if there's a "Service Areas" or footer-adjacent strip, add the new cities; otherwise leave alone.
+
+### 5. Out of scope (handled in later chunks)
+
+- `/get-started` rewrite to match live (will need its own chunk — currently diverges in steps + form).
+- `/home-audit` residential funnel — separate chunk.
+
+### Technical notes
+
+- All work in `src/data/serviceAreas.ts`, `src/routes/areas.index.tsx`, `src/components/site/SiteHeader.tsx`, `src/components/site/SiteFooter.tsx`. No new shared primitives — reuse `SolutionHero`, `FieldDataTrio`, `ClosingCta` from `SolutionPrimitives`.
+- The dynamic route file `areas.$areaSlug.tsx` needs no changes; it already loads from `getServiceArea()` and renders region/city correctly once data is fixed.
+- No new images required — `/areas` index is text + cards.
+- `routeTree.gen.ts` regenerates automatically when `areas.index.tsx` is added.
