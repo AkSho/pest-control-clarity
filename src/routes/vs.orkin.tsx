@@ -110,6 +110,11 @@ function OrkinVsPage() {
               </tbody>
             </table>
           </div>
+          <InlineFigure
+            src={operatorStation}
+            alt="Cloakd operator servicing an Evolve block inside an existing pest-control station"
+            caption="Cloakd deploys as an additive layer inside your existing vendor's program."
+          />
           <p className="mt-6 max-w-3xl text-sm text-muted-foreground">
             Orkin is a registered trademark of its respective owner.
             Comparison is for informational purposes; Cloakd is not
