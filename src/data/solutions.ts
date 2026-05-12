@@ -306,6 +306,22 @@ export const SOLUTIONS: Solution[] = [
     ],
     ctaLabel: "Bring this to your next board meeting",
   },
+  {
+    slug: "mouse-violations",
+    audience: "Mouse Violations (04L)",
+    navLabel: "Mouse Violations (04L)",
+    icon: MousePointer2,
+    eyebrow: "For NYC food service operators",
+    headline:
+      "DOHMH code 04L is a mouse violation — and ignoring it while you manage the rats is how you end up with 10 critical points on one inspection.",
+    lede:
+      "DOHMH violation code 04L covers evidence of mice. It's a critical violation carrying the same minimum point value as 04K, triggering the same re-inspection cycle, with an identical fine structure.",
+    badge: "5+ critical points per citation",
+    painPoints: [],
+    outcomes: [],
+    stats: [],
+    ctaLabel: "Address the 04L citation",
+  },
 ];
 
 export const getSolution = (slug: string) =>
