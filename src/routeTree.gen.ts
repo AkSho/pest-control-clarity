@@ -25,6 +25,7 @@ import { Route as ContrapestVsEvolveRouteImport } from './routes/contrapest-vs-e
 import { Route as ContrapestRouteImport } from './routes/contrapest'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AreasIndexRouteImport } from './routes/areas.index'
+import { Route as VsDiyRatBirthControlRouteImport } from './routes/vs.diy-rat-birth-control'
 import { Route as SolutionsRestaurantsRouteImport } from './routes/solutions.restaurants'
 import { Route as SolutionsResidentialRouteImport } from './routes/solutions.residential'
 import { Route as SolutionsPropertyManagersRouteImport } from './routes/solutions.property-managers'
@@ -116,6 +117,11 @@ const AreasIndexRoute = AreasIndexRouteImport.update({
   path: '/areas/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VsDiyRatBirthControlRoute = VsDiyRatBirthControlRouteImport.update({
+  id: '/vs/diy-rat-birth-control',
+  path: '/vs/diy-rat-birth-control',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SolutionsRestaurantsRoute = SolutionsRestaurantsRouteImport.update({
   id: '/solutions/restaurants',
   path: '/solutions/restaurants',
@@ -189,6 +195,7 @@ export interface FileRoutesByFullPath {
   '/solutions/property-managers': typeof SolutionsPropertyManagersRoute
   '/solutions/residential': typeof SolutionsResidentialRoute
   '/solutions/restaurants': typeof SolutionsRestaurantsRoute
+  '/vs/diy-rat-birth-control': typeof VsDiyRatBirthControlRoute
   '/areas/': typeof AreasIndexRoute
 }
 export interface FileRoutesByTo {
@@ -216,6 +223,7 @@ export interface FileRoutesByTo {
   '/solutions/property-managers': typeof SolutionsPropertyManagersRoute
   '/solutions/residential': typeof SolutionsResidentialRoute
   '/solutions/restaurants': typeof SolutionsRestaurantsRoute
+  '/vs/diy-rat-birth-control': typeof VsDiyRatBirthControlRoute
   '/areas': typeof AreasIndexRoute
 }
 export interface FileRoutesById {
@@ -244,6 +252,7 @@ export interface FileRoutesById {
   '/solutions/property-managers': typeof SolutionsPropertyManagersRoute
   '/solutions/residential': typeof SolutionsResidentialRoute
   '/solutions/restaurants': typeof SolutionsRestaurantsRoute
+  '/vs/diy-rat-birth-control': typeof VsDiyRatBirthControlRoute
   '/areas/': typeof AreasIndexRoute
 }
 export interface FileRouteTypes {
@@ -273,6 +282,7 @@ export interface FileRouteTypes {
     | '/solutions/property-managers'
     | '/solutions/residential'
     | '/solutions/restaurants'
+    | '/vs/diy-rat-birth-control'
     | '/areas/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -300,6 +310,7 @@ export interface FileRouteTypes {
     | '/solutions/property-managers'
     | '/solutions/residential'
     | '/solutions/restaurants'
+    | '/vs/diy-rat-birth-control'
     | '/areas'
   id:
     | '__root__'
@@ -327,6 +338,7 @@ export interface FileRouteTypes {
     | '/solutions/property-managers'
     | '/solutions/residential'
     | '/solutions/restaurants'
+    | '/vs/diy-rat-birth-control'
     | '/areas/'
   fileRoutesById: FileRoutesById
 }
@@ -355,6 +367,7 @@ export interface RootRouteChildren {
   SolutionsPropertyManagersRoute: typeof SolutionsPropertyManagersRoute
   SolutionsResidentialRoute: typeof SolutionsResidentialRoute
   SolutionsRestaurantsRoute: typeof SolutionsRestaurantsRoute
+  VsDiyRatBirthControlRoute: typeof VsDiyRatBirthControlRoute
   AreasIndexRoute: typeof AreasIndexRoute
 }
 
@@ -472,6 +485,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AreasIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/vs/diy-rat-birth-control': {
+      id: '/vs/diy-rat-birth-control'
+      path: '/vs/diy-rat-birth-control'
+      fullPath: '/vs/diy-rat-birth-control'
+      preLoaderRoute: typeof VsDiyRatBirthControlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/solutions/restaurants': {
       id: '/solutions/restaurants'
       path: '/solutions/restaurants'
@@ -563,6 +583,7 @@ const rootRouteChildren: RootRouteChildren = {
   SolutionsPropertyManagersRoute: SolutionsPropertyManagersRoute,
   SolutionsResidentialRoute: SolutionsResidentialRoute,
   SolutionsRestaurantsRoute: SolutionsRestaurantsRoute,
+  VsDiyRatBirthControlRoute: VsDiyRatBirthControlRoute,
   AreasIndexRoute: AreasIndexRoute,
 }
 export const routeTree = rootRouteImport
