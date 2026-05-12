@@ -438,7 +438,7 @@ function HomePage() {
               Operator reviews
             </p>
             <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
-              See why NYC & NJ operators stay on the program
+              See why operators stay on the program
             </h2>
           </div>
 
