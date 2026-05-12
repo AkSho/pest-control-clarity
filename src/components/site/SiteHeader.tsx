@@ -1,37 +1,28 @@
 import { Link } from "@tanstack/react-router";
-import { Phone, Menu, X, ArrowRight } from "lucide-react";
+import { Menu, X, ArrowRight, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
+import { SOLUTIONS } from "@/data/solutions";
 
-const NAV = [
-  { to: "/", label: "How it works", hash: "#how" },
-  { to: "/", label: "Who we serve", hash: "#who" },
-  { to: "/", label: "Field data", hash: "#data" },
-  { to: "/areas/manhattan-ny", label: "Service areas" },
-  { to: "/", label: "FAQ", hash: "#faq" },
+const NAV: { label: string; to: string }[] = [
+  { label: "The Problem", to: "/why-it-keeps-coming-back" },
+  { label: "Results", to: "/results" },
+  { label: "FAQ", to: "/faq" },
+  { label: "Resources", to: "/resources" },
 ];
-
-export function TopBar() {
-  return (
-    <div className="bg-brand text-brand-foreground text-xs">
-      <div className="container-site flex h-9 items-center justify-between gap-4">
-        <span className="font-semibold tracking-wide">
-          Pest Control License: <span className="font-bold">#NYC-PCO-XXXXXX</span>
-        </span>
-        <a
-          href="tel:+18005550199"
-          className="flex items-center gap-2 font-semibold hover:opacity-90"
-        >
-          <Phone className="h-3.5 w-3.5" />
-          (800) 555-0199
-        </a>
-      </div>
-    </div>
-  );
-}
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const [mobileSolutionsOpen, setMobileSolutionsOpen] = useState(false);
+
   return (
     <header className="sticky top-0 z-40 ink-section border-b border-ink-border">
       <div className="container-site flex h-16 items-center justify-between">
@@ -47,23 +38,70 @@ export function SiteHeader() {
           </div>
         </Link>
 
-        <nav className="hidden items-center gap-7 md:flex">
-          {NAV.map((item) => (
-            <a
-              key={item.label}
-              href={item.hash ? item.hash : item.to}
-              className="text-sm font-medium text-ink-foreground/85 transition hover:text-ink-foreground"
-            >
-              {item.label}
-            </a>
-          ))}
-        </nav>
+        <div className="hidden md:block">
+          <NavigationMenu>
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuLink asChild>
+                  <Link
+                    to="/why-it-keeps-coming-back"
+                    className="inline-flex h-9 items-center px-3 text-sm font-medium text-ink-foreground/85 transition hover:text-ink-foreground"
+                  >
+                    The Problem
+                  </Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="!bg-transparent text-ink-foreground/85 hover:!bg-white/5 hover:!text-ink-foreground data-[state=open]:!bg-white/5 data-[state=open]:!text-ink-foreground">
+                  Solutions
+                </NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid w-[440px] gap-1 p-3 sm:grid-cols-2">
+                    {SOLUTIONS.map((s) => (
+                      <li key={s.slug}>
+                        <NavigationMenuLink asChild>
+                          <Link
+                            to="/solutions/$slug"
+                            params={{ slug: s.slug }}
+                            className="block rounded-md p-3 text-sm leading-none text-foreground transition hover:bg-accent hover:text-accent-foreground"
+                          >
+                            <div className="flex items-center gap-2 font-semibold">
+                              <s.icon className="h-4 w-4 text-brand" />
+                              {s.navLabel}
+                            </div>
+                            <div className="mt-1 line-clamp-2 text-xs text-muted-foreground">
+                              {s.eyebrow}
+                            </div>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+
+              {NAV.slice(1).map((item) => (
+                <NavigationMenuItem key={item.label}>
+                  <NavigationMenuLink asChild>
+                    <Link
+                      to={item.to}
+                      className="inline-flex h-9 items-center px-3 text-sm font-medium text-ink-foreground/85 transition hover:text-ink-foreground"
+                    >
+                      {item.label}
+                    </Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+              ))}
+            </NavigationMenuList>
+          </NavigationMenu>
+        </div>
 
         <div className="hidden md:block">
           <Button asChild className="rounded-full h-10 px-5">
-            <a href="tel:+18005550199">
-              (800) 555-0199 <ArrowRight className="h-4 w-4" />
-            </a>
+            <Link to="/get-started">
+              Get Started <ArrowRight className="h-4 w-4" />
+            </Link>
           </Button>
         </div>
 
@@ -78,19 +116,55 @@ export function SiteHeader() {
 
       {open && (
         <div className="border-t border-ink-border ink-section md:hidden">
-          <div className="container-site flex flex-col gap-2 py-4">
-            {NAV.map((item) => (
-              <a
+          <div className="container-site flex flex-col gap-1 py-4">
+            <Link
+              to="/why-it-keeps-coming-back"
+              onClick={() => setOpen(false)}
+              className="rounded-md px-3 py-2 text-sm font-medium text-ink-foreground hover:bg-white/5"
+            >
+              The Problem
+            </Link>
+
+            <button
+              onClick={() => setMobileSolutionsOpen((v) => !v)}
+              className="flex items-center justify-between rounded-md px-3 py-2 text-left text-sm font-medium text-ink-foreground hover:bg-white/5"
+            >
+              Solutions
+              <ChevronDown
+                className={`h-4 w-4 transition ${mobileSolutionsOpen ? "rotate-180" : ""}`}
+              />
+            </button>
+            {mobileSolutionsOpen && (
+              <div className="ml-2 flex flex-col gap-1 border-l border-ink-border pl-2">
+                {SOLUTIONS.map((s) => (
+                  <Link
+                    key={s.slug}
+                    to="/solutions/$slug"
+                    params={{ slug: s.slug }}
+                    onClick={() => setOpen(false)}
+                    className="rounded-md px-3 py-2 text-sm text-ink-foreground/85 hover:bg-white/5"
+                  >
+                    {s.navLabel}
+                  </Link>
+                ))}
+              </div>
+            )}
+
+            {NAV.slice(1).map((item) => (
+              <Link
                 key={item.label}
-                href={item.hash ? item.hash : item.to}
+                to={item.to}
                 onClick={() => setOpen(false)}
                 className="rounded-md px-3 py-2 text-sm font-medium text-ink-foreground hover:bg-white/5"
               >
                 {item.label}
-              </a>
+              </Link>
             ))}
-            <Button asChild className="mt-2 rounded-full">
-              <a href="tel:+18005550199">Call (800) 555-0199</a>
+
+            <Button asChild className="mt-3 rounded-full">
+              <Link to="/get-started" onClick={() => setOpen(false)}>
+                Get Started <ArrowRight className="h-4 w-4" />
+              </Link>
             </Button>
           </div>
         </div>
