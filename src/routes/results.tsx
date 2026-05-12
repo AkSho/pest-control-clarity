@@ -46,16 +46,42 @@ function StatTile({
   );
 }
 
-const CITIES = [
+const CITIES: { name: string; year: string; body: React.ReactNode }[] = [
   {
     name: "New York City",
     year: "2025",
-    body: "NYC City Council passed a rat contraceptive pilot bill in October 2024. Deployment of ContraPest — a fertility management product made by SenesTech — began in designated rat mitigation zones in April 2025.",
+    body: (
+      <>
+        NYC City Council passed a rat contraceptive pilot bill in October
+        2024. Deployment of{" "}
+        <Link
+          to="/contrapest"
+          className="text-brand underline-offset-2 hover:underline"
+        >
+          ContraPest
+        </Link>{" "}
+        — a fertility management product made by SenesTech — began in
+        designated rat mitigation zones in April 2025.
+      </>
+    ),
   },
   {
     name: "Baltimore",
     year: "2025",
-    body: "Baltimore adopted Evolve for its city-run rodent control program in 2025. The program runs through the city's public health department as part of a broader effort to reduce the rat population citywide.",
+    body: (
+      <>
+        Baltimore adopted{" "}
+        <Link
+          to="/evolve-rodent-birth-control"
+          className="text-brand underline-offset-2 hover:underline"
+        >
+          Evolve
+        </Link>{" "}
+        for its city-run rodent control program in 2025. The program runs
+        through the city's public health department as part of a broader
+        effort to reduce the rat population citywide.
+      </>
+    ),
   },
   {
     name: "Chicago",
