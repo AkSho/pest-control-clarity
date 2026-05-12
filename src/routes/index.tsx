@@ -415,7 +415,7 @@ function HomePage() {
       </section>
 
       {/* SERVICE AREAS */}
-      <section className="bg-background py-20">
+      <section id="areas" className="bg-background py-20">
         <div className="container-site">
           <div className="grid gap-10 md:grid-cols-[0.9fr_1.1fr] md:gap-16">
             <div>
@@ -423,7 +423,7 @@ function HomePage() {
                 Service areas
               </p>
               <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
-                Serving food-service operators and managed properties across NYC & NJ
+                Serving food-service operators and managed properties across NYC, NJ & the Bay Area
               </h2>
               <p className="mt-5 text-muted-foreground">
                 Month-to-month coverage, documented every cycle. Pick your area
@@ -433,20 +433,23 @@ function HomePage() {
 
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
               {[
-                "Manhattan, NY",
-                "Brooklyn, NY",
-                "Queens, NY",
-                "Bronx, NY",
-                "Staten Island, NY",
-                "Jersey City, NJ",
-                "Newark, NJ",
-                "Hoboken, NJ",
-                "Elizabeth, NJ",
-              ].map((label) => (
+                { label: "Manhattan, NY", slug: "manhattan-ny" },
+                { label: "Brooklyn, NY", slug: "manhattan-ny" },
+                { label: "Queens, NY", slug: "manhattan-ny" },
+                { label: "Bronx, NY", slug: "manhattan-ny" },
+                { label: "Staten Island, NY", slug: "manhattan-ny" },
+                { label: "Jersey City, NJ", slug: "manhattan-ny" },
+                { label: "Newark, NJ", slug: "manhattan-ny" },
+                { label: "Hoboken, NJ", slug: "manhattan-ny" },
+                { label: "Elizabeth, NJ", slug: "manhattan-ny" },
+                { label: "San Francisco, CA", slug: "san-francisco-ca" },
+                { label: "Oakland, CA", slug: "oakland-ca" },
+                { label: "San Jose, CA", slug: "san-jose-ca" },
+              ].map(({ label, slug }) => (
                 <Link
                   key={label}
                   to="/areas/$areaSlug"
-                  params={{ areaSlug: "manhattan-ny" }}
+                  params={{ areaSlug: slug }}
                   className="group flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3 text-sm font-semibold transition hover:border-brand hover:bg-brand-soft"
                 >
                   {label}
@@ -457,6 +460,7 @@ function HomePage() {
           </div>
         </div>
       </section>
+
 
       {/* TESTIMONIALS */}
       <section className="bg-surface py-20">
