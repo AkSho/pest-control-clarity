@@ -6,6 +6,8 @@ import {
   SectionHeader,
   SolutionHero,
 } from "@/components/site/solutions/SolutionPrimitives";
+import { InlineFigure } from "@/components/site/InlineFigure";
+import operatorStation from "@/assets/inline/operator-contrapest-station.jpg";
 
 const TITLE = "Orkin vs. Cloakd: Adding the Fertility Layer to Standard Treatment | Cloakd";
 const DESCRIPTION =
