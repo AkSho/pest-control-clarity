@@ -380,6 +380,25 @@ function HomePage() {
           </div>
 
           <WhoWeServeGrid />
+        </div>
+      </section>
+
+      {/* SERVICE AREAS */}
+      <section className="bg-background py-20">
+        <div className="container-site">
+          <div className="grid gap-10 md:grid-cols-[0.9fr_1.1fr] md:gap-16">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+                Service areas
+              </p>
+              <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
+                Serving food-service operators and managed properties across NYC, NJ, &amp; CA
+              </h2>
+              <p className="mt-5 text-muted-foreground">
+                Month-to-month coverage, documented every cycle. Pick your area
+                for local pressure data and program details.
+              </p>
+            </div>
 
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
               {[
