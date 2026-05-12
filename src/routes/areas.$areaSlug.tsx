@@ -14,7 +14,7 @@ export const Route = createFileRoute("/areas/$areaSlug")({
   loader: ({ params }) => {
     const area = getServiceArea(params.areaSlug);
     if (!area) throw notFound();
-    return { area };
+    return { area: area as NonNullable<typeof area> };
   },
   head: ({ loaderData }) => {
     const a = loaderData?.area;
