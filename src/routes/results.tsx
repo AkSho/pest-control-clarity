@@ -47,7 +47,7 @@ function StatTile({
   );
 }
 
-const CITIES: { name: string; year: string; body: React.ReactNode }[] = [
+const CITIES: { name: string; year: string; body: ReactNode }[] = [
   {
     name: "New York City",
     year: "2025",
