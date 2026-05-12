@@ -25,6 +25,8 @@ import {
 import { LeadForm } from "@/components/site/LeadForm";
 import { HeroTrustBadges } from "@/components/site/TrustBadges";
 import { PressStrip } from "@/components/site/PressStrip";
+import { AboutSection } from "@/components/site/AboutSection";
+import { ReviewsGrid } from "@/components/site/ReviewsGrid";
 import heroImg from "@/assets/hero-urban.jpg";
 
 export const Route = createFileRoute("/")({
@@ -50,9 +52,21 @@ export const Route = createFileRoute("/")({
 });
 
 const STATS = [
-  { value: "79%", label: "reduction in rodent activity", sub: "5-month urban field study" },
-  { value: "88%", label: "drop in track density", sub: "at monitored locations" },
-  { value: "90%", label: "fertility reduction", sub: "when integrated into active programs" },
+  {
+    value: "79%",
+    label: "reduction in rodent track presence",
+    sub: "Location A — 5-month urban field study, Aug 2025 to Jan 2026",
+  },
+  {
+    value: "88%",
+    label: "drop in track density",
+    sub: "Same location — tracks per plate declined even where rodents still present",
+  },
+  {
+    value: "79%+",
+    label: "reduction at second monitored site",
+    sub: "Location B — independent deployment, 5-month monitoring window",
+  },
 ];
 
 const SERVICES = [
@@ -190,23 +204,23 @@ function HomePage() {
       {/* HERO */}
       <section className="relative overflow-hidden ink-section">
         <div
-          className="absolute inset-0 opacity-30"
+          className="absolute inset-0 opacity-40"
           style={{
             backgroundImage: `url(${heroImg})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/95 to-ink/70" />
+        <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/95 to-ink/85" />
         <div className="container-site relative grid gap-10 py-16 md:grid-cols-[1.1fr_0.9fr] md:py-24">
           <div>
             <HeroTrustBadges />
 
-            <h1 className="mt-7 text-4xl font-extrabold leading-[1.05] md:text-6xl">
+            <h1 className="mt-7 text-4xl font-extrabold leading-[1.05] text-white md:text-6xl">
               Every six weeks, the rodents are back.{" "}
-              <span className="text-brand">We end that cycle.</span>
+              <span className="text-accent-warm">We end that cycle.</span>
             </h1>
-            <p className="mt-6 max-w-xl text-base leading-relaxed text-ink-muted md:text-lg">
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-white/85 md:text-lg">
               Standard treatment clears the colony, and within weeks the
               territory fills again. Rodent fertility control suppresses the
               birth rate — the front standard treatment never touches. Run both
@@ -245,15 +259,11 @@ function HomePage() {
         <div className="container-site">
           <div className="mx-auto max-w-2xl text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
-              Field data · monitored deployments
+              Field data
             </p>
             <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
-              Real numbers from real urban field studies
+              Real numbers from monitored deployments
             </h2>
-            <p className="mt-4 text-muted-foreground">
-              Locations A & B — independent 5-month monitoring windows, August
-              2025 through January 2026.
-            </p>
           </div>
 
           <div className="mt-12 grid gap-5 md:grid-cols-3">
