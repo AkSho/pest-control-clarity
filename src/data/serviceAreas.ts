@@ -5,11 +5,18 @@ export type ServiceArea = {
   city: string;
   state: string;
   region: Region;
+  jurisdiction: string;
   intro: string;
   localProof: string;
   neighborhoods: string[];
   faqs: { q: string; a: string }[];
   nearbyAreas: { slug: string; label: string }[];
+};
+
+const JURISDICTION: Record<Region, string> = {
+  NYC: "DOHMH",
+  NJ: "local NJ health",
+  "Bay Area": "local CA health",
 };
 
 const STANDARD_FAQS = (city: string, jurisdiction: string): { q: string; a: string }[] => [
