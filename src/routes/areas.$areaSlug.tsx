@@ -194,6 +194,43 @@ function AreaPage() {
         </div>
       </section>
 
+      {/* WHY CITY */}
+      <section className="bg-background py-16">
+        <div className="container-site">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+            Why {area.city} operators choose Cloakd
+          </p>
+          <h2 className="mt-4 max-w-3xl text-2xl font-extrabold leading-tight md:text-4xl">
+            Built for {area.city}'s replacement cycle.
+          </h2>
+          <div className="mt-10 grid gap-5 md:grid-cols-3">
+            {[
+              {
+                t: `Local pressure data, not a national average`,
+                b: `We baseline your block, then track the decline cycle by cycle. The numbers reflect your address — not a study somewhere else.`,
+              },
+              {
+                t: `Layered onto your existing vendor`,
+                b: `No contract switch in ${area.city}. Whatever pest control you already pay for keeps doing knockdown. We add the fertility layer on top.`,
+              },
+              {
+                t: `Documented for ${getJurisdiction(area)}`,
+                b: `Monthly reports formatted to show ${getJurisdiction(area)} inspectors, ownership, or franchise corporate. The numbers are yours to use.`,
+              },
+            ].map((r) => (
+              <div
+                key={r.t}
+                className="rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-card)]"
+              >
+                <Check className="h-5 w-5 text-brand" />
+                <h3 className="mt-4 text-base font-bold leading-tight">{r.t}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{r.b}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* NEIGHBORHOODS */}
       <section className="bg-surface py-16">
         <div className="container-site">
