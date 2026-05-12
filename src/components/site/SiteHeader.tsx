@@ -37,6 +37,19 @@ const PROGRAM_LINKS: { label: string; to: string; eyebrow: string }[] = [
   },
 ];
 
+const COMPLIANCE_LINKS: { label: string; to: string; eyebrow: string }[] = [
+  {
+    label: "DOHMH rodent violation (NYC)",
+    to: "/dohmh-rodent-violation-nyc",
+    eyebrow: "Codes 04K & 04L, fines, and what closes the citation",
+  },
+  {
+    label: "NJ rodent violation",
+    to: "/nj-rodent-violation",
+    eyebrow: "Local health enforcement and permit suspension exposure",
+  },
+];
+
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [mobileSolutionsOpen, setMobileSolutionsOpen] = useState(false);
@@ -115,6 +128,31 @@ export function SiteHeader() {
                             </div>
                             <div className="mt-1 line-clamp-2 text-xs text-muted-foreground">
                               {s.eyebrow}
+                            </div>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="!bg-transparent text-ink-foreground/85 hover:!bg-white/5 hover:!text-ink-foreground data-[state=open]:!bg-white/5 data-[state=open]:!text-ink-foreground">
+                  Compliance
+                </NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid w-[420px] gap-1 p-3">
+                    {COMPLIANCE_LINKS.map((p) => (
+                      <li key={p.to}>
+                        <NavigationMenuLink asChild>
+                          <Link
+                            to={p.to}
+                            className="block rounded-md p-3 text-sm leading-none text-foreground transition hover:bg-accent hover:text-accent-foreground"
+                          >
+                            <div className="font-semibold">{p.label}</div>
+                            <div className="mt-1 line-clamp-2 text-xs text-muted-foreground">
+                              {p.eyebrow}
                             </div>
                           </Link>
                         </NavigationMenuLink>
@@ -203,6 +241,17 @@ export function SiteHeader() {
                 ))}
               </div>
             )}
+
+            {COMPLIANCE_LINKS.map((p) => (
+              <Link
+                key={p.to}
+                to={p.to}
+                onClick={() => setOpen(false)}
+                className="rounded-md px-3 py-2 text-sm font-medium text-ink-foreground hover:bg-white/5"
+              >
+                {p.label}
+              </Link>
+            ))}
 
             {NAV.slice(1).map((item) => (
               <Link

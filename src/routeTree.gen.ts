@@ -13,9 +13,11 @@ import { Route as WhyItKeepsComingBackRouteImport } from './routes/why-it-keeps-
 import { Route as WhatToExpectRouteImport } from './routes/what-to-expect'
 import { Route as ResultsRouteImport } from './routes/results'
 import { Route as ResourcesRouteImport } from './routes/resources'
+import { Route as NjRodentViolationRouteImport } from './routes/nj-rodent-violation'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as GetStartedRouteImport } from './routes/get-started'
 import { Route as FaqRouteImport } from './routes/faq'
+import { Route as DohmhRodentViolationNycRouteImport } from './routes/dohmh-rodent-violation-nyc'
 import { Route as DoesRatBirthControlWorkRouteImport } from './routes/does-rat-birth-control-work'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SolutionsRestaurantsRouteImport } from './routes/solutions.restaurants'
@@ -48,6 +50,11 @@ const ResourcesRoute = ResourcesRouteImport.update({
   path: '/resources',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NjRodentViolationRoute = NjRodentViolationRouteImport.update({
+  id: '/nj-rodent-violation',
+  path: '/nj-rodent-violation',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HowItWorksRoute = HowItWorksRouteImport.update({
   id: '/how-it-works',
   path: '/how-it-works',
@@ -61,6 +68,11 @@ const GetStartedRoute = GetStartedRouteImport.update({
 const FaqRoute = FaqRouteImport.update({
   id: '/faq',
   path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DohmhRodentViolationNycRoute = DohmhRodentViolationNycRouteImport.update({
+  id: '/dohmh-rodent-violation-nyc',
+  path: '/dohmh-rodent-violation-nyc',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DoesRatBirthControlWorkRoute = DoesRatBirthControlWorkRouteImport.update({
@@ -124,9 +136,11 @@ const AreasAreaSlugRoute = AreasAreaSlugRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/does-rat-birth-control-work': typeof DoesRatBirthControlWorkRoute
+  '/dohmh-rodent-violation-nyc': typeof DohmhRodentViolationNycRoute
   '/faq': typeof FaqRoute
   '/get-started': typeof GetStartedRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/nj-rodent-violation': typeof NjRodentViolationRoute
   '/resources': typeof ResourcesRoute
   '/results': typeof ResultsRoute
   '/what-to-expect': typeof WhatToExpectRoute
@@ -144,9 +158,11 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/does-rat-birth-control-work': typeof DoesRatBirthControlWorkRoute
+  '/dohmh-rodent-violation-nyc': typeof DohmhRodentViolationNycRoute
   '/faq': typeof FaqRoute
   '/get-started': typeof GetStartedRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/nj-rodent-violation': typeof NjRodentViolationRoute
   '/resources': typeof ResourcesRoute
   '/results': typeof ResultsRoute
   '/what-to-expect': typeof WhatToExpectRoute
@@ -165,9 +181,11 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/does-rat-birth-control-work': typeof DoesRatBirthControlWorkRoute
+  '/dohmh-rodent-violation-nyc': typeof DohmhRodentViolationNycRoute
   '/faq': typeof FaqRoute
   '/get-started': typeof GetStartedRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/nj-rodent-violation': typeof NjRodentViolationRoute
   '/resources': typeof ResourcesRoute
   '/results': typeof ResultsRoute
   '/what-to-expect': typeof WhatToExpectRoute
@@ -187,9 +205,11 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/does-rat-birth-control-work'
+    | '/dohmh-rodent-violation-nyc'
     | '/faq'
     | '/get-started'
     | '/how-it-works'
+    | '/nj-rodent-violation'
     | '/resources'
     | '/results'
     | '/what-to-expect'
@@ -207,9 +227,11 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/does-rat-birth-control-work'
+    | '/dohmh-rodent-violation-nyc'
     | '/faq'
     | '/get-started'
     | '/how-it-works'
+    | '/nj-rodent-violation'
     | '/resources'
     | '/results'
     | '/what-to-expect'
@@ -227,9 +249,11 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/does-rat-birth-control-work'
+    | '/dohmh-rodent-violation-nyc'
     | '/faq'
     | '/get-started'
     | '/how-it-works'
+    | '/nj-rodent-violation'
     | '/resources'
     | '/results'
     | '/what-to-expect'
@@ -248,9 +272,11 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DoesRatBirthControlWorkRoute: typeof DoesRatBirthControlWorkRoute
+  DohmhRodentViolationNycRoute: typeof DohmhRodentViolationNycRoute
   FaqRoute: typeof FaqRoute
   GetStartedRoute: typeof GetStartedRoute
   HowItWorksRoute: typeof HowItWorksRoute
+  NjRodentViolationRoute: typeof NjRodentViolationRoute
   ResourcesRoute: typeof ResourcesRoute
   ResultsRoute: typeof ResultsRoute
   WhatToExpectRoute: typeof WhatToExpectRoute
@@ -296,6 +322,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResourcesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/nj-rodent-violation': {
+      id: '/nj-rodent-violation'
+      path: '/nj-rodent-violation'
+      fullPath: '/nj-rodent-violation'
+      preLoaderRoute: typeof NjRodentViolationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/how-it-works': {
       id: '/how-it-works'
       path: '/how-it-works'
@@ -315,6 +348,13 @@ declare module '@tanstack/react-router' {
       path: '/faq'
       fullPath: '/faq'
       preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dohmh-rodent-violation-nyc': {
+      id: '/dohmh-rodent-violation-nyc'
+      path: '/dohmh-rodent-violation-nyc'
+      fullPath: '/dohmh-rodent-violation-nyc'
+      preLoaderRoute: typeof DohmhRodentViolationNycRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/does-rat-birth-control-work': {
@@ -400,9 +440,11 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DoesRatBirthControlWorkRoute: DoesRatBirthControlWorkRoute,
+  DohmhRodentViolationNycRoute: DohmhRodentViolationNycRoute,
   FaqRoute: FaqRoute,
   GetStartedRoute: GetStartedRoute,
   HowItWorksRoute: HowItWorksRoute,
+  NjRodentViolationRoute: NjRodentViolationRoute,
   ResourcesRoute: ResourcesRoute,
   ResultsRoute: ResultsRoute,
   WhatToExpectRoute: WhatToExpectRoute,
