@@ -37,6 +37,19 @@ const PROGRAM_LINKS: { label: string; to: string; eyebrow: string }[] = [
   },
 ];
 
+const COMPLIANCE_LINKS: { label: string; to: string; eyebrow: string }[] = [
+  {
+    label: "DOHMH rodent violation (NYC)",
+    to: "/dohmh-rodent-violation-nyc",
+    eyebrow: "Codes 04K & 04L, fines, and what closes the citation",
+  },
+  {
+    label: "NJ rodent violation",
+    to: "/nj-rodent-violation",
+    eyebrow: "Local health enforcement and permit suspension exposure",
+  },
+];
+
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [mobileSolutionsOpen, setMobileSolutionsOpen] = useState(false);
