@@ -1,5 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import heroImg from "@/assets/program-how-it-works.jpg";
+import { InlineFigure } from "@/components/site/InlineFigure";
+import evolveSoftBait from "@/assets/inline/evolve-soft-bait.jpg";
+import contrapestVsEvolve from "@/assets/inline/contrapest-vs-evolve.jpg";
+import operatorStation from "@/assets/inline/operator-contrapest-station.jpg";
 import {
   ClosingCta,
   FieldDataTrio,
@@ -140,6 +144,16 @@ function EvolvePage() {
         </div>
       </section>
 
+      <section className="bg-background pb-12">
+        <div className="container-site max-w-4xl">
+          <InlineFigure
+            src={evolveSoftBait}
+            alt="Evolve soft bait pieces beside their tub packaging"
+            caption="Evolve soft bait — ready-to-use, no mixing, no liquid reservoir."
+          />
+        </div>
+      </section>
+
       {/* EPA 25(b) */}
       <section className="bg-surface py-20">
         <div className="container-site">
@@ -228,6 +242,16 @@ function EvolvePage() {
               </p>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="bg-background pb-12">
+        <div className="container-site max-w-4xl">
+          <InlineFigure
+            src={contrapestVsEvolve}
+            alt="ContraPest liquid bait dispenser system on the left and Evolve soft bait packaging on the right"
+            caption="ContraPest's liquid system (left) and Evolve's soft bait (right)."
+          />
         </div>
       </section>
 
@@ -340,6 +364,16 @@ function EvolvePage() {
                 </p>
               </>
             }
+          />
+        </div>
+      </section>
+
+      <section className="bg-background pb-12">
+        <div className="container-site max-w-4xl">
+          <InlineFigure
+            src={operatorStation}
+            alt="Cloakd operator servicing an Evolve block in an existing pest control station in NYC"
+            caption="NYC service visit — additive deployment in an existing station."
           />
         </div>
       </section>

@@ -1,84 +1,80 @@
-# Inline image audit — recommendations only
+# Inline Image Implementation Plan (v2)
 
-Every key page already has a hero photo. The gap is **inline imagery** that breaks up long text columns, anchors comparison tables, and gives operators something concrete to look at mid-scroll. Below are the pages that would meaningfully benefit, grouped by priority. The home page is excluded per your note. Pages already image-rich (`/results`, `/why-it-keeps-coming-back`) and short utility pages (`/get-started`, `/faq`, `/areas`) are skipped.
+Wire 9 user-provided images into audited pages as full-width inline figures with italic captions, matching the nealrfg.com editorial feel. Closest-fit substitution for any remaining gaps.
 
-For each recommendation: **section anchor → image concept → role**. Style cue throughout: match the existing `hero-bait-station.jpg` / `program-bryant-park.jpg` look — natural light, real urban/operational settings, no stock-photo gloss.
+## Asset inventory
 
----
+Copy uploads to `src/assets/inline/` with stable names:
 
-## Tier 1 — Highest ROI (long, text-heavy SEO pages)
+| File | Source | Concept |
+|---|---|---|
+| `evolve-soft-bait.jpg` | image-9.png | Evolve bucket + soft-bait pieces |
+| `snap-trap.jpg` | image-10.png | Snap trap close-up |
+| `operator-contrapest-station.jpg` | image-11.png | Gloved operator at ContraPest station |
+| `nyc-mitigation-zone-map.jpg` | image-12.png | NYC Rat Mitigation Zone map |
+| `monitoring-report.jpg` | monitoring_report.png | Floor-plan monitoring report |
+| `pco-operator-field.jpg` | pco.png | PCO servicing station, clipboard visible |
+| `contrapest-vs-evolve.jpg` | contrapest_vs._evolve.png | Side-by-side product diptych |
+| `basement-pipe-audit.jpg` | audit.png | Operator inspecting basement plumbing with flashlight |
+| `restaurant-snap-trap.jpg` | audit_2.png | Snap trap on bar back-of-house mat |
 
-### `/evolve-rodent-birth-control` (381 lines, all text after hero)
-1. **"A cottonseed-derived bait that suppresses rat fertility"** → close-up of Evolve soft-bait block in a bait station, lid open. Anchors the product claim.
-2. **"Same product. Different structure. Different results."** (ContraPest vs Evolve split) → side-by-side: ContraPest liquid reservoir vs Evolve soft-bait block. Visual diff for the comparison.
-3. **"Municipal and independent urban deployments, 2025–2026."** → wide street-level photo of an NYC mitigation zone or a tagged station on a sidewalk. Grounds the field-data section.
+## Reusable component
 
-### `/contrapest` (330 lines)
-1. **"Designated mitigation zones, run by the city"** → NYC street sign / mitigation-zone signage or a city-installed liquid station. Establishes the municipal context.
-2. **"Different formulations from the same maker"** → same liquid-vs-soft-bait diptych as above (reusable asset).
-3. **"Cloakd deploys Evolve, not ContraPest liquid"** → operator-hands shot placing an Evolve block in a building's bait station. Sells the managed-program framing.
+Create `src/components/site/InlineFigure.tsx`:
+- Props: `src`, `alt`, `caption`, optional `priority`
+- Semantic `<figure>`, full-width within the article column
+- Image: `rounded-lg`, `border border-border`, `object-cover`, natural aspect or `aspect-[16/9]` cap
+- `<figcaption>`: small italic `text-muted-foreground`, top-margin spacing
+- Lazy-load by default; `loading="eager"` when `priority`
+- Pure presentation — semantic tokens only
 
-### `/contrapest-vs-evolve` (350 lines)
-1. **"The differences that matter for deployment"** → annotated comparison still: liquid reservoir vs soft-bait block, both in their typical housings.
-2. **"Liquid bait competes with everything liquid in a city"** → photo of street puddles / open dumpster water / AC condensate near a station. Visualizes the competition problem.
-3. **"Field results, sourced"** → urban rooftop or alley station photo with a building backdrop. Same role as the Evolve field-data anchor.
+## Page-by-page placements
 
-### `/does-rat-birth-control-work` (324 lines)
-1. **"The deployment structure was wrong before the bait went in"** → photo of a poorly placed / overgrown / inaccessible station as a "what failure looks like" visual.
-2. **"Two independent urban building deployments. Five months."** → exterior of a multifamily building with a discreet station at the foundation line. Anchors the case-study section.
-3. **"Four things that separate the programs that work"** → operator clipboard / tablet next to a station during a service visit. Shows the "managed" part.
+### Tier 1 — long-form SEO
 
-### `/how-it-works` (297 lines)
-1. **"Two phases. Your existing vendor stays."** → split image: traditional snap-trap/bait setup on one side, Evolve station on the other, both inside the same property. Visualizes the layering claim.
-2. **"It's a second layer. It runs on top of what you already have."** → same operator-clipboard-at-station shot, or a service-route photo. Reinforces "managed."
+**`/evolve-rodent-birth-control`**
+1. After intro: `evolve-soft-bait.jpg` — *"Evolve soft bait — ready-to-use, no mixing, no liquid reservoir."*
+2. Mid-page: `contrapest-vs-evolve.jpg` — *"ContraPest's liquid system (left) and Evolve's soft bait (right)."*
+3. Field results: `operator-contrapest-station.jpg` — *"NYC service visit — additive deployment in an existing station."*
 
----
+**`/contrapest`**
+1. Hero-adjacent: `nyc-mitigation-zone-map.jpg` — *"NYC Rat Mitigation Zones — where fertility control delivers the most leverage."*
+2. Product section: `contrapest-vs-evolve.jpg` — *"ContraPest liquid bait alongside Evolve soft bait — both EPA-registered contraceptives."*
+3. Service section: `operator-contrapest-station.jpg` — *"Operator servicing a ContraPest station during a scheduled visit."*
 
-## Tier 2 — Comparison `/vs/*` pages (currently table-heavy, zero inline imagery)
+**`/contrapest-vs-evolve`**
+1. Top of comparison: `contrapest-vs-evolve.jpg` — *"Side-by-side: ContraPest dispenser system vs. Evolve soft-bait packaging."*
+2. Field-conditions section: `operator-contrapest-station.jpg` — *"Field service in NYC outdoor conditions."*
 
-These pages are dense tables and bullets. One mid-page image each is enough to break the wall.
+**`/does-rat-birth-control-work`**
+1. Early: `basement-pipe-audit.jpg` — *"Placement starts with the audit — finding entry points, runways, and harborage."*
+2. Mid: `monitoring-report.jpg` — *"Monitoring data: bait stations, inspection points, and activity hotspots tracked per visit."*
 
-- **`/vs/rat-poison`** → at "Killing the colony makes the territory available": photo of a freshly cleared alley/back-of-house area (the "vacuum" concept).
-- **`/vs/traditional-pest-control`** → at "Your exterminator stays. We add what their treatment can't do": same vendor-coexistence diptych proposed for `/how-it-works` (reusable).
-- **`/vs/snap-traps`** → at "Trapping removes individuals": photo of a snap trap next to an Evolve station in the same utility room. One-shot version of the tradeoff.
-- **`/vs/orkin`**, **`/vs/assured-environments`**, **`/vs/bell-environmental`**, **`/vs/viking-pest-control`**, **`/vs/western-pest-services`** → one shared "additive layer" image at the "Add Cloakd if / Keep your vendor" section. A single reusable photo (operator placing an Evolve block in an existing third-party station) covers all five competitor pages — do not generate per-competitor variants.
+**`/how-it-works`**
+1. Method comparison: `snap-trap.jpg` then `evolve-soft-bait.jpg` (stacked figures) — *"Lethal snap trap (above) vs. Evolve soft bait (below) — different mechanisms, different outcomes."*
+2. Service section: `pco-operator-field.jpg` — *"Scheduled service: inspect, document, replenish."*
+3. Reporting section: `monitoring-report.jpg` — *"Every visit produces a structured monitoring report."*
 
-### `/vs/diy-rat-birth-control` (already has structure)
-- One image at the "managed program" comparison block: scheduled-service visual (operator + station + clipboard). Same asset as the `/how-it-works` Phase-2 recommendation.
+### Tier 2 — `/vs/*` comparison pages
 
----
+One inline figure per page, placed after the comparison-table intro:
 
-## Tier 3 — Worth one image, low urgency
+- **`/vs/rat-poison`** — `evolve-soft-bait.jpg` — *"Evolve is a contraceptive soft bait — non-lethal, no anticoagulants."*
+- **`/vs/traditional-pest-control`** — `basement-pipe-audit.jpg` — *"Traditional pest control inspects and treats; fertility control adds population suppression on top."*
+- **`/vs/snap-traps`** — `restaurant-snap-trap.jpg` — *"Snap traps remove individuals one at a time; fertility control reduces the next generation."*
+- **`/vs/diy-rat-birth-control`** — `pco-operator-field.jpg` — *"Scheduled professional service — placement, dosing, and reporting."*
+- **`/vs/orkin`**, **`/vs/assured-environments`**, **`/vs/bell-environmental`**, **`/vs/viking-pest-control`**, **`/vs/western-pest-services`** — share `operator-contrapest-station.jpg` — *"Cloakd deploys as an additive layer inside your existing vendor's program."*
 
-- **`/rodent-fertility-control`** (195 lines): one image at "Same product. Different structure. Different outcome." — reuse the liquid-vs-soft-bait diptych.
-- **`/what-to-expect`** (276 lines): at "The program runs in four stages over 90 days" — a small photo of a monitoring report / printed trend chart on a clipboard. Sells the "documented trend line" deliverable.
-- **`/dohmh-rodent-violation-nyc`** and **`/nj-rodent-violation`** (~330 lines each): one mid-page image of the actual violation notice / inspector-at-property scene. Compliance pages benefit from a "this is what the document looks like" visual. (Existing `compliance-*.jpg` assets may already cover this — confirm before generating.)
+## Out of scope
 
----
+- Tier 3 pages — no inline images this pass
+- Hero replacements — heroes stay as-is
+- OG/social images — separate pass
+- New AI-generated imagery — using only the 9 provided uploads
 
-## Skip / no inline image needed
+## Technical notes
 
-- `/` (home) — per your note.
-- `/results`, `/why-it-keeps-coming-back` — already use multiple inline images.
-- `/faq`, `/get-started`, `/areas`, `/areas/$areaSlug`, `/resources` — utility/index pages, text-light or list-driven.
-- `/solutions/*` — each already has a dedicated hero asset and the body is short enough that adding inline imagery would feel padded.
-
----
-
-## Reusable assets to plan for
-
-Several recommendations collapse into a small shared asset library. If you generate these once, they cover most of the audit:
-
-1. **Evolve soft-bait close-up** (in-station, lid open) — used on `/evolve-rodent-birth-control`, possibly `/contrapest`.
-2. **Liquid-vs-soft-bait diptych** — `/evolve-rodent-birth-control`, `/contrapest`, `/contrapest-vs-evolve`, `/rodent-fertility-control`.
-3. **Operator-at-station service shot** (clipboard/tablet) — `/does-rat-birth-control-work`, `/how-it-works`, `/contrapest`, `/vs/diy-rat-birth-control`, `/what-to-expect`.
-4. **Vendor-coexistence diptych** (snap trap + Evolve station in same space) — `/how-it-works`, `/vs/traditional-pest-control`, `/vs/snap-traps`.
-5. **"Additive layer" shot** (Evolve block being placed into an existing third-party station) — all 5 competitor `/vs/*` pages.
-6. **NYC mitigation-zone street scene** — `/contrapest`, `/evolve-rodent-birth-control` field-data section.
-7. **Monitoring report on clipboard** — `/what-to-expect`, optionally `/does-rat-birth-control-work`.
-
-Seven distinct images cover ~20 placement opportunities across 14 pages.
-
----
-
-Reply with which tiers (or specific pages) you want to move forward on, and I'll wait on your generated images before writing the placement implementation plan.
+- Assets under `src/assets/inline/`, imported as ES6 modules
+- `InlineFigure` uses semantic tokens only (`border-border`, `text-muted-foreground`)
+- Figures live between content sections, never inside cards or tables
+- Maintain editorial whitespace per nealrfg.com reference

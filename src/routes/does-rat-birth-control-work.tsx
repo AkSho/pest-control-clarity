@@ -1,5 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import heroImg from "@/assets/program-bryant-park.jpg";
+import { InlineFigure } from "@/components/site/InlineFigure";
+import basementAudit from "@/assets/inline/basement-pipe-audit.jpg";
+import monitoringReport from "@/assets/inline/monitoring-report.jpg";
 import {
   ClosingCta,
   SectionHeader,
@@ -134,6 +137,16 @@ function BirthControlPage() {
         </div>
       </section>
 
+      <section className="bg-background pb-12">
+        <div className="container-site max-w-4xl">
+          <InlineFigure
+            src={basementAudit}
+            alt="Pest control technician inspecting basement plumbing with a flashlight"
+            caption="Placement starts with the audit — finding entry points, runways, and harborage."
+          />
+        </div>
+      </section>
+
       {/* FIELD DATA */}
       <section className="bg-surface py-20">
         <div className="container-site">
@@ -213,6 +226,16 @@ function BirthControlPage() {
               </a>
             </p>
           </div>
+        </div>
+      </section>
+
+      <section className="bg-surface pb-12">
+        <div className="container-site max-w-4xl">
+          <InlineFigure
+            src={monitoringReport}
+            alt="Floor-plan monitoring report showing bait stations, monitoring points, and activity hotspots"
+            caption="Monitoring data: bait stations, inspection points, and activity hotspots tracked per visit."
+          />
         </div>
       </section>
 

@@ -1,5 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import heroImg from "@/assets/program-bryant-park.jpg";
+import { InlineFigure } from "@/components/site/InlineFigure";
+import nycMitigationMap from "@/assets/inline/nyc-mitigation-zone-map.jpg";
+import contrapestVsEvolve from "@/assets/inline/contrapest-vs-evolve.jpg";
+import operatorStation from "@/assets/inline/operator-contrapest-station.jpg";
 import {
   ClosingCta,
   SectionHeader,
@@ -101,6 +105,16 @@ function ContraPestPage() {
         </div>
       </section>
 
+      <section className="bg-background pb-12">
+        <div className="container-site max-w-4xl">
+          <InlineFigure
+            src={nycMitigationMap}
+            alt="Map of NYC Rat Mitigation Zones across Manhattan and the Bronx"
+            caption="NYC Rat Mitigation Zones — where fertility control delivers the most leverage."
+          />
+        </div>
+      </section>
+
       {/* NYC PROGRAM */}
       <section className="bg-surface py-20">
         <div className="container-site">
@@ -168,6 +182,16 @@ function ContraPestPage() {
               </li>
             ))}
           </ul>
+        </div>
+      </section>
+
+      <section className="bg-background pb-12">
+        <div className="container-site max-w-4xl">
+          <InlineFigure
+            src={contrapestVsEvolve}
+            alt="ContraPest dispenser system beside Evolve soft-bait packaging"
+            caption="ContraPest liquid bait alongside Evolve soft bait — both EPA-registered contraceptives."
+          />
         </div>
       </section>
 
@@ -259,6 +283,16 @@ function ContraPestPage() {
               </li>
             ))}
           </ul>
+        </div>
+      </section>
+
+      <section className="bg-background pb-12">
+        <div className="container-site max-w-4xl">
+          <InlineFigure
+            src={operatorStation}
+            alt="Gloved operator opening a ContraPest bait station during a service visit"
+            caption="Operator servicing a ContraPest station during a scheduled visit."
+          />
         </div>
       </section>
 
