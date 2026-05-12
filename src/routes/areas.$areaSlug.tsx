@@ -8,7 +8,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { LeadForm } from "@/components/site/LeadForm";
-import { getServiceArea, SERVICE_AREAS } from "@/data/serviceAreas";
+import { getServiceArea, SERVICE_AREAS, type ServiceArea } from "@/data/serviceAreas";
 
 export const Route = createFileRoute("/areas/$areaSlug")({
   loader: ({ params }) => {
@@ -54,7 +54,7 @@ export const Route = createFileRoute("/areas/$areaSlug")({
 });
 
 function AreaPage() {
-  const { area } = Route.useLoaderData();
+  const { area } = Route.useLoaderData() as { area: ServiceArea };
 
   return (
     <>
