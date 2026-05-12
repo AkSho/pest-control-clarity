@@ -16,6 +16,7 @@ import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as GetStartedRouteImport } from './routes/get-started'
 import { Route as FaqRouteImport } from './routes/faq'
+import { Route as DohmhRodentViolationNycRouteImport } from './routes/dohmh-rodent-violation-nyc'
 import { Route as DoesRatBirthControlWorkRouteImport } from './routes/does-rat-birth-control-work'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SolutionsRestaurantsRouteImport } from './routes/solutions.restaurants'
@@ -61,6 +62,11 @@ const GetStartedRoute = GetStartedRouteImport.update({
 const FaqRoute = FaqRouteImport.update({
   id: '/faq',
   path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DohmhRodentViolationNycRoute = DohmhRodentViolationNycRouteImport.update({
+  id: '/dohmh-rodent-violation-nyc',
+  path: '/dohmh-rodent-violation-nyc',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DoesRatBirthControlWorkRoute = DoesRatBirthControlWorkRouteImport.update({
@@ -124,6 +130,7 @@ const AreasAreaSlugRoute = AreasAreaSlugRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/does-rat-birth-control-work': typeof DoesRatBirthControlWorkRoute
+  '/dohmh-rodent-violation-nyc': typeof DohmhRodentViolationNycRoute
   '/faq': typeof FaqRoute
   '/get-started': typeof GetStartedRoute
   '/how-it-works': typeof HowItWorksRoute
@@ -144,6 +151,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/does-rat-birth-control-work': typeof DoesRatBirthControlWorkRoute
+  '/dohmh-rodent-violation-nyc': typeof DohmhRodentViolationNycRoute
   '/faq': typeof FaqRoute
   '/get-started': typeof GetStartedRoute
   '/how-it-works': typeof HowItWorksRoute
@@ -165,6 +173,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/does-rat-birth-control-work': typeof DoesRatBirthControlWorkRoute
+  '/dohmh-rodent-violation-nyc': typeof DohmhRodentViolationNycRoute
   '/faq': typeof FaqRoute
   '/get-started': typeof GetStartedRoute
   '/how-it-works': typeof HowItWorksRoute
@@ -187,6 +196,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/does-rat-birth-control-work'
+    | '/dohmh-rodent-violation-nyc'
     | '/faq'
     | '/get-started'
     | '/how-it-works'
@@ -207,6 +217,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/does-rat-birth-control-work'
+    | '/dohmh-rodent-violation-nyc'
     | '/faq'
     | '/get-started'
     | '/how-it-works'
@@ -227,6 +238,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/does-rat-birth-control-work'
+    | '/dohmh-rodent-violation-nyc'
     | '/faq'
     | '/get-started'
     | '/how-it-works'
@@ -248,6 +260,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DoesRatBirthControlWorkRoute: typeof DoesRatBirthControlWorkRoute
+  DohmhRodentViolationNycRoute: typeof DohmhRodentViolationNycRoute
   FaqRoute: typeof FaqRoute
   GetStartedRoute: typeof GetStartedRoute
   HowItWorksRoute: typeof HowItWorksRoute
@@ -315,6 +328,13 @@ declare module '@tanstack/react-router' {
       path: '/faq'
       fullPath: '/faq'
       preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dohmh-rodent-violation-nyc': {
+      id: '/dohmh-rodent-violation-nyc'
+      path: '/dohmh-rodent-violation-nyc'
+      fullPath: '/dohmh-rodent-violation-nyc'
+      preLoaderRoute: typeof DohmhRodentViolationNycRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/does-rat-birth-control-work': {
@@ -400,6 +420,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DoesRatBirthControlWorkRoute: DoesRatBirthControlWorkRoute,
+  DohmhRodentViolationNycRoute: DohmhRodentViolationNycRoute,
   FaqRoute: FaqRoute,
   GetStartedRoute: GetStartedRoute,
   HowItWorksRoute: HowItWorksRoute,
@@ -420,3 +441,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
