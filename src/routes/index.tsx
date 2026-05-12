@@ -27,7 +27,7 @@ import { PressStrip } from "@/components/site/PressStrip";
 import { AboutSection } from "@/components/site/AboutSection";
 import { ReviewsGrid } from "@/components/site/ReviewsGrid";
 import { WhoWeServeGrid } from "@/components/site/WhoWeServeGrid";
-import heroImg from "@/assets/hero-urban.jpg";
+import heroImg from "@/assets/hero-bait-station.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -204,7 +204,7 @@ function HomePage() {
       {/* HERO */}
       <section className="relative overflow-hidden ink-section">
         <div
-          className="absolute inset-0 opacity-40"
+          className="absolute inset-0 opacity-60"
           style={{
             backgroundImage: `url(${heroImg})`,
             backgroundSize: "cover",
