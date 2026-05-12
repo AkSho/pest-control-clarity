@@ -101,9 +101,9 @@ function FAQPage() {
         />
         <div className="relative container-site py-16 md:py-24">
           <div className="mx-auto max-w-3xl text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-accent-warm">
+            <Eyebrow tone="dark" className="text-accent-warm">
               Common questions
-            </p>
+            </Eyebrow>
             <h1 className="mt-4 text-4xl font-extrabold leading-[1.05] text-white md:text-6xl">
               Your exterminator has probably seen this fail.{" "}
               <span className="text-accent-warm">Here's what went wrong.</span>

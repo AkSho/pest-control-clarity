@@ -248,9 +248,9 @@ function ResourcesPage() {
         />
         <div className="relative container-site py-16 md:py-24">
           <div className="mx-auto max-w-3xl text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-accent-warm">
+            <Eyebrow tone="dark" className="text-accent-warm">
               Resources
-            </p>
+            </Eyebrow>
             <h1 className="mt-4 text-4xl font-extrabold leading-[1.05] text-white md:text-6xl">
               How urban rodent control{" "}
               <span className="text-accent-warm">actually works.</span>

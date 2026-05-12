@@ -124,9 +124,9 @@ function ProblemPage() {
         <div className="relative container-site grid gap-10 py-16 md:grid-cols-[1.1fr_0.9fr] md:py-24">
           <div>
             <HeroTrustBadges />
-            <p className="mt-7 text-xs font-semibold uppercase tracking-[0.25em] text-accent-warm">
+            <Eyebrow tone="dark" className="text-accent-warm mt-7">
               Why it keeps coming back
-            </p>
+            </Eyebrow>
             <h1 className="mt-4 text-4xl font-extrabold leading-[1.05] text-white md:text-6xl">
               You paid for the treatment.{" "}
               <span className="text-accent-warm">
@@ -281,9 +281,9 @@ function ProblemPage() {
       <section className="ink-section py-20">
         <div className="container-site">
           <div className="mx-auto max-w-3xl text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-accent-warm">
+            <Eyebrow tone="dark" className="text-accent-warm">
               The full cycle
-            </p>
+            </Eyebrow>
             <h2 className="mt-4 text-3xl font-extrabold leading-tight text-white md:text-5xl">
               Standard treatment every six weeks. The cycle runs every six
               weeks.

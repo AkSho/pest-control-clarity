@@ -104,9 +104,9 @@ function ResultsPage() {
         <div className="relative container-site grid gap-10 py-16 md:grid-cols-[1.1fr_0.9fr] md:py-24">
           <div>
             <HeroTrustBadges />
-            <p className="mt-7 text-xs font-semibold uppercase tracking-[0.25em] text-accent-warm">
+            <Eyebrow tone="dark" className="text-accent-warm mt-7">
               Field data
-            </p>
+            </Eyebrow>
             <h1 className="mt-4 text-4xl font-extrabold leading-[1.05] text-white md:text-6xl">
               Two buildings. Five months.{" "}
               <span className="text-accent-warm">
@@ -230,9 +230,9 @@ function ResultsPage() {
       <section className="ink-section py-20">
         <div className="container-site grid gap-10 md:grid-cols-[1.1fr_0.9fr] md:items-center">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-accent-warm">
+            <Eyebrow tone="dark" className="text-accent-warm">
               Fertility reduction
-            </p>
+            </Eyebrow>
             <h2 className="mt-4 text-3xl font-extrabold leading-tight text-white md:text-5xl">
               Up to 90% fertility reduction potential.
             </h2>

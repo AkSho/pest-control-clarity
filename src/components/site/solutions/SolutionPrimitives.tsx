@@ -37,9 +37,9 @@ export function SolutionHero({
       <div className="relative container-site grid gap-10 py-16 md:grid-cols-[1.1fr_0.9fr] md:py-24">
         <div>
           <HeroTrustBadges />
-          <p className="mt-7 text-xs font-semibold uppercase tracking-[0.25em] text-accent-warm">
+          <Eyebrow tone="dark" className="text-accent-warm mt-7">
             {eyebrow}
-          </p>
+          </Eyebrow>
           <h1 className="mt-4 text-4xl font-extrabold leading-[1.05] text-white md:text-6xl">
             {headline}{" "}
             {highlight && (

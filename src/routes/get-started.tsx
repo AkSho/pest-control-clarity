@@ -57,9 +57,9 @@ function GetStartedPage() {
       <section className="relative ink-section">
         <div className="container-site grid gap-10 py-16 md:grid-cols-[1fr_1fr] md:py-24">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-accent-warm">
+            <Eyebrow tone="dark" className="text-accent-warm">
               Start the program
-            </p>
+            </Eyebrow>
             <h1 className="mt-4 text-4xl font-extrabold leading-[1.05] text-white md:text-6xl">
               The rodent cycle ends here.{" "}
               <span className="text-accent-warm">Tell us about your property.</span>

@@ -68,9 +68,9 @@ function SolutionPage() {
             <HeroTrustBadges />
             <div className="mt-7 flex items-center gap-2">
               <Icon className="h-5 w-5 text-brand" />
-              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-accent-warm">
+              <Eyebrow tone="dark" className="text-accent-warm">
                 {solution.eyebrow}
-              </p>
+              </Eyebrow>
             </div>
             <h1 className="mt-4 text-4xl font-extrabold leading-[1.05] text-white md:text-6xl">
               {solution.headline}
