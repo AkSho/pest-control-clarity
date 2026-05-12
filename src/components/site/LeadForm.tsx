@@ -66,7 +66,10 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
         STOP to opt out at any time.
       </p>
 
-      <Button type="submit" className="mt-4 h-12 w-full text-base">
+      <Button
+        type="submit"
+        className="mt-4 h-12 w-full bg-brand text-base font-bold text-white hover:bg-brand/90"
+      >
         Schedule Free Walkthrough <ArrowRight className="h-4 w-4" />
       </Button>
 

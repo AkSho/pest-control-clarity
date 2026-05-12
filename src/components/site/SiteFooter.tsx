@@ -33,7 +33,8 @@ export function SiteFooter() {
           </div>
           <p className="mt-4 max-w-md text-sm text-ink-muted">
             EPA-designated minimum-risk fertility control, layered onto your
-            existing pest program. Documented monthly reporting.
+            existing pest program. Documented monthly reporting. Serving NYC,
+            NJ, &amp; CA.
           </p>
           <div className="mt-6 space-y-2 text-sm">
             <a href="tel:+18005550199" className="flex items-center gap-2 hover:text-brand">

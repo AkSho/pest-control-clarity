@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
-  Star,
   Phone,
   Check,
   ArrowRight,
@@ -25,6 +24,8 @@ import {
 import { LeadForm } from "@/components/site/LeadForm";
 import { HeroTrustBadges } from "@/components/site/TrustBadges";
 import { PressStrip } from "@/components/site/PressStrip";
+import { AboutSection } from "@/components/site/AboutSection";
+import { ReviewsGrid } from "@/components/site/ReviewsGrid";
 import heroImg from "@/assets/hero-urban.jpg";
 
 export const Route = createFileRoute("/")({
@@ -50,9 +51,21 @@ export const Route = createFileRoute("/")({
 });
 
 const STATS = [
-  { value: "79%", label: "reduction in rodent activity", sub: "5-month urban field study" },
-  { value: "88%", label: "drop in track density", sub: "at monitored locations" },
-  { value: "90%", label: "fertility reduction", sub: "when integrated into active programs" },
+  {
+    value: "79%",
+    label: "reduction in rodent track presence",
+    sub: "Location A — 5-month urban field study, Aug 2025 to Jan 2026",
+  },
+  {
+    value: "88%",
+    label: "drop in track density",
+    sub: "Same location — tracks per plate declined even where rodents still present",
+  },
+  {
+    value: "79%+",
+    label: "reduction at second monitored site",
+    sub: "Location B — independent deployment, 5-month monitoring window",
+  },
 ];
 
 const SERVICES = [
@@ -190,23 +203,23 @@ function HomePage() {
       {/* HERO */}
       <section className="relative overflow-hidden ink-section">
         <div
-          className="absolute inset-0 opacity-30"
+          className="absolute inset-0 opacity-40"
           style={{
             backgroundImage: `url(${heroImg})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/95 to-ink/70" />
+        <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/95 to-ink/85" />
         <div className="container-site relative grid gap-10 py-16 md:grid-cols-[1.1fr_0.9fr] md:py-24">
           <div>
             <HeroTrustBadges />
 
-            <h1 className="mt-7 text-4xl font-extrabold leading-[1.05] md:text-6xl">
+            <h1 className="mt-7 text-4xl font-extrabold leading-[1.05] text-white md:text-6xl">
               Every six weeks, the rodents are back.{" "}
-              <span className="text-brand">We end that cycle.</span>
+              <span className="text-accent-warm">We end that cycle.</span>
             </h1>
-            <p className="mt-6 max-w-xl text-base leading-relaxed text-ink-muted md:text-lg">
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-white/85 md:text-lg">
               Standard treatment clears the colony, and within weeks the
               territory fills again. Rodent fertility control suppresses the
               birth rate — the front standard treatment never touches. Run both
@@ -245,15 +258,11 @@ function HomePage() {
         <div className="container-site">
           <div className="mx-auto max-w-2xl text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
-              Field data · monitored deployments
+              Field data
             </p>
             <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
-              Real numbers from real urban field studies
+              Real numbers from monitored deployments
             </h2>
-            <p className="mt-4 text-muted-foreground">
-              Locations A & B — independent 5-month monitoring windows, August
-              2025 through January 2026.
-            </p>
           </div>
 
           <div className="mt-12 grid gap-5 md:grid-cols-3">
@@ -314,6 +323,9 @@ function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ABOUT */}
+      <AboutSection />
 
       {/* SERVICES */}
       <section className="bg-background py-20">
@@ -399,7 +411,7 @@ function HomePage() {
                 Service areas
               </p>
               <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
-                Serving food-service operators and managed properties across NYC & NJ
+                Serving food-service operators and managed properties across NYC, NJ, &amp; CA
               </h2>
               <p className="mt-5 text-muted-foreground">
                 Month-to-month coverage, documented every cycle. Pick your area
@@ -449,39 +461,7 @@ function HomePage() {
             </h2>
           </div>
 
-          <div className="mt-12 grid gap-5 md:grid-cols-3">
-            {[
-              {
-                name: "Restaurant GM, Midtown",
-                body: "Our health inspector saw the trend reports and stopped flagging us on rodent activity. We hadn't gone three quarters clean in years before this.",
-              },
-              {
-                name: "Property manager, Brooklyn",
-                body: "Tenant complaints across two of my buildings dropped to almost zero by month four. I'm rolling this out to the rest of the portfolio.",
-              },
-              {
-                name: "Ghost kitchen operator, Queens",
-                body: "We never had a real pest contract before. The monthly reporting alone is worth what we pay them — operators in the building stopped fighting.",
-              },
-            ].map((t) => (
-              <figure
-                key={t.name}
-                className="rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-card)]"
-              >
-                <div className="flex gap-1 text-yellow-400">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-current" />
-                  ))}
-                </div>
-                <blockquote className="mt-4 text-sm leading-relaxed text-foreground">
-                  "{t.body}"
-                </blockquote>
-                <figcaption className="mt-5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  {t.name}
-                </figcaption>
-              </figure>
-            ))}
-          </div>
+          <ReviewsGrid />
         </div>
       </section>
 
@@ -526,8 +506,13 @@ function HomePage() {
               Start the program. Break the cycle.
             </h2>
             <p className="mt-5 max-w-xl text-ink-muted md:text-lg">
-              First visit covers walkthrough and setup. Monthly management and
-              documented reporting run from there. Month-to-month, NYC & NJ.
+              The first visit covers setup, with monthly management and
+              documented reporting running from there. The numbers are yours to
+              show any regulator or property owner who asks.
+            </p>
+            <p className="mt-4 max-w-xl text-ink-muted md:text-lg">
+              Serving food service operators and property managers across NYC
+              and NJ, month-to-month, with results documented every cycle.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Button asChild size="lg" className="h-12 px-6 text-base">
