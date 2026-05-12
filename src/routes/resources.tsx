@@ -1,10 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, FileText, BarChart3, ShieldCheck, BookOpen } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import heroResources from "@/assets/hero-resources.jpg";
 
 const TITLE = "Resources — Cloakd Removals";
 const DESCRIPTION =
-  "Field study summaries, EPA classification notes, sample monthly reports, and program one-pagers for operators evaluating rodent fertility control.";
+  "Field data, plain-language explanations, and compliance guides for restaurants, property managers, and building operators in NYC and NJ.";
 
 export const Route = createFileRoute("/resources")({
   head: () => ({
@@ -18,112 +20,279 @@ export const Route = createFileRoute("/resources")({
   component: ResourcesPage,
 });
 
-type Resource = {
-  icon: typeof FileText;
-  kind: string;
+type Featured = {
+  category: string;
   title: string;
   body: string;
-  cta: string;
+  href?: string;
+  comingSoon?: boolean;
 };
 
-const RESOURCES: Resource[] = [
+const FEATURED: Featured[] = [
   {
-    icon: BarChart3,
-    kind: "Field study",
-    title: "5-month urban deployment summary",
-    body: "Track-density results from two independent NYC-area sites running rodent fertility control layered on existing pest contracts. 79% reduction in monitored activity over 5 months.",
-    cta: "Request the summary",
+    category: "Biology & Mechanism",
+    title: "Why rodents keep coming back after treatment",
+    body: "The exterminator didn't fail. The biology of how rats claim territory is what keeps the cycle running. Standard treatment has no way to interrupt it. Here's what actually happens after treatment ends, and what changes the outcome.",
+    href: "/why-it-keeps-coming-back",
   },
   {
-    icon: ShieldCheck,
-    kind: "Compliance note",
-    title: "EPA minimum-risk classification explained",
-    body: "What \"EPA-designated minimum risk\" actually means for food-handling environments, secondary-kill risk to pets and wildlife, and DOHMH inspection records.",
-    cta: "Read the brief",
+    category: "Program Mechanics",
+    title: "How the 90-day fertility management program works",
+    body: "How Evolve changes the replacement math. The two-phase program and what each phase does. How track count monitoring shows the population is actually declining over 90 days.",
+    comingSoon: true,
   },
   {
-    icon: FileText,
-    kind: "Sample report",
-    title: "Monthly per-cycle program report",
-    body: "An anonymized example of the report your operator, board, or franchise corporate receives every cycle: track-density trend, station logs, photos, and notes.",
-    cta: "See a sample",
-  },
-  {
-    icon: BookOpen,
-    kind: "Operator guide",
-    title: "How to evaluate a fertility-control vendor",
-    body: "Six questions to ask any vendor before signing — measurement methodology, reporting cadence, lock-in terms, EPA classification, and how the program coordinates with your existing exterminator.",
-    cta: "Read the guide",
-  },
-  {
-    icon: BookOpen,
-    kind: "Background",
-    title: "Why municipal programs are adopting it",
-    body: "NYC, Baltimore, and Chicago are running fertility-control pilots. Why public-health agencies are layering this on top of existing rodent abatement, not replacing it.",
-    cta: "Read the background",
-  },
-  {
-    icon: FileText,
-    kind: "One-pager",
-    title: "Program one-pager for board meetings",
-    body: "Print-ready single-page overview of the program — what it is, what it costs, how it integrates, what the reporting looks like. Built for sharing with boards and ownership.",
-    cta: "Get the one-pager",
+    category: "Common Questions",
+    title: "Your exterminator has probably seen this fail. Here's why.",
+    body: "PCOs are skeptical of rat fertility management for a reason. Most failed deployments share the same structure. Every question we hear about whether this actually works, answered directly.",
+    href: "/faq",
   },
 ];
+
+type Topic = {
+  category: string;
+  title: string;
+  body: string;
+  href?: string;
+  comingSoon?: boolean;
+};
+
+const TOPICS: Topic[] = [
+  {
+    category: "Field Data",
+    title: "Numbers from monitored urban deployments",
+    body: "79% reduction in track presence. 88% drop in track density. Five months, two independent sites. The monitoring methodology and what the data shows.",
+    href: "/results",
+  },
+  {
+    category: "Restaurants",
+    title: "DOHMH rodent violations: what the codes actually mean",
+    body: "Codes 04K and 04L, critical violation points, the math on fines and temporary closure costs, and why every inspection is a timing game with standard treatment.",
+    href: "/solutions/restaurants" as const,
+  },
+  {
+    category: "Property Management",
+    title: "Why treating one building increases pressure on the next",
+    body: "Treating buildings one at a time keeps the problem moving across every address you manage. Here's why that happens and what actually stops it.",
+    href: "/solutions/property-managers" as const,
+  },
+  {
+    category: "Ghost Kitchens",
+    title: "Shared food facilities and shared compliance exposure",
+    body: "One rodent sighting in a ghost kitchen puts every brand operating under that roof at risk. Why shared food facilities are harder to protect.",
+    href: "/solutions/ghost-kitchens" as const,
+  },
+  {
+    category: "Comparisons",
+    title: "What standard pest control doesn't address",
+    body: "Your pest control vendor is doing their job correctly. The cycle keeps running anyway. Here's what standard treatment can't fix and why.",
+    comingSoon: true,
+  },
+  {
+    category: "Comparisons",
+    title: "Rat poison and the replacement cycle",
+    body: "Poison kills what's there. The replacement colony forms just as reliably. NYC restrictions on the strongest rat poisons, and why the cycle runs regardless.",
+    comingSoon: true,
+  },
+  {
+    category: "Research",
+    title: "Does rat birth control work? NYC field data and deployment context",
+    body: "NYC's Bryant Park pilot failed. Two independent urban building deployments showed 79% reduction over 5 months. What made the difference — and what it means for your property.",
+    comingSoon: true,
+  },
+  {
+    category: "Compliance",
+    title: "DOHMH rodent violation NYC: codes 04K and 04L explained",
+    body: "What the violation codes mean, how many points they carry, what inspectors look for, and what actually closes the vulnerability — not just the current citation.",
+    comingSoon: true,
+  },
+  {
+    category: "Compliance",
+    title: "NJ rodent violations: how enforcement works without a letter grade",
+    body: "NJ has no DOHMH equivalent. Municipal health departments enforce rodent violations under State Sanitary Code Part IV — permit suspension, imminent hazard classification, and fines up to $1,000/day.",
+    comingSoon: true,
+  },
+  {
+    category: "Compliance",
+    title: "DOHMH code 04L: mouse violations carry the same weight as rat violations",
+    body: "Code 04L is a critical violation — minimum 5 points, same as 04K. What inspectors look for, how 04K and 04L can be cited together, and how the two-phase program covers both species.",
+    comingSoon: true,
+  },
+  {
+    category: "Comparisons",
+    title: "Snap traps vs. Cloakd: mechanical removal and the replacement cycle",
+    body: "Snap traps catch what's there. The replacement colony forms on the same timeline regardless of how many traps are set. What the fertility layer adds to a trapping program.",
+    comingSoon: true,
+  },
+  {
+    category: "Comparisons",
+    title: "DIY Evolve vs. managed program: why the product isn't the variable",
+    body: "You can buy Evolve for $99. The deployments that failed — Bryant Park included — used the same mechanism. Here's what the DIY approach skips and why structure determines the outcome.",
+    comingSoon: true,
+  },
+  {
+    category: "Comparisons",
+    title: "Assured Environments vs. Cloakd: the largest NYC pest control provider",
+    body: "Assured Environments has 90 years of NYC commercial experience. Their exclusion, sanitation, and knockdown program is correct. The replacement cycle that refills treated territory is outside what any standard program covers.",
+    comingSoon: true,
+  },
+  {
+    category: "Comparisons",
+    title: "Orkin Restaurant Precision Protection vs. Cloakd: the replacement cycle gap",
+    body: "Orkin's Restaurant Precision Protection handles the active colony correctly. The biology that keeps refilling that territory four weeks later is what the fertility management layer addresses.",
+    comingSoon: true,
+  },
+  {
+    category: "Comparisons",
+    title: "Bell Environmental vs. Cloakd: the Zero-Pest Zone System",
+    body: "Bell Environmental's perimeter defense and mechanical trapping program has been running NYC commercial properties since 1963. The replacement colony that forms after elimination is the gap it can't close.",
+    comingSoon: true,
+  },
+  {
+    category: "Comparisons",
+    title: "Viking Pest Control vs. Cloakd: SMART monitoring and replacement",
+    body: "Viking's SMART digital monitoring is the most technologically advanced standard rodent program in NJ. Tracking the replacement population is one layer. Reducing its fertility is a different mechanism.",
+    comingSoon: true,
+  },
+  {
+    category: "Comparisons",
+    title: "Western Pest Services vs. Cloakd: integrated pest management",
+    body: "Western Pest Services has been running IPM programs across NJ and NYC since 1928. Board Certified Entomologists, minimum pesticide use, structural intervention. The fertility of the replacement colony is the one variable IPM isn't designed to address.",
+    comingSoon: true,
+  },
+  {
+    category: "Program",
+    title: "What the 90-day program actually looks like: intake to final report",
+    body: "Phase 1 coordination, Evolve deployment, three monthly monitoring visits, and what you receive at the end. Every step, what we need from you, and what you hand to an inspector.",
+    comingSoon: true,
+  },
+];
+
+function ArticleCard({
+  category,
+  title,
+  body,
+  href,
+  comingSoon,
+  large,
+}: {
+  category: string;
+  title: string;
+  body: string;
+  href?: string;
+  comingSoon?: boolean;
+  large?: boolean;
+}) {
+  const inner = (
+    <>
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-semibold uppercase tracking-widest text-brand">
+          {category}
+        </p>
+        {comingSoon && (
+          <Badge variant="secondary" className="text-[10px] uppercase tracking-wider">
+            Coming soon
+          </Badge>
+        )}
+      </div>
+      <h3
+        className={`mt-3 font-extrabold leading-snug ${large ? "text-2xl md:text-3xl" : "text-lg"}`}
+      >
+        {title}
+      </h3>
+      <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
+        {body}
+      </p>
+      {!comingSoon && (
+        <span className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-brand">
+          Read more <ArrowRight className="h-4 w-4" />
+        </span>
+      )}
+    </>
+  );
+
+  const className = `group flex h-full flex-col rounded-2xl border border-border bg-card p-7 shadow-[var(--shadow-card)] transition ${
+    comingSoon
+      ? "opacity-60 cursor-not-allowed"
+      : "hover:-translate-y-0.5 hover:shadow-[var(--shadow-elevated)]"
+  }`;
+
+  if (comingSoon || !href) {
+    return (
+      <div className={className} aria-disabled="true">
+        {inner}
+      </div>
+    );
+  }
+  // Use plain anchor to avoid TS complaints about dynamic typed routes
+  return (
+    <Link to={href} className={className}>
+      {inner}
+    </Link>
+  );
+}
 
 function ResourcesPage() {
   return (
     <>
       {/* HERO */}
-      <section className="relative ink-section">
-        <div className="container-site py-16 md:py-24">
+      <section className="relative ink-section overflow-hidden">
+        <img
+          src={heroResources}
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-15"
+          width={1536}
+          height={1024}
+        />
+        <div className="relative container-site py-16 md:py-24">
           <div className="mx-auto max-w-3xl text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.25em] text-accent-warm">
               Resources
             </p>
             <h1 className="mt-4 text-4xl font-extrabold leading-[1.05] text-white md:text-6xl">
-              Field data, compliance notes, and{" "}
-              <span className="text-accent-warm">operator references.</span>
+              How urban rodent control{" "}
+              <span className="text-accent-warm">actually works.</span>
             </h1>
             <p className="mt-6 text-base leading-relaxed text-white/85 md:text-lg">
-              Material we hand to operators, boards, and ownership when they're
-              evaluating the program. Request any of the items below and we'll
-              send them over.
+              Field data, plain-language explanations, and compliance guides
+              for restaurants, property managers, and building operators in
+              NYC and NJ. Starting with the questions that matter most.
             </p>
           </div>
         </div>
       </section>
 
-      {/* GRID */}
+      {/* START HERE */}
       <section className="bg-background py-20">
         <div className="container-site">
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {RESOURCES.map((r) => {
-              const Icon = r.icon;
-              return (
-                <div
-                  key={r.title}
-                  className="group flex flex-col rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-card)] transition hover:-translate-y-0.5"
-                >
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-soft text-brand">
-                    <Icon className="h-5 w-5" />
-                  </div>
-                  <p className="mt-5 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-                    {r.kind}
-                  </p>
-                  <h3 className="mt-2 text-lg font-bold">{r.title}</h3>
-                  <p className="mt-2 flex-1 text-sm text-muted-foreground leading-relaxed">
-                    {r.body}
-                  </p>
-                  <Link
-                    to="/get-started"
-                    className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-brand hover:underline"
-                  >
-                    {r.cta} <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </div>
-              );
-            })}
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+            Start here
+          </p>
+          <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
+            The three reads that explain the program.
+          </h2>
+          <div className="mt-10 grid gap-5 md:grid-cols-3">
+            {FEATURED.map((r) => (
+              <ArticleCard key={r.title} {...r} large />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* BY TOPIC */}
+      <section className="bg-surface py-20">
+        <div className="container-site">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+            By topic
+          </p>
+          <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
+            Field data, comparisons, compliance.
+          </h2>
+          <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {TOPICS.map((r) => (
+              <ArticleCard key={r.title} {...r} />
+            ))}
           </div>
         </div>
       </section>
@@ -131,17 +300,17 @@ function ResourcesPage() {
       {/* CTA */}
       <section className="ink-section">
         <div className="container-site py-16 text-center md:py-20">
-          <h2 className="text-3xl font-extrabold leading-tight md:text-5xl">
-            Want all of these in one packet?
+          <h2 className="text-3xl font-extrabold leading-tight text-white md:text-5xl">
+            Ready to start the program?
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-ink-muted md:text-lg">
-            Tell us your property type and we'll send the full operator packet
-            tailored to your environment.
+            NYC and NJ. Tell us about your property and current pest control
+            setup. First response within one business day.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Button asChild size="lg" className="h-12 px-6 text-base">
               <Link to="/get-started">
-                Request the packet <ArrowRight className="h-4 w-4" />
+                Get started <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
           </div>
