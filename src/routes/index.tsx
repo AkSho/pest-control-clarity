@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
-  ShieldCheck,
   Star,
   Phone,
   Check,
