@@ -64,10 +64,9 @@ function AreaPage() {
       <section className="ink-section">
         <div className="container-site grid gap-10 py-16 md:grid-cols-[1.1fr_0.9fr] md:py-20">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-ink-border bg-white/5 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-brand">
-              <MapPin className="h-3.5 w-3.5" />
+            <Eyebrow tone="dark" icon={MapPin}>
               {area.region} · {area.city}, {area.state}
-            </div>
+            </Eyebrow>
             <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] text-white md:text-5xl">
               Rodent Fertility Control in{" "}
               <span className="text-accent-warm">
