@@ -1,56 +1,42 @@
-import { Star, Sprout, Leaf, ShieldCheck, Home } from "lucide-react";
+import { Star, Home } from "lucide-react";
 import { REVIEWS, type ReviewSource } from "@/data/reviews";
+import walmartLogo from "@/assets/reviews/walmart.png";
+import amazonLogo from "@/assets/reviews/amazon.png";
+import southCountyLogo from "@/assets/reviews/south-county.png";
+import fiveOFarmLogo from "@/assets/reviews/five-o-farm.png";
+import wildhorseLogo from "@/assets/reviews/wildhorse.png";
+
+const LOGOS: Partial<Record<ReviewSource, string>> = {
+  walmart: walmartLogo,
+  amazon: amazonLogo,
+  "pest-control": southCountyLogo,
+  agricultural: fiveOFarmLogo,
+  sanctuary: wildhorseLogo,
+};
 
 function SourceLogo({ source }: { source: ReviewSource }) {
-  // Larger square logo chip rendered top-left of each card.
   const wrap =
-    "flex h-14 w-14 items-center justify-center rounded-xl bg-white shadow-[0_2px_10px_rgba(0,0,0,0.08)] ring-1 ring-border";
+    "flex h-14 w-14 items-center justify-center rounded-xl bg-white shadow-[0_2px_10px_rgba(0,0,0,0.08)] ring-1 ring-border overflow-hidden";
 
-  switch (source) {
-    case "walmart":
-      return (
-        <div className={wrap}>
-          <span className="text-[11px] font-extrabold leading-none text-[#0071dc]">
-            Walmart
-          </span>
-        </div>
-      );
-    case "amazon":
-      return (
-        <div className={wrap}>
-          <span
-            className="text-[13px] lowercase leading-none text-foreground"
-            style={{ fontWeight: 900 }}
-          >
-            amazon
-          </span>
-        </div>
-      );
-    case "agricultural":
-      return (
-        <div className={wrap}>
-          <Sprout className="h-7 w-7 text-emerald-700" />
-        </div>
-      );
-    case "sanctuary":
-      return (
-        <div className={wrap}>
-          <Leaf className="h-7 w-7 text-emerald-700" />
-        </div>
-      );
-    case "pest-control":
-      return (
-        <div className={wrap}>
-          <ShieldCheck className="h-7 w-7 text-brand" />
-        </div>
-      );
-    case "residential":
-      return (
-        <div className={wrap}>
-          <Home className="h-7 w-7 text-brand" />
-        </div>
-      );
+  const logo = LOGOS[source];
+  if (logo) {
+    return (
+      <div className={wrap}>
+        <img
+          src={logo}
+          alt=""
+          className="h-full w-full object-contain p-1.5"
+          loading="lazy"
+        />
+      </div>
+    );
   }
+
+  return (
+    <div className={wrap}>
+      <Home className="h-7 w-7 text-brand" />
+    </div>
+  );
 }
 
 export function ReviewsGrid() {
@@ -83,4 +69,3 @@ export function ReviewsGrid() {
     </div>
   );
 }
-

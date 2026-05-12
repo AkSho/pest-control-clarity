@@ -1,9 +1,9 @@
-import { Users } from "lucide-react";
 import restaurants from "@/assets/who/restaurants.png";
 import ghostKitchens from "@/assets/who/ghost-kitchens.png";
 import coldChain from "@/assets/who/cold-chain.png";
 import residential from "@/assets/who/residential.png";
 import propertyManagers from "@/assets/who/property-managers.png";
+import hoasCoops from "@/assets/who/hoas-coops.jpg";
 
 type Card = {
   title: string;
@@ -41,6 +41,7 @@ const CARDS: Card[] = [
     title: "HOAs & Co-ops",
     desc: "Board-friendly reporting, predictable monthly billing, shared visibility across the property.",
     badge: "Board-ready reports",
+    image: hoasCoops,
   },
   {
     title: "Residential",
@@ -59,18 +60,12 @@ export function WhoWeServeGrid() {
           className="group overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-card)]"
         >
           <div className="relative aspect-[4/3] overflow-hidden bg-ink">
-            {c.image ? (
-              <img
-                src={c.image}
-                alt={c.title}
-                className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]"
-                loading="lazy"
-              />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center">
-                <Users className="h-16 w-16 text-white/30" />
-              </div>
-            )}
+            <img
+              src={c.image}
+              alt={c.title}
+              className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]"
+              loading="lazy"
+            />
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent p-5">
               <h3 className="font-display text-2xl font-extrabold uppercase tracking-tight text-white">
                 {c.title}
