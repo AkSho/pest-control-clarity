@@ -84,7 +84,7 @@ function ShieldBadge({ line1, line2 }: { line1: string; line2: string }) {
 export function HeroTrustBadges() {
   return (
     <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
-      <LaurelBadge line1="4.9—Star Rated By" line2="Operators" />
+      <LaurelBadge line1="4.9 - Star Rated By" line2="Operators" />
       <ShieldBadge line1="EPA-Designated" line2="Minimum Risk" />
     </div>
   );
