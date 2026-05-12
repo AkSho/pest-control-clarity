@@ -163,6 +163,48 @@ export function SiteHeader() {
                 </NavigationMenuContent>
               </NavigationMenuItem>
 
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="!bg-transparent text-ink-foreground/85 hover:!bg-white/5 hover:!text-ink-foreground data-[state=open]:!bg-white/5 data-[state=open]:!text-ink-foreground">
+                  Areas
+                </NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <div className="grid w-[560px] gap-4 p-4 sm:grid-cols-3">
+                    {REGIONS.map((r) => (
+                      <div key={r.key}>
+                        <div className="px-2 text-xs font-semibold uppercase tracking-[0.18em] text-brand">
+                          {r.label}
+                        </div>
+                        <ul className="mt-2 space-y-1">
+                          {getAreasByRegion(r.key).map((a) => (
+                            <li key={a.slug}>
+                              <NavigationMenuLink asChild>
+                                <Link
+                                  to="/areas/$areaSlug"
+                                  params={{ areaSlug: a.slug }}
+                                  className="block rounded-md px-2 py-1.5 text-sm text-foreground transition hover:bg-accent hover:text-accent-foreground"
+                                >
+                                  {a.city}, {a.state}
+                                </Link>
+                              </NavigationMenuLink>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                    <div className="sm:col-span-3 border-t border-border pt-3">
+                      <NavigationMenuLink asChild>
+                        <Link
+                          to="/areas"
+                          className="block rounded-md px-2 py-1.5 text-sm font-semibold text-brand hover:bg-accent"
+                        >
+                          All service areas →
+                        </Link>
+                      </NavigationMenuLink>
+                    </div>
+                  </div>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+
               {NAV.slice(1).map((item) => (
                 <NavigationMenuItem key={item.label}>
                   <NavigationMenuLink asChild>
