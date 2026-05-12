@@ -24,6 +24,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { LeadForm } from "@/components/site/LeadForm";
+import { HeroTrustBadges } from "@/components/site/TrustBadges";
+import { PressStrip } from "@/components/site/PressStrip";
 import heroImg from "@/assets/hero-urban.jpg";
 
 export const Route = createFileRoute("/")({
@@ -166,21 +168,19 @@ const FAQS = [
   },
 ];
 
-function TrustChips() {
+function HeroPills() {
+  const pills = ["Fertility Control", "Site Inspection", "Monthly Reporting"];
   return (
-    <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-ink-muted">
-      <div className="flex items-center gap-2">
-        <Star className="h-4 w-4 fill-current text-yellow-400" />
-        <span>4.9★ — operator reviews</span>
-      </div>
-      <div className="flex items-center gap-2">
-        <ShieldCheck className="h-4 w-4 text-brand" />
-        <span>EPA-designated minimum risk</span>
-      </div>
-      <div className="flex items-center gap-2">
-        <Check className="h-4 w-4 text-brand" />
-        <span>Month-to-month, documented</span>
-      </div>
+    <div className="mt-7 flex flex-wrap gap-2">
+      {pills.map((p) => (
+        <span
+          key={p}
+          className="inline-flex items-center gap-2 rounded-full border border-ink-border bg-white/5 px-4 py-2 text-sm font-semibold text-ink-foreground"
+        >
+          <Check className="h-4 w-4 text-brand" />
+          {p}
+        </span>
+      ))}
     </div>
   );
 }
