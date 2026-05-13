@@ -206,7 +206,7 @@ function RatPoisonVsPage() {
             </table>
           </div>
           <SplitFigure imageSide="right"
-            src={evolveSoftBait}
+            image={evolveSoftBait}
             alt="Evolve soft bait pieces beside their tub packaging"
             caption="Evolve is a contraceptive soft bait — non-lethal, no anticoagulants."
           />

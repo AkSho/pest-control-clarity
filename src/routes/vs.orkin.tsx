@@ -111,7 +111,7 @@ function OrkinVsPage() {
             </table>
           </div>
           <SplitFigure imageSide="right"
-            src={operatorStation}
+            image={operatorStation}
             alt="Cloakd operator servicing an Evolve block inside an existing pest-control station"
             caption="Cloakd deploys as an additive layer inside your existing vendor's program."
           />

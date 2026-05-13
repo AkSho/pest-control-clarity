@@ -116,7 +116,7 @@ function ComparePage() {
       <section className="bg-background pb-12">
         <div className="container-site max-w-4xl">
           <SplitFigure imageSide="right"
-            src={contrapestVsEvolve}
+            image={contrapestVsEvolve}
             alt="ContraPest dispenser system on the left and Evolve soft-bait packaging on the right"
             caption="Side-by-side: ContraPest dispenser system vs. Evolve soft-bait packaging."
           />
@@ -268,7 +268,7 @@ function ComparePage() {
       <section className="bg-surface pb-12">
         <div className="container-site max-w-4xl">
           <SplitFigure imageSide="left"
-            src={operatorStation}
+            image={operatorStation}
             alt="Operator servicing a ContraPest station outdoors in NYC"
             caption="Field service in NYC outdoor conditions."
           />
