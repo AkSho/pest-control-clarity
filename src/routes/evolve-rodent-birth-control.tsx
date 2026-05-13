@@ -147,7 +147,7 @@ function EvolvePage() {
       <section className="bg-background pb-12">
         <div className="container-site max-w-4xl">
           <SplitFigure imageSide="right"
-            src={evolveSoftBait}
+            image={evolveSoftBait}
             alt="Evolve soft bait pieces beside their tub packaging"
             caption="Evolve soft bait — ready-to-use, no mixing, no liquid reservoir."
           />
@@ -248,7 +248,7 @@ function EvolvePage() {
       <section className="bg-background pb-12">
         <div className="container-site max-w-4xl">
           <SplitFigure imageSide="left"
-            src={contrapestVsEvolve}
+            image={contrapestVsEvolve}
             alt="ContraPest liquid bait dispenser system on the left and Evolve soft bait packaging on the right"
             caption="ContraPest's liquid system (left) and Evolve's soft bait (right)."
           />
@@ -371,7 +371,7 @@ function EvolvePage() {
       <section className="bg-background pb-12">
         <div className="container-site max-w-4xl">
           <SplitFigure imageSide="right"
-            src={operatorStation}
+            image={operatorStation}
             alt="Cloakd operator servicing an Evolve block in an existing pest control station in NYC"
             caption="NYC service visit — additive deployment in an existing station."
           />

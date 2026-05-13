@@ -169,7 +169,7 @@ function SnapTrapsVsPage() {
             </table>
           </div>
           <SplitFigure imageSide="right"
-            src={restaurantSnapTrap}
+            image={restaurantSnapTrap}
             alt="Snap trap placed on a restaurant back-of-house floor mat"
             caption="Snap traps remove individuals one at a time; fertility control reduces the next generation."
           />

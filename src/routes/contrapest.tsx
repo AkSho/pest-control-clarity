@@ -108,7 +108,7 @@ function ContraPestPage() {
       <section className="bg-background pb-12">
         <div className="container-site max-w-4xl">
           <SplitFigure imageSide="right"
-            src={nycMitigationMap}
+            image={nycMitigationMap}
             alt="Map of NYC Rat Mitigation Zones across Manhattan and the Bronx"
             caption="NYC Rat Mitigation Zones — where fertility control delivers the most leverage."
           />
@@ -188,7 +188,7 @@ function ContraPestPage() {
       <section className="bg-background pb-12">
         <div className="container-site max-w-4xl">
           <SplitFigure imageSide="left"
-            src={contrapestVsEvolve}
+            image={contrapestVsEvolve}
             alt="ContraPest dispenser system beside Evolve soft-bait packaging"
             caption="ContraPest liquid bait alongside Evolve soft bait — both EPA-registered contraceptives."
           />
@@ -289,7 +289,7 @@ function ContraPestPage() {
       <section className="bg-background pb-12">
         <div className="container-site max-w-4xl">
           <SplitFigure imageSide="right"
-            src={operatorStation}
+            image={operatorStation}
             alt="Gloved operator opening a ContraPest bait station during a service visit"
             caption="Operator servicing a ContraPest station during a scheduled visit."
           />

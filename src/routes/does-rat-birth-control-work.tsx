@@ -140,7 +140,7 @@ function BirthControlPage() {
       <section className="bg-background pb-12">
         <div className="container-site max-w-4xl">
           <SplitFigure imageSide="right"
-            src={basementAudit}
+            image={basementAudit}
             alt="Pest control technician inspecting basement plumbing with a flashlight"
             caption="Placement starts with the audit — finding entry points, runways, and harborage."
           />
@@ -232,7 +232,7 @@ function BirthControlPage() {
       <section className="bg-surface pb-12">
         <div className="container-site max-w-4xl">
           <SplitFigure imageSide="left"
-            src={monitoringReport}
+            image={monitoringReport}
             alt="Floor-plan monitoring report showing bait stations, monitoring points, and activity hotspots"
             caption="Monitoring data: bait stations, inspection points, and activity hotspots tracked per visit."
           />

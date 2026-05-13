@@ -159,7 +159,7 @@ function DiyComparePage() {
             </table>
           </div>
           <SplitFigure imageSide="right"
-            src={pcoOperator}
+            image={pcoOperator}
             alt="Professional pest control operator servicing an outdoor bait station"
             caption="Scheduled professional service — placement, dosing, and reporting."
           />

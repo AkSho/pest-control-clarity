@@ -194,7 +194,7 @@ function TradPestVsPage() {
       <section className="bg-background pb-4">
         <div className="container-site">
           <SplitFigure imageSide="right"
-            src={basementAudit}
+            image={basementAudit}
             alt="Pest control technician inspecting basement pipes with a flashlight"
             caption="Traditional pest control inspects and treats; fertility control adds population suppression on top."
           />
