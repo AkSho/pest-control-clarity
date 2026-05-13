@@ -6,7 +6,7 @@ import {
   SectionHeader,
   SolutionHero,
 } from "@/components/site/solutions/SolutionPrimitives";
-import { SplitFigure } from "@/components/site/SplitFigure";
+// import { SplitFigure } from "@/components/site/SplitFigure";
 import operatorStation from "@/assets/inline/operator-contrapest-station.jpg";
 
 const TITLE = "Western Pest Services vs. Cloakd: Adding Fertility Management to IPM | Cloakd";
@@ -114,11 +114,11 @@ function WesternVsPage() {
               </tbody>
             </table>
           </div>
-          <SplitFigure imageSide="right"
+          {/* <SplitFigure imageSide="right"
             image={operatorStation}
             alt="Cloakd operator servicing an Evolve block inside an existing pest-control station"
             caption="Cloakd deploys as an additive layer inside your existing vendor's program."
-          />
+          /> */}
           <p className="mt-6 max-w-3xl text-sm text-muted-foreground">
             Western Pest Services is a registered trademark of its
             respective owner. Comparison is for informational purposes;

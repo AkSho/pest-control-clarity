@@ -6,7 +6,7 @@ import {
   SectionHeader,
   SolutionHero,
 } from "@/components/site/solutions/SolutionPrimitives";
-import { SplitFigure } from "@/components/site/SplitFigure";
+// import { SplitFigure } from "@/components/site/SplitFigure";
 import operatorStation from "@/assets/inline/operator-contrapest-station.jpg";
 
 const TITLE = "Viking Pest Control vs. Cloakd: The Fertility Layer for NJ Properties | Cloakd";
@@ -113,11 +113,11 @@ function VikingVsPage() {
               </tbody>
             </table>
           </div>
-          <SplitFigure imageSide="right"
+          {/* <SplitFigure imageSide="right"
             image={operatorStation}
             alt="Cloakd operator servicing an Evolve block inside an existing pest-control station"
             caption="Cloakd deploys as an additive layer inside your existing vendor's program."
-          />
+          /> */}
           <p className="mt-6 max-w-3xl text-sm text-muted-foreground">
             Viking Pest Control is a registered trademark of its
             respective owner. Comparison is for informational purposes;

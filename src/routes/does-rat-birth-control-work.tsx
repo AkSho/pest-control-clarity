@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import heroImg from "@/assets/program-bryant-park.jpg";
-import { SplitFigure } from "@/components/site/SplitFigure";
+// import { SplitFigure } from "@/components/site/SplitFigure";
 import basementAudit from "@/assets/inline/basement-pipe-audit.jpg";
 import monitoringReport from "@/assets/inline/monitoring-report.jpg";
 import {
@@ -139,11 +139,11 @@ function BirthControlPage() {
 
       <section className="bg-background pb-12">
         <div className="container-site max-w-4xl">
-          <SplitFigure imageSide="right"
+          {/* <SplitFigure imageSide="right"
             image={basementAudit}
             alt="Pest control technician inspecting basement plumbing with a flashlight"
             caption="Placement starts with the audit — finding entry points, runways, and harborage."
-          />
+          /> */}
         </div>
       </section>
 
@@ -231,11 +231,11 @@ function BirthControlPage() {
 
       <section className="bg-surface pb-12">
         <div className="container-site max-w-4xl">
-          <SplitFigure imageSide="left"
+          {/* <SplitFigure imageSide="left"
             image={monitoringReport}
             alt="Floor-plan monitoring report showing bait stations, monitoring points, and activity hotspots"
             caption="Monitoring data: bait stations, inspection points, and activity hotspots tracked per visit."
-          />
+          /> */}
         </div>
       </section>
 
