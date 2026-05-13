@@ -2,7 +2,6 @@ import { Link } from "@tanstack/react-router";
 import { ArrowRight, Check } from "lucide-react";
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
-import { LeadForm } from "@/components/site/LeadForm";
 import { HeroTrustBadges } from "@/components/site/TrustBadges";
 import { SOLUTIONS, type SolutionSlug } from "@/data/solutions";
 
@@ -33,19 +32,18 @@ export function SolutionHero({
         width={1536}
         height={1024}
       />
-      <div className="relative container-site grid gap-10 py-16 md:grid-cols-[1.1fr_0.9fr] md:py-24">
-        <div>
+      <div className="relative container-site py-16 md:py-24">
           <HeroTrustBadges />
           <p className="mt-7 text-xs font-semibold uppercase tracking-[0.25em] text-accent-warm">
             {eyebrow}
           </p>
-          <h1 className="mt-4 text-4xl font-extrabold leading-[1.05] text-white md:text-6xl">
+          <h1 className="mt-4 max-w-3xl text-4xl font-extrabold leading-[1.05] text-white md:text-6xl">
             {headline}{" "}
             {highlight && (
               <span className="text-accent-warm">{highlight}</span>
             )}
           </h1>
-          <p className="mt-6 max-w-xl text-base leading-relaxed text-white/85 md:text-lg">
+          <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/85 md:text-lg">
             {lede}
           </p>
           {badge && (
@@ -60,10 +58,6 @@ export function SolutionHero({
               </Link>
             </Button>
           </div>
-        </div>
-        <div>
-          <LeadForm />
-        </div>
       </div>
     </section>
   );

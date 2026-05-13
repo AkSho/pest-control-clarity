@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import heroImg from "@/assets/program-how-it-works.jpg";
-import { CheckoutForm } from "@/components/site/CheckoutForm";
 import {
   ClosingCta,
   FieldDataTrio,
@@ -185,50 +184,12 @@ function ProgramPage() {
         </div>
       </section>
 
-      {/* CHECKOUT */}
-      <section id="start" className="bg-surface py-20">
-        <div className="container-site grid gap-12 md:grid-cols-[1fr_420px] md:items-start">
-          <div className="md:pt-2">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
-              Start the program
-            </p>
-            <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
-              The cycle ends when you hit it from both ends.
-            </h2>
-            <p className="mt-5 text-muted-foreground leading-relaxed">
-              Monthly managed rodent fertility control for NYC, NJ, and Bay
-              Area restaurants and commercial properties. Licensed operator.
-              Results documented every cycle.
-            </p>
-            <ul className="mt-6 space-y-2 text-sm text-muted-foreground">
-              {[
-                "Monthly licensed operator site visit",
-                "Evolve bait station deployment & maintenance",
-                "Track count monitoring — documented monthly",
-                "EPA 25(b) product — safe in food environments",
-                "No changes to your existing pest control vendor",
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-2">
-                  <span className="mt-0.5 text-brand">✓</span>
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <p className="mt-6 text-sm text-muted-foreground">
-              Questions first?{" "}
-              <Link
-                to="/how-it-works"
-                className="text-brand underline-offset-2 hover:underline"
-              >
-                See how it works →
-              </Link>
-            </p>
-          </div>
-          <div className="md:sticky md:top-24">
-            <CheckoutForm />
-          </div>
-        </div>
-      </section>
+      <ClosingCta
+        title="The cycle ends when you hit it from both ends."
+        body="Evolve bait station deployment for NYC, NJ, and Bay Area commercial properties. EPA 25(b) minimum-risk product. Documented track count monitoring every cycle."
+        primary={{ label: "Get started", to: "/get-started" }}
+        secondary={{ label: "See how it works", to: "/how-it-works" }}
+      />
     </>
   );
 }
