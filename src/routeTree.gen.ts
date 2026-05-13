@@ -11,9 +11,12 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WhyItKeepsComingBackRouteImport } from './routes/why-it-keeps-coming-back'
 import { Route as WhatToExpectRouteImport } from './routes/what-to-expect'
+import { Route as ThankYouRouteImport } from './routes/thank-you'
 import { Route as RodentFertilityControlRouteImport } from './routes/rodent-fertility-control'
 import { Route as ResultsRouteImport } from './routes/results'
 import { Route as ResourcesRouteImport } from './routes/resources'
+import { Route as QuestionsRouteImport } from './routes/questions'
+import { Route as PaymentConfirmedRouteImport } from './routes/payment-confirmed'
 import { Route as NjRodentViolationRouteImport } from './routes/nj-rodent-violation'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as GetStartedRouteImport } from './routes/get-started'
@@ -54,6 +57,11 @@ const WhatToExpectRoute = WhatToExpectRouteImport.update({
   path: '/what-to-expect',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ThankYouRoute = ThankYouRouteImport.update({
+  id: '/thank-you',
+  path: '/thank-you',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RodentFertilityControlRoute = RodentFertilityControlRouteImport.update({
   id: '/rodent-fertility-control',
   path: '/rodent-fertility-control',
@@ -67,6 +75,16 @@ const ResultsRoute = ResultsRouteImport.update({
 const ResourcesRoute = ResourcesRouteImport.update({
   id: '/resources',
   path: '/resources',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuestionsRoute = QuestionsRouteImport.update({
+  id: '/questions',
+  path: '/questions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PaymentConfirmedRoute = PaymentConfirmedRouteImport.update({
+  id: '/payment-confirmed',
+  path: '/payment-confirmed',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NjRodentViolationRoute = NjRodentViolationRouteImport.update({
@@ -230,9 +248,12 @@ export interface FileRoutesByFullPath {
   '/get-started': typeof GetStartedRoute
   '/how-it-works': typeof HowItWorksRoute
   '/nj-rodent-violation': typeof NjRodentViolationRoute
+  '/payment-confirmed': typeof PaymentConfirmedRoute
+  '/questions': typeof QuestionsRoute
   '/resources': typeof ResourcesRoute
   '/results': typeof ResultsRoute
   '/rodent-fertility-control': typeof RodentFertilityControlRoute
+  '/thank-you': typeof ThankYouRoute
   '/what-to-expect': typeof WhatToExpectRoute
   '/why-it-keeps-coming-back': typeof WhyItKeepsComingBackRoute
   '/areas/$areaSlug': typeof AreasAreaSlugRoute
@@ -266,9 +287,12 @@ export interface FileRoutesByTo {
   '/get-started': typeof GetStartedRoute
   '/how-it-works': typeof HowItWorksRoute
   '/nj-rodent-violation': typeof NjRodentViolationRoute
+  '/payment-confirmed': typeof PaymentConfirmedRoute
+  '/questions': typeof QuestionsRoute
   '/resources': typeof ResourcesRoute
   '/results': typeof ResultsRoute
   '/rodent-fertility-control': typeof RodentFertilityControlRoute
+  '/thank-you': typeof ThankYouRoute
   '/what-to-expect': typeof WhatToExpectRoute
   '/why-it-keeps-coming-back': typeof WhyItKeepsComingBackRoute
   '/areas/$areaSlug': typeof AreasAreaSlugRoute
@@ -303,9 +327,12 @@ export interface FileRoutesById {
   '/get-started': typeof GetStartedRoute
   '/how-it-works': typeof HowItWorksRoute
   '/nj-rodent-violation': typeof NjRodentViolationRoute
+  '/payment-confirmed': typeof PaymentConfirmedRoute
+  '/questions': typeof QuestionsRoute
   '/resources': typeof ResourcesRoute
   '/results': typeof ResultsRoute
   '/rodent-fertility-control': typeof RodentFertilityControlRoute
+  '/thank-you': typeof ThankYouRoute
   '/what-to-expect': typeof WhatToExpectRoute
   '/why-it-keeps-coming-back': typeof WhyItKeepsComingBackRoute
   '/areas/$areaSlug': typeof AreasAreaSlugRoute
@@ -341,9 +368,12 @@ export interface FileRouteTypes {
     | '/get-started'
     | '/how-it-works'
     | '/nj-rodent-violation'
+    | '/payment-confirmed'
+    | '/questions'
     | '/resources'
     | '/results'
     | '/rodent-fertility-control'
+    | '/thank-you'
     | '/what-to-expect'
     | '/why-it-keeps-coming-back'
     | '/areas/$areaSlug'
@@ -377,9 +407,12 @@ export interface FileRouteTypes {
     | '/get-started'
     | '/how-it-works'
     | '/nj-rodent-violation'
+    | '/payment-confirmed'
+    | '/questions'
     | '/resources'
     | '/results'
     | '/rodent-fertility-control'
+    | '/thank-you'
     | '/what-to-expect'
     | '/why-it-keeps-coming-back'
     | '/areas/$areaSlug'
@@ -413,9 +446,12 @@ export interface FileRouteTypes {
     | '/get-started'
     | '/how-it-works'
     | '/nj-rodent-violation'
+    | '/payment-confirmed'
+    | '/questions'
     | '/resources'
     | '/results'
     | '/rodent-fertility-control'
+    | '/thank-you'
     | '/what-to-expect'
     | '/why-it-keeps-coming-back'
     | '/areas/$areaSlug'
@@ -450,9 +486,12 @@ export interface RootRouteChildren {
   GetStartedRoute: typeof GetStartedRoute
   HowItWorksRoute: typeof HowItWorksRoute
   NjRodentViolationRoute: typeof NjRodentViolationRoute
+  PaymentConfirmedRoute: typeof PaymentConfirmedRoute
+  QuestionsRoute: typeof QuestionsRoute
   ResourcesRoute: typeof ResourcesRoute
   ResultsRoute: typeof ResultsRoute
   RodentFertilityControlRoute: typeof RodentFertilityControlRoute
+  ThankYouRoute: typeof ThankYouRoute
   WhatToExpectRoute: typeof WhatToExpectRoute
   WhyItKeepsComingBackRoute: typeof WhyItKeepsComingBackRoute
   AreasAreaSlugRoute: typeof AreasAreaSlugRoute
@@ -492,6 +531,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WhatToExpectRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/thank-you': {
+      id: '/thank-you'
+      path: '/thank-you'
+      fullPath: '/thank-you'
+      preLoaderRoute: typeof ThankYouRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/rodent-fertility-control': {
       id: '/rodent-fertility-control'
       path: '/rodent-fertility-control'
@@ -511,6 +557,20 @@ declare module '@tanstack/react-router' {
       path: '/resources'
       fullPath: '/resources'
       preLoaderRoute: typeof ResourcesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/questions': {
+      id: '/questions'
+      path: '/questions'
+      fullPath: '/questions'
+      preLoaderRoute: typeof QuestionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/payment-confirmed': {
+      id: '/payment-confirmed'
+      path: '/payment-confirmed'
+      fullPath: '/payment-confirmed'
+      preLoaderRoute: typeof PaymentConfirmedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/nj-rodent-violation': {
@@ -730,9 +790,12 @@ const rootRouteChildren: RootRouteChildren = {
   GetStartedRoute: GetStartedRoute,
   HowItWorksRoute: HowItWorksRoute,
   NjRodentViolationRoute: NjRodentViolationRoute,
+  PaymentConfirmedRoute: PaymentConfirmedRoute,
+  QuestionsRoute: QuestionsRoute,
   ResourcesRoute: ResourcesRoute,
   ResultsRoute: ResultsRoute,
   RodentFertilityControlRoute: RodentFertilityControlRoute,
+  ThankYouRoute: ThankYouRoute,
   WhatToExpectRoute: WhatToExpectRoute,
   WhyItKeepsComingBackRoute: WhyItKeepsComingBackRoute,
   AreasAreaSlugRoute: AreasAreaSlugRoute,
