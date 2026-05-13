@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Check, Phone } from "lucide-react";
+import { Check } from "lucide-react";
 import { LeadForm } from "@/components/site/LeadForm";
 import { FieldDataTrio } from "@/components/site/solutions/SolutionPrimitives";
 
@@ -68,16 +68,6 @@ function GetStartedPage() {
               response within one business day.
             </p>
 
-            <div className="mt-8 flex items-center gap-3 text-sm text-ink-foreground/85">
-              <Phone className="h-4 w-4" />
-              Prefer to call?{" "}
-              <a
-                href="tel:+18005550199"
-                className="font-semibold text-ink-foreground underline"
-              >
-                (800) 555-0199
-              </a>
-            </div>
           </div>
 
           <div>

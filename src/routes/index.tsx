@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
-  Phone,
   Check,
   ArrowRight,
   Building2,
@@ -235,13 +234,6 @@ function HomePage() {
                   Get started <ArrowRight className="h-4 w-4" />
                 </a>
               </Button>
-              <a
-                href="tel:+18005550199"
-                className="ml-1 flex items-center gap-2 text-sm font-medium text-ink-foreground hover:text-brand"
-              >
-                <Phone className="h-4 w-4" />
-                (800) 555-0199
-              </a>
             </div>
           </div>
 
@@ -457,9 +449,9 @@ function HomePage() {
               Questions operators ask before starting
             </h2>
             <p className="mt-5 text-muted-foreground">
-              Don't see yours? Call us at{" "}
-              <a href="tel:+18005550199" className="font-semibold text-foreground underline">
-                (800) 555-0199
+              Don't see yours?{" "}
+              <a href="mailto:hello@cloakd-removals.cloud" className="font-semibold text-foreground underline">
+                Email us
               </a>
               .
             </p>
@@ -501,12 +493,6 @@ function HomePage() {
                   Get started <ArrowRight className="h-4 w-4" />
                 </a>
               </Button>
-              <a
-                href="tel:+18005550199"
-                className="flex items-center gap-2 text-base font-semibold text-ink-foreground hover:text-brand"
-              >
-                <Phone className="h-4 w-4" /> (800) 555-0199
-              </a>
             </div>
           </div>
           <div className="rounded-2xl border border-ink-border bg-white/5 p-6 backdrop-blur">

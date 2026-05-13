@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Phone, Mail, MapPin } from "lucide-react";
+import { Mail, MapPin } from "lucide-react";
 import { SOLUTIONS } from "@/data/solutions";
 import { SERVICE_AREAS } from "@/data/serviceAreas";
 
@@ -25,10 +25,6 @@ export function SiteFooter() {
             NJ, &amp; CA.
           </p>
           <div className="mt-6 space-y-2 text-sm">
-            <a href="tel:+18005550199" className="flex items-center gap-2 hover:text-brand">
-              <Phone className="h-4 w-4" />
-              <span>(800) 555-0199</span>
-            </a>
             <a href="mailto:hello@cloakd-removals.cloud" className="flex items-center gap-2 hover:text-brand">
               <Mail className="h-4 w-4" />
               <span>hello@cloakd-removals.cloud</span>
