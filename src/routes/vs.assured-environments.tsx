@@ -6,7 +6,7 @@ import {
   SectionHeader,
   SolutionHero,
 } from "@/components/site/solutions/SolutionPrimitives";
-import { InlineFigure } from "@/components/site/InlineFigure";
+import { SplitFigure } from "@/components/site/SplitFigure";
 import operatorStation from "@/assets/inline/operator-contrapest-station.jpg";
 
 const TITLE = "Assured Environments vs. Cloakd: The Layer Added On Top | Cloakd";
@@ -108,7 +108,7 @@ function AssuredVsPage() {
               </tbody>
             </table>
           </div>
-          <InlineFigure
+          <SplitFigure imageSide="right"
             src={operatorStation}
             alt="Cloakd operator servicing an Evolve block inside an existing pest-control station"
             caption="Cloakd deploys as an additive layer inside your existing vendor's program."

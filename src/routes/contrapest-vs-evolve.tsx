@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import heroImg from "@/assets/program-how-it-works.jpg";
-import { InlineFigure } from "@/components/site/InlineFigure";
+import { SplitFigure } from "@/components/site/SplitFigure";
 import contrapestVsEvolve from "@/assets/inline/contrapest-vs-evolve.jpg";
 import operatorStation from "@/assets/inline/operator-contrapest-station.jpg";
 import {
@@ -115,7 +115,7 @@ function ComparePage() {
 
       <section className="bg-background pb-12">
         <div className="container-site max-w-4xl">
-          <InlineFigure
+          <SplitFigure imageSide="right"
             src={contrapestVsEvolve}
             alt="ContraPest dispenser system on the left and Evolve soft-bait packaging on the right"
             caption="Side-by-side: ContraPest dispenser system vs. Evolve soft-bait packaging."
@@ -267,7 +267,7 @@ function ComparePage() {
 
       <section className="bg-surface pb-12">
         <div className="container-site max-w-4xl">
-          <InlineFigure
+          <SplitFigure imageSide="left"
             src={operatorStation}
             alt="Operator servicing a ContraPest station outdoors in NYC"
             caption="Field service in NYC outdoor conditions."

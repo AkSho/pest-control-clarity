@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Check, X } from "lucide-react";
 import heroImg from "@/assets/program-how-it-works.jpg";
-import { InlineFigure } from "@/components/site/InlineFigure";
+import { SplitFigure } from "@/components/site/SplitFigure";
 import snapTrap from "@/assets/inline/snap-trap.jpg";
 import evolveSoftBait from "@/assets/inline/evolve-soft-bait.jpg";
 import pcoOperator from "@/assets/inline/pco-operator-field.jpg";
@@ -133,12 +133,12 @@ function HowItWorksPage() {
 
       <section className="bg-background pb-12">
         <div className="container-site max-w-4xl space-y-2">
-          <InlineFigure
+          <SplitFigure imageSide="right"
             src={snapTrap}
             alt="Close-up of a black plastic snap trap"
             caption="Lethal snap trap — removes one rat per trigger."
           />
-          <InlineFigure
+          <SplitFigure imageSide="left"
             src={evolveSoftBait}
             alt="Evolve soft bait pieces beside their tub packaging"
             caption="Evolve soft bait — reduces the next generation by suppressing fertility."
@@ -211,7 +211,7 @@ function HowItWorksPage() {
 
       <section className="bg-surface pb-12">
         <div className="container-site max-w-4xl">
-          <InlineFigure
+          <SplitFigure imageSide="right"
             src={pcoOperator}
             alt="Pest control operator kneeling at a bait station with tools and clipboard"
             caption="Scheduled service: inspect, document, replenish."
@@ -281,7 +281,7 @@ function HowItWorksPage() {
 
       <section className="bg-background pb-12">
         <div className="container-site max-w-4xl">
-          <InlineFigure
+          <SplitFigure imageSide="left"
             src={monitoringReport}
             alt="Floor-plan monitoring report with bait stations and activity hotspots labeled"
             caption="Every visit produces a structured monitoring report."

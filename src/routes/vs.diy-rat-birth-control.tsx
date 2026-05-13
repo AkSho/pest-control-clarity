@@ -5,7 +5,7 @@ import {
   SectionHeader,
   SolutionHero,
 } from "@/components/site/solutions/SolutionPrimitives";
-import { InlineFigure } from "@/components/site/InlineFigure";
+import { SplitFigure } from "@/components/site/SplitFigure";
 import pcoOperator from "@/assets/inline/pco-operator-field.jpg";
 
 const TITLE =
@@ -158,7 +158,7 @@ function DiyComparePage() {
               </tbody>
             </table>
           </div>
-          <InlineFigure
+          <SplitFigure imageSide="right"
             src={pcoOperator}
             alt="Professional pest control operator servicing an outdoor bait station"
             caption="Scheduled professional service — placement, dosing, and reporting."
