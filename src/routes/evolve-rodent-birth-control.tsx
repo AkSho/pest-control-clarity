@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import heroImg from "@/assets/program-how-it-works.jpg";
-import { SplitFigure } from "@/components/site/SplitFigure";
+// import { SplitFigure } from "@/components/site/SplitFigure";
 import evolveSoftBait from "@/assets/inline/evolve-soft-bait.jpg";
 import contrapestVsEvolve from "@/assets/inline/contrapest-vs-evolve.jpg";
 import operatorStation from "@/assets/inline/operator-contrapest-station.jpg";
@@ -146,11 +146,11 @@ function EvolvePage() {
 
       <section className="bg-background pb-12">
         <div className="container-site max-w-4xl">
-          <SplitFigure imageSide="right"
+          {/* <SplitFigure imageSide="right"
             image={evolveSoftBait}
             alt="Evolve soft bait pieces beside their tub packaging"
             caption="Evolve soft bait — ready-to-use, no mixing, no liquid reservoir."
-          />
+          /> */}
         </div>
       </section>
 
@@ -247,11 +247,11 @@ function EvolvePage() {
 
       <section className="bg-background pb-12">
         <div className="container-site max-w-4xl">
-          <SplitFigure imageSide="left"
+          {/* <SplitFigure imageSide="left"
             image={contrapestVsEvolve}
             alt="ContraPest liquid bait dispenser system on the left and Evolve soft bait packaging on the right"
             caption="ContraPest's liquid system (left) and Evolve's soft bait (right)."
-          />
+          /> */}
         </div>
       </section>
 
@@ -370,11 +370,11 @@ function EvolvePage() {
 
       <section className="bg-background pb-12">
         <div className="container-site max-w-4xl">
-          <SplitFigure imageSide="right"
+          {/* <SplitFigure imageSide="right"
             image={operatorStation}
             alt="Cloakd operator servicing an Evolve block in an existing pest control station in NYC"
             caption="NYC service visit — additive deployment in an existing station."
-          />
+          /> */}
         </div>
       </section>
 

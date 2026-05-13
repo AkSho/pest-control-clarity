@@ -7,7 +7,7 @@ import {
   SolutionHero,
   StatCard,
 } from "@/components/site/solutions/SolutionPrimitives";
-import { SplitFigure } from "@/components/site/SplitFigure";
+// import { SplitFigure } from "@/components/site/SplitFigure";
 import restaurantSnapTrap from "@/assets/inline/restaurant-snap-trap.jpg";
 
 const TITLE =
@@ -168,11 +168,11 @@ function SnapTrapsVsPage() {
               </tbody>
             </table>
           </div>
-          <SplitFigure imageSide="right"
+          {/* <SplitFigure imageSide="right"
             image={restaurantSnapTrap}
             alt="Snap trap placed on a restaurant back-of-house floor mat"
             caption="Snap traps remove individuals one at a time; fertility control reduces the next generation."
-          />
+          /> */}
         </div>
       </section>
 
