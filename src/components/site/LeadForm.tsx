@@ -14,6 +14,28 @@ export function LeadForm({
   extended?: boolean;
 }) {
   const [submitted, setSubmitted] = useState(false);
+  const [propertyType, setPropertyType] = useState("");
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    const lead = {
+      name: fd.get("name") as string,
+      business: fd.get("business") as string,
+      property_type: propertyType,
+      address: fd.get("address") as string,
+      email: fd.get("email") as string,
+      phone: fd.get("phone") as string,
+      notes: fd.get("notes") as string,
+      ts: new Date().toISOString(),
+    };
+    try {
+      sessionStorage.setItem("cloakd_lead", JSON.stringify(lead));
+    } catch {
+      // sessionStorage unavailable — continue anyway
+    }
+    setSubmitted(true);
+  }
 
   if (submitted) {
     return (
@@ -33,10 +55,7 @@ export function LeadForm({
 
   return (
     <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        setSubmitted(true);
-      }}
+      onSubmit={handleSubmit}
       className="rounded-2xl bg-card p-6 shadow-[var(--shadow-elevated)] md:p-8"
     >
       <div className="text-center">
@@ -61,11 +80,11 @@ export function LeadForm({
       </div>
 
       <div className="mt-5 space-y-3">
-        <Input required placeholder="Your name*" className="h-11 bg-secondary" />
+        <Input name="name" required placeholder="Your name*" className="h-11 bg-secondary" />
         {extended && (
-          <Input placeholder="Business name" className="h-11 bg-secondary" />
+          <Input name="business" placeholder="Business name" className="h-11 bg-secondary" />
         )}
-        <Select defaultValue="">
+        <Select value={propertyType} onValueChange={setPropertyType}>
           <SelectTrigger className="h-11 bg-secondary">
             <SelectValue placeholder="Property type*" />
           </SelectTrigger>
@@ -79,13 +98,14 @@ export function LeadForm({
             <SelectItem value="other">Other</SelectItem>
           </SelectContent>
         </Select>
-        <Input required placeholder="Property address*" className="h-11 bg-secondary" />
+        <Input name="address" required placeholder="Property address*" className="h-11 bg-secondary" />
         {(!compact || extended) && (
-          <Input type="email" placeholder="Email" className="h-11 bg-secondary" />
+          <Input name="email" type="email" placeholder="Email" className="h-11 bg-secondary" />
         )}
-        <Input required type="tel" placeholder="Phone number*" className="h-11 bg-secondary" />
+        <Input name="phone" required type="tel" placeholder="Phone number*" className="h-11 bg-secondary" />
         {extended && (
           <Textarea
+            name="notes"
             placeholder="Anything we should know"
             className="min-h-[88px] bg-secondary"
           />
