@@ -6,7 +6,7 @@ import {
   SectionHeader,
   SolutionHero,
 } from "@/components/site/solutions/SolutionPrimitives";
-import { InlineFigure } from "@/components/site/InlineFigure";
+import { SplitFigure } from "@/components/site/SplitFigure";
 import basementAudit from "@/assets/inline/basement-pipe-audit.jpg";
 
 const TITLE =
@@ -193,7 +193,7 @@ function TradPestVsPage() {
 
       <section className="bg-background pb-4">
         <div className="container-site">
-          <InlineFigure
+          <SplitFigure imageSide="right"
             src={basementAudit}
             alt="Pest control technician inspecting basement pipes with a flashlight"
             caption="Traditional pest control inspects and treats; fertility control adds population suppression on top."

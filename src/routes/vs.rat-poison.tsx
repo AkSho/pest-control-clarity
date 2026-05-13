@@ -6,7 +6,7 @@ import {
   SectionHeader,
   SolutionHero,
 } from "@/components/site/solutions/SolutionPrimitives";
-import { InlineFigure } from "@/components/site/InlineFigure";
+import { SplitFigure } from "@/components/site/SplitFigure";
 import evolveSoftBait from "@/assets/inline/evolve-soft-bait.jpg";
 
 const TITLE =
@@ -205,7 +205,7 @@ function RatPoisonVsPage() {
               </tbody>
             </table>
           </div>
-          <InlineFigure
+          <SplitFigure imageSide="right"
             src={evolveSoftBait}
             alt="Evolve soft bait pieces beside their tub packaging"
             caption="Evolve is a contraceptive soft bait — non-lethal, no anticoagulants."
