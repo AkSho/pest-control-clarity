@@ -33,12 +33,15 @@ export const Route = createFileRoute("/checkout/$variantId")({
 
 function CheckoutPage() {
   const { product, variant } = Route.useLoaderData();
-  const { plan, qty } = Route.useSearch();
+  const { plan, qty, cadence } = Route.useSearch();
 
-  const usingSub = plan === "sub" && variant.subscription;
-  const unitPrice = usingSub ? variant.subscription!.price : variant.oneTimePrice;
+  const usingSub = plan === "sub";
+  const unitPrice = usingSub
+    ? subscriptionPrice(variant.oneTimePrice, product.subscription.discountPct)
+    : variant.oneTimePrice;
   const subtotal = unitPrice * qty;
   const total = subtotal + FLAT_SHIPPING_USD;
+  const cadenceLabel = `every ${cadence} month${cadence === 1 ? "" : "s"}`;
   const backTo =
     product.slug === "starter-kit" ? "/products/starter-kit" : "/products/refill";
 
