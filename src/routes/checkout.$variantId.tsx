@@ -119,7 +119,7 @@ function CheckoutPage() {
                   <span className="text-xs text-muted-foreground">Qty {qty}</span>
                   {usingSub && (
                     <span className="mt-1 inline-flex w-fit rounded-full bg-brand/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand">
-                      Auto-deliver {variant.subscription!.cadenceLabel}
+                      Auto-deliver {cadenceLabel}
                     </span>
                   )}
                 </div>
@@ -135,9 +135,8 @@ function CheckoutPage() {
               </div>
               {usingSub && (
                 <p className="text-xs text-muted-foreground">
-                  Then ${variant.subscription!.price.toFixed(2)} +{" "}
-                  ${FLAT_SHIPPING_USD.toFixed(2)} shipping {variant.subscription!.cadenceLabel}.
-                  Cancel anytime.
+                  Then ${unitPrice.toFixed(2)} + ${FLAT_SHIPPING_USD.toFixed(2)} shipping{" "}
+                  {cadenceLabel}. Cancel anytime.
                 </p>
               )}
             </div>
