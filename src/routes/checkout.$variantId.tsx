@@ -2,11 +2,12 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
 import { ArrowLeft, Lock } from "lucide-react";
-import { findVariant, FLAT_SHIPPING_USD } from "@/data/products";
+import { findVariant, FLAT_SHIPPING_USD, subscriptionPrice } from "@/data/products";
 
 const searchSchema = z.object({
   plan: fallback(z.enum(["oneTime", "sub"]), "oneTime").default("oneTime"),
   qty: fallback(z.number().int().min(1).max(10), 1).default(1),
+  cadence: fallback(z.number().int().min(1).max(12), 2).default(2),
 });
 
 export const Route = createFileRoute("/checkout/$variantId")({
