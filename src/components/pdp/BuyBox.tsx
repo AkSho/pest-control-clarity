@@ -1,6 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Star, Truck, ShieldCheck, RotateCcw, Minus, Plus, ChevronDown } from "lucide-react";
+import { Star, Truck, ShieldCheck, RotateCcw, Minus, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PestPills } from "./PestPills";
 import { SizePills } from "./SizePills";
