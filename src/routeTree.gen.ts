@@ -45,6 +45,9 @@ import { Route as SolutionsHoasRouteImport } from './routes/solutions.hoas'
 import { Route as SolutionsGhostKitchensRouteImport } from './routes/solutions.ghost-kitchens'
 import { Route as SolutionsFoodStorageRouteImport } from './routes/solutions.food-storage'
 import { Route as SolutionsSlugRouteImport } from './routes/solutions.$slug'
+import { Route as ProductsStarterKitRouteImport } from './routes/products.starter-kit'
+import { Route as ProductsRefillRouteImport } from './routes/products.refill'
+import { Route as CheckoutVariantIdRouteImport } from './routes/checkout.$variantId'
 import { Route as AreasAreaSlugRouteImport } from './routes/areas.$areaSlug'
 
 const WhyItKeepsComingBackRoute = WhyItKeepsComingBackRouteImport.update({
@@ -231,6 +234,21 @@ const SolutionsSlugRoute = SolutionsSlugRouteImport.update({
   path: '/solutions/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProductsStarterKitRoute = ProductsStarterKitRouteImport.update({
+  id: '/products/starter-kit',
+  path: '/products/starter-kit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProductsRefillRoute = ProductsRefillRouteImport.update({
+  id: '/products/refill',
+  path: '/products/refill',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckoutVariantIdRoute = CheckoutVariantIdRouteImport.update({
+  id: '/checkout/$variantId',
+  path: '/checkout/$variantId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AreasAreaSlugRoute = AreasAreaSlugRouteImport.update({
   id: '/areas/$areaSlug',
   path: '/areas/$areaSlug',
@@ -257,6 +275,9 @@ export interface FileRoutesByFullPath {
   '/what-to-expect': typeof WhatToExpectRoute
   '/why-it-keeps-coming-back': typeof WhyItKeepsComingBackRoute
   '/areas/$areaSlug': typeof AreasAreaSlugRoute
+  '/checkout/$variantId': typeof CheckoutVariantIdRoute
+  '/products/refill': typeof ProductsRefillRoute
+  '/products/starter-kit': typeof ProductsStarterKitRoute
   '/solutions/$slug': typeof SolutionsSlugRoute
   '/solutions/food-storage': typeof SolutionsFoodStorageRoute
   '/solutions/ghost-kitchens': typeof SolutionsGhostKitchensRoute
@@ -296,6 +317,9 @@ export interface FileRoutesByTo {
   '/what-to-expect': typeof WhatToExpectRoute
   '/why-it-keeps-coming-back': typeof WhyItKeepsComingBackRoute
   '/areas/$areaSlug': typeof AreasAreaSlugRoute
+  '/checkout/$variantId': typeof CheckoutVariantIdRoute
+  '/products/refill': typeof ProductsRefillRoute
+  '/products/starter-kit': typeof ProductsStarterKitRoute
   '/solutions/$slug': typeof SolutionsSlugRoute
   '/solutions/food-storage': typeof SolutionsFoodStorageRoute
   '/solutions/ghost-kitchens': typeof SolutionsGhostKitchensRoute
@@ -336,6 +360,9 @@ export interface FileRoutesById {
   '/what-to-expect': typeof WhatToExpectRoute
   '/why-it-keeps-coming-back': typeof WhyItKeepsComingBackRoute
   '/areas/$areaSlug': typeof AreasAreaSlugRoute
+  '/checkout/$variantId': typeof CheckoutVariantIdRoute
+  '/products/refill': typeof ProductsRefillRoute
+  '/products/starter-kit': typeof ProductsStarterKitRoute
   '/solutions/$slug': typeof SolutionsSlugRoute
   '/solutions/food-storage': typeof SolutionsFoodStorageRoute
   '/solutions/ghost-kitchens': typeof SolutionsGhostKitchensRoute
@@ -377,6 +404,9 @@ export interface FileRouteTypes {
     | '/what-to-expect'
     | '/why-it-keeps-coming-back'
     | '/areas/$areaSlug'
+    | '/checkout/$variantId'
+    | '/products/refill'
+    | '/products/starter-kit'
     | '/solutions/$slug'
     | '/solutions/food-storage'
     | '/solutions/ghost-kitchens'
@@ -416,6 +446,9 @@ export interface FileRouteTypes {
     | '/what-to-expect'
     | '/why-it-keeps-coming-back'
     | '/areas/$areaSlug'
+    | '/checkout/$variantId'
+    | '/products/refill'
+    | '/products/starter-kit'
     | '/solutions/$slug'
     | '/solutions/food-storage'
     | '/solutions/ghost-kitchens'
@@ -455,6 +488,9 @@ export interface FileRouteTypes {
     | '/what-to-expect'
     | '/why-it-keeps-coming-back'
     | '/areas/$areaSlug'
+    | '/checkout/$variantId'
+    | '/products/refill'
+    | '/products/starter-kit'
     | '/solutions/$slug'
     | '/solutions/food-storage'
     | '/solutions/ghost-kitchens'
@@ -495,6 +531,9 @@ export interface RootRouteChildren {
   WhatToExpectRoute: typeof WhatToExpectRoute
   WhyItKeepsComingBackRoute: typeof WhyItKeepsComingBackRoute
   AreasAreaSlugRoute: typeof AreasAreaSlugRoute
+  CheckoutVariantIdRoute: typeof CheckoutVariantIdRoute
+  ProductsRefillRoute: typeof ProductsRefillRoute
+  ProductsStarterKitRoute: typeof ProductsStarterKitRoute
   SolutionsSlugRoute: typeof SolutionsSlugRoute
   SolutionsFoodStorageRoute: typeof SolutionsFoodStorageRoute
   SolutionsGhostKitchensRoute: typeof SolutionsGhostKitchensRoute
@@ -769,6 +808,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SolutionsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/products/starter-kit': {
+      id: '/products/starter-kit'
+      path: '/products/starter-kit'
+      fullPath: '/products/starter-kit'
+      preLoaderRoute: typeof ProductsStarterKitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/products/refill': {
+      id: '/products/refill'
+      path: '/products/refill'
+      fullPath: '/products/refill'
+      preLoaderRoute: typeof ProductsRefillRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkout/$variantId': {
+      id: '/checkout/$variantId'
+      path: '/checkout/$variantId'
+      fullPath: '/checkout/$variantId'
+      preLoaderRoute: typeof CheckoutVariantIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/areas/$areaSlug': {
       id: '/areas/$areaSlug'
       path: '/areas/$areaSlug'
@@ -799,6 +859,9 @@ const rootRouteChildren: RootRouteChildren = {
   WhatToExpectRoute: WhatToExpectRoute,
   WhyItKeepsComingBackRoute: WhyItKeepsComingBackRoute,
   AreasAreaSlugRoute: AreasAreaSlugRoute,
+  CheckoutVariantIdRoute: CheckoutVariantIdRoute,
+  ProductsRefillRoute: ProductsRefillRoute,
+  ProductsStarterKitRoute: ProductsStarterKitRoute,
   SolutionsSlugRoute: SolutionsSlugRoute,
   SolutionsFoodStorageRoute: SolutionsFoodStorageRoute,
   SolutionsGhostKitchensRoute: SolutionsGhostKitchensRoute,
@@ -821,13 +884,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
