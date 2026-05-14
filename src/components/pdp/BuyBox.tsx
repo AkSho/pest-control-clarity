@@ -243,5 +243,3 @@ function TrustItem({ icon: Icon, label }: { icon: typeof Truck; label: string })
   );
 }
 
-// silence unused import in some bundlers
-void ChevronDown;
