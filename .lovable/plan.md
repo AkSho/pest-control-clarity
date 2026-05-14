@@ -1,91 +1,97 @@
-# Plan: Product PDPs (Starter Kit + Refill)
+## PDP rebuild — Gruns-style structure, SenesTech-grounded content
 
-UI-only scaffold. Stripe, Cloud, orders, and webhooks are explicitly deferred — buttons will navigate to a mock `/checkout/$variantId` confirmation step that captures the selected SKU + plan in the URL so we can wire payments cleanly later.
+### Scope
+Two routes only: `/products/starter-kit` and `/products/refill`. No nav/header changes. No new business logic.
 
-## Scope
+### Source material gathered (Firecrawl)
+- 8 SenesTech pages scraped to `/tmp/sn/` (3 PDPs, Evolve landing, rat & mouse category pages, soft-bait pages).
+- Pricing, descriptions, key benefits, FAQ, FIFRA 25(b) language, "2 rats → 15,000" hook, subscribe-and-save 10% cadence (1/2/3 mo), real review excerpts (Don S., Bryan A., Judith C., Jordan L.) all captured.
+- Cloakd's own field stats (79% / 88% / 79%+) and EPA bullets pulled from `src/routes/index.tsx` and `src/routes/evolve-rodent-birth-control.tsx`.
 
-### New routes
-- `/products/starter-kit` — variants: Rat (default), Mouse
-- `/products/refill` — variants: Rat 6lb (default), Mouse 6lb, Rat 12lb
-- `/checkout/$variantId` — placeholder express-checkout page (email + shipping fields, "Place order" disabled with a "Payments coming online soon" note). Reads variant + plan from search params.
-
-### Source of truth
-- `src/data/products.ts` — single typed catalog. Each variant: `id`, `productSlug`, `label`, `pestType`, `size`, `oneTimePrice`, `subscription` (nullable: `{ price, cadenceDays, label }`), `image`, `senestechUrl`, `shortDescription`, `longDescription`, `features[]`, `howItWorks[]`, `whatsIncluded[]` (starter only), `faq[]`.
-- Content + image URLs scraped from the 5 SenesTech PDPs via Firecrawl. Images hotlinked from `cdn.shopify.com` URLs SenesTech uses. Gaps backfilled from existing copy in `src/data/solutions.ts` and routes like `evolve-rodent-birth-control.tsx`, `how-it-works.tsx`, `does-rat-birth-control-work.tsx`.
-- Confirmed pricing matrix (your numbers):
+### Page architecture (per PDP)
 
 ```text
-SKU                  One-time    Replenishment
-Starter Kit Rat      $169        —
-Starter Kit Mouse    $169        —
-Refill Rat 6lb       $149        $129 every 60 days
-Refill Mouse 6lb     $149        $129 every 60 days
-Refill Rat 12lb      $249        $219 every 90 days
+[1] Sticky mini-nav (anchors)
+[2] Two-column hero
+    L: ProductGallery (existing, swap to multiple images)
+    R: BuyBox
+       - Title + rating row (4.6 ★ · 38 reviews — from SenesTech)
+       - Short description
+       - VariantPills (pest)
+       - Size pills (1.5 / 3 / 6 / 12 lb for refill; starter sizes for kit)
+       - PlanSelector — REBUILD as two stacked cards
+         · Subscribe & Save 10%  (cadence: 1/2/3 months)
+         · One-time purchase
+       - Add to cart CTA + "Free shipping over $99"
+       - INLINE ACCORDION (Gruns 1:1):
+         · Description
+         · How it works
+         · What's inside
+         · Ingredients & safety (cottonseed oil, FIFRA 25(b))
+         · Deployment guide (link to PDF)
+         · Shipping & returns
+         · FAQs (top 4)
+[3] "Works on / Safe around" marquee strip (replaces Gruns emoji marquee)
+    Row A: Norway rats · Roof rats · House mice · Deer mice · Burrows · Fence lines · Dumpster pads · Garages
+    Row B: Safe around — Dogs · Cats · Kids · Hawks · Owls · Livestock · Gardens · Food-handling areas
+[4] "The rebound problem" explainer (3 cols)
+    Pulls from how-it-works.tsx CYCLE + SenesTech "2 rats → 15,000" hook
+[5] How Evolve works (mechanism trio: Males / Females / Cumulative)
+    Reuse copy from evolve-rodent-birth-control.tsx MECHANISM
+[6] Field results trio (79% / 88% / 79%+) with PRNewswire citations
+[7] ComparisonTable — Evolve vs Poison vs Snap traps (existing, light copy polish)
+[8] Reviews — tag-filtered carousel
+    Tags: All · Effectiveness · Safety · Customer service · HOA/Multi-unit
+    Seed with 5 real SenesTech reviews + 3 Cloakd ones
+[9] Press strip (existing PressStrip component, already on home)
+[10] Trust row — Made in USA · FIFRA 25(b) · Non-anticoagulant · No secondary kill
+[11] FAQ accordion (full version, 8–10 Qs from SHARED_FAQ + SenesTech)
+[12] Closing CTA band
+[13] StickyMobileBar (existing)
 ```
 
-### PDP layout (Gruns 1:1)
-Two-column above fold (image gallery left, buy box right), then stacked content sections:
+### Component changes
 
-1. **Sticky-ish gallery** — main image + 3-4 thumbnails
-2. **Buy box**
-   - Product title + one-line subtitle
-   - Star rating + review count (use existing `src/data/reviews.ts` aggregate)
-   - Variant pills (Rat / Mouse, or Rat 6lb / Mouse 6lb / Rat 12lb)
-   - Plan selector (refill PDP only): two radio cards
-     - "One-time — $149"
-     - "Replenishment plan — $129, auto-delivered every 60 days" (selected by default per your "lead with commitment" framing)
-   - Price (live) + crossed-out one-time when sub selected
-   - Quantity stepper (1–10)
-   - Primary CTA: "Add to order" → navigates to `/checkout/$variantId?plan=oneTime|sub&qty=N`
-   - Trust row: free returns, ships in 24h, $12.95 flat shipping, made in USA / EPA-registered
-3. **Value strip** — 4 icon tiles ("EPA-registered active ingredient", "No poison", "Targets reproduction", "Works on resistant populations")
-4. **How it works** — 3-step horizontal (bait → consumed → fertility decline). Reuse SplitFigure pattern.
-5. **What's inside / What's included** — Starter kit shows bait stations + pouch; Refill shows pouch only
-6. **Comparison table** — Evolve vs poison vs snap traps (compress existing `vs.*` page content)
-7. **Reviews** — pull from `src/data/reviews.ts` via existing `ReviewsGrid`
-8. **FAQ accordion** — 5-7 Qs from existing `faq.tsx` filtered to product-relevant
-9. **Sticky mobile buy bar** — appears on scroll past buy box, contains price + CTA
+**Rebuild**
+- `PlanSelector.tsx` → two large stacked cards matching Gruns: subscribe card highlighted (badge "Save 10%"), cadence dropdown inside subscribe card, one-time card dimmed.
+- `BuyBox.tsx` → add inline accordion section under CTA; add 4.6★ rating row above title; add size pills row.
 
-### Shared components (new)
-- `src/components/pdp/ProductGallery.tsx`
-- `src/components/pdp/BuyBox.tsx` (handles variant + plan + qty state, emits navigate)
-- `src/components/pdp/PlanSelector.tsx`
-- `src/components/pdp/VariantPills.tsx`
-- `src/components/pdp/ValueStrip.tsx`
-- `src/components/pdp/ComparisonTable.tsx`
-- `src/components/pdp/StickyMobileBar.tsx`
+**New components** (`src/components/pdp/`)
+- `WorksOnMarquee.tsx` — two infinite-scroll rows, CSS-only animation
+- `MechanismTrio.tsx` — 3-card grid (Males / Females / Cumulative)
+- `ReboundExplainer.tsx` — 3-col "remove → empty → refill" with the 15,000 hook
+- `FieldResultsTrio.tsx` — 79/88/79 stat cards with citations (component already partially exists as `FieldDataTrio` in solutions; reuse if signature fits, otherwise wrap)
+- `ReviewsCarousel.tsx` — tag-filtered horizontal carousel using shadcn `carousel` + `tabs`
+- `PdpAnchorNav.tsx` — sticky sub-nav with smooth-scroll
+- `TrustRow.tsx` — 4-icon strip
 
-Both PDP routes are thin wrappers that pass a `productSlug` to a single `<ProductPage />` component — keeps logic DRY.
+**Data**
+- Extend `src/data/products.ts`:
+  - Add `sizes` array per pest with prices matching SenesTech (1.5 / 3 / 6 / 12 lb at $34.99 / $56.99 / $99.99 / $199.99 for rat refill; mouse equivalent; starter kit at $45.99 / $129.99)
+  - Add `subscription.discountPct: 10` and cadence options `[1,2,3]` months
+  - Add `accordion: { description, howItWorks, whatsInside, ingredients, deployment, shipping }[]`
+  - Add `mechanism`, `fieldResults`, `worksOn`, `safeAround`, `pressLogos` (reuse), `trustBadges`
+- New `src/data/pdpReviews.ts` — 8 reviews with `tags: string[]`, seeded from scraped SenesTech reviews + Cloakd's existing `reviews.ts`
 
-### Out of scope (this turn)
-- Stripe enable, PaymentIntents, webhooks, orders table
-- Lovable Cloud
-- Cart / multi-item
-- Tax calc
-- Real shipping address validation
-- Subscription management portal
-- Updating homepage / nav CTAs (existing service pages stay as-is per your routing answer)
+### Visible TODO placeholders (per Tier 3 from prior turn)
+- Hero overlay icons: stage 4 with placeholder labels marked `TODO: confirm icon set`
+- Authority endorsement card: stage layout, body says "TODO: Name, title, quote, headshot"
+- Video testimonials: 3 video tile placeholders with "TODO: Vimeo/YouTube URL"
+- Lifestyle photography: keep current SenesTech CDN product shots; add 3 grey `<aside>TODO: lifestyle shot</aside>` blocks in gallery
 
-## Technical details
+### Out of scope
+- Quantity discounts (confirmed flat)
+- Secondary in-box selector beyond pest+size (confirmed)
+- Real reviews widget integration (deferred)
+- New routes, header/footer, checkout flow
 
-- Firecrawl: connect via `standard_connectors--connect`, then call `firecrawl.scrape` server-side from a one-shot script (not a server function — pure build-time content gathering). Output written into `src/data/products.ts`. If a product page returns thin content, fall back to existing site copy.
-- Images: store the `cdn.shopify.com` URLs in the catalog and `<img src>` directly. Add `loading="lazy"` and explicit `width`/`height` to avoid CLS. If hotlinking flakes, easy follow-up to download into `public/products/`.
-- Routing: TanStack file-based, flat dot convention — `src/routes/products.starter-kit.tsx`, `src/routes/products.refill.tsx`, `src/routes/checkout.$variantId.tsx`. Each route owns its `head()` (title, description, og:title, og:description, og:url, canonical, JSON-LD `Product` schema with `offers` reflecting current variant defaults).
-- State: URL is the source of truth — variant + plan + qty live in search params (`?variant=rat-6lb&plan=sub&qty=1`) so refresh and share both work, and the buy box rehydrates from URL on mount.
-- Styling: design tokens from `src/styles.css` only — no raw colors. Reuse existing `Button`, `Card`, `Accordion`, `Badge`. Mobile-first; sticky buy bar appears below `md`.
-- SEO: `Product` JSON-LD per page with all variant offers; `<link rel="canonical">` per leaf only (root has none, per template convention).
-- No backend, no secrets, no API calls at runtime.
+### Files touched (estimate)
+- Edit: `src/data/products.ts`, `src/components/pdp/{BuyBox,PlanSelector,ProductPage,VariantPills}.tsx`, `src/routes/products.{starter-kit,refill}.tsx`
+- Create: 7 new components in `src/components/pdp/`, `src/data/pdpReviews.ts`
 
-## Deliverables checklist
-- [ ] Firecrawl connected + 5 product pages scraped
-- [ ] `src/data/products.ts` populated with copy + image URLs + confirmed pricing
-- [ ] 7 new PDP components under `src/components/pdp/`
-- [ ] `/products/starter-kit`, `/products/refill`, `/checkout/$variantId` routes
-- [ ] Per-route head() metadata + Product JSON-LD
-- [ ] Mobile sticky buy bar
-- [ ] Visual QA in preview at 634px (your current viewport) and desktop
-
-## Open follow-ups (next turn)
-1. Enable Lovable Cloud + Stripe, wire `/checkout/$variantId` to real PaymentIntent + Stripe Elements
-2. Add `orders` table + webhook handler at `/api/public/stripe-webhook`
-3. Decide on homepage CTA reframe once PDPs are live and you've eyeballed them
+### Build order
+1. Data layer (products.ts + pdpReviews.ts)
+2. Rebuild PlanSelector + BuyBox with inline accordion
+3. New section components in dependency order
+4. Wire into ProductPage with anchor nav
+5. Visual QA at 634px (current viewport) and desktop

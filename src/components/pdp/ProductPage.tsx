@@ -8,14 +8,21 @@ import {
 } from "@/components/ui/accordion";
 import { ProductGallery } from "./ProductGallery";
 import { BuyBox } from "./BuyBox";
-import { ValueStrip } from "./ValueStrip";
 import { ComparisonTable } from "./ComparisonTable";
-import { ReviewsGrid } from "@/components/site/ReviewsGrid";
+import { PdpAnchorNav } from "./PdpAnchorNav";
+import { WorksOnMarquee } from "./WorksOnMarquee";
+import { ReboundExplainer } from "./ReboundExplainer";
+import { MechanismTrio } from "./MechanismTrio";
+import { FieldResultsTrio } from "./FieldResultsTrio";
+import { ReviewsCarousel } from "./ReviewsCarousel";
+import { TrustRow } from "./TrustRow";
+import { AuthorityCard } from "./AuthorityCard";
+import { VideoTestimonialsRow } from "./VideoTestimonialsRow";
+import { PressStrip } from "@/components/site/PressStrip";
 import type { Product } from "@/data/products";
 
 export function ProductPage({ product, routePath }: { product: Product; routePath: string }) {
   const navigate = useNavigate();
-  // routePath is "/products/starter-kit" | "/products/refill"
   const search = useSearch({ from: routePath as "/products/starter-kit" }) as {
     variant?: string;
   };
@@ -35,121 +42,44 @@ export function ProductPage({ product, routePath }: { product: Product; routePat
 
   return (
     <div className="bg-background pb-32 md:pb-12">
+      <PdpAnchorNav />
+
       {/* Hero: gallery + buy box */}
-      <section className="container-site grid gap-8 py-8 md:grid-cols-2 md:gap-12 md:py-12 lg:gap-16">
+      <section
+        id="overview"
+        className="container-site grid gap-8 py-8 md:grid-cols-2 md:gap-12 md:py-12 lg:gap-16"
+      >
         <ProductGallery images={variant.galleryImages} alt={variant.shortName} />
         <BuyBox product={product} variant={variant} onVariantChange={onVariantChange} />
       </section>
 
-      <ValueStrip />
+      <WorksOnMarquee />
 
-      {/* Description */}
-      <section className="container-site grid gap-10 py-16 md:grid-cols-5 md:gap-16">
-        <div className="md:col-span-2">
-          <span className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">
-            Why this exists
-          </span>
-          <h2 className="mt-2 text-3xl font-bold tracking-tight md:text-4xl">{product.intro}</h2>
-        </div>
-        <div className="space-y-4 text-base leading-relaxed text-muted-foreground md:col-span-3">
-          {product.longDescription.map((p, i) => (
-            <p key={i}>{p}</p>
-          ))}
-        </div>
-      </section>
+      <div id="how-it-works">
+        <ReboundExplainer />
+        <MechanismTrio />
+      </div>
 
-      {/* How it works */}
-      <section className="border-y border-border bg-surface">
-        <div className="container-site py-16">
-          <div className="mx-auto max-w-2xl text-center">
-            <span className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">
-              How it works
-            </span>
-            <h2 className="mt-2 text-3xl font-bold tracking-tight md:text-4xl">
-              Three steps. One mechanism the alternatives don't have.
-            </h2>
-          </div>
-          <ol className="mx-auto mt-12 grid max-w-5xl gap-6 md:grid-cols-3">
-            {product.howItWorks.map((s) => (
-              <li
-                key={s.step}
-                className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-6"
-              >
-                <span className="text-xs font-bold tracking-wider text-brand">{s.step}</span>
-                <h3 className="text-xl font-semibold text-foreground">{s.title}</h3>
-                <p className="text-sm text-muted-foreground">{s.body}</p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
+      <div id="results">
+        <FieldResultsTrio />
+      </div>
 
-      {/* Features */}
-      <section className="container-site py-16">
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight md:text-4xl">What you're getting</h2>
-        </div>
-        <div className="mx-auto mt-10 grid max-w-5xl gap-4 md:grid-cols-2">
-          {product.features.map((f) => (
-            <div
-              key={f.title}
-              className="rounded-2xl border border-border bg-card p-6"
-            >
-              <h3 className="text-base font-bold text-foreground">{f.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{f.body}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+      <AuthorityCard />
 
-      {/* What's included */}
-      <section className="border-y border-border bg-surface">
-        <div className="container-site py-16">
-          <div className="mx-auto max-w-3xl">
-            <span className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">
-              {product.slug === "starter-kit" ? "What's in the box" : "What ships"}
-            </span>
-            <h2 className="mt-2 text-3xl font-bold tracking-tight md:text-4xl">
-              {product.slug === "starter-kit"
-                ? "Everything for first deployment"
-                : "Pure refill, ready to drop in"}
-            </h2>
-            <ul className="mt-6 space-y-3">
-              {product.whatsIncluded.map((item) => (
-                <li
-                  key={item}
-                  className="flex items-start gap-3 rounded-xl border border-border bg-card p-4"
-                >
-                  <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-brand" />
-                  <span className="text-sm font-medium text-foreground">{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
+      <PressStrip />
 
-      <ComparisonTable />
+      <div id="compare">
+        <ComparisonTable />
+      </div>
 
-      {/* Reviews */}
-      <section className="border-y border-border bg-surface">
-        <div className="container-site py-16">
-          <div className="mx-auto max-w-2xl text-center">
-            <span className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">
-              Operators in the field
-            </span>
-            <h2 className="mt-2 text-3xl font-bold tracking-tight md:text-4xl">
-              From people who actually deploy this
-            </h2>
-          </div>
-          <div className="mt-10">
-            <ReviewsGrid />
-          </div>
-        </div>
-      </section>
+      <VideoTestimonialsRow />
 
-      {/* FAQ */}
-      <section className="container-site py-16">
+      <ReviewsCarousel avgRating={product.rating.avg} count={product.rating.count} />
+
+      <TrustRow />
+
+      {/* FAQ — full version */}
+      <section id="faq" className="container-site py-16">
         <div className="mx-auto max-w-3xl">
           <div className="text-center">
             <span className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">
@@ -171,6 +101,25 @@ export function ProductPage({ product, routePath }: { product: Product; routePat
               </AccordionItem>
             ))}
           </Accordion>
+        </div>
+      </section>
+
+      {/* Closing CTA band */}
+      <section className="border-t border-border bg-surface">
+        <div className="container-site py-16 text-center">
+          <h2 className="mx-auto max-w-2xl text-3xl font-bold tracking-tight md:text-4xl">
+            Stop reacting. Start collapsing the population.
+          </h2>
+          <p className="mx-auto mt-3 max-w-xl text-base text-muted-foreground">
+            Free shipping over $99. Ships in 24 hours from NJ. Cancel your replenishment plan
+            anytime.
+          </p>
+          <a
+            href="#overview"
+            className="mt-6 inline-flex h-12 items-center justify-center rounded-full bg-brand px-8 text-base font-bold text-brand-foreground transition hover:bg-brand/90"
+          >
+            Pick your variant ↑
+          </a>
         </div>
       </section>
     </div>

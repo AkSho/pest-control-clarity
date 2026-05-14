@@ -2,11 +2,12 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
 import { ArrowLeft, Lock } from "lucide-react";
-import { findVariant, FLAT_SHIPPING_USD } from "@/data/products";
+import { findVariant, FLAT_SHIPPING_USD, subscriptionPrice } from "@/data/products";
 
 const searchSchema = z.object({
   plan: fallback(z.enum(["oneTime", "sub"]), "oneTime").default("oneTime"),
   qty: fallback(z.number().int().min(1).max(10), 1).default(1),
+  cadence: fallback(z.number().int().min(1).max(12), 2).default(2),
 });
 
 export const Route = createFileRoute("/checkout/$variantId")({
@@ -32,12 +33,15 @@ export const Route = createFileRoute("/checkout/$variantId")({
 
 function CheckoutPage() {
   const { product, variant } = Route.useLoaderData();
-  const { plan, qty } = Route.useSearch();
+  const { plan, qty, cadence } = Route.useSearch();
 
-  const usingSub = plan === "sub" && variant.subscription;
-  const unitPrice = usingSub ? variant.subscription!.price : variant.oneTimePrice;
+  const usingSub = plan === "sub";
+  const unitPrice = usingSub
+    ? subscriptionPrice(variant.oneTimePrice, product.subscription.discountPct)
+    : variant.oneTimePrice;
   const subtotal = unitPrice * qty;
   const total = subtotal + FLAT_SHIPPING_USD;
+  const cadenceLabel = `every ${cadence} month${cadence === 1 ? "" : "s"}`;
   const backTo =
     product.slug === "starter-kit" ? "/products/starter-kit" : "/products/refill";
 
@@ -115,7 +119,7 @@ function CheckoutPage() {
                   <span className="text-xs text-muted-foreground">Qty {qty}</span>
                   {usingSub && (
                     <span className="mt-1 inline-flex w-fit rounded-full bg-brand/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand">
-                      Auto-deliver {variant.subscription!.cadenceLabel}
+                      Auto-deliver {cadenceLabel}
                     </span>
                   )}
                 </div>
@@ -131,9 +135,8 @@ function CheckoutPage() {
               </div>
               {usingSub && (
                 <p className="text-xs text-muted-foreground">
-                  Then ${variant.subscription!.price.toFixed(2)} +{" "}
-                  ${FLAT_SHIPPING_USD.toFixed(2)} shipping {variant.subscription!.cadenceLabel}.
-                  Cancel anytime.
+                  Then ${unitPrice.toFixed(2)} + ${FLAT_SHIPPING_USD.toFixed(2)} shipping{" "}
+                  {cadenceLabel}. Cancel anytime.
                 </p>
               )}
             </div>
