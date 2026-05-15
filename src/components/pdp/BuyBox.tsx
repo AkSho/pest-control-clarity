@@ -12,8 +12,49 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { cn } from "@/lib/utils";
 import type { Pest, Product, Variant } from "@/data/products";
 import { FLAT_SHIPPING_USD, sizesFor, uniquePests } from "@/data/products";
+
+type BundleType = "home" | "property";
+
+type BundleItem = { label: string; desc?: string; starterOnly?: boolean };
+
+const HOME_BUNDLE: BundleItem[] = [
+  { label: "Evolve soft bait — rat or mouse formula" },
+  { label: "2× locking bait stations + keys", starterOnly: true },
+  { label: "Home Deployment Guide", desc: "PDF delivered with your order confirmation" },
+  {
+    label: "30-day deployment support",
+    desc: "Text us with questions during setup — we won't come out, just answer what you need",
+  },
+  { label: "Neighbor Strategy Note", desc: "How to coordinate with adjacent properties" },
+  { label: "Pet Safety Card", desc: "Keep it handy, share it with your vet" },
+  { label: "Consumption tracking log", desc: "Track feeding activity month by month" },
+];
+
+const PROPERTY_BUNDLE: BundleItem[] = [
+  { label: "Evolve soft bait — rat or mouse formula" },
+  { label: "2× locking bait stations + keys", starterOnly: true },
+  {
+    label: "Property-specific Deployment Guide",
+    desc: "PDF delivered with your order confirmation",
+  },
+  {
+    label: "Compliance Documentation Template",
+    desc: "For landlords, property managers, and commercial sites",
+  },
+  {
+    label: "30-day deployment support",
+    desc: "Text us with questions during setup — we won't come out, just answer what you need",
+  },
+  { label: "Consumption tracking log", desc: "Track feeding activity site by site" },
+];
+
+const BUNDLE_ITEMS: Record<BundleType, BundleItem[]> = {
+  home: HOME_BUNDLE,
+  property: PROPERTY_BUNDLE,
+};
 
 // T09 — outcome-first, plain English, objection-handling
 const FEATURE_BULLETS = [
@@ -36,6 +77,8 @@ export function BuyBox({
 
   const hasSub = variant.subPrice !== undefined;
   const [plan, setPlan] = useState<Plan>(hasSub ? "sub" : "oneTime");
+  const [bundleType, setBundleType] = useState<BundleType>("home");
+  const isStarterKit = variant.productSlug === "starter-kit";
 
   // Reset to oneTime if switching to a variant without a sub plan
   const handleVariantChange = (id: string) => {
@@ -100,16 +143,16 @@ export function BuyBox({
             ({product.rating.count} reviews)
           </a>
         </div>
-        <h1 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+        <h1 className="text-4xl font-bold tracking-tight text-foreground md:text-5xl">
           {product.title}
         </h1>
-        <p className="mt-2 text-base text-muted-foreground">{product.subtitle}</p>
+        <p className="mt-3 text-base text-foreground/80 md:text-lg">{product.subtitle}</p>
       </div>
 
       {/* Feature bullets */}
       <ul className="flex flex-col gap-2">
         {FEATURE_BULLETS.map((bullet) => (
-          <li key={bullet} className="flex items-center gap-2.5 text-sm text-foreground">
+          <li key={bullet} className="flex items-center gap-2.5 text-base text-foreground">
             <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand/10 text-[11px] font-bold text-brand">
               ✓
             </span>
@@ -145,6 +188,51 @@ export function BuyBox({
           <PlanSelector variant={variant} selected={plan} onChange={setPlan} />
         </div>
       )}
+
+      {/* Bundle selector — T05 */}
+      <div className="flex flex-col gap-3">
+        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          What's included:
+        </span>
+        <div className="flex gap-2">
+          {(["home", "property"] as BundleType[]).map((t) => (
+            <button
+              key={t}
+              onClick={() => setBundleType(t)}
+              className={cn(
+                "flex-1 rounded-full border-2 py-2.5 text-sm font-semibold transition",
+                bundleType === t
+                  ? "border-brand bg-brand text-brand-foreground"
+                  : "border-border bg-background text-foreground hover:border-foreground/30",
+              )}
+            >
+              {t === "home" ? "For my home" : "For my property"}
+            </button>
+          ))}
+        </div>
+        <div className="rounded-xl border border-border bg-surface p-4">
+          <p className="mb-3 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+            Packed with
+          </p>
+          <ul className="flex flex-col gap-2.5">
+            {BUNDLE_ITEMS[bundleType]
+              .filter((item) => !item.starterOnly || isStarterKit)
+              .map((item) => (
+                <li key={item.label} className="flex items-start gap-2.5">
+                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand/10 text-[11px] font-bold text-brand">
+                    ✓
+                  </span>
+                  <div className="text-sm">
+                    <span className="font-semibold text-foreground">{item.label}</span>
+                    {item.desc && (
+                      <span className="text-muted-foreground"> — {item.desc}</span>
+                    )}
+                  </div>
+                </li>
+              ))}
+          </ul>
+        </div>
+      </div>
 
       {/* CTA block */}
       <div className="flex flex-col gap-3 rounded-2xl bg-surface p-5">
