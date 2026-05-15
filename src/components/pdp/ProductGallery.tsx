@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { FileText } from "lucide-react";
+import { FileText, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function ProductGallery({ images, alt }: { images: string[]; alt: string }) {
@@ -69,6 +69,15 @@ export function ProductGallery({ images, alt }: { images: string[]; alt: string 
         <FileText className="h-3.5 w-3.5 text-brand" />
         View Product Label
       </a>
+
+      {/* EPA credential badge */}
+      <div className="flex items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3">
+        <ShieldCheck className="h-8 w-8 shrink-0 text-brand" />
+        <div>
+          <p className="text-xs font-bold text-foreground">EPA Minimum-Risk · FIFRA 25(b)</p>
+          <p className="text-xs text-muted-foreground">No secondary kill — safe for hawks, owls, pets &amp; wildlife</p>
+        </div>
+      </div>
     </div>
   );
 }

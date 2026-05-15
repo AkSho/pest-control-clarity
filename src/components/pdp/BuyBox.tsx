@@ -46,6 +46,15 @@ export function BuyBox({
   const pests = useMemo(() => uniquePests(product.variants), [product]);
   const sizes = useMemo(() => sizesFor(product.variants, variant.pest), [product, variant.pest]);
 
+  const pestImages = useMemo(() => {
+    const imgs: Partial<Record<Pest, string>> = {};
+    for (const p of pests) {
+      const v = product.variants.find((v) => v.pest === p);
+      if (v) imgs[p] = v.image;
+    }
+    return imgs;
+  }, [pests, product.variants]);
+
   const onPestChange = (p: Pest) => {
     const same = product.variants.find((v) => v.pest === p && v.size === variant.size);
     const fallback = product.variants.find((v) => v.pest === p);
@@ -113,7 +122,7 @@ export function BuyBox({
         <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           Pest
         </span>
-        <PestPills pests={pests} selected={variant.pest} onSelect={onPestChange} />
+        <PestPills pests={pests} selected={variant.pest} onSelect={onPestChange} images={pestImages} />
       </div>
 
       {/* Size */}
@@ -191,6 +200,9 @@ export function BuyBox({
         </AccItem>
       </Accordion>
 
+      {/* Active ingredients section (Gruns "Tastes Like" equivalent) */}
+      <ActiveIngredients />
+
       {/* Sticky bar (mobile) */}
       <StickyMobileBar
         priceLabel={priceLabel}
@@ -228,5 +240,56 @@ function TrustItem({ icon: Icon, label }: { icon: typeof Truck; label: string })
       <Icon className="h-5 w-5 text-brand" />
       <span className="text-[11px] font-medium leading-tight text-muted-foreground">{label}</span>
     </li>
+  );
+}
+
+const PRIMARY_BADGES = [
+  { emoji: "🌿", label: "Cottonseed oil", sub: "Active ingredient" },
+  { emoji: "🔬", label: "Targets reproduction", sub: "Not individuals" },
+  { emoji: "🦅", label: "Safe for predators", sub: "No secondary kill" },
+];
+
+const SECONDARY_BADGES = [
+  { emoji: "✅", label: "No anticoagulants" },
+  { emoji: "✅", label: "No neurotoxins" },
+  { emoji: "✅", label: "Food-grade formula" },
+  { emoji: "✅", label: "EPA 25(b) exempt" },
+  { emoji: "✅", label: "No license required" },
+  { emoji: "✅", label: "Indoor & outdoor" },
+];
+
+function ActiveIngredients() {
+  return (
+    <div className="flex flex-col gap-4 border-t border-border pt-6">
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+        What makes it work
+      </p>
+
+      {/* Primary — 3 large circles */}
+      <div className="flex flex-wrap gap-3">
+        {PRIMARY_BADGES.map((b) => (
+          <div key={b.label} className="flex flex-col items-center gap-1.5 text-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-brand/8 text-3xl">
+              {b.emoji}
+            </div>
+            <div className="text-[11px] font-bold leading-tight text-foreground">{b.label}</div>
+            <div className="text-[10px] leading-tight text-muted-foreground">{b.sub}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Secondary — smaller badges */}
+      <div className="flex flex-wrap gap-2">
+        {SECONDARY_BADGES.map((b) => (
+          <span
+            key={b.label}
+            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-1.5 text-xs font-medium text-foreground"
+          >
+            <span>{b.emoji}</span>
+            {b.label}
+          </span>
+        ))}
+      </div>
+    </div>
   );
 }
