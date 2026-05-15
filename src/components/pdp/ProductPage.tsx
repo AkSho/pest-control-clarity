@@ -47,7 +47,9 @@ export function ProductPage({ product, routePath }: { product: Product; routePat
         id="overview"
         className="container-site grid gap-8 py-8 md:grid-cols-2 md:gap-12 md:py-12 lg:gap-16"
       >
-        <ProductGallery images={variant.galleryImages} alt={variant.shortName} />
+        <div className="md:sticky md:top-5 md:self-start">
+          <ProductGallery images={variant.galleryImages} alt={variant.shortName} />
+        </div>
         <BuyBox product={product} variant={variant} onVariantChange={onVariantChange} />
       </section>
 
