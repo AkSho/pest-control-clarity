@@ -73,7 +73,7 @@ export function ProductPage({ product, routePath }: { product: Product; routePat
                 </h2>
                 <p className="mt-4 text-base leading-relaxed text-muted-foreground">
                   Evolve works as long as bait is available. Place the station where rodents already
-                  travel. Check for consumption. Keep it stocked. The colony declines on its own
+                  travel. Check for consumption and keep it stocked. The colony declines on its own
                   schedule.
                 </p>
               </div>

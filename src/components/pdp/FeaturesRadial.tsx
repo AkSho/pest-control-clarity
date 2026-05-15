@@ -14,7 +14,7 @@ const BENEFITS: { icon: Icon; title: string; body: string }[] = [
   },
   {
     icon: SealCheck,
-    title: "No license, no permit",
+    title: "No license, no permit needed",
     body: "The EPA puts it in the minimum-risk category. Homeowners and property managers can buy and deploy it directly.",
   },
   {
