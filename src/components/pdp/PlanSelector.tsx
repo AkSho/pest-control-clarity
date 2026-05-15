@@ -58,7 +58,6 @@ export function PlanSelector({
           <ul className="ml-8 flex flex-col gap-1.5">
             <BenefitLine checked={true}>Save ${savings} per shipment</BenefitLine>
             <BenefitLine checked={true}>Pause or cancel anytime</BenefitLine>
-            <BenefitLine checked={true}>Ships on schedule — never run out</BenefitLine>
           </ul>
         </button>
       )}

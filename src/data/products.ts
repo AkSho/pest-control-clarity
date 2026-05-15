@@ -88,7 +88,7 @@ const SHARED_FAQ: FAQ[] = [
   },
   {
     q: "Do I need a license to buy or use this?",
-    a: "No. The EPA classifies Evolve as a minimum-risk pesticide — the same category as products made from cottonseed oil and cedarwood. Anyone can buy and use it directly: homeowners, landlords, property managers, restaurant owners. No license, no permit, no exterminator.",
+    a: "No. The EPA classifies Evolve as a minimum-risk pesticide — the same category as products made from cottonseed oil and cedarwood. That means no license and no permit required. Homeowners, landlords, property managers, and restaurant owners can all buy and deploy it directly.",
   },
   {
     q: "When will I see results?",
@@ -128,8 +128,8 @@ const SHARED_FEATURES: Product["features"] = [
     body: "Cottonseed-oil active ingredient restricts fertility in both males and females — the lever poison and traps can't pull.",
   },
   {
-    title: "No license, no permit, no exterminator",
-    body: "Food-grade active ingredient. The EPA puts it in the same category as cottonseed oil and cedarwood — minimum-risk, anyone can use it.",
+    title: "Anyone can use it directly",
+    body: "Food-grade active ingredient. The EPA puts it in the minimum-risk category — same tier as products made from cottonseed oil and cedarwood. No license, no permit.",
   },
   {
     title: "Works on resistant populations",

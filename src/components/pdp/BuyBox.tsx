@@ -59,7 +59,7 @@ const BUNDLE_ITEMS: Record<BundleType, BundleItem[]> = {
 // T09 — outcome-first, plain English, objection-handling
 const FEATURE_BULLETS = [
   "Traps and poison leave the breeding pair intact. Evolve removes the colony's ability to rebuild.",
-  "No license, no permit, no exterminator required — anyone can use it.",
+  "Anyone can buy and use it directly — no license, no permit required.",
   "Food-grade formula. Safe for dogs, cats, kids, hawks, and owls.",
   "Works on populations that have built resistance to conventional poison.",
 ];

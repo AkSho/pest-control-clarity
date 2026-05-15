@@ -107,9 +107,8 @@ export function FeaturesRadial() {
           </p>
           <ul className="flex flex-col gap-3">
             {[
-              "Traps and poison remove individuals — not the colony's ability to rebuild",
+              "Traps and poison remove individuals — not the colony's ability to rebuild.",
               "Survivors breed faster under pressure. The colony compensates for every removal.",
-              "Anticoagulant resistance is now widespread. Poison gets less effective each generation.",
             ].map((item) => (
               <li key={item} className="flex items-start gap-2.5 text-base text-foreground">
                 <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-destructive/10 text-[11px] font-bold text-destructive">
@@ -131,14 +130,12 @@ export function FeaturesRadial() {
           </h3>
           <p className="text-base leading-relaxed text-muted-foreground">
             The cottonseed oil active ingredient interrupts reproduction in both males and females.
-            No new pups means no replacements. The colony shrinks on its own timeline — no die-off,
-            no carcasses, no cleanup.
+            No new pups means no replacements. The colony shrinks on its own timeline — no die-off, no cleanup.
           </p>
           <ul className="flex flex-col gap-3">
             {[
-              "Males: sperm production suppressed within days of consistent feeding",
-              "Females: litter sizes shrink, then stop entirely after the first breeding cycle",
-              "Both sexes: effects compound over 60–90 days — no resistance possible",
+              "Males: sperm production suppressed within days of consistent feeding.",
+              "Females: litter sizes shrink, then stop entirely after the first breeding cycle.",
             ].map((item) => (
               <li key={item} className="flex items-start gap-2.5 text-base text-foreground">
                 <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand/10 text-[11px] font-bold text-brand">
