@@ -15,8 +15,6 @@ import { HowToVideo } from "./HowToVideo";
 import { OperatorQuote } from "./OperatorQuote";
 import { PdpAnchorNav } from "./PdpAnchorNav";
 import { WorksOnMarquee } from "./WorksOnMarquee";
-import { ReboundExplainer } from "./ReboundExplainer";
-import { MechanismTrio } from "./MechanismTrio";
 import { FieldResultsTrio } from "./FieldResultsTrio";
 import { ReviewsCarousel } from "./ReviewsCarousel";
 import { TrustRow } from "./TrustRow";
@@ -62,11 +60,6 @@ export function ProductPage({ product, routePath }: { product: Product; routePat
       <PressStrip />
 
       <FeaturesRadial />
-
-      <div id="how-it-works">
-        <ReboundExplainer />
-        <MechanismTrio />
-      </div>
 
       {/* 50/50 lifestyle — station deployed in context */}
       <section className="container-site py-16">

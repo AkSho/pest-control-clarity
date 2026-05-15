@@ -89,6 +89,67 @@ export function FeaturesRadial() {
           <Tile {...BENEFITS[3]} />
         </div>
       </div>
+
+      {/* Why traps fail + How Evolve fixes it */}
+      <div className="mt-16 grid gap-0 overflow-hidden rounded-2xl border border-border md:grid-cols-2">
+        {/* Left — The problem */}
+        <div className="flex flex-col gap-4 border-b border-border bg-surface p-8 md:border-b-0 md:border-r">
+          <span className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+            The problem
+          </span>
+          <h3 className="text-xl font-bold tracking-tight text-foreground md:text-2xl">
+            Why pest control keeps failing you
+          </h3>
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            Trap a rat today. Two survivors breed tonight. A single pair produces up to 12 pups
+            every 21 days — and they reach breeding age in 5 weeks. By spring you're back where you
+            started, or worse.
+          </p>
+          <ul className="flex flex-col gap-3">
+            {[
+              "Traps and poison remove individuals — not the colony's ability to rebuild",
+              "Survivors breed faster under pressure. The colony compensates for every removal.",
+              "Anticoagulant resistance is now widespread. Poison gets less effective each generation.",
+            ].map((item) => (
+              <li key={item} className="flex items-start gap-2.5 text-sm text-foreground">
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-destructive/10 text-[11px] font-bold text-destructive">
+                  ✗
+                </span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Right — The fix */}
+        <div className="flex flex-col gap-4 bg-card p-8">
+          <span className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">
+            The fix
+          </span>
+          <h3 className="text-xl font-bold tracking-tight text-foreground md:text-2xl">
+            Evolve cuts off the supply
+          </h3>
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            The cottonseed oil active ingredient interrupts reproduction in both males and females.
+            No new pups means no replacements. The colony shrinks on its own timeline — no die-off,
+            no carcasses, no cleanup.
+          </p>
+          <ul className="flex flex-col gap-3">
+            {[
+              "Males: sperm production suppressed within days of consistent feeding",
+              "Females: litter sizes shrink, then stop entirely after the first breeding cycle",
+              "Both sexes: effects compound over 60–90 days — no resistance possible",
+            ].map((item) => (
+              <li key={item} className="flex items-start gap-2.5 text-sm text-foreground">
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand/10 text-[11px] font-bold text-brand">
+                  ✓
+                </span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </section>
   );
 }
