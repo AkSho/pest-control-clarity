@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200">
+  <rect width="1200" height="1200" fill="#f8f9fa"/>
+  <text x="600" y="120" font-family="system-ui, sans-serif" font-size="40" font-weight="900" fill="#1a2540" text-anchor="middle">What to expect</text>
+  <rect x="60" y="180" width="340" height="400" rx="16" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+  <text x="230" y="260" font-family="system-ui, sans-serif" font-size="22" font-weight="800" fill="#4a90e2" text-anchor="middle">Week 1</text>
+  <text x="230" y="310" font-family="system-ui, sans-serif" font-size="17" fill="#64748b" text-anchor="middle">Bait acceptance</text>
+  <text x="230" y="360" font-family="system-ui, sans-serif" font-size="15" fill="#94a3b8" text-anchor="middle">Stations are found</text>
+  <text x="230" y="390" font-family="system-ui, sans-serif" font-size="15" fill="#94a3b8" text-anchor="middle">and fed consistently</text>
+  <rect x="430" y="180" width="340" height="400" rx="16" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+  <text x="600" y="260" font-family="system-ui, sans-serif" font-size="22" font-weight="800" fill="#4a90e2" text-anchor="middle">Month 1</text>
+  <text x="600" y="310" font-family="system-ui, sans-serif" font-size="17" fill="#64748b" text-anchor="middle">Reproduction declines</text>
+  <text x="600" y="360" font-family="system-ui, sans-serif" font-size="15" fill="#94a3b8" text-anchor="middle">Fewer pups born</text>
+  <text x="600" y="390" font-family="system-ui, sans-serif" font-size="15" fill="#94a3b8" text-anchor="middle">after first breeding cycle</text>
+  <rect x="800" y="180" width="340" height="400" rx="16" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+  <text x="970" y="260" font-family="system-ui, sans-serif" font-size="22" font-weight="800" fill="#4a90e2" text-anchor="middle">Month 3</text>
+  <text x="970" y="310" font-family="system-ui, sans-serif" font-size="17" fill="#64748b" text-anchor="middle">Population collapses</text>
+  <text x="970" y="360" font-family="system-ui, sans-serif" font-size="15" fill="#94a3b8" text-anchor="middle">Colony can't replace</text>
+  <text x="970" y="390" font-family="system-ui, sans-serif" font-size="15" fill="#94a3b8" text-anchor="middle">what it loses</text>
+  <text x="600" y="700" font-family="system-ui, sans-serif" font-size="18" fill="#cbd5e1" text-anchor="middle">PLACEHOLDER · Provide final asset: gallery-timeline.jpg</text>
+</svg>

@@ -1,6 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Star, Truck, ShieldCheck, RotateCcw, Minus, Plus } from "lucide-react";
+import { Star, Truck, ShieldCheck, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PestPills } from "./PestPills";
 import { SizePills } from "./SizePills";
@@ -13,13 +13,14 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import type { Pest, Product, Variant } from "@/data/products";
-import {
-  FLAT_SHIPPING_USD,
-  FREE_SHIPPING_THRESHOLD_USD,
-  sizesFor,
-  subscriptionPrice,
-  uniquePests,
-} from "@/data/products";
+import { FLAT_SHIPPING_USD, sizesFor, uniquePests } from "@/data/products";
+
+const FEATURE_BULLETS = [
+  "Attacks reproduction, not just individuals",
+  "FIFRA 25(b) exempt — no license required",
+  "Safe for pets, kids & non-target wildlife",
+  "Works where traps and poison fail",
+];
 
 export function BuyBox({
   product,
@@ -31,40 +32,43 @@ export function BuyBox({
   onVariantChange: (id: string) => void;
 }) {
   const navigate = useNavigate();
-  const [plan, setPlan] = useState<Plan>("sub");
-  const [qty, setQty] = useState(1);
-  const [cadence, setCadence] = useState(product.subscription.defaultMonths);
+
+  const hasSub = variant.subPrice !== undefined;
+  const [plan, setPlan] = useState<Plan>(hasSub ? "sub" : "oneTime");
+
+  // Reset to oneTime if switching to a variant without a sub plan
+  const handleVariantChange = (id: string) => {
+    const next = product.variants.find((v) => v.id === id);
+    if (next && next.subPrice === undefined) setPlan("oneTime");
+    onVariantChange(id);
+  };
 
   const pests = useMemo(() => uniquePests(product.variants), [product]);
   const sizes = useMemo(() => sizesFor(product.variants, variant.pest), [product, variant.pest]);
 
   const onPestChange = (p: Pest) => {
-    // try to keep same size; fall back to first available
     const same = product.variants.find((v) => v.pest === p && v.size === variant.size);
     const fallback = product.variants.find((v) => v.pest === p);
     const next = same ?? fallback;
-    if (next) onVariantChange(next.id);
+    if (next) handleVariantChange(next.id);
   };
 
-  const unitPrice =
-    plan === "sub"
-      ? subscriptionPrice(variant.oneTimePrice, product.subscription.discountPct)
-      : variant.oneTimePrice;
-  const totalPrice = unitPrice * qty;
-  const totalLabel = `$${totalPrice.toFixed(2)}`;
-  const freeShipping = totalPrice >= FREE_SHIPPING_THRESHOLD_USD;
+  const unitPrice = plan === "sub" && hasSub ? variant.subPrice! : variant.oneTimePrice;
+  const priceLabel = `$${unitPrice}`;
+
+  const savings = hasSub ? variant.oneTimePrice - variant.subPrice! : 0;
 
   const handleBuy = () => {
     navigate({
       to: "/checkout/$variantId",
       params: { variantId: variant.id },
-      search: { plan, qty, cadence },
+      search: { plan },
     });
   };
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Title + rating */}
+      {/* Rating + title */}
       <div>
         <div className="mb-2 flex items-center gap-2">
           <div className="flex">
@@ -92,6 +96,18 @@ export function BuyBox({
         <p className="mt-2 text-base text-muted-foreground">{product.subtitle}</p>
       </div>
 
+      {/* Feature bullets */}
+      <ul className="flex flex-col gap-2">
+        {FEATURE_BULLETS.map((bullet) => (
+          <li key={bullet} className="flex items-center gap-2.5 text-sm text-foreground">
+            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand/10 text-[11px] font-bold text-brand">
+              ✓
+            </span>
+            {bullet}
+          </li>
+        ))}
+      </ul>
+
       {/* Pest */}
       <div className="flex flex-col gap-2">
         <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -101,81 +117,61 @@ export function BuyBox({
       </div>
 
       {/* Size */}
-      <div className="flex flex-col gap-2">
-        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Size
-        </span>
-        <SizePills variants={sizes} selectedId={variant.id} onSelect={onVariantChange} />
-      </div>
-
-      {/* Plan */}
-      <div className="flex flex-col gap-2">
-        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Purchase option
-        </span>
-        <PlanSelector
-          product={product}
-          variant={variant}
-          selected={plan}
-          onChange={setPlan}
-          cadenceMonths={cadence}
-          onCadenceChange={setCadence}
-        />
-      </div>
-
-      {/* Quantity */}
-      <div className="flex items-center justify-between gap-4">
-        <span className="text-sm font-semibold text-foreground">Quantity</span>
-        <div className="flex items-center rounded-full border border-border">
-          <button
-            onClick={() => setQty((q) => Math.max(1, q - 1))}
-            className="flex h-10 w-10 items-center justify-center text-foreground transition hover:bg-surface"
-            aria-label="Decrease quantity"
-          >
-            <Minus className="h-4 w-4" />
-          </button>
-          <span className="w-10 text-center text-sm font-semibold tabular-nums">{qty}</span>
-          <button
-            onClick={() => setQty((q) => Math.min(10, q + 1))}
-            className="flex h-10 w-10 items-center justify-center text-foreground transition hover:bg-surface"
-            aria-label="Increase quantity"
-          >
-            <Plus className="h-4 w-4" />
-          </button>
+      {sizes.length > 1 && (
+        <div className="flex flex-col gap-2">
+          <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Size
+          </span>
+          <SizePills variants={sizes} selectedId={variant.id} onSelect={handleVariantChange} />
         </div>
-      </div>
+      )}
 
-      {/* Total + CTA */}
+      {/* Plan selector — only for refill variants */}
+      {hasSub && (
+        <div className="flex flex-col gap-2">
+          <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Replenishment plan:
+          </span>
+          <PlanSelector variant={variant} selected={plan} onChange={setPlan} />
+        </div>
+      )}
+
+      {/* CTA block */}
       <div className="flex flex-col gap-3 rounded-2xl bg-surface p-5">
         <div className="flex items-baseline justify-between">
           <span className="text-sm text-muted-foreground">
             {plan === "sub" ? "Per shipment" : "One-time"}
           </span>
-          <span className="text-3xl font-bold text-foreground">{totalLabel}</span>
+          <span className="text-3xl font-bold text-foreground">{priceLabel}</span>
         </div>
         <Button
           onClick={handleBuy}
           className="h-12 rounded-full bg-brand text-base font-bold text-brand-foreground hover:bg-brand/90"
         >
-          {plan === "sub" ? "Start replenishment plan" : "Add to order"}
+          Order Now
         </Button>
-        <p className="text-center text-xs text-muted-foreground">
-          {freeShipping
-            ? "✓ Free shipping unlocked · ships in 24h"
-            : `$${FLAT_SHIPPING_USD.toFixed(2)} flat shipping · free over $${FREE_SHIPPING_THRESHOLD_USD}`}
-        </p>
+        {/* Post-CTA confirmation */}
+        {plan === "sub" && hasSub ? (
+          <p className="text-center text-xs font-medium text-brand">
+            Replenishment plan applied ✓ You're saving ${savings} on this order
+          </p>
+        ) : (
+          <p className="text-center text-xs text-muted-foreground">
+            ${FLAT_SHIPPING_USD.toFixed(2)} flat shipping · ships in 24h from NJ
+          </p>
+        )}
       </div>
 
-      {/* Trust row */}
-      <ul className="grid grid-cols-1 gap-3 border-t border-border pt-5 sm:grid-cols-3">
-        <TrustItem icon={Truck} label="Ships in 24h" />
-        <TrustItem icon={ShieldCheck} label="EPA 25(b) exempt" />
-        <TrustItem icon={RotateCcw} label="Cancel anytime" />
+      {/* Trust badges */}
+      <ul className="grid grid-cols-3 gap-3 border-t border-border pt-5">
+        <TrustItem icon={RotateCcw} label="30-day guarantee" />
+        <TrustItem icon={ShieldCheck} label="EPA 25(b)" />
+        <TrustItem icon={Truck} label="Ships 24h NJ" />
       </ul>
 
-      {/* Inline accordion (Gruns 1:1) */}
+      {/* Inline accordion */}
       <Accordion type="single" collapsible className="border-t border-border pt-2">
-        <AccItem value="desc" label="Description">
+        <AccItem value="why" label="Why Evolve?">
           {product.accordion.description}
         </AccItem>
         <AccItem value="how" label="How it works">
@@ -188,15 +184,7 @@ export function BuyBox({
           {product.accordion.ingredients}
         </AccItem>
         <AccItem value="dep" label="Deployment guide">
-          {product.accordion.deployment}{" "}
-          <a
-            href="https://senestech.com/evolve-deployment-guide"
-            target="_blank"
-            rel="noreferrer"
-            className="font-semibold text-brand underline-offset-4 hover:underline"
-          >
-            Download PDF
-          </a>
+          {product.accordion.deployment}
         </AccItem>
         <AccItem value="ship" label="Shipping & returns">
           {product.accordion.shipping}
@@ -205,8 +193,8 @@ export function BuyBox({
 
       {/* Sticky bar (mobile) */}
       <StickyMobileBar
-        priceLabel={totalLabel}
-        ctaLabel={plan === "sub" ? "Start plan" : "Add to order"}
+        priceLabel={priceLabel}
+        ctaLabel={plan === "sub" ? "Start plan" : "Order Now"}
         onClick={handleBuy}
       />
     </div>
@@ -236,10 +224,9 @@ function AccItem({
 
 function TrustItem({ icon: Icon, label }: { icon: typeof Truck; label: string }) {
   return (
-    <li className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-      <Icon className="h-4 w-4 text-brand" />
-      {label}
+    <li className="flex flex-col items-center gap-1.5 text-center">
+      <Icon className="h-5 w-5 text-brand" />
+      <span className="text-[11px] font-medium leading-tight text-muted-foreground">{label}</span>
     </li>
   );
 }
-

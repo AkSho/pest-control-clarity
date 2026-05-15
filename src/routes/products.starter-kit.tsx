@@ -19,7 +19,7 @@ export const Route = createFileRoute("/products/starter-kit")({
       {
         name: "description",
         content:
-          "Start a rodent fertility-control program. Two locked bait stations, keys, and a 6 lb pouch of Evolve soft bait. Ships in 24 hours. $169.",
+          "Start a rodent fertility-control program. Two locked bait stations, keys, and a 6 lb pouch of Evolve soft bait. Ships in 24 hours. $179.",
       },
       { property: "og:title", content: "Evolve XL Starter Kit | Cloakd" },
       {

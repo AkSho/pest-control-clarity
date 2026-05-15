@@ -2,12 +2,10 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
 import { ArrowLeft, Lock } from "lucide-react";
-import { findVariant, FLAT_SHIPPING_USD, subscriptionPrice } from "@/data/products";
+import { findVariant, FLAT_SHIPPING_USD } from "@/data/products";
 
 const searchSchema = z.object({
   plan: fallback(z.enum(["oneTime", "sub"]), "oneTime").default("oneTime"),
-  qty: fallback(z.number().int().min(1).max(10), 1).default(1),
-  cadence: fallback(z.number().int().min(1).max(12), 2).default(2),
 });
 
 export const Route = createFileRoute("/checkout/$variantId")({
@@ -33,15 +31,17 @@ export const Route = createFileRoute("/checkout/$variantId")({
 
 function CheckoutPage() {
   const { product, variant } = Route.useLoaderData();
-  const { plan, qty, cadence } = Route.useSearch();
+  const { plan } = Route.useSearch();
 
-  const usingSub = plan === "sub";
-  const unitPrice = usingSub
-    ? subscriptionPrice(variant.oneTimePrice, product.subscription.discountPct)
-    : variant.oneTimePrice;
-  const subtotal = unitPrice * qty;
-  const total = subtotal + FLAT_SHIPPING_USD;
-  const cadenceLabel = `every ${cadence} month${cadence === 1 ? "" : "s"}`;
+  const usingSub = plan === "sub" && variant.subPrice !== undefined;
+  const unitPrice = usingSub ? variant.subPrice! : variant.oneTimePrice;
+  const total = unitPrice + FLAT_SHIPPING_USD;
+  const cadenceLabel =
+    variant.subDays === 60
+      ? "every 60 days"
+      : variant.subDays
+        ? `every ${variant.subDays} days`
+        : "";
   const backTo =
     product.slug === "starter-kit" ? "/products/starter-kit" : "/products/refill";
 
@@ -116,7 +116,6 @@ function CheckoutPage() {
                 </div>
                 <div className="flex flex-col">
                   <span className="text-sm font-bold text-foreground">{variant.shortName}</span>
-                  <span className="text-xs text-muted-foreground">Qty {qty}</span>
                   {usingSub && (
                     <span className="mt-1 inline-flex w-fit rounded-full bg-brand/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand">
                       Auto-deliver {cadenceLabel}
@@ -125,7 +124,7 @@ function CheckoutPage() {
                 </div>
               </div>
               <div className="flex flex-col gap-2 border-t border-border pt-4 text-sm">
-                <Row label="Subtotal" value={`$${subtotal.toFixed(2)}`} />
+                <Row label="Subtotal" value={`$${unitPrice}`} />
                 <Row label="Shipping" value={`$${FLAT_SHIPPING_USD.toFixed(2)}`} />
                 <Row label="Tax" value="—" muted />
               </div>
@@ -133,10 +132,10 @@ function CheckoutPage() {
                 <span className="text-sm font-semibold text-foreground">Total today</span>
                 <span className="text-2xl font-bold text-foreground">${total.toFixed(2)}</span>
               </div>
-              {usingSub && (
+              {usingSub && cadenceLabel && (
                 <p className="text-xs text-muted-foreground">
-                  Then ${unitPrice.toFixed(2)} + ${FLAT_SHIPPING_USD.toFixed(2)} shipping{" "}
-                  {cadenceLabel}. Cancel anytime.
+                  Then ${unitPrice} + ${FLAT_SHIPPING_USD.toFixed(2)} shipping {cadenceLabel}.
+                  Cancel anytime.
                 </p>
               )}
             </div>

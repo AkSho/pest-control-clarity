@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { Mail, MapPin } from "lucide-react";
+import { Mail } from "lucide-react";
 import { SOLUTIONS } from "@/data/solutions";
-import { SERVICE_AREAS } from "@/data/serviceAreas";
 
 export function SiteFooter() {
   return (
@@ -13,32 +12,28 @@ export function SiteFooter() {
               C
             </div>
             <div className="leading-tight">
-              <div className="text-base font-bold">Cloakd Removals</div>
+              <div className="text-base font-bold">Cloakd</div>
               <div className="text-[11px] uppercase tracking-widest text-ink-muted">
-                Rodent fertility control
+                Evolve specialist retailer
               </div>
             </div>
           </div>
           <p className="mt-4 max-w-md text-sm text-ink-muted">
-            EPA-designated minimum-risk fertility control, layered onto your
-            existing pest program. Documented monthly reporting. Serving NYC,
-            NJ, &amp; CA.
+            The only place to get Evolve rodent fertility control with
+            deployment expertise built in. Ships in 24 hours from NJ.
+            FIFRA 25(b) exempt. No license required.
           </p>
           <div className="mt-6 space-y-2 text-sm">
             <a href="mailto:hello@cloakd-removals.cloud" className="flex items-center gap-2 hover:text-brand">
               <Mail className="h-4 w-4" />
               <span>hello@cloakd-removals.cloud</span>
             </a>
-            <div className="flex items-center gap-2 text-ink-muted">
-              <MapPin className="h-4 w-4" />
-              <span>NYC · NJ · Bay Area</span>
-            </div>
           </div>
         </div>
 
         <div>
           <div className="text-xs font-semibold uppercase tracking-widest text-ink-muted">
-            Program
+            Learn
           </div>
           <ul className="mt-4 space-y-2 text-sm">
             <li><Link to="/why-it-keeps-coming-back" className="hover:text-brand">The Problem</Link></li>
@@ -98,17 +93,15 @@ export function SiteFooter() {
 
         <div>
           <div className="text-xs font-semibold uppercase tracking-widest text-ink-muted">
-            Service areas
+            Shop
           </div>
           <ul className="mt-4 space-y-2 text-sm">
-            <li><Link to="/areas" className="hover:text-brand font-semibold">All service areas →</Link></li>
-            {SERVICE_AREAS.map((a) => (
-              <li key={a.slug}>
-                <Link to="/areas/$areaSlug" params={{ areaSlug: a.slug }} className="hover:text-brand">
-                  {a.city}, {a.state}
-                </Link>
-              </li>
-            ))}
+            <li><Link to="/products/starter-kit" className="hover:text-brand">Evolve XL Starter Kit</Link></li>
+            <li><Link to="/products/refill" className="hover:text-brand">Evolve Refill — 6 lb</Link></li>
+            <li><Link to="/products/refill" search={{ variant: "refill-rat-12lb" }} className="hover:text-brand">Evolve Refill — 12 lb</Link></li>
+            <li><Link to="/how-it-works" className="hover:text-brand">How it works</Link></li>
+            <li><Link to="/what-to-expect" className="hover:text-brand">What to expect</Link></li>
+            <li><Link to="/results" className="hover:text-brand">Results</Link></li>
           </ul>
         </div>
       </div>

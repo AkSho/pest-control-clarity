@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200">
+  <rect width="1200" height="1200" fill="#0f1729"/>
+  <rect x="400" y="60" width="400" height="50" rx="8" fill="#1e3a5f"/>
+  <text x="600" y="93" font-family="system-ui, sans-serif" font-size="20" font-weight="700" fill="#4a90e2" text-anchor="middle">INDEPENDENT FIELD STUDY</text>
+  <text x="600" y="280" font-family="system-ui, sans-serif" font-size="130" font-weight="900" fill="#4a90e2" text-anchor="middle">79%</text>
+  <text x="600" y="340" font-family="system-ui, sans-serif" font-size="26" fill="#ffffff" text-anchor="middle">reduction in rodent activity</text>
+  <text x="600" y="390" font-family="system-ui, sans-serif" font-size="18" fill="#8fa3c0" text-anchor="middle">5-month urban field study</text>
+  <line x1="200" y1="440" x2="1000" y2="440" stroke="#2a3a60" stroke-width="2"/>
+  <text x="300" y="530" font-family="system-ui, sans-serif" font-size="80" font-weight="900" fill="#60a5fa" text-anchor="middle">88%</text>
+  <text x="300" y="580" font-family="system-ui, sans-serif" font-size="18" fill="#8fa3c0" text-anchor="middle">drop in sightings</text>
+  <text x="900" y="530" font-family="system-ui, sans-serif" font-size="80" font-weight="900" fill="#60a5fa" text-anchor="middle">79%+</text>
+  <text x="900" y="580" font-family="system-ui, sans-serif" font-size="18" fill="#8fa3c0" text-anchor="middle">trap-catch reduction</text>
+  <text x="600" y="900" font-family="system-ui, sans-serif" font-size="18" fill="#4a6080" text-anchor="middle">PLACEHOLDER · Provide final asset: gallery-field-data.jpg</text>
+</svg>

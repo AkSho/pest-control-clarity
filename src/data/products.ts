@@ -1,19 +1,10 @@
 // Product catalog for Cloakd PDPs.
-// Pricing matches SenesTech retail; copy paraphrased from SenesTech product
-// pages with gaps filled from existing Cloakd content. Image URLs hotlinked
-// from SenesTech's Shopify CDN.
+// Pricing reflects Cloakd retail (not SenesTech). Subscription = "Replenishment plan".
+// Image URLs hotlinked from SenesTech's Shopify CDN — download to /public/products/ before launch.
 
 export type ProductSlug = "starter-kit" | "refill";
 export type Pest = "rat" | "mouse";
-export type Size = "1.5lb" | "3lb" | "6lb" | "12lb";
-
-export type CadenceOption = { months: number; label: string };
-
-export type Subscription = {
-  discountPct: number; // e.g. 10
-  cadences: CadenceOption[];
-  defaultMonths: number;
-};
+export type Size = "6lb" | "12lb";
 
 export type Variant = {
   id: string;
@@ -23,6 +14,10 @@ export type Variant = {
   label: string; // size pill, e.g. "6 lb"
   shortName: string;
   oneTimePrice: number;
+  /** Fixed replenishment price. undefined = no replenishment plan for this SKU. */
+  subPrice?: number;
+  /** Replenishment cadence in days. Must be set if subPrice is set. */
+  subDays?: number;
   image: string;
   galleryImages: string[];
   shippingWeightLb: number;
@@ -52,36 +47,26 @@ export type Product = {
   accordion: AccordionContent;
   defaultVariantId: string;
   variants: Variant[];
-  subscription: Subscription;
   rating: { avg: number; count: number };
 };
 
-// ===== Images (SenesTech CDN) =====
-const STATION_CLOSED =
-  "https://senestech.com/cdn/shop/files/Evolve_Bait_Station_Closed_Isolated.png?v=1775246340&width=1200";
-const STATION_OPEN =
-  "https://senestech.com/cdn/shop/files/Evolve_Bait_Station_Open_Isolated.png?v=1775246340&width=1200";
+// ===== Images =====
+const STATION_CLOSED = "/products/station-closed.png";
+const STATION_OPEN = "/products/station-open.png";
 
-const RAT_15 =
-  "https://senestech.com/cdn/shop/files/Evolve-Rat-1.5-1800x1800.jpg?v=1775246194&width=1200";
-const RAT_3 =
-  "https://senestech.com/cdn/shop/files/Evolve-Rat-3-1800x1800.jpg?v=1775246194&width=1200";
-const RAT_6 =
-  "https://senestech.com/cdn/shop/files/Evolve-Rat-6-1800x1800_e883469c-9f7f-4c27-b760-d29d7ac414d8.jpg?v=1775245629&width=1200";
-const RAT_12 =
-  "https://senestech.com/cdn/shop/files/Evolve-Rat-Pail-12-Front-1800x1800.jpg?v=1775235718&width=1200";
+const RAT_6 = "/products/refill-rat-6lb.jpg";
+const RAT_12 = "/products/refill-rat-12lb.jpg";
 
-const MOUSE_15 =
-  "https://senestech.com/cdn/shop/files/Evolve-Mouse-1.5-Pouch-Straight-1800x1800.jpg?v=1775246005&width=1200";
-const MOUSE_3 =
-  "https://senestech.com/cdn/shop/files/Evolve-Mouse-3-Pouch-Straight-1800x1800.jpg?v=1775246005&width=1200";
-const MOUSE_6 =
-  "https://senestech.com/cdn/shop/files/Evolve-Mouse-6-Pouch-Straight-1800x1800.jpg?v=1775246005&width=1200";
+const MOUSE_6 = "/products/refill-mouse-6lb.jpg";
 
-const STARTER_RAT_HERO =
-  "https://senestech.com/cdn/shop/files/Evolve_Rat_XL_Starter_Kit_8f547392-92c7-490e-be46-25162c8724e1.png?v=1775246194&width=1200";
-const STARTER_MOUSE_HERO =
-  "https://senestech.com/cdn/shop/files/Evolve_Mouse_XL_Starter_Kit_64b722f7-912b-44bc-82bb-5b7e4413b8e7.png?v=1775246005&width=1200";
+const STARTER_RAT_HERO = "/products/starter-kit-rat.png";
+const STARTER_MOUSE_HERO = "/products/starter-kit-mouse.png";
+
+// Gallery conversion slides (replace SVGs with final .jpg assets when ready)
+const GALLERY_SOCIAL_PROOF = "/products/gallery-social-proof.svg";
+const GALLERY_TIMELINE = "/products/gallery-timeline.svg";
+const GALLERY_FIELD_DATA = "/products/gallery-field-data.svg";
+const GALLERY_DEPLOYED = "/products/gallery-deployed.svg";
 
 // ===== Shared content =====
 const SHARED_FAQ: FAQ[] = [
@@ -156,16 +141,6 @@ const SHARED_FEATURES: Product["features"] = [
   },
 ];
 
-const SHARED_SUBSCRIPTION: Subscription = {
-  discountPct: 10,
-  cadences: [
-    { months: 1, label: "Every 1 month" },
-    { months: 2, label: "Every 2 months" },
-    { months: 3, label: "Every 3 months" },
-  ],
-  defaultMonths: 2,
-};
-
 // ===== Catalog =====
 export const PRODUCTS: Record<ProductSlug, Product> = {
   "starter-kit": {
@@ -185,7 +160,7 @@ export const PRODUCTS: Record<ProductSlug, Product> = {
     whatsIncluded: [
       "2 × locked Evolve bait stations",
       "2 × bait station keys",
-      "Evolve soft-bait pouch (size depends on variant)",
+      "Evolve soft-bait pouch (6 lb)",
       "Deployment guide + label and SDS",
     ],
     faq: SHARED_FAQ,
@@ -195,64 +170,41 @@ export const PRODUCTS: Record<ProductSlug, Product> = {
       howItWorks:
         "Place each station along an active travel path. Load the included Evolve soft bait. Rodents enter, feed, and the cottonseed-oil active ingredient interferes with reproduction in both males and females. Effects begin after the first 4–6 week breeding cycle.",
       whatsInside:
-        "Two locked Evolve bait stations · Two station keys · One Evolve soft-bait pouch · Deployment guide · EPA label · Safety Data Sheet (SDS).",
+        "Two locked Evolve bait stations · Two station keys · One Evolve soft-bait pouch (6 lb) · Deployment guide · EPA label · Safety Data Sheet (SDS).",
       ingredients:
         "Active ingredient: Cottonseed oil. Other ingredients: food-grade carriers and palatants. FIFRA Section 25(b) exempt minimum-risk pesticide. No anticoagulants. No neurotoxins.",
       deployment:
         "Stations belong along rodent travel paths: foundation walls, fence lines, behind dumpsters, near burrows. Keep bait dry and continuously available — gaps in supply restart the breeding cycle.",
       shipping:
-        "Free shipping on orders over $99. Ships in 24 hours from NJ. 30-day satisfaction guarantee on starter kits.",
+        "Flat $12.95 shipping. Ships within 24 hours from NJ. 30-day satisfaction guarantee.",
     },
-    defaultVariantId: "starter-kit-rat-1.5lb",
-    subscription: SHARED_SUBSCRIPTION,
+    defaultVariantId: "starter-kit-rat-6lb",
     rating: { avg: 4.6, count: 38 },
     variants: [
-      {
-        id: "starter-kit-rat-1.5lb",
-        productSlug: "starter-kit",
-        pest: "rat",
-        size: "1.5lb",
-        label: "1.5 lb",
-        shortName: "Starter Kit — Rat 1.5 lb",
-        oneTimePrice: 45.99,
-        image: STARTER_RAT_HERO,
-        galleryImages: [STARTER_RAT_HERO, RAT_15, STATION_CLOSED, STATION_OPEN],
-        shippingWeightLb: 4,
-      },
       {
         id: "starter-kit-rat-6lb",
         productSlug: "starter-kit",
         pest: "rat",
         size: "6lb",
-        label: "6 lb · XL",
-        shortName: "XL Starter Kit — Rat 6 lb",
-        oneTimePrice: 129.99,
+        label: "Rat",
+        shortName: "XL Starter Kit — Rat",
+        oneTimePrice: 179,
+        // No replenishment plan on starter kits
         image: STARTER_RAT_HERO,
-        galleryImages: [STARTER_RAT_HERO, RAT_6, STATION_CLOSED, STATION_OPEN],
+        galleryImages: [STARTER_RAT_HERO, GALLERY_SOCIAL_PROOF, GALLERY_TIMELINE, GALLERY_FIELD_DATA, GALLERY_DEPLOYED, STATION_OPEN],
         shippingWeightLb: 8,
-      },
-      {
-        id: "starter-kit-mouse-1.5lb",
-        productSlug: "starter-kit",
-        pest: "mouse",
-        size: "1.5lb",
-        label: "1.5 lb",
-        shortName: "Starter Kit — Mouse 1.5 lb",
-        oneTimePrice: 45.99,
-        image: STARTER_MOUSE_HERO,
-        galleryImages: [STARTER_MOUSE_HERO, MOUSE_15, STATION_CLOSED, STATION_OPEN],
-        shippingWeightLb: 4,
       },
       {
         id: "starter-kit-mouse-6lb",
         productSlug: "starter-kit",
         pest: "mouse",
         size: "6lb",
-        label: "6 lb · XL",
-        shortName: "XL Starter Kit — Mouse 6 lb",
-        oneTimePrice: 129.99,
+        label: "Mouse",
+        shortName: "XL Starter Kit — Mouse",
+        oneTimePrice: 179,
+        // No replenishment plan on starter kits
         image: STARTER_MOUSE_HERO,
-        galleryImages: [STARTER_MOUSE_HERO, MOUSE_6, STATION_CLOSED, STATION_OPEN],
+        galleryImages: [STARTER_MOUSE_HERO, GALLERY_SOCIAL_PROOF, GALLERY_TIMELINE, GALLERY_FIELD_DATA, GALLERY_DEPLOYED, STATION_OPEN],
         shippingWeightLb: 8,
       },
     ],
@@ -290,36 +242,11 @@ export const PRODUCTS: Record<ProductSlug, Product> = {
       deployment:
         "Pull the empty pouch from your station, drop in the new one. Re-bait on a fixed cadence — most sites land on every 30–60 days. Replenishment plans automate this.",
       shipping:
-        "Free shipping on orders over $99. Ships in 24 hours from NJ. Replenishment plans cancel anytime.",
+        "Flat $12.95 shipping. Ships within 24 hours from NJ. Replenishment plans cancel anytime.",
     },
     defaultVariantId: "refill-rat-6lb",
-    subscription: SHARED_SUBSCRIPTION,
     rating: { avg: 4.6, count: 38 },
     variants: [
-      {
-        id: "refill-rat-1.5lb",
-        productSlug: "refill",
-        pest: "rat",
-        size: "1.5lb",
-        label: "1.5 lb",
-        shortName: "Evolve Rat Refill — 1.5 lb",
-        oneTimePrice: 34.99,
-        image: RAT_15,
-        galleryImages: [RAT_15, STATION_OPEN, STATION_CLOSED],
-        shippingWeightLb: 2,
-      },
-      {
-        id: "refill-rat-3lb",
-        productSlug: "refill",
-        pest: "rat",
-        size: "3lb",
-        label: "3 lb",
-        shortName: "Evolve Rat Refill — 3 lb",
-        oneTimePrice: 56.99,
-        image: RAT_3,
-        galleryImages: [RAT_3, STATION_OPEN, STATION_CLOSED],
-        shippingWeightLb: 4,
-      },
       {
         id: "refill-rat-6lb",
         productSlug: "refill",
@@ -327,9 +254,11 @@ export const PRODUCTS: Record<ProductSlug, Product> = {
         size: "6lb",
         label: "6 lb",
         shortName: "Evolve Rat Refill — 6 lb",
-        oneTimePrice: 99.99,
+        oneTimePrice: 149,
+        subPrice: 129,
+        subDays: 60,
         image: RAT_6,
-        galleryImages: [RAT_6, STATION_OPEN, STATION_CLOSED],
+        galleryImages: [RAT_6, GALLERY_SOCIAL_PROOF, GALLERY_TIMELINE, GALLERY_FIELD_DATA, GALLERY_DEPLOYED, STATION_OPEN],
         shippingWeightLb: 7,
       },
       {
@@ -339,34 +268,12 @@ export const PRODUCTS: Record<ProductSlug, Product> = {
         size: "12lb",
         label: "12 lb",
         shortName: "Evolve Rat Refill — 12 lb",
-        oneTimePrice: 199.99,
+        oneTimePrice: 249,
+        subPrice: 219,
+        subDays: 90,
         image: RAT_12,
-        galleryImages: [RAT_12, STATION_OPEN, STATION_CLOSED],
+        galleryImages: [RAT_12, GALLERY_SOCIAL_PROOF, GALLERY_TIMELINE, GALLERY_FIELD_DATA, GALLERY_DEPLOYED, STATION_OPEN],
         shippingWeightLb: 13,
-      },
-      {
-        id: "refill-mouse-1.5lb",
-        productSlug: "refill",
-        pest: "mouse",
-        size: "1.5lb",
-        label: "1.5 lb",
-        shortName: "Evolve Mouse Refill — 1.5 lb",
-        oneTimePrice: 34.99,
-        image: MOUSE_15,
-        galleryImages: [MOUSE_15, STATION_OPEN, STATION_CLOSED],
-        shippingWeightLb: 2,
-      },
-      {
-        id: "refill-mouse-3lb",
-        productSlug: "refill",
-        pest: "mouse",
-        size: "3lb",
-        label: "3 lb",
-        shortName: "Evolve Mouse Refill — 3 lb",
-        oneTimePrice: 56.99,
-        image: MOUSE_3,
-        galleryImages: [MOUSE_3, STATION_OPEN, STATION_CLOSED],
-        shippingWeightLb: 4,
       },
       {
         id: "refill-mouse-6lb",
@@ -375,9 +282,11 @@ export const PRODUCTS: Record<ProductSlug, Product> = {
         size: "6lb",
         label: "6 lb",
         shortName: "Evolve Mouse Refill — 6 lb",
-        oneTimePrice: 99.99,
+        oneTimePrice: 149,
+        subPrice: 129,
+        subDays: 60,
         image: MOUSE_6,
-        galleryImages: [MOUSE_6, STATION_OPEN, STATION_CLOSED],
+        galleryImages: [MOUSE_6, GALLERY_SOCIAL_PROOF, GALLERY_TIMELINE, GALLERY_FIELD_DATA, GALLERY_DEPLOYED, STATION_OPEN],
         shippingWeightLb: 7,
       },
     ],
@@ -413,11 +322,6 @@ export function sizesFor(variants: Variant[], pest: Pest): Variant[] {
   return variants.filter((v) => v.pest === pest);
 }
 
-export function subscriptionPrice(oneTime: number, discountPct: number): number {
-  return Math.round(oneTime * (1 - discountPct / 100) * 100) / 100;
-}
-
-export const FREE_SHIPPING_THRESHOLD_USD = 99;
 export const FLAT_SHIPPING_USD = 12.95;
 
 // ===== "Works on" / "Safe around" marquee data =====

@@ -16,8 +16,6 @@ import { MechanismTrio } from "./MechanismTrio";
 import { FieldResultsTrio } from "./FieldResultsTrio";
 import { ReviewsCarousel } from "./ReviewsCarousel";
 import { TrustRow } from "./TrustRow";
-import { AuthorityCard } from "./AuthorityCard";
-import { VideoTestimonialsRow } from "./VideoTestimonialsRow";
 import { PressStrip } from "@/components/site/PressStrip";
 import type { Product } from "@/data/products";
 
@@ -64,15 +62,11 @@ export function ProductPage({ product, routePath }: { product: Product; routePat
         <FieldResultsTrio />
       </div>
 
-      <AuthorityCard />
-
       <PressStrip />
 
       <div id="compare">
         <ComparisonTable />
       </div>
-
-      <VideoTestimonialsRow />
 
       <ReviewsCarousel avgRating={product.rating.avg} count={product.rating.count} />
 
@@ -104,6 +98,8 @@ export function ProductPage({ product, routePath }: { product: Product; routePat
         </div>
       </section>
 
+      {/* TODO: full reviews widget here (Junip/Okendo) once platform is wired */}
+
       {/* Closing CTA band */}
       <section className="border-t border-border bg-surface">
         <div className="container-site py-16 text-center">
@@ -111,7 +107,7 @@ export function ProductPage({ product, routePath }: { product: Product; routePat
             Stop reacting. Start collapsing the population.
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-base text-muted-foreground">
-            Free shipping over $99. Ships in 24 hours from NJ. Cancel your replenishment plan
+            Flat $12.95 shipping. Ships in 24 hours from NJ. Cancel your replenishment plan
             anytime.
           </p>
           <a

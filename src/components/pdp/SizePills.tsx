@@ -28,7 +28,7 @@ export function SizePills({
             )}
           >
             <span className="text-sm font-semibold text-foreground">{v.label}</span>
-            <span className="text-xs text-muted-foreground">${v.oneTimePrice.toFixed(2)}</span>
+            <span className="text-xs text-muted-foreground">${v.oneTimePrice}</span>
           </button>
         );
       })}
