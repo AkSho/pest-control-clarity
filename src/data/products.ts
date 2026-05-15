@@ -88,7 +88,7 @@ const SHARED_FAQ: FAQ[] = [
   },
   {
     q: "Do I need a license to buy or use this?",
-    a: "No. Evolve uses a food-grade active ingredient that the EPA has classified as minimum-risk. That means no restricted-use license, no certified applicator, and no permit required. Homeowners, landlords, property managers, and restaurant owners can all buy and deploy it directly.",
+    a: "No. The EPA classifies Evolve as a minimum-risk pesticide — the same category as products made from cottonseed oil and cedarwood. Anyone can buy and use it directly: homeowners, landlords, property managers, restaurant owners. No license, no permit, no exterminator.",
   },
   {
     q: "When will I see results?",
@@ -96,11 +96,11 @@ const SHARED_FAQ: FAQ[] = [
   },
   {
     q: "Can I use it indoors and outdoors?",
-    a: "Yes. Inside stations indoors (basements, mechanical rooms, kitchens). Outdoors: along fence lines, near burrows, behind dumpsters, or staked near garden beds. Keep bait dry and out of direct sun for best palatability.",
+    a: "Yes. Indoors: basements, mechanical rooms, kitchens — inside locked stations. Outdoors: along fence lines, near burrows, behind dumpsters, or staked near garden beds. Keep bait dry and out of direct sun — heat and moisture affect how readily rodents eat it.",
   },
   {
     q: "Will Evolve work alongside traps or other tools?",
-    a: "Yes — it's designed to complement an Integrated Pest Management program. Traps and exclusion handle visible activity; Evolve removes the population's ability to rebound.",
+    a: "Yes — traps and exclusion handle what's visible right now; Evolve removes the colony's ability to rebound. Run them together and you're addressing both the symptom and the cause.",
   },
 ];
 
@@ -113,7 +113,7 @@ const SHARED_HOW: Product["howItWorks"] = [
   {
     step: "02",
     title: "They eat it. Willingly.",
-    body: "The soft bait is highly palatable — rodents prefer it to most food sources nearby. Consistent consumption is what drives the result, so keep it stocked.",
+    body: "Rodents go for it readily — they'll choose it over most food sources nearby. Consistent feeding is what drives the result, so keep it stocked.",
   },
   {
     step: "03",
@@ -128,16 +128,16 @@ const SHARED_FEATURES: Product["features"] = [
     body: "Cottonseed-oil active ingredient restricts fertility in both males and females — the lever poison and traps can't pull.",
   },
   {
-    title: "FIFRA 25(b) exempt",
-    body: "Food-grade active. No restricted-use license required. Safe around pets, kids, and non-target wildlife when used as directed.",
+    title: "No license, no permit, no exterminator",
+    body: "Food-grade active ingredient. The EPA puts it in the same category as cottonseed oil and cedarwood — minimum-risk, anyone can use it.",
   },
   {
     title: "Works on resistant populations",
     body: "Anticoagulant resistance is now widespread. Evolve sidesteps the resistance arms race entirely — it doesn't kill, it sterilizes.",
   },
   {
-    title: "Built for sustained deployment",
-    body: "Soft-bait format stays palatable and stable in stations for weeks. One refill cycle keeps a typical site continuously baited.",
+    title: "Gets stronger every refill cycle",
+    body: "Each 60–90 day cycle reduces the breeding population further. Rodents keep eating it month after month — no tolerance buildup, no resistance.",
   },
 ];
 
@@ -166,7 +166,7 @@ export const PRODUCTS: Record<ProductSlug, Product> = {
     faq: SHARED_FAQ,
     accordion: {
       description:
-        "The XL Starter Kit is a complete first-deployment package. Two locked stations, keys, and Evolve soft bait — built to attack rodent reproduction at the source.",
+        "Your rodent problem isn't a removal problem — it's a replacement problem. As long as the breeding pair stays intact, what you remove gets replaced. The XL Starter Kit is the full setup to start targeting reproduction instead: two locked stations, keys, and a soft-bait pouch.",
       howItWorks:
         "Place each station along an active travel path. Load the included Evolve soft bait. Rodents enter, feed, and the cottonseed-oil active ingredient interferes with reproduction in both males and females. Effects begin after the first 4–6 week breeding cycle.",
       whatsInside:
@@ -220,7 +220,7 @@ export const PRODUCTS: Record<ProductSlug, Product> = {
     longDescription: [
       "Once your starter kit is in place, the only thing standing between you and a collapsed colony is consistency. Empty stations don't suppress reproduction.",
       "The 6 lb pouch is the right cadence for most single-site deployments. The 12 lb pail is built for larger properties — multi-unit residential, food-storage facilities, ghost-kitchen complexes — where you'd otherwise be reordering twice as often.",
-      "Replenishment plan customers get auto-delivery on the cadence that matches typical consumption. You set the program once and stop thinking about it.",
+      "You set the cadence once and it runs. Replenishment plan customers get auto-delivery timed to their site's typical burn rate — no reordering, no gaps, no interrupted cycles.",
     ],
     features: SHARED_FEATURES,
     howItWorks: SHARED_HOW,

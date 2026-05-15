@@ -9,13 +9,13 @@ const BENEFITS: { icon: LucideIcon; title: string; body: string }[] = [
   },
   {
     icon: ShieldCheck,
-    title: "No Secondary Kill",
-    body: "Cottonseed oil. Safe for hawks, owls, pets, and all non-target wildlife.",
+    title: "Safe for predators and pets",
+    body: "Cottonseed oil active. Hawks, owls, dogs, cats — none of them are at risk from rodents that fed on Evolve.",
   },
   {
     icon: BadgeCheck,
-    title: "EPA Exempt",
-    body: "FIFRA 25(b) minimum-risk formula. No restricted-use license required.",
+    title: "No license, no permit",
+    body: "The EPA puts it in the minimum-risk category. Homeowners and property managers can buy and deploy it directly.",
   },
   {
     icon: RefreshCw,

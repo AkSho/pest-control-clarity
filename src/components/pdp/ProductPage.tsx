@@ -67,7 +67,7 @@ export function ProductPage({ product, routePath }: { product: Product; routePat
                 Field-deployed
               </span>
               <h2 className="mt-2 text-3xl font-bold tracking-tight md:text-4xl">
-                Designed for real properties. Built to run quietly.
+                Designed for working properties. Runs quietly in the background.
               </h2>
               <p className="mt-3 text-base text-muted-foreground">
                 The XL locking bait station keeps bait secure from kids, pets,
