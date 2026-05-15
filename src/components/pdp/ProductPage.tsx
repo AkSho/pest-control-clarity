@@ -10,6 +10,8 @@ import { ProductGallery } from "./ProductGallery";
 import { BuyBox } from "./BuyBox";
 import { ComparisonTable } from "./ComparisonTable";
 import { FeaturesRadial } from "./FeaturesRadial";
+import { FindYourFit } from "./FindYourFit";
+import { HowToVideo } from "./HowToVideo";
 import { OperatorQuote } from "./OperatorQuote";
 import { PdpAnchorNav } from "./PdpAnchorNav";
 import { WorksOnMarquee } from "./WorksOnMarquee";
@@ -129,11 +131,15 @@ export function ProductPage({ product, routePath }: { product: Product; routePat
 
       <ReviewsCarousel avgRating={product.rating.avg} count={product.rating.count} />
 
+      <HowToVideo />
+
       <div id="compare">
         <ComparisonTable />
       </div>
 
       <OperatorQuote />
+
+      <FindYourFit currentSlug={product.slug} />
 
       <TrustRow />
 
