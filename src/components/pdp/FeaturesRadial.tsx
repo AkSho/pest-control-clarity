@@ -5,12 +5,12 @@ const BENEFITS: { icon: Icon; title: string; body: string }[] = [
   {
     icon: TrendDown,
     title: "Collapses the colony",
-    body: "Targets the breeding cycle, not individuals. The population shrinks each generation because there aren't enough pups to replace what's lost.",
+    body: "Each cycle produces fewer pups than the last. The population shrinks on its own timeline — without a die-off.",
   },
   {
     icon: ShieldCheck,
-    title: "Safe for predators and pets",
-    body: "Cottonseed oil active. Hawks, owls, dogs, cats — none of them are at risk from rodents that fed on Evolve.",
+    title: "Safe for predators and other animals",
+    body: "Cottonseed oil active. Hawks, owls, dogs, cats: none are at risk from rodents that fed on Evolve.",
   },
   {
     icon: SealCheck,
@@ -20,7 +20,7 @@ const BENEFITS: { icon: Icon; title: string; body: string }[] = [
   {
     icon: ArrowsClockwise,
     title: "Gets stronger every cycle",
-    body: "Each 60–90 day refill builds on the last. Population pressure drops continuously — no resistance possible.",
+    body: "Each 60–90 day refill builds on the last. Population pressure drops continuously. No resistance develops.",
   },
 ];
 
@@ -43,13 +43,13 @@ export function FeaturesRadial() {
         {/* Section header */}
         <div className="mx-auto text-center">
           <span className="text-xs font-bold uppercase tracking-[0.18em] text-brand">
-            The root cause
+            How it works
           </span>
           <h2 className="pdp-h2 mx-auto mt-2 max-w-lg text-foreground">
-            Every rat you remove gets replaced.
+            Evolve stops the colony from replacing itself.
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">
-            Two independent urban field studies. 79% average population reduction.
+            79% average population reduction across two independent urban field studies.
             Measurable within 90 days of consistent deployment.
           </p>
         </div>
@@ -75,7 +75,7 @@ export function FeaturesRadial() {
 
         {/* Desktop: left tiles | center image | right tiles */}
         <div className="mt-10 hidden sm:grid sm:grid-cols-[1fr_260px_1fr] sm:items-center sm:gap-10 lg:grid-cols-[1fr_320px_1fr] lg:gap-14">
-          <div className="flex flex-col gap-12">
+          <div className="flex flex-col gap-16">
             <Tile {...BENEFITS[0]} />
             <Tile {...BENEFITS[2]} />
           </div>
@@ -87,7 +87,7 @@ export function FeaturesRadial() {
             loading="lazy"
             className="h-auto w-full rounded-2xl border-2 border-brand/20 object-contain shadow-[2px_2px_0_0_var(--color-brand)]"
           />
-          <div className="flex flex-col gap-12">
+          <div className="flex flex-col gap-16">
             <Tile {...BENEFITS[1]} />
             <Tile {...BENEFITS[3]} />
           </div>

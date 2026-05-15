@@ -25,13 +25,23 @@ export type Variant = {
 
 export type FAQ = { q: string; a: string };
 
+export type AccordionSection = {
+  lead?: string;
+  steps?: string[];
+  bullets?: string[];
+  items?: string[];
+  chips?: string[];
+  lines?: string[];
+  note?: string;
+};
+
 export type AccordionContent = {
-  description: string;
-  howItWorks: string;
-  whatsInside: string;
-  ingredients: string;
-  deployment: string;
-  shipping: string;
+  description: AccordionSection;
+  howItWorks: AccordionSection;
+  whatsInside: AccordionSection;
+  ingredients: AccordionSection;
+  deployment: AccordionSection;
+  shipping: AccordionSection;
 };
 
 export type Product = {
@@ -165,18 +175,57 @@ export const PRODUCTS: Record<ProductSlug, Product> = {
     ],
     faq: SHARED_FAQ,
     accordion: {
-      description:
-        "Your rodent problem isn't a removal problem — it's a replacement problem. As long as the breeding pair stays intact, what you remove gets replaced. The XL Starter Kit is the full setup to start targeting reproduction instead: two locked stations, keys, and a soft-bait pouch.",
-      howItWorks:
-        "Place each station along an active travel path. Load the included Evolve soft bait. Rodents go for it readily — formulated with fats and sugars, they'll choose it over other food sources even in food-rich environments. They don't develop bait aversion, so feeding stays consistent. The cottonseed-oil active ingredient interferes with reproduction in both males and females. Effects begin after the first 4–6 week breeding cycle.",
-      whatsInside:
-        "Two locked Evolve bait stations · Two station keys · One Evolve soft-bait pouch (6 lb) · Deployment guide · EPA label · Safety Data Sheet (SDS).",
-      ingredients:
-        "Active ingredient: Cottonseed oil. Other ingredients: food-grade carriers and palatants. FIFRA Section 25(b) exempt minimum-risk pesticide. No anticoagulants. No neurotoxins.",
-      deployment:
-        "Stations belong along rodent travel paths: foundation walls, fence lines, behind dumpsters, near burrows. Keep bait dry and continuously available — gaps in supply restart the breeding cycle.",
-      shipping:
-        "Flat $12.95 shipping. Ships within 24 hours. 30-day satisfaction guarantee.",
+      description: {
+        lead: "Traps and poison kill what's in front of you. The colony keeps replacing what you remove.",
+        bullets: [
+          "Evolve targets reproduction in both males and females. Fewer pups each cycle. The population collapses without a die-off.",
+          "Run it alongside traps or exclusion: handle what's there now while Evolve stops the next generation from being born.",
+        ],
+      },
+      howItWorks: {
+        steps: [
+          "Place stations along active travel paths: foundation walls, fence lines, near burrow openings.",
+          "Rodents find it and feed. They don't develop bait aversion, so feeding stays consistent.",
+          "The cottonseed-oil active ingredient suppresses fertility in both males and females. Effects start after the first breeding cycle (4–6 weeks).",
+          "Fewer pups born each generation. The colony shrinks and stops replacing itself.",
+        ],
+      },
+      whatsInside: {
+        items: [
+          "2 × Evolve XL locking bait stations",
+          "2 × bait station keys",
+          "1 × Evolve soft-bait pouch (6 lb)",
+          "Deployment guide",
+          "EPA label and Safety Data Sheet (SDS)",
+        ],
+      },
+      ingredients: {
+        lead: "Active ingredient: Cottonseed oil.",
+        chips: [
+          "EPA Minimum-Risk",
+          "FIFRA 25(b) exempt",
+          "No anticoagulants",
+          "No neurotoxins",
+          "Food-grade formula",
+          "No license required",
+        ],
+      },
+      deployment: {
+        lead: "Place stations where rodents already travel:",
+        bullets: [
+          "Foundation walls and fence lines",
+          "Behind dumpsters and near trash storage",
+          "Near burrow openings or active entry points",
+          "Inside crawl spaces or mechanical rooms",
+        ],
+        note: "Keep bait continuously available. Gaps in supply let the breeding cycle restart. Check stations and refill before they run empty.",
+      },
+      shipping: {
+        lines: [
+          "$12.95 flat shipping.",
+          "Ships within 24 hours.",
+        ],
+      },
     },
     defaultVariantId: "starter-kit-rat-6lb",
     rating: { avg: 4.6, count: 38 },
@@ -231,18 +280,55 @@ export const PRODUCTS: Record<ProductSlug, Product> = {
     ],
     faq: SHARED_FAQ,
     accordion: {
-      description:
-        "Evolve Refill keeps your existing stations stocked. Same soft-bait formula, sized for ongoing deployment — choose the cadence that matches your site's burn rate.",
-      howItWorks:
-        "Refills drop straight into your existing Evolve stations. Continuous availability is what drives fertility decline. Gaps in supply let the breeding cycle restart. Rodents don't develop bait aversion, so they keep feeding consistently as long as stations are stocked. Pick the size that matches your two-month consumption.",
-      whatsInside:
-        "One sealed Evolve soft-bait pouch or pail (size depends on variant) · Label and SDS sheet · No stations or hardware (those are in the Starter Kit).",
-      ingredients:
-        "Active ingredient: Cottonseed oil. Other ingredients: food-grade carriers and palatants. FIFRA Section 25(b) exempt minimum-risk pesticide. No anticoagulants. No neurotoxins.",
-      deployment:
-        "Pull the empty pouch from your station, drop in the new one. Re-bait on a fixed cadence — most sites land on every 30–60 days. Replenishment plans automate this.",
-      shipping:
-        "Flat $12.95 shipping. Ships within 24 hours. Replenishment plans cancel anytime.",
+      description: {
+        lead: "Evolve Refill keeps your existing stations stocked. Same formula, sized for ongoing deployment.",
+        bullets: [
+          "Continuous availability is what drives fertility decline. Gaps in supply let the breeding cycle restart.",
+          "Choose the size that matches your site's burn rate: 6 lb for one to two stations, 12 lb for larger deployments.",
+        ],
+      },
+      howItWorks: {
+        lead: "Continuous availability is what drives the result. Gaps in supply let the breeding cycle restart.",
+        bullets: [
+          "Rodents keep feeding as long as bait is available. No bait aversion builds up over time.",
+          "Each refill cycle compounds the previous one. Fewer pups born each generation.",
+          "The colony collapses on its own schedule. No die-off, no cleanup.",
+        ],
+      },
+      whatsInside: {
+        items: [
+          "1 × Evolve soft-bait pouch or pail (size depends on variant)",
+          "EPA label and Safety Data Sheet (SDS)",
+          "No stations or hardware — those are in the Starter Kit",
+        ],
+      },
+      ingredients: {
+        lead: "Active ingredient: Cottonseed oil.",
+        chips: [
+          "EPA Minimum-Risk",
+          "FIFRA 25(b) exempt",
+          "No anticoagulants",
+          "No neurotoxins",
+          "Food-grade formula",
+          "No license required",
+        ],
+      },
+      deployment: {
+        lead: "Same placement as your Starter Kit. Refill before the station runs empty.",
+        steps: [
+          "Pull the empty pouch from your station.",
+          "Drop in the new one.",
+          "Refill before it runs empty. Most sites land on every 30–60 days depending on activity.",
+        ],
+        note: "Replenishment plans ship automatically on your chosen cadence.",
+      },
+      shipping: {
+        lines: [
+          "$12.95 flat shipping.",
+          "Ships within 24 hours.",
+          "Replenishment plans ship automatically. Cancel anytime.",
+        ],
+      },
     },
     defaultVariantId: "refill-rat-6lb",
     rating: { avg: 4.6, count: 38 },

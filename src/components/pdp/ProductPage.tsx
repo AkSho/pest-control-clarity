@@ -65,23 +65,23 @@ export function ProductPage({ product, routePath }: { product: Product; routePat
             <div className="flex flex-col gap-6 md:basis-1/2">
               <div>
                 <span className="text-xs font-bold uppercase tracking-[0.18em] text-brand">
-                  Field-deployed
+                  How deployment works
                 </span>
                 <h2 className="pdp-h2 mt-2 text-foreground">
-                  Designed for working properties. Runs quietly in the background.
+                  The only job is keeping it stocked.
                 </h2>
                 <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-                  The XL locking bait station keeps bait secure from kids, pets, and non-target
-                  animals while giving rodents reliable access. Set it, monitor it monthly, and let
-                  the biology do the rest.
+                  Evolve works as long as bait is available. Place the station where rodents already
+                  travel. Check for consumption. Keep it stocked. The colony declines on its own
+                  schedule.
                 </p>
               </div>
               <ul className="flex flex-col gap-3">
                 {[
-                  "Tamper-resistant — key-locked, bolt-mountable",
-                  "Works in crawl spaces, wall voids, and outdoor runs",
-                  "No permit required. The EPA puts it in the minimum-risk category.",
-                  "Check every 30 days, refill every 60–90.",
+                  "Place where rodents travel: along walls, fence lines, or near burrow openings.",
+                  "Check for consumption. If bait is being eaten, the station is in the right spot.",
+                  "Refill before it runs empty. Frequency depends on site activity.",
+                  "Each refill cycle builds on the last. The colony declines without a die-off.",
                 ].map((item) => (
                   <li
                     key={item}
@@ -98,7 +98,7 @@ export function ProductPage({ product, routePath }: { product: Product; routePat
                 href="#overview"
                 className="inline-flex h-12 w-fit items-center justify-center rounded-full bg-brand px-7 text-sm font-bold text-brand-foreground shadow-[2px_2px_0_0_oklch(0.15_0.06_262)] transition hover:shadow-[1px_1px_0_0_oklch(0.15_0.06_262)] hover:translate-x-[1px] hover:translate-y-[1px]"
               >
-                Shop the Starter Kit →
+                Shop now →
               </a>
             </div>
             {/* Image side */}

@@ -25,7 +25,7 @@ const TILES = [
 export function FindYourFit({ currentSlug }: { currentSlug: ProductSlug }) {
   return (
     <section className="container-site py-4 md:py-6">
-      <div className="rounded-2xl border border-border/50 bg-card p-8 md:p-14">
+      <div className="rounded-2xl border border-border/50 bg-card p-6 md:p-10">
       <div className="text-center">
         <span className="text-xs font-bold uppercase tracking-[0.18em] text-brand">
           Find your fit

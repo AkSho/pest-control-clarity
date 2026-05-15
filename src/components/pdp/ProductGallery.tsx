@@ -137,7 +137,7 @@ export function ProductGallery({ images, alt }: { images: string[]; alt: string 
               ].map((item) => (
                 <span
                   key={item.label}
-                  className="rounded-md border border-border bg-background px-2.5 py-1 text-xs font-semibold text-foreground"
+                  className="rounded-md border border-border bg-background px-3 py-1.5 text-sm font-semibold text-foreground"
                 >
                   {item.label}
                 </span>
@@ -154,7 +154,6 @@ export function ProductGallery({ images, alt }: { images: string[]; alt: string 
             {[
               { label: "Dogs", emoji: "🐕" },
               { label: "Cats", emoji: "🐈" },
-              { label: "Kids", emoji: "👶" },
               { label: "Hawks", emoji: "🦅" },
               { label: "Owls", emoji: "🦉" },
               { label: "Chickens", emoji: "🐔" },
@@ -162,7 +161,7 @@ export function ProductGallery({ images, alt }: { images: string[]; alt: string 
             ].map((item) => (
               <span
                 key={item.label}
-                className="inline-flex items-center gap-1 rounded-md border border-brand/20 bg-brand/5 px-2.5 py-1 text-xs font-semibold text-foreground"
+                className="inline-flex items-center gap-1.5 rounded-md border border-brand/20 bg-brand/5 px-3 py-1.5 text-sm font-semibold text-foreground"
               >
                 <span>{item.emoji}</span>
                 {item.label}
