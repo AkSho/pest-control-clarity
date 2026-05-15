@@ -1,9 +1,9 @@
-import { TrendingDown, ShieldCheck, SealCheck, ArrowsClockwise } from "@phosphor-icons/react";
+import { TrendDown, ShieldCheck, SealCheck, ArrowsClockwise } from "@phosphor-icons/react";
 import type { Icon } from "@phosphor-icons/react";
 
 const BENEFITS: { icon: Icon; title: string; body: string }[] = [
   {
-    icon: TrendingDown,
+    icon: TrendDown,
     title: "Collapses the colony",
     body: "Targets the breeding cycle, not individuals. The population shrinks each generation because there aren't enough pups to replace what's lost.",
   },
