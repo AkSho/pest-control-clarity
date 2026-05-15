@@ -60,6 +60,63 @@ export function ProductPage({ product, routePath }: { product: Product; routePat
         <MechanismTrio />
       </div>
 
+      {/* 50/50 lifestyle — station deployed in context */}
+      <section className="container-site py-16">
+        <div className="flex flex-col gap-8 md:flex-row md:items-center md:gap-12">
+          {/* Text side */}
+          <div className="flex flex-col gap-6 md:basis-1/2">
+            <div>
+              <span className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">
+                Field-deployed
+              </span>
+              <h2 className="mt-2 text-3xl font-bold tracking-tight md:text-4xl">
+                Designed for real properties. Built to run quietly.
+              </h2>
+              <p className="mt-3 text-base text-muted-foreground">
+                The XL locking bait station keeps bait secure from kids, pets,
+                and non-target animals while giving rodents reliable access. Set
+                it, monitor it monthly, and let the biology do the rest.
+              </p>
+            </div>
+            <ul className="flex flex-col gap-3">
+              {[
+                "Tamper-resistant — key-locked, bolt-mountable",
+                "Works in crawl spaces, wall voids, outdoor runs",
+                "No permit required · FIFRA 25(b) exempt",
+                "Check every 30 days — refill every 60–90",
+              ].map((item) => (
+                <li
+                  key={item}
+                  className="flex items-center gap-2.5 text-sm text-foreground"
+                >
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand/10 text-[11px] font-bold text-brand">
+                    ✓
+                  </span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <a
+              href="#overview"
+              className="inline-flex h-11 w-fit items-center justify-center rounded-full bg-brand px-7 text-sm font-bold text-brand-foreground transition hover:bg-brand/90"
+            >
+              Shop the Starter Kit →
+            </a>
+          </div>
+          {/* Image side */}
+          <div className="overflow-hidden rounded-2xl md:basis-1/2 md:self-stretch">
+            <img
+              src="/products/station-closed.png"
+              alt="Evolve XL locking bait station"
+              width={800}
+              height={800}
+              loading="lazy"
+              className="h-full w-full object-cover"
+            />
+          </div>
+        </div>
+      </section>
+
       <div id="results">
         <FieldResultsTrio />
       </div>
