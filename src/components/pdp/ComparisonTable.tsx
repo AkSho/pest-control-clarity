@@ -12,18 +12,20 @@ const ROWS: { label: string; evolve: boolean; poison: boolean; traps: boolean }[
 
 export function ComparisonTable() {
   return (
-    <section className="container-site py-16">
+    <section className="container-site py-4 md:py-6">
+      <div className="rounded-2xl border border-border/50 bg-card p-8 md:p-14">
       <div className="flex flex-col gap-8 md:flex-row md:items-start md:gap-12">
         {/* Heading side */}
         <div className="flex flex-col gap-3 md:max-w-[380px] md:basis-[36%] md:pt-2">
           <span className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">
             Evolve vs. alternatives
           </span>
-          <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-            Why fertility control beats the alternatives
+          <h2 className="pdp-h2 text-foreground">
+            Why everything else keeps failing
           </h2>
           <p className="text-base text-muted-foreground">
-            Most rodent control attacks individuals. Evolve attacks the supply.
+            Every tool you've tried kills the rodents that are there. The ones being born right now
+            aren't affected. Evolve closes that gap.
           </p>
         </div>
 
@@ -51,6 +53,7 @@ export function ComparisonTable() {
             </div>
           ))}
         </div>
+      </div>
       </div>
     </section>
   );

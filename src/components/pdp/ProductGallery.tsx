@@ -117,34 +117,55 @@ export function ProductGallery({ images, alt }: { images: string[]; alt: string 
         </DialogContent>
       </Dialog>
 
-      {/* Targets / Safe for — compact pill display */}
-      <div className="flex flex-col gap-3 rounded-xl border border-border bg-surface px-4 py-3">
-        <div className="flex items-center gap-3">
-          <span className="w-16 shrink-0 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-            Targets
-          </span>
-          <div className="flex flex-wrap gap-1.5">
-            {["Rats", "Mice"].map((item) => (
-              <span
-                key={item}
-                className="rounded-full border border-border bg-background px-2.5 py-1 text-xs font-medium text-foreground"
-              >
-                {item}
-              </span>
-            ))}
+      {/* Targets / Safe for */}
+      <div className="rounded-2xl border border-border bg-surface p-4">
+        <div className="mb-3 flex items-start gap-4">
+          <div className="flex flex-col items-center gap-1 pt-0.5">
+            <span className="text-2xl">🐀</span>
+            <span className="text-2xl">🐭</span>
+          </div>
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              Targets
+            </p>
+            <div className="mt-1.5 flex flex-wrap gap-1.5">
+              {[
+                { label: "Norway rat", emoji: "🐀" },
+                { label: "Roof rat", emoji: "🐀" },
+                { label: "House mouse", emoji: "🐭" },
+                { label: "Deer mouse", emoji: "🐭" },
+              ].map((item) => (
+                <span
+                  key={item.label}
+                  className="rounded-md border border-border bg-background px-2.5 py-1 text-xs font-semibold text-foreground"
+                >
+                  {item.label}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          <span className="w-16 shrink-0 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+
+        <div className="border-t border-border pt-3">
+          <p className="mb-1.5 text-xs font-bold uppercase tracking-wider text-muted-foreground">
             Safe for
-          </span>
+          </p>
           <div className="flex flex-wrap gap-1.5">
-            {["Dogs", "Cats", "Kids", "Hawks", "Owls", "Chickens"].map((item) => (
+            {[
+              { label: "Dogs", emoji: "🐕" },
+              { label: "Cats", emoji: "🐈" },
+              { label: "Kids", emoji: "👶" },
+              { label: "Hawks", emoji: "🦅" },
+              { label: "Owls", emoji: "🦉" },
+              { label: "Chickens", emoji: "🐔" },
+              { label: "Livestock", emoji: "🐄" },
+            ].map((item) => (
               <span
-                key={item}
-                className="rounded-full border border-border bg-background px-2.5 py-1 text-xs font-medium text-foreground"
+                key={item.label}
+                className="inline-flex items-center gap-1 rounded-md border border-brand/20 bg-brand/5 px-2.5 py-1 text-xs font-semibold text-foreground"
               >
-                {item}
+                <span>{item.emoji}</span>
+                {item.label}
               </span>
             ))}
           </div>

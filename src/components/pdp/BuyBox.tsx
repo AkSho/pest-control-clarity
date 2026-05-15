@@ -1,7 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Star, Truck, ShieldCheck, RotateCcw, Award } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Star } from "lucide-react";
+import { Flag, Bird, ShieldCheck, Leaf } from "@phosphor-icons/react";
 import { PestPills } from "./PestPills";
 import { SizePills } from "./SizePills";
 import { PlanSelector, type Plan } from "./PlanSelector";
@@ -56,12 +56,12 @@ const BUNDLE_ITEMS: Record<BundleType, BundleItem[]> = {
   property: PROPERTY_BUNDLE,
 };
 
-// T09 — outcome-first, plain English, objection-handling
 const FEATURE_BULLETS = [
   "Traps and poison leave the breeding pair intact. Evolve removes the colony's ability to rebuild.",
   "Anyone can buy and use it directly — no license, no permit required.",
   "Food-grade formula. Safe for dogs, cats, kids, hawks, and owls.",
   "Works on populations that have built resistance to conventional poison.",
+  "Rodents don't develop bait aversion — they'll choose it over other food sources even in food-rich environments.",
 ];
 
 export function BuyBox({
@@ -242,12 +242,17 @@ export function BuyBox({
           </span>
           <span className="text-3xl font-bold text-foreground">{priceLabel}</span>
         </div>
-        <Button
-          onClick={handleBuy}
-          className="h-12 rounded-full bg-brand text-base font-bold text-brand-foreground hover:bg-brand/90"
-        >
+        <button onClick={handleBuy} className="pdp-btn-primary">
           Order Now
-        </Button>
+        </button>
+        {plan !== "sub" && (
+          <button
+            onClick={handleBuy}
+            className="text-center text-sm font-medium text-muted-foreground underline underline-offset-2 hover:text-foreground"
+          >
+            One-time purchase — ${unitPrice}
+          </button>
+        )}
         {/* Post-CTA confirmation */}
         {plan === "sub" && hasSub ? (
           <p className="text-center text-xs font-medium text-brand">
@@ -260,12 +265,12 @@ export function BuyBox({
         )}
       </div>
 
-      {/* Trust badges — T04 */}
+      {/* Trust badges */}
       <ul className="grid grid-cols-2 gap-3 border-t border-border pt-5 sm:grid-cols-4">
-        <TrustItem icon={RotateCcw} label="30-day guarantee" />
-        <TrustItem icon={ShieldCheck} label="No license needed" />
-        <TrustItem icon={Truck} label="Ships in 24h" />
-        <TrustItem icon={Award} label="Made in the USA" />
+        <TrustItem icon={Flag} label="Made in USA" />
+        <TrustItem icon={Bird} label="No secondary kill" />
+        <TrustItem icon={ShieldCheck} label="EPA minimum-risk" />
+        <TrustItem icon={Leaf} label="Non-anticoagulant" />
       </ul>
 
       {/* Inline accordion */}
@@ -324,10 +329,10 @@ function AccItem({
   );
 }
 
-function TrustItem({ icon: Icon, label }: { icon: typeof Truck; label: string }) {
+function TrustItem({ icon: Icon, label }: { icon: typeof Flag; label: string }) {
   return (
     <li className="flex flex-col items-center gap-1.5 text-center">
-      <Icon className="h-5 w-5 text-brand" />
+      <Icon size={20} weight="fill" className="text-brand" />
       <span className="text-[11px] font-medium leading-tight text-muted-foreground">{label}</span>
     </li>
   );

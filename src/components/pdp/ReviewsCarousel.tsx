@@ -12,10 +12,10 @@ export function ReviewsCarousel({ avgRating, count }: { avgRating: number; count
       <div className="container-site py-16">
         {/* Header */}
         <div className="text-center">
-          <span className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">
+          <span className="text-xs font-bold uppercase tracking-[0.18em] text-brand">
             Verified reviews
           </span>
-          <h2 className="mt-2 text-3xl font-bold tracking-tight md:text-4xl">
+          <h2 className="pdp-h2 mt-2 text-foreground">
             What people are seeing in the field
           </h2>
           <div className="mt-3 flex items-center justify-center gap-2">

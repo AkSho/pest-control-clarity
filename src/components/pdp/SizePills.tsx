@@ -21,14 +21,17 @@ export function SizePills({
             aria-checked={selected}
             onClick={() => onSelect(v.id)}
             className={cn(
-              "flex flex-col items-start gap-0.5 rounded-xl border-2 px-4 py-2.5 text-left transition",
+              "flex flex-col items-start gap-0.5 rounded-xl border-2 px-4 py-3 text-left transition",
               selected
-                ? "border-foreground bg-foreground/[0.03]"
+                ? "border-brand bg-brand/[0.03] shadow-[2px_2px_0_0_var(--color-brand)]"
                 : "border-border bg-background hover:border-foreground/40",
             )}
           >
-            <span className="text-sm font-semibold text-foreground">{v.label}</span>
-            <span className="text-xs text-muted-foreground">${v.oneTimePrice}</span>
+            <span className="text-base font-bold text-foreground">{v.label}</span>
+            <span className="text-xs text-muted-foreground">
+              {v.size === "6lb" ? "~2 stations · 60-day supply" : "~4 stations · 90-day supply"}
+            </span>
+            <span className="text-sm font-semibold text-brand">${v.oneTimePrice}</span>
           </button>
         );
       })}

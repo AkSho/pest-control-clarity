@@ -24,12 +24,13 @@ const TILES = [
 
 export function FindYourFit({ currentSlug }: { currentSlug: ProductSlug }) {
   return (
-    <section className="container-site py-16">
+    <section className="container-site py-4 md:py-6">
+      <div className="rounded-2xl border border-border/50 bg-card p-8 md:p-14">
       <div className="text-center">
-        <span className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">
+        <span className="text-xs font-bold uppercase tracking-[0.18em] text-brand">
           Find your fit
         </span>
-        <h2 className="mt-2 text-3xl font-bold tracking-tight md:text-4xl">
+        <h2 className="pdp-h2 mt-2 text-foreground">
           Where are you in the process?
         </h2>
       </div>
@@ -73,6 +74,7 @@ export function FindYourFit({ currentSlug }: { currentSlug: ProductSlug }) {
             </Link>
           );
         })}
+      </div>
       </div>
     </section>
   );

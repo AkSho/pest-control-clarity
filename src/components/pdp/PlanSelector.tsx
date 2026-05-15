@@ -25,40 +25,45 @@ export function PlanSelector({
           aria-checked={selected === "sub"}
           onClick={() => onChange("sub")}
           className={cn(
-            "relative flex w-full flex-col gap-3 rounded-2xl border-2 p-5 text-left transition",
+            "relative flex w-full flex-col overflow-hidden rounded-2xl border-2 text-left transition",
             selected === "sub"
-              ? "border-brand bg-brand/[0.04] shadow-sm"
+              ? "border-brand shadow-[2px_2px_0_0_var(--color-brand)]"
               : "border-border bg-background hover:border-foreground/30",
           )}
         >
-          <span className="absolute -top-2.5 left-4 rounded-full bg-brand px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand-foreground">
-            Most Popular
-          </span>
-          <div className="flex items-start gap-3">
-            <Radio checked={selected === "sub"} />
-            <div className="flex flex-1 flex-col gap-1">
-              <div className="flex items-baseline justify-between gap-2">
-                <span className="text-sm font-bold text-foreground">Replenishment plan</span>
-                <span className="flex items-baseline gap-2">
+          {/* Colored header strip */}
+          <div className="flex items-center justify-between bg-brand px-5 py-2.5">
+            <span className="text-xs font-bold uppercase tracking-wider text-brand-foreground">
+              Replenishment plan
+            </span>
+            <span className="rounded-full bg-brand-foreground/20 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand-foreground">
+              Most Popular
+            </span>
+          </div>
+
+          <div className="flex flex-col gap-3 p-5">
+            <div className="flex items-start gap-3">
+              <Radio checked={selected === "sub"} />
+              <div className="flex flex-1 flex-col gap-1">
+                <div className="flex items-baseline justify-between gap-2">
                   <span className="text-sm text-muted-foreground line-through">
                     ${variant.oneTimePrice}
                   </span>
                   <span className="text-lg font-bold text-foreground">
                     ${variant.subPrice!}
                   </span>
+                </div>
+                <span className="text-xs text-muted-foreground">
+                  {cadenceLabel} · auto-delivered
                 </span>
               </div>
-              <span className="text-xs text-muted-foreground">
-                ${variant.subPrice!} {cadenceLabel} · auto-delivered
-              </span>
             </div>
-          </div>
 
-          {/* Benefits drawer — always open on subscribe card */}
-          <ul className="ml-8 flex flex-col gap-1.5">
-            <BenefitLine checked={true}>Save ${savings} per shipment</BenefitLine>
-            <BenefitLine checked={true}>Pause or cancel anytime</BenefitLine>
-          </ul>
+            <ul className="ml-8 flex flex-col gap-1.5">
+              <BenefitLine checked={true}>Save ${savings} per shipment</BenefitLine>
+              <BenefitLine checked={true}>Pause or cancel anytime</BenefitLine>
+            </ul>
+          </div>
         </button>
       )}
 

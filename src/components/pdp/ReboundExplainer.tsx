@@ -1,11 +1,12 @@
 export function ReboundExplainer() {
   return (
-    <section className="container-site py-16">
+    <section className="container-site py-4 md:py-6">
+      <div className="rounded-2xl border border-border/50 bg-card p-8 md:p-14">
       <div className="mx-auto max-w-2xl text-center">
-        <span className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">
+        <span className="text-xs font-bold uppercase tracking-[0.18em] text-brand">
           The rebound problem
         </span>
-        <h2 className="mt-2 text-3xl font-bold tracking-tight md:text-4xl">
+        <h2 className="pdp-h2 mt-2 text-foreground">
           Two surviving rats can become 15,000 in a year
         </h2>
         <p className="mt-4 text-base text-muted-foreground">
@@ -24,6 +25,7 @@ export function ReboundExplainer() {
             <p className="text-sm text-muted-foreground">{s.body}</p>
           </div>
         ))}
+      </div>
       </div>
     </section>
   );

@@ -2,8 +2,8 @@ import { cn } from "@/lib/utils";
 import type { Pest } from "@/data/products";
 
 const PEST_META: Record<Pest, { label: string; sub: string }> = {
-  rat: { label: "Rats", sub: "Norway rat · roof rat" },
-  mouse: { label: "Mice", sub: "House mouse · deer mouse" },
+  rat: { label: "Rats", sub: "Norway rat · Roof rat" },
+  mouse: { label: "Mice", sub: "House mouse · Deer mouse" },
 };
 
 export function PestPills({
@@ -61,6 +61,9 @@ export function PestPills({
               isSel ? "bg-brand text-brand-foreground" : "bg-surface text-foreground",
             )}>
               <div className="text-sm font-bold">{meta.label}</div>
+              <div className={cn("mt-0.5 text-[10px] leading-tight", isSel ? "text-brand-foreground/70" : "text-muted-foreground")}>
+                {meta.sub}
+              </div>
             </div>
           </button>
         );

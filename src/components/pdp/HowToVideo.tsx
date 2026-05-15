@@ -30,10 +30,10 @@ export function HowToVideo() {
     <section className="border-y border-border bg-surface">
       <div className="container-site py-16">
         <div className="mb-10 text-center">
-          <span className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">
+          <span className="text-xs font-bold uppercase tracking-[0.18em] text-brand">
             How to deploy
           </span>
-          <h2 className="mx-auto mt-2 max-w-sm text-3xl font-bold tracking-tight md:text-4xl">
+          <h2 className="pdp-h2 mx-auto mt-2 max-w-sm text-foreground">
             Set it up in under 10 minutes
           </h2>
         </div>

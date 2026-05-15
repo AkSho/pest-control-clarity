@@ -168,7 +168,7 @@ export const PRODUCTS: Record<ProductSlug, Product> = {
       description:
         "Your rodent problem isn't a removal problem — it's a replacement problem. As long as the breeding pair stays intact, what you remove gets replaced. The XL Starter Kit is the full setup to start targeting reproduction instead: two locked stations, keys, and a soft-bait pouch.",
       howItWorks:
-        "Place each station along an active travel path. Load the included Evolve soft bait. Rodents enter, feed, and the cottonseed-oil active ingredient interferes with reproduction in both males and females. Effects begin after the first 4–6 week breeding cycle.",
+        "Place each station along an active travel path. Load the included Evolve soft bait. Rodents go for it readily — formulated with fats and sugars, they'll choose it over other food sources even in food-rich environments. They don't develop bait aversion, so feeding stays consistent. The cottonseed-oil active ingredient interferes with reproduction in both males and females. Effects begin after the first 4–6 week breeding cycle.",
       whatsInside:
         "Two locked Evolve bait stations · Two station keys · One Evolve soft-bait pouch (6 lb) · Deployment guide · EPA label · Safety Data Sheet (SDS).",
       ingredients:
@@ -234,7 +234,7 @@ export const PRODUCTS: Record<ProductSlug, Product> = {
       description:
         "Evolve Refill keeps your existing stations stocked. Same soft-bait formula, sized for ongoing deployment — choose the cadence that matches your site's burn rate.",
       howItWorks:
-        "Refills drop straight into your existing Evolve stations. Continuous availability is what drives fertility decline — gaps in supply let the breeding cycle restart. Pick the size that matches your two-month consumption.",
+        "Refills drop straight into your existing Evolve stations. Continuous availability is what drives fertility decline. Gaps in supply let the breeding cycle restart. Rodents don't develop bait aversion, so they keep feeding consistently as long as stations are stocked. Pick the size that matches your two-month consumption.",
       whatsInside:
         "One sealed Evolve soft-bait pouch or pail (size depends on variant) · Label and SDS sheet · No stations or hardware (those are in the Starter Kit).",
       ingredients:
