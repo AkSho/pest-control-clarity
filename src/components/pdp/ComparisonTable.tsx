@@ -28,7 +28,8 @@ export function ComparisonTable() {
         </div>
 
         {/* Table side — swap for <picture> once us-vs-them-desktop.png is ready */}
-        <div className="overflow-hidden rounded-2xl border border-border bg-card md:grow">
+        <div className="overflow-x-auto rounded-2xl border border-border bg-card md:grow">
+          <div className="min-w-[480px]">
           <div className="grid grid-cols-4 border-b border-border bg-surface text-center text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             <div className="p-4 text-left">&nbsp;</div>
             <div className="p-4 bg-brand/5 text-brand">Evolve</div>

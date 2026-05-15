@@ -80,7 +80,7 @@ export function HowToVideo() {
                 </div>
                 <div className="flex flex-col gap-1">
                   <h3 className="text-base font-bold text-foreground">{s.title}</h3>
-                  <p className="text-sm leading-relaxed text-muted-foreground">{s.body}</p>
+                  <p className="text-base leading-relaxed text-muted-foreground">{s.body}</p>
                 </div>
               </div>
             ))}
