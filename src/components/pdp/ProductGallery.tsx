@@ -1,11 +1,21 @@
 import { useState, useEffect } from "react";
-import { FileText, ShieldCheck } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
+// T01: "View Product Label" button removed
+// T02: EPA badge now opens an ELI5 modal
+// T06: Compact "Targets / Safe for" display replaces standalone WorksOnMarquee
 
 export function ProductGallery({ images, alt }: { images: string[]; alt: string }) {
   const [active, setActive] = useState(0);
 
-  // Reset to hero when variant changes
   useEffect(() => setActive(0), [images]);
 
   const activeSrc = images[active] ?? images[0];
@@ -13,7 +23,6 @@ export function ProductGallery({ images, alt }: { images: string[]; alt: string 
   return (
     <div className="flex flex-col gap-3">
       {/* Gallery: thumbs left on desktop, below on mobile */}
-      {/* xl:flex-row-reverse puts thumbs on the LEFT (main image on right) */}
       <div className="flex flex-col-reverse gap-3 xl:flex-row-reverse xl:gap-4">
         {/* Main image */}
         <div className="flex-1 overflow-hidden rounded-xl border-2 border-foreground/10 bg-white">
@@ -29,7 +38,7 @@ export function ProductGallery({ images, alt }: { images: string[]; alt: string 
           </div>
         </div>
 
-        {/* Thumbnails — horizontal scroll on mobile, vertical column on desktop */}
+        {/* Thumbnails — horizontal on mobile, vertical on desktop */}
         {images.length > 1 && (
           <div className="flex gap-2 overflow-x-auto pb-1 xl:flex-col xl:overflow-visible xl:pb-0">
             {images.map((src, i) => (
@@ -59,23 +68,86 @@ export function ProductGallery({ images, alt }: { images: string[]; alt: string 
         )}
       </div>
 
-      {/* View Product Label button */}
-      <a
-        href="/products/product-label.jpg"
-        target="_blank"
-        rel="noreferrer"
-        className="inline-flex items-center justify-center gap-2 self-start rounded-full border border-border bg-background px-4 py-2 text-xs font-semibold text-foreground shadow-sm transition hover:bg-surface"
-      >
-        <FileText className="h-3.5 w-3.5 text-brand" />
-        View Product Label
-      </a>
+      {/* EPA badge — click opens plain-English explanation modal */}
+      <Dialog>
+        <DialogTrigger asChild>
+          <button className="flex w-full items-center gap-3 rounded-xl border border-brand/30 bg-brand/5 px-4 py-3 text-left transition hover:bg-brand/10">
+            <ShieldCheck className="h-8 w-8 shrink-0 text-brand" />
+            <div>
+              <p className="text-xs font-bold text-foreground">EPA Minimum-Risk · FIFRA 25(b)</p>
+              <p className="text-xs text-brand">What does this mean for me? →</p>
+            </div>
+          </button>
+        </DialogTrigger>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-base">
+              <ShieldCheck className="h-5 w-5 text-brand" />
+              What "EPA Minimum-Risk" means for you
+            </DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col gap-4 text-sm text-muted-foreground">
+            <p>
+              The EPA keeps a list of pest control products made from ingredients already known to
+              be safe — things like food-grade oils, cedarwood, and other natural materials.
+              Products on this list are classified as{" "}
+              <strong className="text-foreground">minimum-risk pesticides</strong>. Evolve is on
+              that list.
+            </p>
+            <p>
+              The active ingredient is <strong className="text-foreground">cottonseed oil</strong>{" "}
+              — food-grade, not a blood thinner, not a neurotoxin.
+            </p>
+            <ul className="flex flex-col gap-2.5">
+              {[
+                "No license or permit needed to buy or use it",
+                "No exterminator or certified applicator required",
+                "Safe for pets, dogs, hawks, owls, and other wildlife when used as directed",
+                "Can be used in homes, rentals, restaurants, and commercial buildings",
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-2">
+                  <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-brand/10 text-[10px] font-bold text-brand">
+                    ✓
+                  </span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </DialogContent>
+      </Dialog>
 
-      {/* EPA credential badge */}
-      <div className="flex items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3">
-        <ShieldCheck className="h-8 w-8 shrink-0 text-brand" />
-        <div>
-          <p className="text-xs font-bold text-foreground">EPA Minimum-Risk · FIFRA 25(b)</p>
-          <p className="text-xs text-muted-foreground">No secondary kill — safe for hawks, owls, pets &amp; wildlife</p>
+      {/* Targets / Safe for — compact pill display */}
+      <div className="flex flex-col gap-3 rounded-xl border border-border bg-surface px-4 py-3">
+        <div className="flex items-center gap-3">
+          <span className="w-16 shrink-0 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+            Targets
+          </span>
+          <div className="flex flex-wrap gap-1.5">
+            {["Rats", "Mice"].map((item) => (
+              <span
+                key={item}
+                className="rounded-full border border-border bg-background px-2.5 py-1 text-xs font-medium text-foreground"
+              >
+                {item}
+              </span>
+            ))}
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="w-16 shrink-0 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+            Safe for
+          </span>
+          <div className="flex flex-wrap gap-1.5">
+            {["Dogs", "Cats", "Kids", "Hawks", "Owls", "Chickens"].map((item) => (
+              <span
+                key={item}
+                className="rounded-full border border-border bg-background px-2.5 py-1 text-xs font-medium text-foreground"
+              >
+                {item}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
     </div>

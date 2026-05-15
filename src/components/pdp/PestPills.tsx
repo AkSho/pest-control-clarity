@@ -32,14 +32,14 @@ export function PestPills({
             onClick={() => onSelect(p)}
             className={cn(
               "flex flex-col overflow-hidden rounded-xl border-2 text-left transition",
-              "w-[110px]",
+              "w-[140px]",
               isSel
                 ? "border-brand shadow-sm"
                 : "border-border hover:border-foreground/30",
             )}
           >
             {/* Product image */}
-            <div className="flex h-[90px] w-full items-center justify-center bg-white p-2">
+            <div className="flex h-[110px] w-full items-center justify-center bg-white p-2">
               {img ? (
                 <img
                   src={img}
@@ -57,16 +57,10 @@ export function PestPills({
 
             {/* Label bar */}
             <div className={cn(
-              "px-3 py-2 transition",
+              "px-3 py-2.5 transition",
               isSel ? "bg-brand text-brand-foreground" : "bg-surface text-foreground",
             )}>
-              <div className="text-xs font-bold">{meta.label}</div>
-              <div className={cn(
-                "text-[10px] leading-tight",
-                isSel ? "text-brand-foreground/80" : "text-muted-foreground",
-              )}>
-                {meta.sub}
-              </div>
+              <div className="text-sm font-bold">{meta.label}</div>
             </div>
           </button>
         );

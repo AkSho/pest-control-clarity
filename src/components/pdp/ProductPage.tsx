@@ -14,10 +14,8 @@ import { FindYourFit } from "./FindYourFit";
 import { HowToVideo } from "./HowToVideo";
 import { OperatorQuote } from "./OperatorQuote";
 import { PdpAnchorNav } from "./PdpAnchorNav";
-import { WorksOnMarquee } from "./WorksOnMarquee";
 import { FieldResultsTrio } from "./FieldResultsTrio";
 import { ReviewsCarousel } from "./ReviewsCarousel";
-import { TrustRow } from "./TrustRow";
 import { PressStrip } from "@/components/site/PressStrip";
 import type { Product } from "@/data/products";
 
@@ -54,8 +52,6 @@ export function ProductPage({ product, routePath }: { product: Product; routePat
         </div>
         <BuyBox product={product} variant={variant} onVariantChange={onVariantChange} />
       </section>
-
-      <WorksOnMarquee />
 
       <PressStrip />
 
@@ -134,8 +130,6 @@ export function ProductPage({ product, routePath }: { product: Product; routePat
 
       <FindYourFit currentSlug={product.slug} />
 
-      <TrustRow />
-
       {/* FAQ — full version */}
       <section id="faq" className="container-site py-16">
         <div className="mx-auto max-w-3xl">
@@ -164,21 +158,21 @@ export function ProductPage({ product, routePath }: { product: Product; routePat
 
       {/* TODO: full reviews widget here (Junip/Okendo) once platform is wired */}
 
-      {/* Closing CTA band */}
-      <section className="border-t border-border bg-surface">
-        <div className="container-site py-16 text-center">
-          <h2 className="mx-auto max-w-2xl text-3xl font-bold tracking-tight md:text-4xl">
-            Stop reacting. Start collapsing the population.
+      {/* Closing CTA band — T15 */}
+      <section className="border-t border-border bg-brand">
+        <div className="container-site py-20 text-center">
+          <h2 className="mx-auto max-w-2xl text-3xl font-bold tracking-tight text-brand-foreground md:text-5xl">
+            You've been managing a symptom.
+            <br className="hidden md:block" /> This addresses the cause.
           </h2>
-          <p className="mx-auto mt-3 max-w-xl text-base text-muted-foreground">
-            Flat $12.95 shipping. Ships in 24 hours from NJ. Cancel your replenishment plan
-            anytime.
+          <p className="mx-auto mt-4 max-w-lg text-base text-brand-foreground/80">
+            $12.95 flat shipping. Ships within 24 hours. 30-day guarantee if it doesn't work.
           </p>
           <a
             href="#overview"
-            className="mt-6 inline-flex h-12 items-center justify-center rounded-full bg-brand px-8 text-base font-bold text-brand-foreground transition hover:bg-brand/90"
+            className="mt-8 inline-flex h-13 items-center justify-center rounded-full bg-background px-10 text-base font-bold text-foreground transition hover:bg-background/90"
           >
-            Pick your variant ↑
+            Order now ↑
           </a>
         </div>
       </section>

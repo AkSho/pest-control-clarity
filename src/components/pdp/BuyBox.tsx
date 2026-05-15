@@ -1,6 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Star, Truck, ShieldCheck, RotateCcw } from "lucide-react";
+import { Star, Truck, ShieldCheck, RotateCcw, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PestPills } from "./PestPills";
 import { SizePills } from "./SizePills";
@@ -15,11 +15,12 @@ import {
 import type { Pest, Product, Variant } from "@/data/products";
 import { FLAT_SHIPPING_USD, sizesFor, uniquePests } from "@/data/products";
 
+// T09 — outcome-first, plain English, objection-handling
 const FEATURE_BULLETS = [
-  "Attacks reproduction, not just individuals",
-  "FIFRA 25(b) exempt — no license required",
-  "Safe for pets, kids & non-target wildlife",
-  "Works where traps and poison fail",
+  "Traps and poison leave the breeding pair intact. Evolve removes the colony's ability to rebuild.",
+  "No license, no permit, no exterminator required — anyone can use it.",
+  "Food-grade formula. Safe for dogs, cats, kids, hawks, and owls.",
+  "Works on populations that have built resistance to conventional poison.",
 ];
 
 export function BuyBox({
@@ -166,16 +167,17 @@ export function BuyBox({
           </p>
         ) : (
           <p className="text-center text-xs text-muted-foreground">
-            ${FLAT_SHIPPING_USD.toFixed(2)} flat shipping · ships in 24h from NJ
+            ${FLAT_SHIPPING_USD.toFixed(2)} flat shipping · ships within 24 hours
           </p>
         )}
       </div>
 
-      {/* Trust badges */}
-      <ul className="grid grid-cols-3 gap-3 border-t border-border pt-5">
+      {/* Trust badges — T04 */}
+      <ul className="grid grid-cols-2 gap-3 border-t border-border pt-5 sm:grid-cols-4">
         <TrustItem icon={RotateCcw} label="30-day guarantee" />
-        <TrustItem icon={ShieldCheck} label="EPA 25(b)" />
-        <TrustItem icon={Truck} label="Ships 24h NJ" />
+        <TrustItem icon={ShieldCheck} label="No license needed" />
+        <TrustItem icon={Truck} label="Ships in 24h" />
+        <TrustItem icon={Award} label="Made in the USA" />
       </ul>
 
       {/* Inline accordion */}

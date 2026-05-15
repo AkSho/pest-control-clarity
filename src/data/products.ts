@@ -76,23 +76,23 @@ const SHARED_FAQ: FAQ[] = [
   },
   {
     q: "Is it safe around pets, kids, and wildlife?",
-    a: "Evolve is FIFRA Section 25(b) exempt. The active ingredient is food-grade cottonseed oil — not an anticoagulant or neurotoxin. Used as directed (inside locked stations), it poses little to no risk to people, pets, or non-target predators like hawks and owls.",
+    a: "Yes. The active ingredient is food-grade cottonseed oil — not a blood thinner, not a neurotoxin. The EPA classifies it as a minimum-risk pesticide, which means the agency has reviewed the ingredients and determined they don't need the same restrictions as traditional pest control products. Used as directed inside locked stations, it poses no meaningful risk to dogs, cats, kids, hawks, owls, or other non-target animals.",
   },
   {
     q: "Why doesn't snap-trapping or poison just fix this?",
-    a: "Both kill individuals but leave the breeding pair untouched. A single rat pair can produce up to 15,000 descendants in a year. As long as the colony can replace what you remove, you're paying to manage symptoms forever. Evolve attacks the supply side.",
+    a: "Both kill individuals but leave the breeding pair untouched. A single rat pair can produce up to 15,000 descendants in a year — and survivors breed faster under pressure. As long as the colony can replace what you remove, you're paying to manage a symptom forever. Evolve attacks the cause: it removes the colony's ability to rebuild. Use it alongside traps or other tools to cull the current population while Evolve stops the next generation from being born.",
   },
   {
-    q: "How much do I need and where do I deploy it?",
-    a: "For most properties, a 6 lb pouch covers 30 days of continuous baiting across two stations. Place stations along travel paths — fence lines, foundation walls, behind dumpsters, near burrows. Rodents have to eat it consistently for it to work.",
+    q: "How much do I need and where do I put it?",
+    a: "For most homes and small properties, a 6 lb pouch covers 30 days of continuous baiting across two stations. Place stations along where rodents already travel — foundation walls, fence lines, behind dumpsters, near burrow openings. Rodents need to eat it consistently for it to work, so keep stations stocked.",
   },
   {
-    q: "Do I need a pesticide license to use this?",
-    a: "No. Because Evolve is 25(b) exempt, it doesn't require a restricted-use applicator license. Property managers, restaurant operators, HOA boards, and homeowners can deploy it directly.",
+    q: "Do I need a license to buy or use this?",
+    a: "No. Evolve uses a food-grade active ingredient that the EPA has classified as minimum-risk. That means no restricted-use license, no certified applicator, and no permit required. Homeowners, landlords, property managers, and restaurant owners can all buy and deploy it directly.",
   },
   {
     q: "When will I see results?",
-    a: "Bait consumption usually starts within the first week. Reproduction effects begin showing after the first full breeding cycle (4–6 weeks). Most operators see a meaningful drop in sightings and droppings inside 60–90 days of consistent deployment.",
+    a: "Most people notice bait being consumed within the first week — that means rodents are feeding, which is exactly what you want. Reproduction effects start showing after the first full breeding cycle (4–6 weeks). Most sites see a meaningful drop in sightings and droppings within 60–90 days of consistent deployment.",
   },
   {
     q: "Can I use it indoors and outdoors?",
@@ -145,9 +145,9 @@ const SHARED_FEATURES: Product["features"] = [
 export const PRODUCTS: Record<ProductSlug, Product> = {
   "starter-kit": {
     slug: "starter-kit",
-    title: "Evolve XL Starter Kit",
+    title: "Evolve Rodent Fertility Control — Starter Kit",
     subtitle:
-      "Everything you need to start a rodent fertility-control program — bait, stations, and keys in one box.",
+      "Stop replacing rodents you remove. Evolve cuts off the breeding cycle so the colony can't rebuild itself — month by month, without poison, without cleanup.",
     intro:
       "The XL Starter Kit is the cleanest way to begin. Locked bait stations, keys, and an Evolve soft-bait pouch — enough to seed a typical site for the first deployment cycle.",
     longDescription: [
@@ -176,7 +176,7 @@ export const PRODUCTS: Record<ProductSlug, Product> = {
       deployment:
         "Stations belong along rodent travel paths: foundation walls, fence lines, behind dumpsters, near burrows. Keep bait dry and continuously available — gaps in supply restart the breeding cycle.",
       shipping:
-        "Flat $12.95 shipping. Ships within 24 hours from NJ. 30-day satisfaction guarantee.",
+        "Flat $12.95 shipping. Ships within 24 hours. 30-day satisfaction guarantee.",
     },
     defaultVariantId: "starter-kit-rat-6lb",
     rating: { avg: 4.6, count: 38 },
@@ -212,9 +212,9 @@ export const PRODUCTS: Record<ProductSlug, Product> = {
 
   refill: {
     slug: "refill",
-    title: "Evolve Refill",
+    title: "Evolve Rodent Fertility Control — Refill Bait",
     subtitle:
-      "Keep your stations stocked. Soft-bait refill pouches and pails for ongoing deployment.",
+      "Keep the pressure on. Empty stations let the breeding cycle restart. Refills keep the colony collapsing on schedule.",
     intro:
       "Continuous baiting is what makes fertility control actually work. Refills keep your stations full so the colony never gets a break in the cycle.",
     longDescription: [
@@ -242,7 +242,7 @@ export const PRODUCTS: Record<ProductSlug, Product> = {
       deployment:
         "Pull the empty pouch from your station, drop in the new one. Re-bait on a fixed cadence — most sites land on every 30–60 days. Replenishment plans automate this.",
       shipping:
-        "Flat $12.95 shipping. Ships within 24 hours from NJ. Replenishment plans cancel anytime.",
+        "Flat $12.95 shipping. Ships within 24 hours. Replenishment plans cancel anytime.",
     },
     defaultVariantId: "refill-rat-6lb",
     rating: { avg: 4.6, count: 38 },
@@ -383,8 +383,8 @@ export const FIELD_RESULTS = [
   },
   {
     stat: "88%",
-    label: "Operator-reported drop in sightings",
-    note: "Pest-control professionals using Evolve in active accounts.",
+    label: "Drop in rodent sightings reported",
+    note: "Pest management professionals using Evolve across active sites.",
   },
   {
     stat: "79%+",
