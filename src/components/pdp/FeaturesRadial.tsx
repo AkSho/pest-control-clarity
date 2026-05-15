@@ -31,7 +31,7 @@ function Tile({ icon: Icon, title, body }: (typeof BENEFITS)[0]) {
         <Icon className="h-5 w-5 text-brand" />
       </div>
       <h3 className="text-base font-bold text-foreground">{title}</h3>
-      <p className="text-sm leading-relaxed text-muted-foreground">{body}</p>
+      <p className="text-base leading-relaxed text-muted-foreground">{body}</p>
     </div>
   );
 }
@@ -100,7 +100,7 @@ export function FeaturesRadial() {
           <h3 className="text-xl font-bold tracking-tight text-foreground md:text-2xl">
             Why pest control keeps failing you
           </h3>
-          <p className="text-sm leading-relaxed text-muted-foreground">
+          <p className="text-base leading-relaxed text-muted-foreground">
             Trap a rat today. Two survivors breed tonight. A single pair produces up to 12 pups
             every 21 days — and they reach breeding age in 5 weeks. By spring you're back where you
             started, or worse.
@@ -111,7 +111,7 @@ export function FeaturesRadial() {
               "Survivors breed faster under pressure. The colony compensates for every removal.",
               "Anticoagulant resistance is now widespread. Poison gets less effective each generation.",
             ].map((item) => (
-              <li key={item} className="flex items-start gap-2.5 text-sm text-foreground">
+              <li key={item} className="flex items-start gap-2.5 text-base text-foreground">
                 <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-destructive/10 text-[11px] font-bold text-destructive">
                   ✗
                 </span>
@@ -129,7 +129,7 @@ export function FeaturesRadial() {
           <h3 className="text-xl font-bold tracking-tight text-foreground md:text-2xl">
             Evolve cuts off the supply
           </h3>
-          <p className="text-sm leading-relaxed text-muted-foreground">
+          <p className="text-base leading-relaxed text-muted-foreground">
             The cottonseed oil active ingredient interrupts reproduction in both males and females.
             No new pups means no replacements. The colony shrinks on its own timeline — no die-off,
             no carcasses, no cleanup.
@@ -140,7 +140,7 @@ export function FeaturesRadial() {
               "Females: litter sizes shrink, then stop entirely after the first breeding cycle",
               "Both sexes: effects compound over 60–90 days — no resistance possible",
             ].map((item) => (
-              <li key={item} className="flex items-start gap-2.5 text-sm text-foreground">
+              <li key={item} className="flex items-start gap-2.5 text-base text-foreground">
                 <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand/10 text-[11px] font-bold text-brand">
                   ✓
                 </span>

@@ -16,7 +16,7 @@ export function FieldResultsTrio() {
           Field results
         </span>
         <h2 className="mt-2 text-3xl font-bold tracking-tight md:text-4xl">
-          What operators measure on real sites
+          What the field data shows
         </h2>
       </div>
 
@@ -43,7 +43,7 @@ export function FieldResultsTrio() {
         </p>
         <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {NOT_EVOLVE.map((item) => (
-            <li key={item} className="flex items-start gap-2.5 text-sm text-foreground">
+            <li key={item} className="flex items-start gap-2.5 text-base text-foreground">
               <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-destructive/10 text-[11px] font-bold text-destructive">
                 ✗
               </span>

@@ -16,7 +16,7 @@ export function ReviewsCarousel({ avgRating, count }: { avgRating: number; count
             Verified reviews
           </span>
           <h2 className="mt-2 text-3xl font-bold tracking-tight md:text-4xl">
-            From people running real programs
+            What people are seeing in the field
           </h2>
           <div className="mt-3 flex items-center justify-center gap-2">
             <div className="flex">

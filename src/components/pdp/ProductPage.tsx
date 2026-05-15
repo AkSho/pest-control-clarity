@@ -84,7 +84,7 @@ export function ProductPage({ product, routePath }: { product: Product; routePat
               ].map((item) => (
                 <li
                   key={item}
-                  className="flex items-center gap-2.5 text-sm text-foreground"
+                  className="flex items-center gap-2.5 text-base text-foreground"
                 >
                   <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand/10 text-[11px] font-bold text-brand">
                     ✓
