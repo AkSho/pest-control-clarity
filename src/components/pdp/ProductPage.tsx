@@ -9,6 +9,8 @@ import {
 import { ProductGallery } from "./ProductGallery";
 import { BuyBox } from "./BuyBox";
 import { ComparisonTable } from "./ComparisonTable";
+import { FeaturesRadial } from "./FeaturesRadial";
+import { OperatorQuote } from "./OperatorQuote";
 import { PdpAnchorNav } from "./PdpAnchorNav";
 import { WorksOnMarquee } from "./WorksOnMarquee";
 import { ReboundExplainer } from "./ReboundExplainer";
@@ -54,6 +56,10 @@ export function ProductPage({ product, routePath }: { product: Product; routePat
       </section>
 
       <WorksOnMarquee />
+
+      <PressStrip />
+
+      <FeaturesRadial />
 
       <div id="how-it-works">
         <ReboundExplainer />
@@ -121,13 +127,13 @@ export function ProductPage({ product, routePath }: { product: Product; routePat
         <FieldResultsTrio />
       </div>
 
-      <PressStrip />
+      <ReviewsCarousel avgRating={product.rating.avg} count={product.rating.count} />
 
       <div id="compare">
         <ComparisonTable />
       </div>
 
-      <ReviewsCarousel avgRating={product.rating.avg} count={product.rating.count} />
+      <OperatorQuote />
 
       <TrustRow />
 
