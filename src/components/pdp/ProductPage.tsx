@@ -17,6 +17,7 @@ import { PdpAnchorNav } from "./PdpAnchorNav";
 import { FieldResultsTrio } from "./FieldResultsTrio";
 import { ReviewsCarousel } from "./ReviewsCarousel";
 import { PressStrip } from "@/components/site/PressStrip";
+import { AccordionSectionContent } from "./AccordionSectionContent";
 import type { Product } from "@/data/products";
 
 export function ProductPage({ product, routePath }: { product: Product; routePath: string }) {
@@ -150,8 +151,8 @@ export function ProductPage({ product, routePath }: { product: Product; routePat
                   <AccordionTrigger className="text-left text-[1.125rem] font-semibold">
                     {f.q}
                   </AccordionTrigger>
-                  <AccordionContent className="text-sm leading-relaxed text-muted-foreground">
-                    {f.a}
+                  <AccordionContent>
+                    <AccordionSectionContent section={f.a} />
                   </AccordionContent>
                 </AccordionItem>
               ))}
@@ -167,9 +168,6 @@ export function ProductPage({ product, routePath }: { product: Product; routePat
             You've been managing a symptom.
             <br className="hidden md:block" /> This addresses the cause.
           </h2>
-          <p className="mx-auto mt-4 max-w-lg text-base text-brand-foreground/80">
-            $12.95 flat shipping. Ships within 24 hours.
-          </p>
           <a
             href="#overview"
             className="mt-8 inline-flex h-14 items-center justify-center rounded-full bg-background px-10 text-base font-bold text-foreground shadow-[2px_2px_0_0_oklch(0.15_0.06_262)] transition hover:shadow-[1px_1px_0_0_oklch(0.15_0.06_262)] hover:translate-x-[1px] hover:translate-y-[1px]"

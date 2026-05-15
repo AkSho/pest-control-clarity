@@ -13,7 +13,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { cn } from "@/lib/utils";
-import type { AccordionSection, Pest, Product, Variant } from "@/data/products";
+import { AccordionSectionContent } from "./AccordionSectionContent";
+import type { Pest, Product, Variant } from "@/data/products";
 import { FLAT_SHIPPING_USD, sizesFor, uniquePests } from "@/data/products";
 
 type BundleType = "home" | "property";
@@ -21,22 +22,22 @@ type BundleType = "home" | "property";
 type BundleItem = { label: string; desc?: string; starterOnly?: boolean };
 
 const HOME_BUNDLE: BundleItem[] = [
-  { label: "Evolve soft bait", desc: "Rat or mouse formula" },
+  { label: "Evolve soft bait" },
   { label: "2× locking bait stations + keys", starterOnly: true },
-  { label: "Home Deployment Guide", desc: "PDF delivered with your order confirmation" },
-  { label: "30-day deployment support", desc: "Text us during setup. We answer questions, no site visit." },
-  { label: "Neighbor Strategy Note", desc: "How to coordinate with adjacent properties" },
-  { label: "Pet Safety Card", desc: "Keep it handy, share it with your vet" },
-  { label: "Consumption tracking log", desc: "Track feeding activity month by month" },
+  { label: "Home Deployment Guide" },
+  { label: "30-day deployment support" },
+  { label: "Neighbor Strategy Note" },
+  { label: "Pet Safety Card" },
+  { label: "Consumption tracking log" },
 ];
 
 const PROPERTY_BUNDLE: BundleItem[] = [
-  { label: "Evolve soft bait", desc: "Rat or mouse formula" },
+  { label: "Evolve soft bait" },
   { label: "2× locking bait stations + keys", starterOnly: true },
-  { label: "Business Deployment Guide", desc: "PDF delivered with your order confirmation" },
-  { label: "Compliance Documentation Template", desc: "For landlords, property managers, and commercial sites" },
-  { label: "30-day deployment support", desc: "Text us during setup. We answer questions, no site visit." },
-  { label: "Consumption tracking log", desc: "Track feeding activity site by site" },
+  { label: "Business Deployment Guide" },
+  { label: "Compliance Documentation Template" },
+  { label: "30-day deployment support" },
+  { label: "Consumption tracking log" },
 ];
 
 const BUNDLE_ITEMS: Record<BundleType, BundleItem[]> = {
@@ -308,72 +309,6 @@ function AccItem({
   );
 }
 
-function AccordionSectionContent({ section }: { section: AccordionSection }) {
-  return (
-    <div className="flex flex-col gap-3 pb-1">
-      {section.lead && (
-        <p className="text-sm leading-relaxed text-muted-foreground">{section.lead}</p>
-      )}
-      {section.steps && (
-        <ol className="flex flex-col gap-2.5">
-          {section.steps.map((step, i) => (
-            <li key={step} className="flex items-start gap-2.5">
-              <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand/10 text-[11px] font-bold text-brand">
-                {i + 1}
-              </span>
-              <span className="text-sm leading-relaxed text-foreground">{step}</span>
-            </li>
-          ))}
-        </ol>
-      )}
-      {section.bullets && (
-        <ul className="flex flex-col gap-2.5">
-          {section.bullets.map((bullet) => (
-            <li key={bullet} className="flex items-start gap-2.5">
-              <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand/10 text-[11px] font-bold text-brand">
-                ✓
-              </span>
-              <span className="text-sm leading-relaxed text-foreground">{bullet}</span>
-            </li>
-          ))}
-        </ul>
-      )}
-      {section.items && (
-        <ul className="flex flex-col gap-2">
-          {section.items.map((item) => (
-            <li key={item} className="flex items-center gap-2 text-sm text-foreground">
-              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand" />
-              {item}
-            </li>
-          ))}
-        </ul>
-      )}
-      {section.chips && (
-        <div className="flex flex-wrap gap-2">
-          {section.chips.map((chip) => (
-            <span
-              key={chip}
-              className="rounded-full border border-border bg-surface px-3 py-1 text-xs font-medium text-foreground"
-            >
-              {chip}
-            </span>
-          ))}
-        </div>
-      )}
-      {section.lines && (
-        <div className="flex flex-col gap-1.5">
-          {section.lines.map((line) => (
-            <p key={line} className="text-sm text-muted-foreground">{line}</p>
-          ))}
-        </div>
-      )}
-      {section.note && (
-        <p className="text-xs italic text-muted-foreground/80">{section.note}</p>
-      )}
-    </div>
-  );
-}
-
 function TrustItem({ icon: Icon, label }: { icon: typeof Flag; label: string }) {
   return (
     <li className="flex flex-col items-center gap-2 text-center">
@@ -386,7 +321,7 @@ function TrustItem({ icon: Icon, label }: { icon: typeof Flag; label: string }) 
 const PRIMARY_BADGES = [
   { emoji: "🌿", label: "Cottonseed oil", sub: "Active ingredient" },
   { emoji: "🔬", label: "Targets reproduction", sub: "Not single rodents" },
-  { emoji: "🦅", label: "Safe for predators and other animals", sub: "No secondary kill" },
+  { emoji: "🦅", label: "Safe for predators", sub: "No secondary kill" },
 ];
 
 const SECONDARY_BADGES = [

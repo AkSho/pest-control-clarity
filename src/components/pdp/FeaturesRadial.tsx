@@ -9,8 +9,8 @@ const BENEFITS: { icon: Icon; title: string; body: string }[] = [
   },
   {
     icon: ShieldCheck,
-    title: "Safe for predators and other animals",
-    body: "Cottonseed oil active. Hawks, owls, dogs, cats: none are at risk from rodents that fed on Evolve.",
+    title: "Safe for predators",
+    body: "Cottonseed oil active. Hawks, owls, dogs, cats: none are at risk from rodents that feed on Evolve.",
   },
   {
     icon: SealCheck,
@@ -102,10 +102,6 @@ export function FeaturesRadial() {
           <p className="mt-3 text-lg font-semibold text-foreground">
             offspring a single breeding pair can produce in one year
           </p>
-          <p className="mx-auto mt-2 max-w-lg text-sm text-muted-foreground">
-            Oklahoma State University Extension. Every rat you trap or poison gets replaced by the
-            next generation already in progress.
-          </p>
         </div>
 
         {/* Why pest control keeps failing + how Evolve fixes it */}
@@ -116,7 +112,7 @@ export function FeaturesRadial() {
               The problem
             </span>
             <h3 className="pdp-h4 text-foreground">
-              Why pest control keeps failing you
+              Why pest control keeps failing
             </h3>
             <p className="text-base leading-relaxed text-muted-foreground">
               Trap a rat today. Two survivors breed tonight. A single pair produces up to 12 pups

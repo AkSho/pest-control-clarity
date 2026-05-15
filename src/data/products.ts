@@ -23,7 +23,7 @@ export type Variant = {
   shippingWeightLb: number;
 };
 
-export type FAQ = { q: string; a: string };
+export type FAQ = { q: string; a: AccordionSection };
 
 export type AccordionSection = {
   lead?: string;
@@ -82,35 +82,80 @@ const GALLERY_DEPLOYED = "/products/gallery-deployed.svg";
 const SHARED_FAQ: FAQ[] = [
   {
     q: "How does Evolve actually work?",
-    a: "Evolve is a soft bait built around cottonseed oil — an active ingredient that interferes with reproduction in both male and female rodents. After the first breeding cycle (4–6 weeks) you start seeing fewer pups, and within a few months the colony collapses for lack of new arrivals.",
+    a: {
+      lead: "Evolve is a soft bait built around cottonseed oil, an active ingredient that interferes with reproduction in both male and female rodents.",
+      bullets: [
+        "After the first breeding cycle (4–6 weeks) you start seeing fewer pups.",
+        "Within a few months the colony collapses for lack of new arrivals.",
+      ],
+    },
   },
   {
     q: "Is it safe around pets, kids, and wildlife?",
-    a: "Yes. The active ingredient is food-grade cottonseed oil — not a blood thinner, not a neurotoxin. The EPA classifies it as a minimum-risk pesticide, which means the agency has reviewed the ingredients and determined they don't need the same restrictions as traditional pest control products. Used as directed inside locked stations, it poses no meaningful risk to dogs, cats, kids, hawks, owls, or other non-target animals.",
+    a: {
+      lead: "Yes. The active ingredient is food-grade cottonseed oil. The EPA puts it in the minimum-risk category, the same tier as products made from natural, food-grade ingredients.",
+      lines: [
+        "Used as directed inside locked stations, it poses no meaningful risk to dogs, cats, kids, hawks, owls, or other non-target animals.",
+      ],
+    },
   },
   {
     q: "Why doesn't snap-trapping or poison just fix this?",
-    a: "Both kill individuals but leave the breeding pair untouched. A single rat pair can produce up to 15,000 descendants in a year — and survivors breed faster under pressure. As long as the colony can replace what you remove, you're paying to manage a symptom forever. Evolve attacks the cause: it removes the colony's ability to rebuild. Use it alongside traps or other tools to cull the current population while Evolve stops the next generation from being born.",
+    a: {
+      lead: "Traps and poison kill what's visible. The breeding pair stays intact, and the colony keeps replacing what you remove.",
+      bullets: [
+        "The colony replaces every animal you remove. Usually faster than you can keep up.",
+        "Evolve targets reproduction directly. Use it alongside traps or exclusion to handle what's there now while Evolve stops the next generation from being born.",
+      ],
+    },
   },
   {
     q: "How much do I need and where do I put it?",
-    a: "For most homes and small properties, a 6 lb pouch covers 30 days of continuous baiting across two stations. Place stations along where rodents already travel — foundation walls, fence lines, behind dumpsters, near burrow openings. Rodents need to eat it consistently for it to work, so keep stations stocked.",
+    a: {
+      lead: "For most homes and small properties, a 6 lb pouch covers 30 days of continuous baiting across two stations. Place stations where rodents already travel:",
+      bullets: [
+        "Foundation walls and fence lines",
+        "Behind dumpsters and near trash storage",
+        "Near burrow openings or active entry points",
+      ],
+      note: "Rodents need to eat it consistently, so keep stations stocked.",
+    },
   },
   {
     q: "Do I need a license to buy or use this?",
-    a: "No. The EPA classifies Evolve as a minimum-risk pesticide — the same category as products made from cottonseed oil and cedarwood. That means no license and no permit required. Homeowners, landlords, property managers, and restaurant owners can all buy and deploy it directly.",
+    a: {
+      lead: "No. The EPA classifies Evolve as a minimum-risk pesticide, the same category as products made from cottonseed oil and cedarwood.",
+      lines: [
+        "No license, no permit required. Homeowners, landlords, property managers, and restaurant owners can all buy and deploy it directly.",
+      ],
+    },
   },
   {
     q: "When will I see results?",
-    a: "Most people notice bait being consumed within the first week — that means rodents are feeding, which is exactly what you want. Reproduction effects start showing after the first full breeding cycle (4–6 weeks). Most sites see a meaningful drop in sightings and droppings within 60–90 days of consistent deployment.",
+    a: {
+      lead: "Most people notice bait being consumed within the first week. That means rodents are feeding, which is exactly what you want.",
+      bullets: [
+        "Reproduction effects start showing after the first full breeding cycle (4–6 weeks).",
+        "Most sites see a meaningful drop in sightings and droppings within 60–90 days of consistent deployment.",
+      ],
+    },
   },
   {
     q: "Can I use it indoors and outdoors?",
-    a: "Yes. Indoors: basements, mechanical rooms, kitchens — inside locked stations. Outdoors: along fence lines, near burrows, behind dumpsters, or staked near garden beds. Keep bait dry and out of direct sun — heat and moisture affect how readily rodents eat it.",
+    a: {
+      lead: "Yes.",
+      items: [
+        "Indoors: basements, mechanical rooms, and kitchens (always inside locked stations)",
+        "Outdoors: along fence lines, near burrows, behind dumpsters, or near garden beds",
+      ],
+      note: "Keep bait dry and out of direct sun. Heat and moisture affect how readily rodents eat it.",
+    },
   },
   {
     q: "Will Evolve work alongside traps or other tools?",
-    a: "Yes — traps and exclusion handle what's visible right now; Evolve removes the colony's ability to rebound. Run them together and you're addressing both the symptom and the cause.",
+    a: {
+      lead: "Yes. Traps and exclusion handle what's visible right now. Evolve removes the colony's ability to keep producing new rodents. Run them together for faster results.",
+    },
   },
 ];
 
@@ -157,7 +202,7 @@ export const PRODUCTS: Record<ProductSlug, Product> = {
     slug: "starter-kit",
     title: "Evolve Rodent Fertility Control — Starter Kit",
     subtitle:
-      "Stop replacing rodents you remove. Evolve cuts off the breeding cycle so the colony can't rebuild itself — month by month, without poison, without cleanup.",
+      "Evolve cuts off the rodent breeding cycle by targeting male and female reproductive systems, so rodent colonies can't rebuild themselves.",
     intro:
       "The XL Starter Kit is the cleanest way to begin. Locked bait stations, keys, and an Evolve soft-bait pouch — enough to seed a typical site for the first deployment cycle.",
     longDescription: [
