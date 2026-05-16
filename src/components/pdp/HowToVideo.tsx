@@ -1,6 +1,3 @@
-// TODO: Replace YOUTUBE_ID with the actual YouTube short ID when ready.
-// The video should show: open station, place bait, close + secure, check at 30 days.
-const YOUTUBE_ID = "";
 
 const STEPS = [
   {
@@ -41,34 +38,13 @@ export function HowToVideo() {
         <div className="flex flex-col gap-8 md:flex-row md:items-start md:gap-12">
           {/* Video left */}
           <div className="w-full overflow-hidden rounded-2xl bg-border/20 md:basis-1/2">
-            {YOUTUBE_ID ? (
-              <div className="relative aspect-video">
-                <iframe
-                  src={`https://www.youtube.com/embed/${YOUTUBE_ID}`}
-                  title="How to deploy Evolve rodent fertility control"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className="absolute inset-0 h-full w-full rounded-2xl"
-                />
-              </div>
-            ) : (
-              /* Placeholder until video is ready */
-              <div className="flex aspect-video items-center justify-center">
-                <div className="text-center text-muted-foreground">
-                  <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-border">
-                    <svg
-                      className="h-6 w-6"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
-                  </div>
-                  <p className="text-sm font-medium">Deployment video coming soon</p>
-                </div>
-              </div>
-            )}
+            <video
+              src="/how-to-deploy.mp4"
+              controls
+              playsInline
+              className="w-full rounded-2xl"
+              aria-label="How to deploy Evolve rodent fertility control"
+            />
           </div>
 
           {/* Steps right */}
