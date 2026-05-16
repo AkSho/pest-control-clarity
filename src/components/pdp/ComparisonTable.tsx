@@ -13,8 +13,8 @@ export function ComparisonTable() {
             Why everything else keeps failing
           </h2>
           <p className="text-base text-muted-foreground">
-            Every tool you've tried kills the rodents that are there. The ones being born right now
-            aren't affected. Evolve closes that gap.
+            Every tool you've tried kills the rodents that are there — not the ones being born right now.
+            Evolve closes that gap.
           </p>
         </div>
 

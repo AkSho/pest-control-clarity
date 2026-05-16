@@ -14,7 +14,7 @@ const TILES = [
   {
     slug: "refill" as ProductSlug,
     href: "/products/refill",
-    image: "/products/refill-rat-6lb.jpg",
+    image: "/products/refill-rat-6lb.png",
     label: "Already set up",
     title: "Evolve Refill",
     desc: "Keep your stations stocked. Replenishment plans from $129 every 60 days.",

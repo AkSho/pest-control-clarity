@@ -54,42 +54,24 @@ export function FeaturesRadial() {
           </p>
         </div>
 
-        {/* Mobile: image top, 2×2 tiles below */}
-        <div className="mt-10 sm:hidden">
-          <div className="flex justify-center">
+        {/* Image + tiles: stacked on mobile, side-by-side on desktop */}
+        <div className="mt-10 flex flex-col gap-8 sm:flex-row sm:items-center sm:gap-12">
+          {/* Image — full width mobile, 50% desktop */}
+          <div className="overflow-hidden rounded-2xl border-2 border-brand/20 shadow-[2px_2px_0_0_var(--color-brand)] sm:basis-1/2 sm:self-stretch">
             <img
               src="/products/how-it-works.png"
               alt="How Evolve works"
-              width={220}
-              height={220}
+              width={800}
+              height={800}
               loading="lazy"
-              className="h-auto w-[220px] object-contain"
+              className="h-full w-full object-contain"
             />
           </div>
-          <div className="mt-8 grid grid-cols-2 gap-6">
+          {/* 2×2 tile grid */}
+          <div className="grid grid-cols-2 gap-8 sm:basis-1/2">
             {BENEFITS.map((b) => (
               <Tile key={b.title} {...b} />
             ))}
-          </div>
-        </div>
-
-        {/* Desktop: left tiles | center image | right tiles */}
-        <div className="mt-10 hidden sm:grid sm:grid-cols-[1fr_260px_1fr] sm:items-center sm:gap-10 lg:grid-cols-[1fr_320px_1fr] lg:gap-14">
-          <div className="flex flex-col gap-16">
-            <Tile {...BENEFITS[0]} />
-            <Tile {...BENEFITS[2]} />
-          </div>
-          <img
-            src="/products/starter-kit-rat.png"
-            alt="Evolve rodent fertility control bait"
-            width={400}
-            height={400}
-            loading="lazy"
-            className="h-auto w-full rounded-2xl border-2 border-brand/20 object-contain shadow-[2px_2px_0_0_var(--color-brand)]"
-          />
-          <div className="flex flex-col gap-16">
-            <Tile {...BENEFITS[1]} />
-            <Tile {...BENEFITS[3]} />
           </div>
         </div>
 

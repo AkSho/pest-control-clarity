@@ -77,6 +77,7 @@ const GALLERY_LIFESTYLE = "/products/gallery-lifestyle.png";
 const GALLERY_STATS = "/products/gallery-stats.png";
 const GALLERY_75_REDUCTION = "/products/gallery-75-reduction.png";
 const GALLERY_WHAT_TO_EXPECT = "/products/gallery-what-to-expect.png";
+const GALLERY_SPEC_SHEET = "/products/gallery-spec-sheet.jpg";
 
 // ===== Shared content =====
 const SHARED_FAQ: FAQ[] = [
@@ -285,7 +286,7 @@ export const PRODUCTS: Record<ProductSlug, Product> = {
         oneTimePrice: 179,
         // No replenishment plan on starter kits
         image: STARTER_RAT_HERO,
-        galleryImages: [STARTER_RAT_HERO, GALLERY_LIFESTYLE, GALLERY_STATS, GALLERY_75_REDUCTION, GALLERY_WHAT_TO_EXPECT],
+        galleryImages: [STARTER_RAT_HERO, GALLERY_LIFESTYLE, GALLERY_STATS, GALLERY_75_REDUCTION, GALLERY_WHAT_TO_EXPECT, GALLERY_SPEC_SHEET],
         shippingWeightLb: 8,
       },
       {
@@ -298,7 +299,7 @@ export const PRODUCTS: Record<ProductSlug, Product> = {
         oneTimePrice: 179,
         // No replenishment plan on starter kits
         image: STARTER_MOUSE_HERO,
-        galleryImages: [STARTER_MOUSE_HERO, GALLERY_LIFESTYLE, GALLERY_STATS, GALLERY_75_REDUCTION, GALLERY_WHAT_TO_EXPECT],
+        galleryImages: [STARTER_MOUSE_HERO, GALLERY_LIFESTYLE, GALLERY_STATS, GALLERY_75_REDUCTION, GALLERY_WHAT_TO_EXPECT, GALLERY_SPEC_SHEET],
         shippingWeightLb: 8,
       },
     ],
@@ -389,7 +390,7 @@ export const PRODUCTS: Record<ProductSlug, Product> = {
         subPrice: 129,
         subDays: 60,
         image: RAT_6,
-        galleryImages: [RAT_6, GALLERY_LIFESTYLE, GALLERY_STATS, GALLERY_75_REDUCTION, GALLERY_WHAT_TO_EXPECT],
+        galleryImages: [RAT_6, GALLERY_LIFESTYLE, GALLERY_STATS, GALLERY_75_REDUCTION, GALLERY_WHAT_TO_EXPECT, GALLERY_SPEC_SHEET],
         shippingWeightLb: 7,
       },
       {
@@ -403,7 +404,7 @@ export const PRODUCTS: Record<ProductSlug, Product> = {
         subPrice: 219,
         subDays: 90,
         image: RAT_12,
-        galleryImages: [RAT_12, GALLERY_LIFESTYLE, GALLERY_STATS, GALLERY_75_REDUCTION, GALLERY_WHAT_TO_EXPECT],
+        galleryImages: [RAT_12, GALLERY_LIFESTYLE, GALLERY_STATS, GALLERY_75_REDUCTION, GALLERY_WHAT_TO_EXPECT, GALLERY_SPEC_SHEET],
         shippingWeightLb: 13,
       },
       {
@@ -417,7 +418,7 @@ export const PRODUCTS: Record<ProductSlug, Product> = {
         subPrice: 129,
         subDays: 60,
         image: MOUSE_6,
-        galleryImages: [MOUSE_6, GALLERY_LIFESTYLE, GALLERY_STATS, GALLERY_75_REDUCTION, GALLERY_WHAT_TO_EXPECT],
+        galleryImages: [MOUSE_6, GALLERY_LIFESTYLE, GALLERY_STATS, GALLERY_75_REDUCTION, GALLERY_WHAT_TO_EXPECT, GALLERY_SPEC_SHEET],
         shippingWeightLb: 7,
       },
     ],
