@@ -64,7 +64,7 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [mobileSolutionsOpen, setMobileSolutionsOpen] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const isPdp = pathname.startsWith("/products/");
+  const isPdp = pathname.startsWith("/products/") || pathname.startsWith("/checkout/");
 
   return (
     <header className="sticky top-0 z-40 ink-section border-b border-ink-border">
@@ -266,6 +266,26 @@ export function SiteHeader() {
       {open && (
         <div className="border-t border-ink-border ink-section md:hidden">
           <div className="container-site flex flex-col gap-1 py-4">
+            {isPdp ? (
+              <>
+                {PDP_ANCHOR_LINKS.map((l) => (
+                  <a
+                    key={l.id}
+                    href={`#${l.id}`}
+                    onClick={() => setOpen(false)}
+                    className="rounded-md px-3 py-2 text-sm font-medium text-ink-foreground hover:bg-white/5"
+                  >
+                    {l.label}
+                  </a>
+                ))}
+                <Button asChild className="mt-3 rounded-full">
+                  <Link to="/products/starter-kit" onClick={() => setOpen(false)}>
+                    Get Started <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </Button>
+              </>
+            ) : (
+            <>
             <Link
               to="/why-it-keeps-coming-back"
               onClick={() => setOpen(false)}
@@ -345,6 +365,8 @@ export function SiteHeader() {
                 Get Started <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
+            </>
+            )}
           </div>
         </div>
       )}
