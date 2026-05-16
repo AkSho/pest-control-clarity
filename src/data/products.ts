@@ -281,7 +281,7 @@ export const PRODUCTS: Record<ProductSlug, Product> = {
         productSlug: "starter-kit",
         pest: "rat",
         size: "6lb",
-        label: "Rat",
+        label: "6 lb",
         shortName: "XL Starter Kit — Rat",
         oneTimePrice: 179,
         // No replenishment plan on starter kits
@@ -294,7 +294,7 @@ export const PRODUCTS: Record<ProductSlug, Product> = {
         productSlug: "starter-kit",
         pest: "mouse",
         size: "6lb",
-        label: "Mouse",
+        label: "6 lb",
         shortName: "XL Starter Kit — Mouse",
         oneTimePrice: 179,
         // No replenishment plan on starter kits
