@@ -134,6 +134,11 @@ export function BuyBox({
         <h1 className="text-4xl font-bold tracking-tight text-foreground md:text-5xl">
           {product.title}
         </h1>
+        <div className="mt-3 flex items-center gap-2">
+          <span className="inline-flex items-center rounded-full border-2 border-brand/40 bg-brand/10 px-4 py-1.5 text-sm font-bold tracking-wide text-brand">
+            {variant.size.replace(/(\d+)(lb)/i, "$1 lb")}
+          </span>
+        </div>
         <p className="mt-3 text-base text-foreground/80 md:text-lg">{product.subtitle}</p>
       </div>
 
