@@ -5,10 +5,12 @@ export function SizePills({
   variants,
   selectedId,
   onSelect,
+  showPrice = true,
 }: {
   variants: Variant[];
   selectedId: string;
   onSelect: (id: string) => void;
+  showPrice?: boolean;
 }) {
   return (
     <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Choose size">
@@ -31,7 +33,9 @@ export function SizePills({
             <span className="text-xs text-muted-foreground">
               {v.size === "6lb" ? "~2 stations · 60-day supply" : "~4 stations · 90-day supply"}
             </span>
-            <span className="text-sm font-semibold text-brand">${v.oneTimePrice}</span>
+            {showPrice && (
+              <span className="text-sm font-semibold text-brand">${v.oneTimePrice}</span>
+            )}
           </button>
         );
       })}

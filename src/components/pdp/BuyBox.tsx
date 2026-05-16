@@ -163,14 +163,17 @@ export function BuyBox({
       </div>
 
       {/* Size */}
-      {sizes.length > 1 && (
-        <div className="flex flex-col gap-2">
-          <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            Size
-          </span>
-          <SizePills variants={sizes} selectedId={variant.id} onSelect={handleVariantChange} />
-        </div>
-      )}
+      <div className="flex flex-col gap-2">
+        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          Size
+        </span>
+        <SizePills
+          variants={sizes}
+          selectedId={variant.id}
+          onSelect={handleVariantChange}
+          showPrice={!isStarterKit}
+        />
+      </div>
 
       {/* Plan selector — only for refill variants */}
       {hasSub && (
