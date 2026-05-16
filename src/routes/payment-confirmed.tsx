@@ -1,8 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 
-const TITLE = "Payment Confirmed — Cloakd Removals";
-const DESCRIPTION =
-  "Payment confirmed. Here's what happens next: intake email, site walk, Phase 1 coordination, and baseline deployment.";
+const TITLE = "Order Confirmed — Cloakd";
+const DESCRIPTION = "Your Evolve order is confirmed and ships within 24 hours.";
 
 export const Route = createFileRoute("/payment-confirmed")({
   head: () => ({
@@ -19,20 +18,20 @@ export const Route = createFileRoute("/payment-confirmed")({
 
 const STEPS = [
   {
-    title: "Intake email",
-    body: "Arriving within the hour. Reply with your property details and exterminator contact.",
+    title: "Confirmation email on its way",
+    body: "Check your inbox for your order receipt and tracking info. Usually arrives within a few minutes.",
   },
   {
-    title: "Site walk scheduled",
-    body: "We book your PCO site walk within one week of your intake response.",
+    title: "Ships within 24 hours",
+    body: "Your order leaves our warehouse the next business day. Standard delivery is 2–5 business days.",
   },
   {
-    title: "Phase 1 coordination",
-    body: "We contact your existing exterminator to align Phase 1 timing before Evolve goes in.",
+    title: "Deployment guide included",
+    body: "Every order ships with a printed deployment guide. Read it before you place the stations — placement is everything.",
   },
   {
-    title: "Baseline deployment",
-    body: "Evolve stations and tracking plates in by week 3–4. Your monitoring record starts here.",
+    title: "Check back at 30 days",
+    body: "If bait is being consumed, the stations are in the right spots. That's your signal to stay the course and refill on schedule.",
   },
 ];
 
@@ -42,15 +41,15 @@ function PaymentConfirmedPage() {
       <section className="bg-background py-20 md:py-28">
         <div className="container-site max-w-3xl">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
-            Payment confirmed
+            Order confirmed
           </p>
           <h1 className="mt-4 text-4xl font-extrabold leading-tight tracking-tight md:text-6xl">
-            You're in. Here's what happens next.
+            Your order is in. Here's what to expect.
           </h1>
           <p className="mt-6 text-lg leading-relaxed text-muted-foreground md:text-xl">
-            You'll receive an email within the hour with intake questions —
-            property access, your current exterminator, and any active citations.
-            Once we have those, we schedule the site walk within the week.
+            A confirmation email is on its way. Your order ships within 24 hours.
+            Read the deployment guide before you place the stations — it covers placement,
+            first-check timing, and how to read consumption levels.
           </p>
         </div>
       </section>
@@ -81,10 +80,10 @@ function PaymentConfirmedPage() {
       <section className="bg-background py-20">
         <div className="container-site max-w-3xl text-center">
           <h2 className="text-2xl font-extrabold leading-tight md:text-3xl">
-            Questions before the intake email arrives?
+            Questions about your order?
           </h2>
           <p className="mt-4 text-base leading-relaxed text-muted-foreground md:text-lg">
-            Reach out directly at{" "}
+            Email us at{" "}
             <a
               href="mailto:hello@cloakd-removals.cloud"
               className="font-semibold text-brand underline-offset-4 hover:underline"
@@ -92,14 +91,6 @@ function PaymentConfirmedPage() {
               hello@cloakd-removals.cloud
             </a>
           </p>
-          <div className="mt-8">
-            <Link
-              to="/what-to-expect"
-              className="inline-flex items-center justify-center rounded-md bg-brand px-5 py-3 text-sm font-semibold text-brand-foreground transition-colors hover:bg-brand/90"
-            >
-              Review the full program timeline
-            </Link>
-          </div>
         </div>
       </section>
     </>
