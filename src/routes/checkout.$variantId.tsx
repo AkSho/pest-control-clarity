@@ -1,8 +1,10 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
-import { ArrowLeft, Lock } from "lucide-react";
+import { useState } from "react";
+import { ArrowLeft, Lock, ShieldCheck } from "lucide-react";
 import { findVariant, FLAT_SHIPPING_USD } from "@/data/products";
+import { createCheckoutSession } from "@/server-functions/stripe";
 
 const searchSchema = z.object({
   plan: fallback(z.enum(["oneTime", "sub"]), "oneTime").default("oneTime"),
@@ -32,6 +34,8 @@ export const Route = createFileRoute("/checkout/$variantId")({
 function CheckoutPage() {
   const { product, variant } = Route.useLoaderData();
   const { plan } = Route.useSearch();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const usingSub = plan === "sub" && variant.subPrice !== undefined;
   const unitPrice = usingSub ? variant.subPrice! : variant.oneTimePrice;
@@ -45,6 +49,24 @@ function CheckoutPage() {
   const backTo =
     product.slug === "starter-kit" ? "/products/starter-kit" : "/products/refill";
 
+  async function handleCheckout() {
+    setLoading(true);
+    setError(null);
+    try {
+      const { url } = await createCheckoutSession({
+        data: {
+          variantId: variant.id,
+          plan,
+          origin: window.location.origin,
+        },
+      });
+      window.location.href = url;
+    } catch (err) {
+      setError("Something went wrong. Please try again.");
+      setLoading(false);
+    }
+  }
+
   return (
     <div className="bg-surface min-h-screen">
       <div className="container-site py-8 md:py-12">
@@ -57,45 +79,55 @@ function CheckoutPage() {
         </Link>
 
         <div className="mt-6 grid gap-8 md:grid-cols-5 md:gap-12">
-          {/* Form */}
+          {/* Checkout action */}
           <div className="md:col-span-3">
             <h1 className="text-2xl font-bold tracking-tight md:text-3xl">Checkout</h1>
             <p className="mt-2 text-sm text-muted-foreground">
-              Express checkout. Tell us where to ship — we'll send a payment link to confirm.
+              You'll enter your shipping and payment details on the next page.
             </p>
 
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-              }}
-              className="mt-6 flex flex-col gap-5 rounded-2xl border border-border bg-card p-6"
-            >
-              <Field label="Email" type="email" placeholder="you@business.com" required />
-              <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="First name" required />
-                <Field label="Last name" required />
+            <div className="mt-6 flex flex-col gap-5 rounded-2xl border border-border bg-card p-6">
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                  <ShieldCheck className="h-4 w-4 shrink-0 text-brand" />
+                  Shipping and payment collected securely via Stripe
+                </div>
+                <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                  <ShieldCheck className="h-4 w-4 shrink-0 text-brand" />
+                  Ships within 24 hours · $12.95 flat shipping to the US
+                </div>
+                {usingSub && (
+                  <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                    <ShieldCheck className="h-4 w-4 shrink-0 text-brand" />
+                    Replenishment plan auto-renews {cadenceLabel}. Cancel anytime.
+                  </div>
+                )}
               </div>
-              <Field label="Company (optional)" />
-              <Field label="Street address" required />
-              <div className="grid gap-4 sm:grid-cols-3">
-                <Field label="City" required />
-                <Field label="State" required />
-                <Field label="ZIP" required />
-              </div>
-              <Field label="Phone" type="tel" />
+
+              {error && (
+                <p className="rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive">
+                  {error}
+                </p>
+              )}
 
               <button
-                type="submit"
-                disabled
-                className="mt-2 inline-flex h-12 items-center justify-center gap-2 rounded-full bg-foreground/30 px-6 text-base font-bold text-background"
+                onClick={handleCheckout}
+                disabled={loading}
+                className="pdp-btn-primary mt-2 flex w-full items-center justify-center gap-2 disabled:opacity-60"
               >
-                <Lock className="h-4 w-4" /> Place order — payments coming online soon
+                {loading ? (
+                  "Redirecting…"
+                ) : (
+                  <>
+                    <Lock className="h-4 w-4" /> Proceed to secure checkout
+                  </>
+                )}
               </button>
+
               <p className="text-center text-xs text-muted-foreground">
-                Stripe checkout is wiring up. Submit your details and we'll reach out with a
-                payment link within one business day.
+                Powered by Stripe. Your card details are never stored by Cloakd.
               </p>
-            </form>
+            </div>
           </div>
 
           {/* Summary */}
@@ -145,32 +177,6 @@ function CheckoutPage() {
   );
 }
 
-function Field({
-  label,
-  type = "text",
-  placeholder,
-  required,
-}: {
-  label: string;
-  type?: string;
-  placeholder?: string;
-  required?: boolean;
-}) {
-  return (
-    <label className="flex flex-col gap-1.5">
-      <span className="text-xs font-semibold text-foreground">
-        {label}
-        {required && <span className="ml-0.5 text-destructive">*</span>}
-      </span>
-      <input
-        type={type}
-        placeholder={placeholder}
-        required={required}
-        className="h-11 rounded-lg border border-input bg-background px-3 text-sm text-foreground outline-none transition focus:border-brand focus:ring-2 focus:ring-brand/20"
-      />
-    </label>
-  );
-}
 
 function Row({ label, value, muted }: { label: string; value: string; muted?: boolean }) {
   return (
