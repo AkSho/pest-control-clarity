@@ -183,14 +183,13 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    overflow-x: hidden;
   }
 
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
-  }
-
-  body {
+    overflow-x: hidden;
     font-weight: 500;
     line-height: 1.6;
   }
