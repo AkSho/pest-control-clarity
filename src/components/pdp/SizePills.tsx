@@ -31,7 +31,11 @@ export function SizePills({
           >
             <span className="text-base font-bold text-foreground">{v.label}</span>
             <span className="text-xs text-muted-foreground">
-              {v.size === "6lb" ? "~2 stations · 60-day supply" : "~4 stations · 90-day supply"}
+              {(() => {
+                const sizeLabel = v.size.replace(/(\d+)(lb)/i, "$1 lb");
+                const supply = v.size === "6lb" ? "~2 stations · 60-day supply" : "~4 stations · 90-day supply";
+                return v.label.toLowerCase().includes("lb") ? supply : `${sizeLabel} · ${supply}`;
+              })()}
             </span>
             {showPrice && (
               <span className="text-sm font-semibold text-brand">${v.oneTimePrice}</span>
