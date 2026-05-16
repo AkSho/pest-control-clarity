@@ -58,7 +58,7 @@ export function ProductGallery({ images, alt }: { images: string[]; alt: string 
 
         {/* Thumbnails — horizontal on mobile, vertical on desktop */}
         {images.length > 1 && (
-          <div className="flex gap-2 overflow-x-auto pb-1 xl:flex-col xl:overflow-visible xl:pb-0">
+          <div className="flex gap-2 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden xl:flex-col xl:overflow-visible xl:pb-0">
             {images.map((src, i) => (
               <button
                 key={`${src}-${i}`}
@@ -86,7 +86,8 @@ export function ProductGallery({ images, alt }: { images: string[]; alt: string 
         )}
       </div>
 
-      {/* EPA badge — click opens plain-English explanation modal */}
+      {/* EPA badge — click opens plain-English explanation modal (desktop only) */}
+      <div className="hidden md:block">
       <Dialog>
         <DialogTrigger asChild>
           <button className="flex w-full items-center gap-3 rounded-xl border border-brand/30 bg-brand/5 px-4 py-3 text-left transition hover:bg-brand/10">
@@ -134,9 +135,10 @@ export function ProductGallery({ images, alt }: { images: string[]; alt: string 
           </div>
         </DialogContent>
       </Dialog>
+      </div>
 
-      {/* Targets / Safe for */}
-      <div className="rounded-2xl border border-border bg-surface p-4">
+      {/* Targets / Safe for (desktop only) */}
+      <div className="hidden md:block rounded-2xl border border-border bg-surface p-4">
         <div className="mb-3 flex items-start gap-4">
           <div className="flex flex-col items-center gap-1 pt-0.5">
             <span className="text-2xl">🐀</span>

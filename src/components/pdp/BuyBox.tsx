@@ -185,7 +185,30 @@ export function BuyBox({
         </div>
       )}
 
-      {/* Bundle selector — T05 */}
+      {/* CTA block */}
+      <div className="flex flex-col gap-3 rounded-2xl bg-surface p-5">
+        <div className="flex items-baseline justify-between">
+          <span className="text-sm text-muted-foreground">
+            {plan === "sub" ? "Per shipment" : "One-time"}
+          </span>
+          <span className="text-3xl font-bold text-foreground">{priceLabel}</span>
+        </div>
+        <button onClick={handleBuy} className="pdp-btn-primary">
+          Order Now
+        </button>
+        {/* Post-CTA confirmation */}
+        {plan === "sub" && hasSub ? (
+          <p className="text-center text-xs font-medium text-brand">
+            Replenishment plan applied ✓ You're saving ${savings} on this order
+          </p>
+        ) : (
+          <p className="text-center text-xs text-muted-foreground">
+            ${FLAT_SHIPPING_USD.toFixed(2)} flat shipping · ships within 24 hours
+          </p>
+        )}
+      </div>
+
+      {/* Bundle selector */}
       <div className="flex flex-col gap-3">
         <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           What's included:
@@ -228,29 +251,6 @@ export function BuyBox({
               ))}
           </ul>
         </div>
-      </div>
-
-      {/* CTA block */}
-      <div className="flex flex-col gap-3 rounded-2xl bg-surface p-5">
-        <div className="flex items-baseline justify-between">
-          <span className="text-sm text-muted-foreground">
-            {plan === "sub" ? "Per shipment" : "One-time"}
-          </span>
-          <span className="text-3xl font-bold text-foreground">{priceLabel}</span>
-        </div>
-        <button onClick={handleBuy} className="pdp-btn-primary">
-          Order Now
-        </button>
-        {/* Post-CTA confirmation */}
-        {plan === "sub" && hasSub ? (
-          <p className="text-center text-xs font-medium text-brand">
-            Replenishment plan applied ✓ You're saving ${savings} on this order
-          </p>
-        ) : (
-          <p className="text-center text-xs text-muted-foreground">
-            ${FLAT_SHIPPING_USD.toFixed(2)} flat shipping · ships within 24 hours
-          </p>
-        )}
       </div>
 
       {/* Trust badges */}
