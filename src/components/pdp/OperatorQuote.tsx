@@ -9,27 +9,14 @@ export function OperatorQuote() {
         <div className="flex flex-col gap-10 md:flex-row md:items-center md:gap-16">
           {/* Photo */}
           <div className="overflow-hidden rounded-2xl md:basis-[45%] md:self-stretch">
-            {/* Swap this placeholder once photo is ready */}
-            <div className="flex min-h-[320px] w-full items-center justify-center bg-border/30 md:h-full">
-              <div className="flex flex-col items-center gap-3 p-8 text-center text-muted-foreground">
-                <div className="h-24 w-24 rounded-full bg-border" />
-                <p className="text-xs font-medium">
-                  Larry B.
-                  <br />
-                  (400 × 500 px minimum)
-                </p>
-              </div>
-            </div>
-            {/*
             <img
-              src="/products/operator-larry-b.jpg"
+              src="/products/operator-larry-b.png"
               alt="Larry B., South County Pest Control"
               width={600}
               height={700}
               loading="lazy"
               className="h-full w-full object-cover"
             />
-            */}
           </div>
 
           {/* Quote */}

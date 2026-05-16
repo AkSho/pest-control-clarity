@@ -64,19 +64,19 @@ export type Product = {
 const STATION_CLOSED = "/products/station-closed.png";
 const STATION_OPEN = "/products/station-open.png";
 
-const RAT_6 = "/products/refill-rat-6lb.jpg";
-const RAT_12 = "/products/refill-rat-12lb.jpg";
+const RAT_6 = "/products/refill-rat-6lb.png";
+const RAT_12 = "/products/refill-rat-12lb.png";
 
-const MOUSE_6 = "/products/refill-mouse-6lb.jpg";
+const MOUSE_6 = "/products/refill-mouse-6lb.png";
 
 const STARTER_RAT_HERO = "/products/starter-kit-rat.png";
 const STARTER_MOUSE_HERO = "/products/starter-kit-mouse.png";
 
-// Gallery conversion slides (replace SVGs with final .jpg assets when ready)
-const GALLERY_SOCIAL_PROOF = "/products/gallery-social-proof.svg";
-const GALLERY_TIMELINE = "/products/gallery-timeline.svg";
-const GALLERY_FIELD_DATA = "/products/gallery-field-data.svg";
-const GALLERY_DEPLOYED = "/products/gallery-deployed.svg";
+// Gallery shared slides
+const GALLERY_LIFESTYLE = "/products/gallery-lifestyle.png";
+const GALLERY_STATS = "/products/gallery-stats.png";
+const GALLERY_75_REDUCTION = "/products/gallery-75-reduction.png";
+const GALLERY_WHAT_TO_EXPECT = "/products/gallery-what-to-expect.png";
 
 // ===== Shared content =====
 const SHARED_FAQ: FAQ[] = [
@@ -285,7 +285,7 @@ export const PRODUCTS: Record<ProductSlug, Product> = {
         oneTimePrice: 179,
         // No replenishment plan on starter kits
         image: STARTER_RAT_HERO,
-        galleryImages: [STARTER_RAT_HERO, GALLERY_SOCIAL_PROOF, GALLERY_TIMELINE, GALLERY_FIELD_DATA, GALLERY_DEPLOYED, STATION_OPEN],
+        galleryImages: [STARTER_RAT_HERO, GALLERY_LIFESTYLE, GALLERY_STATS, GALLERY_75_REDUCTION, GALLERY_WHAT_TO_EXPECT],
         shippingWeightLb: 8,
       },
       {
@@ -298,7 +298,7 @@ export const PRODUCTS: Record<ProductSlug, Product> = {
         oneTimePrice: 179,
         // No replenishment plan on starter kits
         image: STARTER_MOUSE_HERO,
-        galleryImages: [STARTER_MOUSE_HERO, GALLERY_SOCIAL_PROOF, GALLERY_TIMELINE, GALLERY_FIELD_DATA, GALLERY_DEPLOYED, STATION_OPEN],
+        galleryImages: [STARTER_MOUSE_HERO, GALLERY_LIFESTYLE, GALLERY_STATS, GALLERY_75_REDUCTION, GALLERY_WHAT_TO_EXPECT],
         shippingWeightLb: 8,
       },
     ],
@@ -389,7 +389,7 @@ export const PRODUCTS: Record<ProductSlug, Product> = {
         subPrice: 129,
         subDays: 60,
         image: RAT_6,
-        galleryImages: [RAT_6, GALLERY_SOCIAL_PROOF, GALLERY_TIMELINE, GALLERY_FIELD_DATA, GALLERY_DEPLOYED, STATION_OPEN],
+        galleryImages: [RAT_6, GALLERY_LIFESTYLE, GALLERY_STATS, GALLERY_75_REDUCTION, GALLERY_WHAT_TO_EXPECT],
         shippingWeightLb: 7,
       },
       {
@@ -403,7 +403,7 @@ export const PRODUCTS: Record<ProductSlug, Product> = {
         subPrice: 219,
         subDays: 90,
         image: RAT_12,
-        galleryImages: [RAT_12, GALLERY_SOCIAL_PROOF, GALLERY_TIMELINE, GALLERY_FIELD_DATA, GALLERY_DEPLOYED, STATION_OPEN],
+        galleryImages: [RAT_12, GALLERY_LIFESTYLE, GALLERY_STATS, GALLERY_75_REDUCTION, GALLERY_WHAT_TO_EXPECT],
         shippingWeightLb: 13,
       },
       {
@@ -417,7 +417,7 @@ export const PRODUCTS: Record<ProductSlug, Product> = {
         subPrice: 129,
         subDays: 60,
         image: MOUSE_6,
-        galleryImages: [MOUSE_6, GALLERY_SOCIAL_PROOF, GALLERY_TIMELINE, GALLERY_FIELD_DATA, GALLERY_DEPLOYED, STATION_OPEN],
+        galleryImages: [MOUSE_6, GALLERY_LIFESTYLE, GALLERY_STATS, GALLERY_75_REDUCTION, GALLERY_WHAT_TO_EXPECT],
         shippingWeightLb: 7,
       },
     ],

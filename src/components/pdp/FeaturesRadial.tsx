@@ -58,8 +58,8 @@ export function FeaturesRadial() {
         <div className="mt-10 sm:hidden">
           <div className="flex justify-center">
             <img
-              src="/products/starter-kit-rat.png"
-              alt="Evolve rodent fertility control bait"
+              src="/products/how-it-works.png"
+              alt="How Evolve works"
               width={220}
               height={220}
               loading="lazy"

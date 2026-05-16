@@ -105,8 +105,8 @@ export function ProductPage({ product, routePath }: { product: Product; routePat
             {/* Image side */}
             <div className="overflow-hidden rounded-2xl border-2 border-brand/20 shadow-[2px_2px_0_0_var(--color-brand)] md:basis-1/2 md:self-stretch">
               <img
-                src="/products/station-closed.png"
-                alt="Evolve XL locking bait station"
+                src="/products/how-deployment-works.png"
+                alt="Evolve bait station deployed in field"
                 width={800}
                 height={800}
                 loading="lazy"
