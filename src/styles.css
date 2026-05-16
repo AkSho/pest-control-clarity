@@ -183,11 +183,14 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    max-width: 100%;
+    overflow-x: clip;
   }
 
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    max-width: 100%;
     overflow-x: clip;
     font-weight: 500;
     line-height: 1.6;
