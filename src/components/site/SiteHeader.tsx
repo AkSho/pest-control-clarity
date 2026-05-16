@@ -82,6 +82,19 @@ export function SiteHeader() {
         </Link>
 
         <div className="hidden md:block">
+          {isPdp ? (
+            <nav className="flex items-center gap-1">
+              {PDP_ANCHOR_LINKS.map((l) => (
+                <a
+                  key={l.id}
+                  href={`#${l.id}`}
+                  className="shrink-0 rounded-full px-3 py-1.5 text-sm font-medium text-ink-foreground/85 transition hover:bg-white/5 hover:text-ink-foreground"
+                >
+                  {l.label}
+                </a>
+              ))}
+            </nav>
+          ) : (
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
@@ -230,6 +243,7 @@ export function SiteHeader() {
               ))}
             </NavigationMenuList>
           </NavigationMenu>
+          )}
         </div>
 
         <div className="hidden md:block">
@@ -248,22 +262,6 @@ export function SiteHeader() {
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
-
-      {isPdp && (
-        <div className="hidden border-t border-ink-border md:block">
-          <div className="container-site flex items-center gap-1 py-2">
-            {PDP_ANCHOR_LINKS.map((l) => (
-              <a
-                key={l.id}
-                href={`#${l.id}`}
-                className="shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold text-ink-foreground/70 transition hover:bg-white/5 hover:text-ink-foreground"
-              >
-                {l.label}
-              </a>
-            ))}
-          </div>
-        </div>
-      )}
 
       {open && (
         <div className="border-t border-ink-border ink-section md:hidden">
