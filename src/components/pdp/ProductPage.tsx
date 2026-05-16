@@ -13,7 +13,6 @@ import { FeaturesRadial } from "./FeaturesRadial";
 import { FindYourFit } from "./FindYourFit";
 import { HowToVideo } from "./HowToVideo";
 import { OperatorQuote } from "./OperatorQuote";
-import { PdpAnchorNav } from "./PdpAnchorNav";
 import { FieldResultsTrio } from "./FieldResultsTrio";
 import { ReviewsCarousel } from "./ReviewsCarousel";
 import { PressStrip } from "@/components/site/PressStrip";
@@ -41,7 +40,6 @@ export function ProductPage({ product, routePath }: { product: Product; routePat
 
   return (
     <div className="bg-background pb-32 md:pb-12">
-      <PdpAnchorNav />
 
       {/* Hero: gallery + buy box */}
       <section
@@ -103,14 +101,14 @@ export function ProductPage({ product, routePath }: { product: Product; routePat
               </a>
             </div>
             {/* Image side */}
-            <div className="flex items-center justify-center overflow-hidden rounded-2xl border-2 border-brand/20 shadow-[2px_2px_0_0_var(--color-brand)] md:basis-1/2 md:self-stretch">
+            <div className="aspect-[4/3] overflow-hidden rounded-2xl border-2 border-brand/20 shadow-[2px_2px_0_0_var(--color-brand)] md:aspect-auto md:basis-1/2">
               <img
                 src="/products/how-deployment-works.png"
                 alt="Evolve bait station deployed in field"
                 width={800}
                 height={800}
                 loading="lazy"
-                className="h-full w-full object-contain"
+                className="h-full w-full object-cover"
               />
             </div>
           </div>

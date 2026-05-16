@@ -77,7 +77,7 @@ const GALLERY_LIFESTYLE = "/products/gallery-lifestyle.png";
 const GALLERY_STATS = "/products/gallery-stats.png";
 const GALLERY_75_REDUCTION = "/products/gallery-75-reduction.png";
 const GALLERY_WHAT_TO_EXPECT = "/products/gallery-what-to-expect.png";
-const GALLERY_SPEC_SHEET = "/products/gallery-spec-sheet.jpg";
+const GALLERY_SPEC_SHEET = "/products/gallery-spec-sheet.svg";
 
 // ===== Shared content =====
 const SHARED_FAQ: FAQ[] = [

@@ -63,13 +63,11 @@ export function FindYourFit({ currentSlug }: { currentSlug: ProductSlug }) {
                   className="h-full w-full object-contain p-6 transition group-hover:scale-[1.02]"
                 />
               </div>
-              <div className="flex flex-col gap-2 bg-surface p-5">
-                <span className="text-xs font-semibold uppercase tracking-wider text-brand">
+              <div className="flex flex-col gap-1.5 bg-surface px-4 py-3">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-brand">
                   {t.label}
                 </span>
-                <h3 className="text-lg font-bold text-foreground">{t.title}</h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">{t.desc}</p>
-                <p className="mt-1 text-base font-bold text-foreground">{t.price}</p>
+                <h3 className="text-sm font-bold text-foreground">{t.title}</h3>
               </div>
             </Link>
           );

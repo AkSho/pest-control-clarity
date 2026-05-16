@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" font-family="'Work Sans', system-ui, sans-serif">
+  <!-- Background -->
+  <rect width="900" height="600" fill="#ffffff"/>
+
+  <!-- Top bar -->
+  <rect width="900" height="80" fill="#1d45b0"/>
+  <text x="48" y="34" font-size="11" font-weight="700" letter-spacing="3" fill="#93b4ff" text-transform="uppercase">CLOAKD</text>
+  <text x="48" y="58" font-size="22" font-weight="700" fill="#ffffff">Evolve Rodent Fertility Control</text>
+  <text x="852" y="48" font-size="11" font-weight="600" fill="#93b4ff" text-anchor="end">Product Specification</text>
+
+  <!-- Divider -->
+  <rect x="48" y="100" width="804" height="1" fill="#e5e9f5"/>
+
+  <!-- Row 1: Active Ingredient -->
+  <rect x="48" y="120" width="4" height="52" rx="2" fill="#1d45b0"/>
+  <text x="68" y="142" font-size="10" font-weight="700" letter-spacing="2" fill="#6b7fa8">ACTIVE INGREDIENT</text>
+  <text x="68" y="163" font-size="17" font-weight="600" fill="#111827">Cottonseed oil</text>
+  <text x="68" y="182" font-size="12" fill="#6b7fa8">FIFRA Section 25(b) exempt · Minimum-risk classification</text>
+
+  <rect x="48" y="188" width="804" height="1" fill="#e5e9f5"/>
+
+  <!-- Row 2: EPA Status -->
+  <rect x="48" y="208" width="4" height="52" rx="2" fill="#1d45b0"/>
+  <text x="68" y="230" font-size="10" font-weight="700" letter-spacing="2" fill="#6b7fa8">REGULATORY STATUS</text>
+  <text x="68" y="251" font-size="17" font-weight="600" fill="#111827">No license or permit required</text>
+  <text x="68" y="270" font-size="12" fill="#6b7fa8">EPA minimum-risk · Available direct to homeowners and property managers</text>
+
+  <rect x="48" y="276" width="804" height="1" fill="#e5e9f5"/>
+
+  <!-- Row 3: Coverage -->
+  <rect x="48" y="296" width="4" height="52" rx="2" fill="#1d45b0"/>
+  <text x="68" y="318" font-size="10" font-weight="700" letter-spacing="2" fill="#6b7fa8">COVERAGE</text>
+  <text x="68" y="339" font-size="17" font-weight="600" fill="#111827">2–12 pieces per station</text>
+  <text x="68" y="358" font-size="12" fill="#6b7fa8">6 lb pouch covers 1–2 stations · 12 lb pail covers 3–4 stations</text>
+
+  <rect x="48" y="364" width="804" height="1" fill="#e5e9f5"/>
+
+  <!-- Row 4: Application -->
+  <rect x="48" y="384" width="4" height="52" rx="2" fill="#1d45b0"/>
+  <text x="68" y="406" font-size="10" font-weight="700" letter-spacing="2" fill="#6b7fa8">APPLICATION</text>
+  <text x="68" y="427" font-size="17" font-weight="600" fill="#111827">Place along rodent travel paths</text>
+  <text x="68" y="446" font-size="12" fill="#6b7fa8">Refill before station empties · Consumption-driven cadence (approx. every 30–60 days)</text>
+
+  <rect x="48" y="452" width="804" height="1" fill="#e5e9f5"/>
+
+  <!-- Row 5: Safety -->
+  <rect x="48" y="472" width="4" height="52" rx="2" fill="#1d45b0"/>
+  <text x="68" y="494" font-size="10" font-weight="700" letter-spacing="2" fill="#6b7fa8">SAFETY PROFILE</text>
+  <text x="68" y="515" font-size="17" font-weight="600" fill="#111827">No secondary kill risk</text>
+  <text x="68" y="534" font-size="12" fill="#6b7fa8">Safe around dogs, cats, hawks, owls · No anticoagulants · No neurotoxins</text>
+
+  <!-- Bottom bar -->
+  <rect y="568" width="900" height="32" fill="#f0f4ff"/>
+  <text x="48" y="589" font-size="10" fill="#6b7fa8">cloakd-removals.cloud</text>
+  <text x="852" y="589" font-size="10" fill="#6b7fa8" text-anchor="end">Evolve is a product of SenesTech, Inc. · Distributed by Cloakd</text>
+</svg>

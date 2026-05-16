@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { Menu, X, ArrowRight, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -51,9 +51,20 @@ const COMPLIANCE_LINKS: { label: string; to: string; eyebrow: string }[] = [
   },
 ];
 
+const PDP_ANCHOR_LINKS = [
+  { id: "overview", label: "Overview" },
+  { id: "how-it-works", label: "How it works" },
+  { id: "results", label: "Results" },
+  { id: "compare", label: "Compare" },
+  { id: "reviews", label: "Reviews" },
+  { id: "faq", label: "FAQ" },
+];
+
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [mobileSolutionsOpen, setMobileSolutionsOpen] = useState(false);
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isPdp = pathname.startsWith("/products/");
 
   return (
     <header className="sticky top-0 z-40 ink-section border-b border-ink-border">
@@ -223,7 +234,7 @@ export function SiteHeader() {
 
         <div className="hidden md:block">
           <Button asChild className="rounded-full h-10 px-5">
-            <Link to="/get-started">
+            <Link to="/products/starter-kit">
               Get Started <ArrowRight className="h-4 w-4" />
             </Link>
           </Button>
@@ -237,6 +248,22 @@ export function SiteHeader() {
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
+
+      {isPdp && (
+        <div className="hidden border-t border-ink-border md:block">
+          <div className="container-site flex items-center gap-1 py-2">
+            {PDP_ANCHOR_LINKS.map((l) => (
+              <a
+                key={l.id}
+                href={`#${l.id}`}
+                className="shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold text-ink-foreground/70 transition hover:bg-white/5 hover:text-ink-foreground"
+              >
+                {l.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
 
       {open && (
         <div className="border-t border-ink-border ink-section md:hidden">
@@ -316,7 +343,7 @@ export function SiteHeader() {
             ))}
 
             <Button asChild className="mt-3 rounded-full">
-              <Link to="/get-started" onClick={() => setOpen(false)}>
+              <Link to="/products/starter-kit" onClick={() => setOpen(false)}>
                 Get Started <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
