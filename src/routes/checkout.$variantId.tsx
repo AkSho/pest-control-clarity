@@ -126,7 +126,6 @@ function CheckoutPage() {
               <div className="flex flex-col gap-2 border-t border-border pt-4 text-sm">
                 <Row label="Subtotal" value={`$${unitPrice}`} />
                 <Row label="Shipping" value={`$${FLAT_SHIPPING_USD.toFixed(2)}`} />
-                <Row label="Tax" value="—" muted />
               </div>
               <div className="flex items-baseline justify-between border-t border-border pt-4">
                 <span className="text-sm font-semibold text-foreground">Total today</span>
