@@ -54,7 +54,9 @@ export function ProductPage({ product, routePath }: { product: Product; routePat
 
       <PressStrip />
 
-      <FeaturesRadial />
+      <div id="how-it-works">
+        <FeaturesRadial />
+      </div>
 
       {/* 50/50 lifestyle — station deployed in context */}
       <section className="container-site py-4 md:py-6">
@@ -119,7 +121,9 @@ export function ProductPage({ product, routePath }: { product: Product; routePat
         <FieldResultsTrio />
       </div>
 
-      <ReviewsCarousel avgRating={product.rating.avg} count={product.rating.count} />
+      <div id="reviews">
+        <ReviewsCarousel avgRating={product.rating.avg} count={product.rating.count} />
+      </div>
 
       <HowToVideo />
 

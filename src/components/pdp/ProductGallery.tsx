@@ -24,19 +24,37 @@ export function ProductGallery({ images, alt }: { images: string[]; alt: string 
     <div className="flex flex-col gap-3">
       {/* Gallery: thumbs left on desktop, below on mobile */}
       <div className="flex flex-col-reverse gap-3 xl:flex-row-reverse xl:gap-4">
-        {/* Main image */}
-        <div className="flex-1 overflow-hidden rounded-xl border-2 border-foreground/10 bg-white">
-          <div className="aspect-square">
+        {/* Main image — click to open lightbox */}
+        <Dialog>
+          <DialogTrigger asChild>
+            <div className="flex-1 cursor-zoom-in overflow-hidden rounded-xl border-2 border-foreground/10 bg-white">
+              <div className="aspect-square">
+                <img
+                  key={activeSrc}
+                  src={activeSrc}
+                  alt={alt}
+                  width={800}
+                  height={800}
+                  className="h-full w-full object-contain p-4 transition-opacity duration-200"
+                  fetchPriority="high"
+                  loading="eager"
+                />
+              </div>
+            </div>
+          </DialogTrigger>
+          <DialogContent className="max-w-3xl border-0 bg-white p-2">
+            <DialogHeader className="sr-only">
+              <DialogTitle>{alt}</DialogTitle>
+            </DialogHeader>
             <img
-              key={activeSrc}
               src={activeSrc}
               alt={alt}
-              width={800}
-              height={800}
-              className="h-full w-full object-contain p-4 transition-opacity duration-200"
+              width={1200}
+              height={1200}
+              className="h-full w-full object-contain"
             />
-          </div>
-        </div>
+          </DialogContent>
+        </Dialog>
 
         {/* Thumbnails — horizontal on mobile, vertical on desktop */}
         {images.length > 1 && (

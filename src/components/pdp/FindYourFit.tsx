@@ -7,7 +7,7 @@ const TILES = [
     href: "/products/starter-kit",
     image: "/products/starter-kit-rat.png",
     label: "Starting out",
-    title: "Evolve XL Starter Kit",
+    title: "Evolve Starter Kit",
     desc: "Stations, keys, and bait — everything for your first deployment.",
     price: "From $179",
   },
