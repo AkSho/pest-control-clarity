@@ -14,7 +14,7 @@ export function SiteFooter() {
             <div className="leading-tight">
               <div className="text-base font-bold">Cloakd</div>
               <div className="text-[11px] uppercase tracking-widest text-ink-muted">
-                Evolve specialist retailer
+                Rodent Fertility Control
               </div>
             </div>
           </div>
