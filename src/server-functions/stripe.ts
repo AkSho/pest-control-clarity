@@ -43,7 +43,8 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       },
     });
 
-    const lineItem: Stripe.Checkout.SessionCreateParams.LineItem = usingSub
+    type LineItem = NonNullable<Parameters<Stripe["checkout"]["sessions"]["create"]>[0]["line_items"]>[number];
+    const lineItem: LineItem = usingSub
       ? {
           price_data: {
             currency: "usd",
