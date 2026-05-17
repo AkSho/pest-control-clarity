@@ -119,7 +119,7 @@ export function OrderReviewDrawer({
             />
             {isSub && (
               <p className="text-xs text-muted-foreground">
-                Recurs every {variant.subInterval ?? "8 weeks"}. Cancel anytime.
+                Recurs automatically. Cancel anytime.
               </p>
             )}
           </dl>
