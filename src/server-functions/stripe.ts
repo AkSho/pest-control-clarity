@@ -104,21 +104,27 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
           ? `/products/starter-kit?variant=${variant.id}`
           : `/products/refill?variant=${variant.id}`;
 
+      // Stripe: shipping_options / shipping_address_collection are not allowed
+      // in mode:"subscription". For subs, add shipping as a recurring line item.
       const session = await stripe.checkout.sessions.create({
         mode: usingSub ? "subscription" : "payment",
-        line_items: [lineItem],
-        shipping_address_collection: { allowed_countries: ["US"] },
-        shipping_options: [{ shipping_rate: shippingRateId }],
-        phone_number_collection: { enabled: true },
-        billing_address_collection: "auto",
-        allow_promotion_codes: true,
-        payment_method_types: ["card", "link"],
-        custom_text: {
-          submit: {
-            message:
-              "Ships within 24 hours · 30-day deployment support included.",
-          },
-        },
+        line_items: usingSub
+          ? [
+              lineItem,
+              {
+                price_data: {
+                  currency: "usd",
+                  product_data: { name: "Standard Shipping" },
+                  unit_amount: Math.round(FLAT_SHIPPING_USD * 100),
+                  recurring: {
+                    interval: "day" as const,
+                    interval_count: variant.subDays!,
+                  },
+                },
+                quantity: 1,
+              },
+            ]
+          : [lineItem],
         ...(usingSub
           ? {
               subscription_data: {
@@ -129,7 +135,20 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
                 },
               },
             }
-          : {}),
+          : {
+              shipping_address_collection: { allowed_countries: ["US"] },
+              shipping_options: [{ shipping_rate: shippingRateId }],
+            }),
+        phone_number_collection: { enabled: true },
+        billing_address_collection: "auto",
+        allow_promotion_codes: true,
+        automatic_payment_methods: { enabled: true },
+        custom_text: {
+          submit: {
+            message:
+              "Ships within 24 hours · 30-day deployment support included.",
+          },
+        },
         success_url: `${data.origin}/payment-confirmed?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${data.origin}${cancelPath}`,
         metadata: {
