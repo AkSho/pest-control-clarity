@@ -354,10 +354,10 @@ function ActiveIngredients() {
       </p>
 
       {/* Primary — 3 large circles */}
-      <div className="flex flex-wrap gap-6">
+      <div className="grid grid-cols-3 gap-3 sm:gap-6">
         {PRIMARY_BADGES.map((b) => (
           <div key={b.label} className="flex flex-col items-center gap-2.5 text-center">
-            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-brand/8 text-4xl">
+            <div className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full bg-brand/8 text-3xl sm:text-4xl">
               {b.emoji}
             </div>
             <div className="text-xs font-bold leading-tight text-foreground">{b.label}</div>
