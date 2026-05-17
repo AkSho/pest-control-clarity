@@ -21,9 +21,9 @@ export function ProductGallery({ images, alt }: { images: string[]; alt: string 
   const activeSrc = images[active] ?? images[0];
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex min-w-0 flex-col gap-3">
       {/* Gallery: thumbs left on desktop, below on mobile */}
-      <div className="flex flex-col-reverse gap-3 xl:flex-row-reverse xl:gap-4">
+      <div className="flex min-w-0 flex-col-reverse gap-3 xl:flex-row-reverse xl:gap-4">
         {/* Main image — click to open lightbox */}
         <Dialog>
           <DialogTrigger asChild>
@@ -58,7 +58,7 @@ export function ProductGallery({ images, alt }: { images: string[]; alt: string 
 
         {/* Thumbnails — horizontal on mobile, vertical on desktop */}
         {images.length > 1 && (
-          <div className="flex gap-2 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden xl:flex-col xl:overflow-visible xl:pb-0">
+          <div className="flex min-w-0 max-w-full gap-2 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden xl:flex-col xl:overflow-visible xl:pb-0">
             {images.map((src, i) => (
               <button
                 key={`${src}-${i}`}

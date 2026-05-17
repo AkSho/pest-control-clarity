@@ -46,10 +46,12 @@ export function ProductPage({ product, routePath }: { product: Product; routePat
         id="overview"
         className="container-site grid gap-8 py-8 md:grid-cols-2 md:gap-12 md:py-12 lg:gap-16"
       >
-        <div className="md:sticky md:top-5 md:self-start">
+        <div className="min-w-0 md:sticky md:top-5 md:self-start">
           <ProductGallery images={variant.galleryImages} alt={variant.shortName} />
         </div>
-        <BuyBox product={product} variant={variant} onVariantChange={onVariantChange} />
+        <div className="min-w-0">
+          <BuyBox product={product} variant={variant} onVariantChange={onVariantChange} />
+        </div>
       </section>
 
       <PressStrip />
@@ -60,7 +62,7 @@ export function ProductPage({ product, routePath }: { product: Product; routePat
 
       {/* 50/50 lifestyle — station deployed in context */}
       <section className="container-site py-4 md:py-6">
-        <div className="rounded-2xl border border-border/50 bg-card p-8 md:p-14">
+        <div className="rounded-2xl border border-border/50 bg-card p-5 md:p-14">
           <div className="flex flex-col gap-8 md:flex-row md:items-center md:gap-12">
             {/* Text side */}
             <div className="flex flex-col gap-6 md:basis-1/2">
@@ -137,7 +139,7 @@ export function ProductPage({ product, routePath }: { product: Product; routePat
 
       {/* FAQ — full version */}
       <section id="faq" className="container-site py-4 md:py-6">
-        <div className="rounded-2xl border border-border/50 bg-card p-8 md:p-14">
+        <div className="rounded-2xl border border-border/50 bg-card p-5 md:p-14">
           <div className="mx-auto max-w-3xl">
             <div className="text-center">
               <span className="text-xs font-bold uppercase tracking-[0.18em] text-brand">
