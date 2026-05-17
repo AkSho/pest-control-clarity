@@ -143,3 +143,40 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       return { url: session.url };
     },
   );
+
+// One-time PaymentIntent for the Express Checkout Element (Apple Pay / Google
+// Pay / Link). Subscriptions still go through hosted Checkout.
+export const createPaymentIntent = createServerFn({ method: "POST" })
+  .inputValidator(
+    z.object({
+      variantId: z.string(),
+    }),
+  )
+  .handler(async ({ data }: { data: { variantId: string } }) => {
+    const found = findVariant(data.variantId);
+    if (!found) throw new Error("Variant not found");
+    const { variant } = found;
+
+    const stripe = getStripe();
+    const amount = Math.round(
+      (variant.oneTimePrice + FLAT_SHIPPING_USD) * 100,
+    );
+
+    const intent = await stripe.paymentIntents.create({
+      amount,
+      currency: "usd",
+      automatic_payment_methods: { enabled: true },
+      description: `${variant.shortName} (one-time)`,
+      shipping: undefined,
+      metadata: {
+        variantId: variant.id,
+        productSlug: variant.productSlug,
+        plan: "oneTime",
+      },
+    });
+
+    if (!intent.client_secret) {
+      throw new Error("Stripe did not return a client secret");
+    }
+    return { clientSecret: intent.client_secret, amount };
+  });
