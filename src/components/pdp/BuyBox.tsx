@@ -320,8 +320,15 @@ export function BuyBox({
       {/* Sticky bar (mobile) */}
       <StickyMobileBar
         priceLabel={priceLabel}
-        ctaLabel={plan === "sub" ? "Start plan" : "Order Now"}
+        ctaLabel={
+          checkoutLoading
+            ? "Redirecting…"
+            : plan === "sub"
+              ? "Start plan"
+              : "Order Now"
+        }
         onClick={handleBuy}
+        loading={checkoutLoading}
       />
     </div>
   );
