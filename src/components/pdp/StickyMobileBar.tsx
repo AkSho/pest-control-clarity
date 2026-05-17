@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
+import { Loader2 } from "lucide-react";
 
 export function StickyMobileBar({
   priceLabel,
   ctaLabel,
   onClick,
+  loading = false,
 }: {
   priceLabel: string;
   ctaLabel: string;
   onClick: () => void;
+  loading?: boolean;
 }) {
   const [show, setShow] = useState(false);
   useEffect(() => {
@@ -30,8 +33,10 @@ export function StickyMobileBar({
         </div>
         <button
           onClick={onClick}
-          className="flex-1 rounded-full bg-brand px-5 py-3 text-sm font-bold text-brand-foreground transition hover:bg-brand/90"
+          disabled={loading}
+          className="flex flex-1 items-center justify-center gap-2 rounded-full bg-brand px-5 py-3 text-sm font-bold text-brand-foreground transition hover:bg-brand/90 disabled:cursor-not-allowed disabled:opacity-70"
         >
+          {loading && <Loader2 className="h-4 w-4 animate-spin" />}
           {ctaLabel}
         </button>
       </div>

@@ -47,7 +47,6 @@ import { Route as SolutionsFoodStorageRouteImport } from './routes/solutions.foo
 import { Route as SolutionsSlugRouteImport } from './routes/solutions.$slug'
 import { Route as ProductsStarterKitRouteImport } from './routes/products.starter-kit'
 import { Route as ProductsRefillRouteImport } from './routes/products.refill'
-import { Route as CheckoutVariantIdRouteImport } from './routes/checkout.$variantId'
 import { Route as AreasAreaSlugRouteImport } from './routes/areas.$areaSlug'
 
 const WhyItKeepsComingBackRoute = WhyItKeepsComingBackRouteImport.update({
@@ -244,11 +243,6 @@ const ProductsRefillRoute = ProductsRefillRouteImport.update({
   path: '/products/refill',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CheckoutVariantIdRoute = CheckoutVariantIdRouteImport.update({
-  id: '/checkout/$variantId',
-  path: '/checkout/$variantId',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AreasAreaSlugRoute = AreasAreaSlugRouteImport.update({
   id: '/areas/$areaSlug',
   path: '/areas/$areaSlug',
@@ -275,7 +269,6 @@ export interface FileRoutesByFullPath {
   '/what-to-expect': typeof WhatToExpectRoute
   '/why-it-keeps-coming-back': typeof WhyItKeepsComingBackRoute
   '/areas/$areaSlug': typeof AreasAreaSlugRoute
-  '/checkout/$variantId': typeof CheckoutVariantIdRoute
   '/products/refill': typeof ProductsRefillRoute
   '/products/starter-kit': typeof ProductsStarterKitRoute
   '/solutions/$slug': typeof SolutionsSlugRoute
@@ -317,7 +310,6 @@ export interface FileRoutesByTo {
   '/what-to-expect': typeof WhatToExpectRoute
   '/why-it-keeps-coming-back': typeof WhyItKeepsComingBackRoute
   '/areas/$areaSlug': typeof AreasAreaSlugRoute
-  '/checkout/$variantId': typeof CheckoutVariantIdRoute
   '/products/refill': typeof ProductsRefillRoute
   '/products/starter-kit': typeof ProductsStarterKitRoute
   '/solutions/$slug': typeof SolutionsSlugRoute
@@ -360,7 +352,6 @@ export interface FileRoutesById {
   '/what-to-expect': typeof WhatToExpectRoute
   '/why-it-keeps-coming-back': typeof WhyItKeepsComingBackRoute
   '/areas/$areaSlug': typeof AreasAreaSlugRoute
-  '/checkout/$variantId': typeof CheckoutVariantIdRoute
   '/products/refill': typeof ProductsRefillRoute
   '/products/starter-kit': typeof ProductsStarterKitRoute
   '/solutions/$slug': typeof SolutionsSlugRoute
@@ -404,7 +395,6 @@ export interface FileRouteTypes {
     | '/what-to-expect'
     | '/why-it-keeps-coming-back'
     | '/areas/$areaSlug'
-    | '/checkout/$variantId'
     | '/products/refill'
     | '/products/starter-kit'
     | '/solutions/$slug'
@@ -446,7 +436,6 @@ export interface FileRouteTypes {
     | '/what-to-expect'
     | '/why-it-keeps-coming-back'
     | '/areas/$areaSlug'
-    | '/checkout/$variantId'
     | '/products/refill'
     | '/products/starter-kit'
     | '/solutions/$slug'
@@ -488,7 +477,6 @@ export interface FileRouteTypes {
     | '/what-to-expect'
     | '/why-it-keeps-coming-back'
     | '/areas/$areaSlug'
-    | '/checkout/$variantId'
     | '/products/refill'
     | '/products/starter-kit'
     | '/solutions/$slug'
@@ -531,7 +519,6 @@ export interface RootRouteChildren {
   WhatToExpectRoute: typeof WhatToExpectRoute
   WhyItKeepsComingBackRoute: typeof WhyItKeepsComingBackRoute
   AreasAreaSlugRoute: typeof AreasAreaSlugRoute
-  CheckoutVariantIdRoute: typeof CheckoutVariantIdRoute
   ProductsRefillRoute: typeof ProductsRefillRoute
   ProductsStarterKitRoute: typeof ProductsStarterKitRoute
   SolutionsSlugRoute: typeof SolutionsSlugRoute
@@ -822,13 +809,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductsRefillRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/checkout/$variantId': {
-      id: '/checkout/$variantId'
-      path: '/checkout/$variantId'
-      fullPath: '/checkout/$variantId'
-      preLoaderRoute: typeof CheckoutVariantIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/areas/$areaSlug': {
       id: '/areas/$areaSlug'
       path: '/areas/$areaSlug'
@@ -859,7 +839,6 @@ const rootRouteChildren: RootRouteChildren = {
   WhatToExpectRoute: WhatToExpectRoute,
   WhyItKeepsComingBackRoute: WhyItKeepsComingBackRoute,
   AreasAreaSlugRoute: AreasAreaSlugRoute,
-  CheckoutVariantIdRoute: CheckoutVariantIdRoute,
   ProductsRefillRoute: ProductsRefillRoute,
   ProductsStarterKitRoute: ProductsStarterKitRoute,
   SolutionsSlugRoute: SolutionsSlugRoute,

@@ -1,86 +1,76 @@
-## What's actually happening
+## Audit: Gruns checkout flow vs Cloakd
 
-Your previous agent added `overflow-x: clip` to `html, body` and shrank `pdp-stat` font-size. That stopped the page from being side-pannable, but `overflow-x: clip` doesn't fix overflow — it *hides* it. Any element wider than 390px is now silently chopped off on the right.
+### How Gruns does it
+Gruns is on Shopify. Their flow is:
 
-The screenshot at 390px shows the hero gallery card, the H1 line ("…Fertility"), and the rating row all clipped ~40–60px past the right edge. That means something inside the hero `<section>` is forcing a render width of ~430–450px.
-
-## Root cause
-
-Two contributors, both presentation-only:
-
-1. **No `min-w-0` on flex children that contain horizontally-scrolling content.** `ProductGallery` is a `flex flex-col` whose thumbnail strip uses `overflow-x-auto` with `shrink-0` thumbnails (6 × ~64px + gaps ≈ 416px). In a flex column, an `overflow-x-auto` child without `min-width: 0` can push its flex parent wider than the viewport. The hero `<section>` is a `grid` whose grid item (`md:sticky` wrapper around `ProductGallery`) has no `min-width: 0` either — and grid items default to `min-width: auto`, which is the same trap.
-
-2. **`container-site` padding is 1.25rem (20px) at every breakpoint.** That leaves 350px of content on a 390px viewport. Combined with `p-8` (32px) on the section cards used elsewhere on the PDP, inner content drops to ~286px and any element that assumes ≥320px (badges, the "EPA Minimum-Risk" card, stat blocks) silently clips under `overflow-x: clip`.
-
-The earlier `overflow-wrap: anywhere` on `.pdp-h1/h2/stat` only helps when the heading itself is the offender. Here the offender is the grid/flex container around it.
-
-## Plan
-
-### Step 1 — Add `min-w-0` to the grid/flex parents in the hero
-
-In `src/components/pdp/ProductPage.tsx`, the hero section grid item that wraps `ProductGallery`:
-
-```tsx
-<div className="md:sticky md:top-5 md:self-start min-w-0">
-  <ProductGallery ... />
-</div>
-<div className="min-w-0">
-  <BuyBox ... />
-</div>
+```text
+PDP "Add to Cart" → slide-out cart drawer → "Checkout" button → Shopify hosted checkout (single page)
 ```
 
-And add `min-w-0` to the same `<section className="container-site grid …">` itself is unnecessary, but the BuyBox column needs it too — long pill rows and price labels can otherwise force the column wider.
+Key properties of their flow:
+- **No interstitial confirmation page.** Clicking "Add to Cart" opens a side drawer with the line item, qty stepper, subtotal, trust badges, and a primary "Checkout" CTA. From there it's straight to the hosted checkout.
+- **Shopify hosted checkout** is a clean single page: Contact → Shipping → Payment, with a sticky order summary (image, name, qty, subtotal, shipping, total, discount code field) on the right at desktop, collapsed at the top on mobile. Express wallets (Shop Pay / Apple Pay / G Pay) appear at the very top.
+- **Persistent trust + offer cues**: free-shipping/discount banner across the top, "Almost sold out" urgency strip, money-back guarantee in the order summary, secure-payment badges in the footer.
+- **One-page mental model**: customer never feels like they've left the product. The PDP, drawer, and checkout share the same brand chrome.
 
-### Step 2 — Add `min-w-0` to `ProductGallery`'s internal flex columns
-
-In `src/components/pdp/ProductGallery.tsx`:
-
-- Outer `<div className="flex flex-col gap-3">` → add `min-w-0`
-- Inner `<div className="flex flex-col-reverse gap-3 xl:flex-row-reverse xl:gap-4">` → add `min-w-0`
-- The thumbnail strip `<div className="flex gap-2 overflow-x-auto …">` → add `min-w-0 max-w-full`
-
-This stops the `overflow-x-auto` scroller from inflating its ancestors.
-
-### Step 3 — Tighten mobile gutters so cards stop kissing the edge
-
-In `src/styles.css`:
-
-```css
-.container-site {
-  padding-inline: 1rem;  /* was 1.25rem */
-}
-@media (min-width: 768px) {
-  .container-site { padding-inline: 1.25rem; }
-}
+### How Cloakd does it today
+```text
+PDP "Order Now" → /checkout/$variantId interstitial → Stripe hosted Checkout
 ```
 
-And reduce section-card padding on mobile only where it's currently `p-8 md:p-14`:
+Issues vs the Gruns benchmark:
+1. **Dead interstitial step.** `/checkout/$variantId` only restates what the user just selected and shows a second "Proceed to secure checkout" button. It adds a click, a page load, and a moment of doubt without collecting anything.
+2. **No cart drawer / no continuity.** The jump from our branded PDP to Stripe's white-label checkout is abrupt. There is no in-context confirmation that the right plan / size / pest was added.
+3. **Stripe Checkout is under-configured.** The session has no product image, no description, no Link / wallet preference set explicitly, no promo code field, no phone collection, and the success URL is a thin page. The line item uses ad-hoc `price_data` so the product looks generic in the checkout summary.
+4. **No express-pay surface on the PDP**. Gruns surfaces Shop Pay; we don't surface Apple Pay / Link / G Pay anywhere before Stripe.
+5. **Trust signals don't carry through.** Our PDP has great trust copy (EPA, Made in USA, no secondary kill) but none of it is repeated near the final CTA or in the Stripe summary.
+6. **Cancel URL bounces back to the dead interstitial**, not the PDP, so a back-out user lands on a page with no product context.
 
-```tsx
-className="… p-5 md:p-14"
-```
+### Plan
 
-Targets: the "How deployment works" card and the FAQ card in `ProductPage.tsx` (lines 63 and 140). Gives mobile ~358px of usable content instead of 286px.
+Goal: collapse the flow to **PDP → Stripe Checkout** with a Gruns-style mini "review" moment, and make the Stripe page itself look like a continuation of the brand.
 
-### Step 4 — Keep `overflow-x: clip` on `html, body`, but only as a *safety net*
+**1. Delete the interstitial route**
+- Remove `src/routes/checkout.$variantId.tsx`.
+- In `BuyBox.handleBuy`, call `createCheckoutSession` directly with a loading state on the "Order Now" button (spinner + "Redirecting to secure checkout…"). Disable the button while pending; show an inline error toast on failure.
+- Update Stripe `cancel_url` in `server-functions/stripe.ts` to `${origin}/products/{slug}?variant={id}` so back-outs land on the PDP.
 
-Leave the rule in place so a future stray element can't break the page, but the goal is that with Steps 1–3, `document.documentElement.scrollWidth` equals `window.innerWidth` at 390px even without the clip. That's the only real verification — if scrollWidth > innerWidth, something is still wrong, regardless of whether the user can see scrollbars.
+**2. Add a lightweight "review drawer" (Gruns parity, optional but recommended)**
+- New `OrderReviewDrawer` (shadcn `Sheet`, right side on desktop, bottom on mobile) that opens when "Order Now" is clicked.
+- Contents: product image, variant name, pest + size pills (read-only), plan badge, qty stepper (fixed at 1 for now), subtotal / shipping / total, 3 trust bullets, "Checkout securely" primary CTA, "Keep shopping" secondary link.
+- The CTA in the drawer is what calls `createCheckoutSession`. This preserves the "I confirmed what I'm buying" moment that the interstitial was trying to provide, without a full page navigation.
+- If we'd rather keep it simple, skip the drawer and rely on Stripe's order summary — but then we MUST do step 3 well.
 
-### Step 5 — Revisit the earlier overrides
+**3. Make the Stripe Checkout session feel branded**
+In `createCheckoutSession`:
+- Add `product_data.images: [absoluteUrl(variant.image)]` and `product_data.description` (e.g. "Evolve rodent fertility control — 6 lb refill").
+- Set `allow_promotion_codes: true`.
+- Set `phone_number_collection: { enabled: true }`.
+- Set `custom_text.submit.message` to a one-line reassurance ("Ships within 24 hours · 30-day support included").
+- Set `payment_method_types: ['card', 'link']` (and `['card', 'link', 'us_bank_account']` only if we want ACH).
+- Set `billing_address_collection: 'auto'`.
+- For sub mode, set `subscription_data.description` so the recurring line is human-readable.
+- Stable shipping rate: create one shipping rate once (or look it up by metadata) instead of `stripe.shippingRates.create` on every call — currently we leak a new rate per checkout attempt.
 
-The previous agent's edits to `.pdp-h1`, `.pdp-h2`, `.pdp-stat` (`overflow-wrap: anywhere` + smaller `pdp-stat` clamp) are no longer load-bearing once Steps 1–3 ship, but they're not harmful. Keep `overflow-wrap: anywhere` on `.pdp-stat` only (because long numerals legitimately can't break otherwise) and remove it from `.pdp-h1`/`.pdp-h2` so headings break on word boundaries instead of mid-word. Restore `pdp-stat` to `clamp(3.5rem, 10vw, 7.5rem)` for a less collapsed look on small screens — 14vw was an over-correction.
+**4. Brand the Stripe Checkout UI itself**
+- One-time setup in Stripe Dashboard → Settings → Branding: upload Cloakd logo + icon, set brand color to our `--brand` and accent to `--brand` darker, set the button style. Mention this in the plan as a manual step for the user, not code.
 
-## Verification
+**5. Tighten the success page**
+- `src/routes/payment-confirmed.tsx`: confirm it fetches the session, shows order #, variant, total, ship-by date, and the "what happens next" timeline. (Audit current state in a follow-up if needed — out of scope here unless we find it's also thin.)
 
-After implementing, at 390 × 844:
-1. Visually: hero gallery card flush with the right card padding, H1 wraps cleanly with no mid-word cuts.
-2. Programmatic: in the browser console, `document.documentElement.scrollWidth - window.innerWidth` returns `0`.
-3. Scroll the entire PDP and confirm no section past the hero clips either — especially `FieldResultsTrio`, `ComparisonTable`, and `ReviewsCarousel` (those are the next likely offenders if anything else is missing `min-w-0`).
+**6. Surface express pay earlier (stretch)**
+- If we want true Gruns parity, mount Stripe's Express Checkout Element (Apple Pay / G Pay / Link) inside the BuyBox above "Order Now". This is a meaningful lift (client-side Stripe Elements, PaymentIntent on mount) — flag as Phase 2.
 
-## What this is *not*
+### Files touched
+- `src/routes/checkout.$variantId.tsx` — delete
+- `src/components/pdp/BuyBox.tsx` — wire `handleBuy` to server fn directly, add loading/error state, optionally open `OrderReviewDrawer`
+- `src/components/pdp/OrderReviewDrawer.tsx` — new (if we do step 2)
+- `src/server-functions/stripe.ts` — branded line items, promo codes, phone, custom text, stable shipping rate, fixed cancel URL
+- (manual) Stripe Dashboard branding
 
-- Not a viewport meta tag issue — `__root.tsx` is correct.
-- Not a font-size issue — `pdp-stat` shrinking didn't help because the overflow isn't coming from the stat number.
-- Not a typography refactor — purely structural CSS / Tailwind utility additions.
+### Phasing
+- **Phase 1 (small, ship this week):** steps 1, 3, 4, 5 — kills the interstitial, makes Stripe look like ours, fixes cancel URL.
+- **Phase 2 (next):** step 2 — review drawer for the on-brand confirmation moment.
+- **Phase 3 (stretch):** step 6 — express pay on PDP.
 
-All changes are presentation-only, scoped to `ProductPage.tsx`, `ProductGallery.tsx`, and `src/styles.css`.
+Want me to proceed with Phase 1, or Phase 1 + 2 together?

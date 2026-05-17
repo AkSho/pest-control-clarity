@@ -1,6 +1,7 @@
-import { useNavigate } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
-import { Star } from "lucide-react";
+import { Loader2, Star } from "lucide-react";
+import { createCheckoutSession } from "@/server-functions/stripe";
 import { Flag, Bird, ShieldCheck, Leaf } from "@phosphor-icons/react";
 import { PestPills } from "./PestPills";
 import { SizePills } from "./SizePills";
@@ -61,11 +62,13 @@ export function BuyBox({
   variant: Variant;
   onVariantChange: (id: string) => void;
 }) {
-  const navigate = useNavigate();
+  const createCheckout = useServerFn(createCheckoutSession);
 
   const hasSub = variant.subPrice !== undefined;
   const [plan, setPlan] = useState<Plan>(hasSub ? "sub" : "oneTime");
   const [bundleType, setBundleType] = useState<BundleType>("home");
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const isStarterKit = variant.productSlug === "starter-kit";
 
   // Reset to oneTime if switching to a variant without a sub plan
@@ -99,12 +102,24 @@ export function BuyBox({
 
   const savings = hasSub ? variant.oneTimePrice - variant.subPrice! : 0;
 
-  const handleBuy = () => {
-    navigate({
-      to: "/checkout/$variantId",
-      params: { variantId: variant.id },
-      search: { plan },
-    });
+  const handleBuy = async () => {
+    if (checkoutLoading) return;
+    setCheckoutLoading(true);
+    setCheckoutError(null);
+    try {
+      const { url } = await createCheckout({
+        data: {
+          variantId: variant.id,
+          plan,
+          origin: window.location.origin,
+        },
+      });
+      window.location.href = url;
+    } catch (err) {
+      console.error("checkout failed", err);
+      setCheckoutError("Something went wrong. Please try again.");
+      setCheckoutLoading(false);
+    }
   };
 
   return (
@@ -193,9 +208,25 @@ export function BuyBox({
           </span>
           <span className="text-3xl font-bold text-foreground">{priceLabel}</span>
         </div>
-        <button onClick={handleBuy} className="pdp-btn-primary">
-          Order Now
+        <button
+          onClick={handleBuy}
+          disabled={checkoutLoading}
+          className="pdp-btn-primary flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-70"
+        >
+          {checkoutLoading ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Redirecting to secure checkout…
+            </>
+          ) : (
+            "Order Now"
+          )}
         </button>
+        {checkoutError && (
+          <p className="rounded-lg bg-destructive/10 px-3 py-2 text-center text-xs font-medium text-destructive">
+            {checkoutError}
+          </p>
+        )}
         {/* Post-CTA confirmation */}
         {plan === "sub" && hasSub ? (
           <p className="text-center text-xs font-medium text-brand">
@@ -289,8 +320,15 @@ export function BuyBox({
       {/* Sticky bar (mobile) */}
       <StickyMobileBar
         priceLabel={priceLabel}
-        ctaLabel={plan === "sub" ? "Start plan" : "Order Now"}
+        ctaLabel={
+          checkoutLoading
+            ? "Redirecting…"
+            : plan === "sub"
+              ? "Start plan"
+              : "Order Now"
+        }
         onClick={handleBuy}
+        loading={checkoutLoading}
       />
     </div>
   );
