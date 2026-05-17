@@ -15,14 +15,14 @@ function getStripe(): Stripe {
 }
 
 export const createCheckoutSession = createServerFn({ method: "POST" })
-  .validator(
+  .inputValidator(
     z.object({
       variantId: z.string(),
       plan: z.enum(["oneTime", "sub"]),
       origin: z.string().url(),
     }),
   )
-  .handler(async ({ data }) => {
+  .handler(async ({ data }: { data: { variantId: string; plan: "oneTime" | "sub"; origin: string } }) => {
     const found = findVariant(data.variantId);
     if (!found) throw new Error("Variant not found");
     const { variant } = found;
@@ -43,7 +43,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       },
     });
 
-    const lineItem: Stripe.Checkout.SessionCreateParams.LineItem = usingSub
+    const lineItem: any = usingSub
       ? {
           price_data: {
             currency: "usd",
