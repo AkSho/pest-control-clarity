@@ -188,23 +188,10 @@ export function BuyBox({
         </div>
         <button
           onClick={handleBuy}
-          disabled={checkoutLoading}
-          className="pdp-btn-primary flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-70"
+          className="pdp-btn-primary flex items-center justify-center gap-2"
         >
-          {checkoutLoading ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Redirecting to secure checkout…
-            </>
-          ) : (
-            "Order Now"
-          )}
+          Order Now
         </button>
-        {checkoutError && (
-          <p className="rounded-lg bg-destructive/10 px-3 py-2 text-center text-xs font-medium text-destructive">
-            {checkoutError}
-          </p>
-        )}
         {/* Post-CTA confirmation */}
         {plan === "sub" && hasSub ? (
           <p className="text-center text-xs font-medium text-brand">
@@ -298,15 +285,17 @@ export function BuyBox({
       {/* Sticky bar (mobile) */}
       <StickyMobileBar
         priceLabel={priceLabel}
-        ctaLabel={
-          checkoutLoading
-            ? "Redirecting…"
-            : plan === "sub"
-              ? "Start plan"
-              : "Order Now"
-        }
+        ctaLabel={plan === "sub" ? "Start plan" : "Order Now"}
         onClick={handleBuy}
-        loading={checkoutLoading}
+      />
+
+      {/* Order review drawer */}
+      <OrderReviewDrawer
+        open={reviewOpen}
+        onOpenChange={setReviewOpen}
+        product={product}
+        variant={variant}
+        plan={plan}
       />
     </div>
   );
