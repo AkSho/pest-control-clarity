@@ -55,7 +55,8 @@ export function OrderReviewDrawer({
       window.location.href = url;
     } catch (err) {
       console.error("checkout failed", err);
-      setError("Something went wrong. Please try again.");
+      const msg = err instanceof Error ? err.message : String(err);
+      setError(`Error: ${msg}`);
       setLoading(false);
     }
   };
