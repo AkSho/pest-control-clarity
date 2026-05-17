@@ -12,6 +12,7 @@ import { createCheckoutSession } from "@/server-functions/stripe";
 import type { Product, Variant } from "@/data/products";
 import { FLAT_SHIPPING_USD } from "@/data/products";
 import type { Plan } from "./PlanSelector";
+import { ExpressCheckoutBlock } from "./ExpressCheckoutBlock";
 
 export function OrderReviewDrawer({
   open,
