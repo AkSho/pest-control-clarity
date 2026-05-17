@@ -57,13 +57,24 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       data: { variantId: string; plan: "oneTime" | "sub"; origin: string };
     }) => {
       const found = findVariant(data.variantId);
-      if (!found) throw new Error("Variant not found");
+      if (!found) throw new Error("STEP1_FAIL: Variant not found: " + data?.variantId);
       const { product, variant } = found;
 
       const usingSub = data.plan === "sub" && variant.subPrice !== undefined;
-      const stripe = getStripe();
 
-      const shippingRateId = await getOrCreateShippingRate(stripe);
+      let stripe: Stripe;
+      try {
+        stripe = getStripe();
+      } catch (e) {
+        throw new Error("STEP2_FAIL: getStripe() threw: " + String(e));
+      }
+
+      let shippingRateId: string;
+      try {
+        shippingRateId = await getOrCreateShippingRate(stripe);
+      } catch (e) {
+        throw new Error("STEP3_FAIL: shippingRate threw: " + String(e));
+      }
 
       const productData = {
         name: variant.shortName,
@@ -106,7 +117,9 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
 
       // Stripe: shipping_options / shipping_address_collection are not allowed
       // in mode:"subscription". For subs, add shipping as a recurring line item.
-      const session = await stripe.checkout.sessions.create({
+      let session: Stripe.Checkout.Session;
+      try {
+      session = await stripe.checkout.sessions.create({
         mode: usingSub ? "subscription" : "payment",
         line_items: usingSub
           ? [
@@ -157,8 +170,11 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
           productSlug: variant.productSlug,
         },
       });
+      } catch (e) {
+        throw new Error("STEP4_FAIL: session.create threw: " + String(e));
+      }
 
-      if (!session.url) throw new Error("Stripe did not return a checkout URL");
+      if (!session.url) throw new Error("STEP5_FAIL: no session URL");
       return { url: session.url };
     },
   );
