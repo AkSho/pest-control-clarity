@@ -43,8 +43,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       },
     });
 
-    type LineItem = NonNullable<Parameters<Stripe["checkout"]["sessions"]["create"]>[0]["line_items"]>[number];
-    const lineItem: LineItem = usingSub
+    const lineItem: any = usingSub
       ? {
           price_data: {
             currency: "usd",
