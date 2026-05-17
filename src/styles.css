@@ -183,11 +183,13 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    overflow-x: clip;
   }
 
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    overflow-x: clip;
     font-weight: 500;
     line-height: 1.6;
   }
@@ -216,10 +218,12 @@
   .pdp-h1 {
     font-size: clamp(2.625rem, 4vw + 1rem, 3.5rem);
     line-height: 1.1; font-weight: 700; letter-spacing: -0.05em;
+    overflow-wrap: anywhere;
   }
   .pdp-h2 {
     font-size: clamp(2rem, 3vw + 0.5rem, 2.75rem);
     line-height: 1.1; font-weight: 700; letter-spacing: -0.05em;
+    overflow-wrap: anywhere;
   }
   .pdp-h3 { font-size: 2rem; line-height: 1.2; font-weight: 700; letter-spacing: -0.05em; }
   .pdp-h4 { font-size: 1.5rem; line-height: 1.2; font-weight: 600; letter-spacing: -0.05em; }
@@ -227,9 +231,10 @@
 
   /* stat: giant numerals for field results / impact moments */
   .pdp-stat {
-    font-size: clamp(4.5rem, 8vw, 7.5rem);
+    font-size: clamp(3rem, 14vw, 7.5rem);
     line-height: 1; font-weight: 700; letter-spacing: -0.05em;
     color: var(--color-brand);
+    overflow-wrap: anywhere;
   }
 
   /* section card wrapper */
