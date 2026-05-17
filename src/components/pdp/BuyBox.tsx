@@ -208,9 +208,25 @@ export function BuyBox({
           </span>
           <span className="text-3xl font-bold text-foreground">{priceLabel}</span>
         </div>
-        <button onClick={handleBuy} className="pdp-btn-primary">
-          Order Now
+        <button
+          onClick={handleBuy}
+          disabled={checkoutLoading}
+          className="pdp-btn-primary flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-70"
+        >
+          {checkoutLoading ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Redirecting to secure checkout…
+            </>
+          ) : (
+            "Order Now"
+          )}
         </button>
+        {checkoutError && (
+          <p className="rounded-lg bg-destructive/10 px-3 py-2 text-center text-xs font-medium text-destructive">
+            {checkoutError}
+          </p>
+        )}
         {/* Post-CTA confirmation */}
         {plan === "sub" && hasSub ? (
           <p className="text-center text-xs font-medium text-brand">
