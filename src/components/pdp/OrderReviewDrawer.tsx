@@ -12,7 +12,7 @@ import { createCheckoutSession } from "@/server-functions/stripe";
 import type { Product, Variant } from "@/data/products";
 import { FLAT_SHIPPING_USD } from "@/data/products";
 import type { Plan } from "./PlanSelector";
-import { ExpressCheckoutBlock } from "./ExpressCheckoutBlock";
+
 
 export function OrderReviewDrawer({
   open,
@@ -144,11 +144,6 @@ export function OrderReviewDrawer({
 
         {/* Footer CTA */}
         <div className="border-t border-border bg-background px-6 py-4">
-          {!isSub && (
-            <div className="mb-3">
-              <ExpressCheckoutBlock variant={variant} />
-            </div>
-          )}
           {error && (
             <p className="mb-2 rounded-lg bg-destructive/10 px-3 py-2 text-center text-xs font-medium text-destructive">
               {error}
