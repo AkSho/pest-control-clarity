@@ -91,7 +91,8 @@ function Inner({ variant }: { variant: Variant }) {
           paymentMethods: {
             applePay: "always",
             googlePay: "always",
-            link: "auto",
+            link: "always",
+            paypal: "always",
           },
         }}
       />
