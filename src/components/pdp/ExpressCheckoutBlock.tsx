@@ -1,5 +1,10 @@
 import { useMemo, useState } from "react";
-import { Elements, ExpressCheckoutElement } from "@stripe/react-stripe-js";
+import {
+  Elements,
+  ExpressCheckoutElement,
+  useElements,
+  useStripe,
+} from "@stripe/react-stripe-js";
 import type {
   StripeExpressCheckoutElementConfirmEvent,
   StripeExpressCheckoutElementReadyEvent,
@@ -12,33 +17,55 @@ import { FLAT_SHIPPING_USD } from "@/data/products";
 
 export function ExpressCheckoutBlock({ variant }: { variant: Variant }) {
   const stripePromise = useMemo(() => getStripe(), []);
-  const createIntent = useServerFn(createPaymentIntent);
-  const [available, setAvailable] = useState<boolean | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
   const amountCents = Math.round(
     (variant.oneTimePrice + FLAT_SHIPPING_USD) * 100,
   );
 
+  return (
+    <Elements
+      stripe={stripePromise}
+      options={{
+        mode: "payment",
+        amount: amountCents,
+        currency: "usd",
+      }}
+    >
+      <Inner variant={variant} />
+    </Elements>
+  );
+}
+
+function Inner({ variant }: { variant: Variant }) {
+  const stripe = useStripe();
+  const elements = useElements();
+  const createIntent = useServerFn(createPaymentIntent);
+  const [available, setAvailable] = useState<boolean | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
   const handleReady = (event: StripeExpressCheckoutElementReadyEvent) => {
     const methods = event.availablePaymentMethods;
-    const any =
-      !!methods &&
-      Object.values(methods).some((v) => v === true);
+    const any = !!methods && Object.values(methods).some((v) => v === true);
     setAvailable(any);
   };
 
   const handleConfirm = async (
-    event: StripeExpressCheckoutElementConfirmEvent,
+    _event: StripeExpressCheckoutElementConfirmEvent,
   ) => {
     try {
-      const stripe = await stripePromise;
-      if (!stripe) throw new Error("Stripe failed to load");
+      if (!stripe || !elements) throw new Error("Stripe not ready");
+
+      const { error: submitError } = await elements.submit();
+      if (submitError) {
+        setError(submitError.message ?? "Payment failed");
+        return;
+      }
+
       const { clientSecret } = await createIntent({
         data: { variantId: variant.id },
       });
 
       const { error: confirmError } = await stripe.confirmPayment({
+        elements,
         clientSecret,
         confirmParams: {
           return_url: `${window.location.origin}/payment-confirmed`,
@@ -55,35 +82,19 @@ export function ExpressCheckoutBlock({ variant }: { variant: Variant }) {
   };
 
   return (
-    <div
-      className={
-        available === false
-          ? "hidden"
-          : "flex flex-col gap-3"
-      }
-    >
-      <Elements
-        stripe={stripePromise}
+    <div className={available === false ? "hidden" : "flex flex-col gap-3"}>
+      <ExpressCheckoutElement
+        onReady={handleReady}
+        onConfirm={handleConfirm}
         options={{
-          mode: "payment",
-          amount: amountCents,
-          currency: "usd",
-          paymentMethodCreation: "manual",
+          buttonHeight: 48,
+          paymentMethods: {
+            applePay: "always",
+            googlePay: "always",
+            link: "auto",
+          },
         }}
-      >
-        <ExpressCheckoutElement
-          onReady={handleReady}
-          onConfirm={handleConfirm}
-          options={{
-            buttonHeight: 48,
-            paymentMethods: {
-              applePay: "always",
-              googlePay: "always",
-              link: "auto",
-            },
-          }}
-        />
-      </Elements>
+      />
       {error && (
         <p className="rounded-lg bg-destructive/10 px-3 py-2 text-center text-xs font-medium text-destructive">
           {error}
