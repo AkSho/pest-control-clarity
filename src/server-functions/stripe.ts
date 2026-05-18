@@ -6,7 +6,9 @@ import { findVariant, FLAT_SHIPPING_USD } from "@/data/products";
 function getStripe(): Stripe {
   const key = process.env.STRIPE_SECRET_KEY;
   if (!key) throw new Error("STRIPE_SECRET_KEY not configured");
-  return new Stripe(key);
+  return new Stripe(key, {
+    httpClient: Stripe.createFetchHttpClient(),
+  });
 }
 
 // Cache the shipping rate id per worker instance so we don't leak a new

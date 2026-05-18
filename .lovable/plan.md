@@ -1,75 +1,43 @@
-## What's broken
+## What's actually happening
 
-Clicking **Checkout securely** calls the `createCheckoutSession` server function, which crashes before it can run. The global SSR error wrapper in `src/server.ts` catches the crash and returns the branded "This page didn't load" HTML — that HTML is exactly what the drawer is now displaying as `Error: <!doctype html>...`.
-
-Two root causes, stacked:
-
-### 1. `cloudflare:workers` can't be imported in dev
-
-`src/server-functions/stripe.ts` does:
-
-```ts
-import { getRequestContext } from "cloudflare:workers";
-```
-
-The dev sandbox log confirms Vite cannot resolve this module:
+I called the checkout endpoint directly and pulled the server logs. The published worker is returning:
 
 ```
-cloudflare:workers (imported by /dev-server/src/server-functions/stripe.ts)
+[error] Error: Server function info not found for src_server-functions_stripe_ts--createCheckoutSession_createServerFn_handler
+POST .../_serverFn/...createCheckoutSession... → 500
 ```
 
-`cloudflare:workers` is a virtual module that only exists inside the workerd runtime. The dev server runs on Node, so the module never resolves and the entire server function module fails to load. Every call to `createCheckoutSession` therefore throws at import time and bubbles up as a 500.
+That message means the server function never got registered at module load time — the file threw while being imported, so the registry is empty when the request arrives. The browser then sees a generic 500 HTML page, the `catch` in `OrderReviewDrawer` fires, and the user sees "We couldn't reach checkout right now."
 
-### 2. `STRIPE_SECRET_KEY` is not configured
+The likely cause is the Stripe Node SDK. `new Stripe(key)` without arguments defaults to the Node HTTP client, which is not safe to instantiate inside Cloudflare's `workerd` runtime — it can blow up at module init when the handler is loaded. Stripe supports Workers, but only when you pass the fetch-based HTTP client and pin an API version.
 
-`fetch_secrets` shows only `FIRECRAWL_API_KEY` and `LOVABLE_API_KEY`. There is no `STRIPE_SECRET_KEY` in the project, so even if the import is fixed the handler would throw `"STRIPE_SECRET_KEY not configured"`.
+The earlier `cloudflare:workers` import has already been removed, and `STRIPE_SECRET_KEY` is set, so this is the remaining blocker.
 
-## Fix
+## Plan
 
-### Step 1 — Read the secret from `process.env` (works in both dev and workerd)
+1. **Fix `src/server-functions/stripe.ts` for the Worker runtime**
+   - Construct Stripe with the fetch HTTP client and a pinned API version:
+     ```ts
+     new Stripe(key, {
+       apiVersion: "2025-04-30.basil", // or the version currently typed by the SDK
+       httpClient: Stripe.createFetchHttpClient(),
+     });
+     ```
+   - Keep the rest of the handler unchanged (validator, shipping-rate caching, subscription vs payment branches).
+   - Apply the same change to `createPaymentIntent`.
 
-Edit `src/server-functions/stripe.ts`:
+2. **Make server-side failures observable**
+   - Add a `try/catch` inside the `createCheckoutSession` handler that logs the error with `console.error("[checkout]", err)` and rethrows. This way, the next time something fails, it shows up in `server-function-logs` instead of vanishing into the branded 500 page.
 
-- Remove `import { getRequestContext } from "cloudflare:workers";`
-- Remove the `CloudflareEnv` type and `getRequestContext()` call
-- Replace `getStripe()` with:
+3. **Republish**
+   - After the edit lands, the user needs to publish so the production worker picks up the new bundle. Without that step the published URL will keep returning the same "Server function info not found" error.
 
-  ```ts
-  function getStripe(): Stripe {
-    const key = process.env.STRIPE_SECRET_KEY;
-    if (!key) throw new Error("STRIPE_SECRET_KEY not configured");
-    return new Stripe(key);
-  }
-  ```
+4. **Verify**
+   - Re-invoke `/_serverFn/...createCheckoutSession...` against the published URL and confirm it returns `{ url: "https://checkout.stripe.com/..." }`.
+   - Click "Checkout securely" in the preview and confirm the browser redirects to Stripe.
 
-  `process.env` is provided by `nodejs_compat` in workerd and natively in dev, so the same code works in both runtimes.
+## Files touched
 
-- Drop the `STEP1_FAIL`…`STEP5_FAIL` debug wrappers in favor of a single thrown error — they were left over from earlier debugging and add no value now.
+- `src/server-functions/stripe.ts` — Stripe constructor + small log/rethrow wrapper.
 
-### Step 2 — Add the Stripe secret
-
-Use `secrets--add_secret` to add `STRIPE_SECRET_KEY` (the user's Stripe **test** or **live** secret key, `sk_test_…` / `sk_live_…`). Without this, checkout cannot create a Stripe session.
-
-### Step 3 — Surface friendly errors in the drawer
-
-Currently `OrderReviewDrawer.handleCheckout` does `setError(`Error: ${msg}`)`. When the server function fails, TanStack serializes the upstream Response body (the branded HTML) into `err.message`, which is what the user sees.
-
-Catch the failure and show a generic message instead:
-
-```ts
-setError("We couldn't reach the checkout right now. Please try again in a moment.");
-console.error("checkout failed", err);
-```
-
-This keeps real diagnostics in the console without dumping HTML into the UI.
-
-## Files to change
-
-- `src/server-functions/stripe.ts` — swap secret source, drop debug wrappers
-- `src/components/pdp/OrderReviewDrawer.tsx` — friendlier error message
-
-## Out of scope
-
-- No changes to the checkout UX flow, layout, or copy beyond the error message
-- No changes to the Stripe session shape (subscriptions, shipping rates, etc.)
-- The `STRIPE_SECRET_KEY` value must come from the user; I'll add it via the secret tool once you approve.
+No UI changes needed; the drawer's error path is already correct.
