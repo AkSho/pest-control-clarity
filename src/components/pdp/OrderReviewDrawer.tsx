@@ -55,8 +55,7 @@ export function OrderReviewDrawer({
       window.location.href = url;
     } catch (err) {
       console.error("checkout failed", err);
-      const msg = err instanceof Error ? err.message : String(err);
-      setError(`Error: ${msg}`);
+      setError("We couldn't reach checkout right now. Please try again in a moment.");
       setLoading(false);
     }
   };
