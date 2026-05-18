@@ -53,6 +53,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
     }: {
       data: { variantId: string; plan: "oneTime" | "sub"; origin: string };
     }) => {
+      try {
       const found = findVariant(data.variantId);
       if (!found) throw new Error("Variant not found");
       const { product, variant } = found;
