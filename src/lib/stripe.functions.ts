@@ -46,7 +46,7 @@ function describeStripeError(err: any): string {
 }
 
 export const createCheckoutSession = createServerFn({ method: "POST" })
-  .validator(
+  .inputValidator(
     z.object({
       variantId: z.string(),
       plan: z.enum(["oneTime", "sub"]),
@@ -180,7 +180,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
 // One-time PaymentIntent for the Express Checkout Element (Apple Pay / Google
 // Pay / Link). Subscriptions still go through hosted Checkout.
 export const createPaymentIntent = createServerFn({ method: "POST" })
-  .validator(
+  .inputValidator(
     z.object({
       variantId: z.string(),
     }),
