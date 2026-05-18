@@ -1,37 +1,75 @@
-## 1. Apple Pay domain verification (you do this, ~2 min)
+## What's broken
 
-In Stripe Dashboard:
-1. **Settings → Payment methods → Apple Pay → Add a new domain**
-2. Enter your domains, one at a time:
-   - `pest-pro-rebrand.lovable.app` (published)
-   - your custom domain too, once it's live
-3. Stripe gives you a verification file to host at `/.well-known/apple-developer-merchantid-domain-association`
-4. **Send me the file contents** (or just paste the URL Stripe gives you) — I'll add a TanStack server route at `src/routes/.well-known/apple-developer-merchantid-domain-association.ts` that serves it. Then you click "Verify" in Stripe.
+Clicking **Checkout securely** calls the `createCheckoutSession` server function, which crashes before it can run. The global SSR error wrapper in `src/server.ts` catches the crash and returns the branded "This page didn't load" HTML — that HTML is exactly what the drawer is now displaying as `Error: <!doctype html>...`.
 
-Note: the preview URL (`id-preview--…lovable.app`) can't be verified — Apple only allows stable domains. Apple Pay will only show on published + custom domains.
+Two root causes, stacked:
 
-## 2. Force Link to always render
+### 1. `cloudflare:workers` can't be imported in dev
 
-One-line change in `src/components/pdp/ExpressCheckoutBlock.tsx`:
+`src/server-functions/stripe.ts` does:
 
-```
-link: "auto"  →  link: "always"
+```ts
+import { getRequestContext } from "cloudflare:workers";
 ```
 
-Effect: every Chrome/Firefox/Edge visitor sees the Link button next to Google Pay, even if Stripe doesn't recognize them yet.
+The dev sandbox log confirms Vite cannot resolve this module:
 
-## 3. Add PayPal as an express button
+```
+cloudflare:workers (imported by /dev-server/src/server-functions/stripe.ts)
+```
 
-Two pieces:
+`cloudflare:workers` is a virtual module that only exists inside the workerd runtime. The dev server runs on Node, so the module never resolves and the entire server function module fails to load. Every call to `createCheckoutSession` therefore throws at import time and bubbles up as a 500.
 
-**a. Enable PayPal in Stripe Dashboard:** Settings → Payment methods → PayPal → Turn on. (Free, no PayPal Business account needed — Stripe handles the connection.)
+### 2. `STRIPE_SECRET_KEY` is not configured
 
-**b. Code change:** PayPal isn't part of `ExpressCheckoutElement`'s built-in wallet set — it has to be added via `paymentMethods.paypal: "always"` in the Element options. Stripe auto-renders it as a yellow PayPal button below Google Pay/Link when enabled on the account.
+`fetch_secrets` shows only `FIRECRAWL_API_KEY` and `LOVABLE_API_KEY`. There is no `STRIPE_SECRET_KEY` in the project, so even if the import is fixed the handler would throw `"STRIPE_SECRET_KEY not configured"`.
 
-That's the whole change — no separate component, no new server fn (the existing `createPaymentIntent` already uses `automatic_payment_methods`, which picks up PayPal once it's enabled on the account).
+## Fix
 
-## Order of operations
+### Step 1 — Read the secret from `process.env` (works in both dev and workerd)
 
-Do step 2 + 3b now (code-only, takes one edit). Step 1 and 3a are dashboard work on your end — once you've enabled PayPal and sent me the Apple Pay verification file, I'll wire up the `.well-known` route.
+Edit `src/server-functions/stripe.ts`:
 
-Sound good?
+- Remove `import { getRequestContext } from "cloudflare:workers";`
+- Remove the `CloudflareEnv` type and `getRequestContext()` call
+- Replace `getStripe()` with:
+
+  ```ts
+  function getStripe(): Stripe {
+    const key = process.env.STRIPE_SECRET_KEY;
+    if (!key) throw new Error("STRIPE_SECRET_KEY not configured");
+    return new Stripe(key);
+  }
+  ```
+
+  `process.env` is provided by `nodejs_compat` in workerd and natively in dev, so the same code works in both runtimes.
+
+- Drop the `STEP1_FAIL`…`STEP5_FAIL` debug wrappers in favor of a single thrown error — they were left over from earlier debugging and add no value now.
+
+### Step 2 — Add the Stripe secret
+
+Use `secrets--add_secret` to add `STRIPE_SECRET_KEY` (the user's Stripe **test** or **live** secret key, `sk_test_…` / `sk_live_…`). Without this, checkout cannot create a Stripe session.
+
+### Step 3 — Surface friendly errors in the drawer
+
+Currently `OrderReviewDrawer.handleCheckout` does `setError(`Error: ${msg}`)`. When the server function fails, TanStack serializes the upstream Response body (the branded HTML) into `err.message`, which is what the user sees.
+
+Catch the failure and show a generic message instead:
+
+```ts
+setError("We couldn't reach the checkout right now. Please try again in a moment.");
+console.error("checkout failed", err);
+```
+
+This keeps real diagnostics in the console without dumping HTML into the UI.
+
+## Files to change
+
+- `src/server-functions/stripe.ts` — swap secret source, drop debug wrappers
+- `src/components/pdp/OrderReviewDrawer.tsx` — friendlier error message
+
+## Out of scope
+
+- No changes to the checkout UX flow, layout, or copy beyond the error message
+- No changes to the Stripe session shape (subscriptions, shipping rates, etc.)
+- The `STRIPE_SECRET_KEY` value must come from the user; I'll add it via the secret tool once you approve.
