@@ -1,32 +1,25 @@
+## Findings
+
+- The preview checkout flow now works: the server function request returns `200` and redirects to Stripe Checkout.
+- The failing message is coming from the currently published/live site, which appears to be stale or missing the product route; `https://pest-pro-rebrand.lovable.app/products/starter-kit` currently shows a 404.
+- Because the preview successfully calls the new server-function ID (`/src/lib/stripe.functions.ts?...createCheckoutSession...`), the prior code move likely fixed the manifest issue, but the live site still needs the updated frontend published.
+
 ## Plan
 
-The checkout error is still coming from the published server function endpoint returning 500 with:
+1. **Publish/update the live app**
+   - You’ll need to click **Publish** / **Update** in Lovable, since I can’t trigger that action from here.
+   - This is required for the live domain to receive the new product route and updated server-function ID.
 
-```text
-Server function info not found for src_server-functions_stripe_ts--createCheckoutSession_createServerFn_handler
-```
+2. **Re-test live checkout after publish**
+   - Open the live product page.
+   - Click **Order Now** → **Checkout securely**.
+   - Confirm the live server-function request returns `200` and redirects to Stripe Checkout.
 
-That means the browser is calling a server-function ID that is not present in the published server-function manifest. This is happening before Stripe is reached, so the current user-facing message is just the drawer catching that 500.
+3. **If it still fails after publishing**
+   - I’ll inspect the live request and production server logs.
+   - If the live request still references `src_server-functions_stripe_ts`, the publish did not pick up the new bundle.
+   - If it references `src_lib_stripe_functions_ts` but returns a Stripe/provider error, I’ll fix that separate issue next.
 
-## What I will change
+## No code changes needed right now
 
-1. **Move the checkout server functions into the recommended client-safe module location**
-   - Create/move the Stripe server functions from `src/server-functions/stripe.ts` to a `*.functions.ts` file under `src/lib/`, for example `src/lib/stripe.functions.ts`.
-   - Keep the existing Stripe logic, including the fetch-based Stripe HTTP client and checkout error logging.
-   - This aligns with TanStack Start’s recommended convention and avoids server-function manifest registration issues with the current location.
-
-2. **Update checkout imports**
-   - Update `OrderReviewDrawer.tsx` to import `createCheckoutSession` from the new functions module.
-   - Update `ExpressCheckoutBlock.tsx` to import `createPaymentIntent` from the new functions module.
-
-3. **Remove the stale server-function module**
-   - Delete or stop using `src/server-functions/stripe.ts` so the app no longer generates/calls the old `src_server-functions_stripe_ts--...` server-function ID.
-
-4. **Verify the flow**
-   - Reproduce checkout through the preview or invoke the new server-function endpoint.
-   - Check server logs to confirm the previous “Server function info not found” error is gone.
-   - If Stripe then returns a provider-level error, use the new checkout logs to address that separately.
-
-## After implementation
-
-Backend/server changes deploy automatically, but if the published frontend is still serving the old bundle, you’ll need to click **Publish/Update** so live users get the updated client-side server-function ID.
+The preview already validates that the current code path can reach Stripe. The remaining step is publishing the updated frontend to the live domain.
