@@ -6,7 +6,9 @@ import { findVariant, FLAT_SHIPPING_USD } from "@/data/products";
 function getStripe(): Stripe {
   const key = process.env.STRIPE_SECRET_KEY;
   if (!key) throw new Error("STRIPE_SECRET_KEY not configured");
-  return new Stripe(key);
+  return new Stripe(key, {
+    httpClient: Stripe.createFetchHttpClient(),
+  });
 }
 
 // Cache the shipping rate id per worker instance so we don't leak a new
@@ -51,6 +53,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
     }: {
       data: { variantId: string; plan: "oneTime" | "sub"; origin: string };
     }) => {
+      try {
       const found = findVariant(data.variantId);
       if (!found) throw new Error("Variant not found");
       const { product, variant } = found;
@@ -154,6 +157,10 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
 
       if (!session.url) throw new Error("Stripe did not return a session URL");
       return { url: session.url };
+      } catch (err) {
+        console.error("[checkout] createCheckoutSession failed", err);
+        throw err;
+      }
     },
   );
 
