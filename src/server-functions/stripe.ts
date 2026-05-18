@@ -157,6 +157,10 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
 
       if (!session.url) throw new Error("Stripe did not return a session URL");
       return { url: session.url };
+      } catch (err) {
+        console.error("[checkout] createCheckoutSession failed", err);
+        throw err;
+      }
     },
   );
 
