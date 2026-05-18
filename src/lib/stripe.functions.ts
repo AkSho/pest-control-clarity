@@ -59,6 +59,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
     }: {
       data: { variantId: string; plan: "oneTime" | "sub"; origin: string };
     }) => {
+      console.log("[checkout] handler v2 entered", { variantId: data.variantId, plan: data.plan });
       try {
         const found = findVariant(data.variantId);
         if (!found) throw new Error("Variant not found");
@@ -190,6 +191,7 @@ export const createPaymentIntent = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }: { data: { variantId: string } }) => {
+    console.log("[checkout] paymentIntent v2 entered", { variantId: data.variantId });
     try {
       const found = findVariant(data.variantId);
       if (!found) throw new Error("Variant not found");
