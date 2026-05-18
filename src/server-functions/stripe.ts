@@ -1,17 +1,12 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import Stripe from "stripe";
-import { getRequestContext } from "cloudflare:workers";
 import { findVariant, FLAT_SHIPPING_USD } from "@/data/products";
 
-type CloudflareEnv = { STRIPE_SECRET_KEY: string };
-
 function getStripe(): Stripe {
-  const { env } = getRequestContext<CloudflareEnv>();
-  if (!env?.STRIPE_SECRET_KEY) {
-    throw new Error("STRIPE_SECRET_KEY not configured");
-  }
-  return new Stripe(env.STRIPE_SECRET_KEY);
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) throw new Error("STRIPE_SECRET_KEY not configured");
+  return new Stripe(key);
 }
 
 // Cache the shipping rate id per worker instance so we don't leak a new
