@@ -11,7 +11,7 @@ import type {
 } from "@stripe/stripe-js";
 import { useServerFn } from "@tanstack/react-start";
 import { getStripe } from "@/lib/stripe-client";
-import { createPaymentIntent } from "@/server-functions/stripe";
+import { createPaymentIntent } from "@/lib/stripe.functions";
 import type { Variant } from "@/data/products";
 import { FLAT_SHIPPING_USD } from "@/data/products";
 

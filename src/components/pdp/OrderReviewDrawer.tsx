@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/sheet";
 import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { createCheckoutSession } from "@/server-functions/stripe";
+import { createCheckoutSession } from "@/lib/stripe.functions";
 import type { Product, Variant } from "@/data/products";
 import { FLAT_SHIPPING_USD } from "@/data/products";
 import type { Plan } from "./PlanSelector";
