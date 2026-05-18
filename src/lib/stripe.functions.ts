@@ -46,19 +46,14 @@ function describeStripeError(err: any): string {
 }
 
 export const createCheckoutSession = createServerFn({ method: "POST" })
-  .inputValidator(
+  .validator(
     z.object({
       variantId: z.string(),
       plan: z.enum(["oneTime", "sub"]),
       origin: z.string().url(),
     }),
   )
-  .handler(
-    async ({
-      data,
-    }: {
-      data: { variantId: string; plan: "oneTime" | "sub"; origin: string };
-    }) => {
+  .handler(async ({ data }) => {
       console.log("[checkout] handler v2 entered", { variantId: data.variantId, plan: data.plan });
       try {
         const found = findVariant(data.variantId);
@@ -185,12 +180,12 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
 // One-time PaymentIntent for the Express Checkout Element (Apple Pay / Google
 // Pay / Link). Subscriptions still go through hosted Checkout.
 export const createPaymentIntent = createServerFn({ method: "POST" })
-  .inputValidator(
+  .validator(
     z.object({
       variantId: z.string(),
     }),
   )
-  .handler(async ({ data }: { data: { variantId: string } }) => {
+  .handler(async ({ data }) => {
     console.log("[checkout] paymentIntent v2 entered", { variantId: data.variantId });
     try {
       const found = findVariant(data.variantId);
