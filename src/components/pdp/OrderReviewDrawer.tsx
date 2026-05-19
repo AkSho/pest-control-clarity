@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Loader2, ShieldCheck, Truck, RotateCcw } from "lucide-react";
+import { Loader2, ShieldCheck, Truck, RotateCcw, Lock } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -160,7 +160,7 @@ export function OrderReviewDrawer({
                 Redirecting to secure checkout…
               </>
             ) : (
-              <>Checkout securely · ${total.toFixed(2)}</>
+              <>Secure Checkout <Lock className="h-4 w-4" /></>
             )}
           </button>
           <button
