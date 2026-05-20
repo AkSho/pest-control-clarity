@@ -19,7 +19,7 @@ export const Route = createFileRoute("/products/refill")({
       {
         name: "description",
         content:
-          "Keep your stations stocked. Evolve soft-bait refills in 6 lb and 12 lb sizes. Replenishment plan from $129 every 60 days.",
+          "Keep your stations stocked. Evolve soft-bait refills in 6 lb and 12 lb sizes. Replenishment plan from $129, shipped on a 30–60 day cadence.",
       },
       { property: "og:title", content: "Evolve Refill | Cloakd" },
       {

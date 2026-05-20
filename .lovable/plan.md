@@ -1,26 +1,40 @@
-## Keyword Gap Analysis: cloakd-removals.cloud vs SenesTech, Ratology, Veseris
+# Align 6 lb pouch cadence copy
 
-### Approach
+## Goal
+Replace every fixed "30-day" or "60-day supply" claim for the 6 lb pouch with a single, consistent "30–60 days, activity-driven" message. The 12 lb pail keeps its proportional range (60–120 days) so the size pills still show a meaningful step-up.
 
-1. **Pull keyword gaps via Semrush** — Run `competitive_analysis` with `your_domain=cloakd-removals.cloud` and `competitor_domains=senestech.com,ratology.com,veseris.com` (US database, max display_limit=25). This returns keywords competitors rank for that cloakd doesn't.
-2. **Enrich each gap keyword** — For each candidate, call `keyword_research` to get volume + KD, and `serp_analysis` to confirm competitor positions (1–20). Drop anything where cloakd already ranks or no competitor sits in top 20.
-3. **Apply user filters**:
-   - Volume 100–2,000
-   - KD < 40
-   - Must contain one of: a city name, a service-type word (rodent, rat, mice, pest, removal, control, exterminator, fertility, birth control), `near me`, `emergency`, `best`, `local`
-4. **Map to existing pages** — Crawl `cloakd-removals.cloud` sitemap/homepage to list current URLs, then for each keyword decide:
-   - **Optimize existing page** if a topically close URL exists
-   - **Create new page** otherwise
-5. **Score & rank** — `opportunity = (volume_normalized × competitor_count) / max(KD, 1)`. Sort desc, take top 20.
-6. **Output** — Write `/mnt/documents/cloakd_keyword_gap.xlsx` with columns: Keyword, Volume, KD, Competitor 1 (pos), Competitor 2 (pos), Competitor 3 (pos), Existing Page (URL or "—"), Opportunity Score, **Action Required**.
+## Source-of-truth string
+- 6 lb: `~2 stations · 30–60 day supply (activity-driven)`
+- 12 lb: `~4 stations · 60–120 day supply (activity-driven)`
+- FAQ long form: "A 6 lb pouch typically covers about 30–60 days of continuous baiting across two stations — refill before the station empties; heavier activity burns through faster."
 
-### Notes / caveats
+## Files to edit
 
-- **Semrush quota**: Each keyword needs 2 API calls (`keyword_research` + `serp_analysis`). If the gap list is large I'll cap enrichment at ~40 candidates to stay under quota, then trim to top 20 after filtering.
-- **Built-in tool scope**: `competitive_analysis` returns keyword names but limited per-competitor position detail; I'll use `serp_analysis` per keyword to confirm which of the 3 competitors rank and at what position.
-- **Existing-page mapping**: Best-effort match using URL slug + page title from the cloakd sitemap. Flagged as "Optimize" only when there's a clear topical fit; otherwise "Create new page".
-- **Domain note**: `cloakd-removals.cloud` isn't this project's domain (project is Evolve / pest-pro-rebrand). Confirm you want me to run this against the external domain — the Semrush quota consumed will count against the workspace.
+1. `src/components/pdp/SizePills.tsx` (line 34)
+   - 6lb → `~2 stations · 30–60 day supply`
+   - 12lb → `~4 stations · 60–120 day supply`
 
-### Deliverable
+2. `src/data/products.ts`
+   - Line 116 (starter-kit FAQ `lead`): rewrite to the long-form string above.
+   - Line 333: change "6 lb for one to two stations, 12 lb for larger deployments" → keep, it's fine.
+   - Line 367: already says "every 30–60 days" — leave as the canonical phrasing.
 
-A single `.xlsx` artifact you can download, sorted by opportunity score with the `Action Required` column populated.
+3. `src/routes/products.refill.tsx` (line 22, meta description)
+   - "Replenishment plan from $129 every 60 days." → "Replenishment plan from $129, shipped on a 30–60 day cadence."
+
+4. `src/components/pdp/FindYourFit.tsx` (line 20)
+   - "Replenishment plans from $129 every 60 days." → "Replenishment plans from $129 on a 30–60 day cadence."
+
+5. `src/components/pdp/PlanSelector.tsx` (line 17)
+   - Keep the underlying `subDays` value (billing cadence is a real number), but change the visible label to read e.g. "ships every 30–60 days" when `subDays === 60`, so the subscription UI matches the activity-driven story. Confirm wording in implementation.
+
+6. `public/products/gallery-spec-sheet.svg` (line 34, Coverage row subtitle)
+   - Replace "6 lb pouch covers 1–2 stations · 12 lb pail covers 3–4 stations" with "6 lb pouch: ~2 stations, 30–60 days · 12 lb pail: ~4 stations, 60–120 days".
+   - Line 42 ("approx. every 30–60 days") is already consistent — leave.
+
+## Out of scope
+- The standalone "30-day deployment support" line in `BuyBox.tsx`, `stripe.functions.ts`, `OrderReviewDrawer.tsx`, and the `payment-confirmed` / `HowToVideo` "Check at 30 days" prompts. Those refer to onboarding support and the first check-in milestone, not pouch supply, so they stay.
+- Pricing, SKUs, and subscription billing cadence in Stripe (only the human-readable label changes).
+
+## Verification
+After edits, re-grep for `60-day supply`, `30 days of continuous`, and `every 60 days` to confirm no stale copy remains, then spot-check the PDP and refill route in preview.

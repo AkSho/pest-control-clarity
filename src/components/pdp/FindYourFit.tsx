@@ -17,7 +17,7 @@ const TILES = [
     image: "/products/refill-rat-6lb.png",
     label: "Already set up",
     title: "Evolve Refill",
-    desc: "Keep your stations stocked. Replenishment plans from $129 every 60 days.",
+    desc: "Keep your stations stocked. Replenishment plans from $129 on a 30–60 day cadence.",
     price: "From $129",
   },
 ];

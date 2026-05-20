@@ -31,7 +31,7 @@ export function SizePills({
           >
             <span className="text-base font-bold text-foreground">{v.label}</span>
             <span className="text-xs text-muted-foreground">
-              {v.size === "6lb" ? "~2 stations · 60-day supply" : "~4 stations · 90-day supply"}
+              {v.size === "6lb" ? "~2 stations · 30–60 day supply" : "~4 stations · 60–120 day supply"}
             </span>
             {showPrice && (
               <span className="text-sm font-semibold text-brand">${v.oneTimePrice}</span>
