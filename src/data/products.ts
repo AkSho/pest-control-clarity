@@ -113,7 +113,7 @@ const SHARED_FAQ: FAQ[] = [
   {
     q: "How much do I need and where do I put it?",
     a: {
-      lead: "For most homes and small properties, a 6 lb pouch covers 30 days of continuous baiting across two stations. Place stations where rodents already travel:",
+      lead: "A 6 lb pouch typically covers about 30–60 days of continuous baiting across two stations — refill before the station empties; heavier activity burns through faster. Place stations where rodents already travel:",
       bullets: [
         "Foundation walls and fence lines",
         "Behind dumpsters and near trash storage",
