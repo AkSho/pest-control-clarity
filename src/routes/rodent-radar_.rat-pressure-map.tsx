@@ -30,6 +30,8 @@ import {
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { activityBandLabels, type ActivityBand } from "@/lib/rodentRadar";
 import {
+  ahsEstimatePins,
+  AHS_META,
   comparePlaceToCohort,
   exposureGuidance,
   formatCount,
@@ -37,10 +39,20 @@ import {
   getAtlasSourceCards,
   getColonyGrowthProjection,
   getRatPressureResults,
+  METRIC_EXPLAINERS,
+  plainBandLede,
+  plainColonyBlurb,
+  plainConfidence,
+  plainRecentVsCohortLabel,
+  plainTrendLabel,
   PRESSURE_BAND_THRESHOLDS,
+  PROVENANCE_CAVEATS,
+  PROVENANCE_LABELS,
   unavailableRatPressureGeos,
+  type AhsEstimatePin,
   type AtlasLayerDefinition,
   type PlaceCohortComparison,
+  type Provenance,
   type RatPressureResult,
   type UnavailableRatPressureGeo,
 } from "@/lib/ratPressureMap";
@@ -58,12 +70,12 @@ import zipToPlaceData from "../../public/rodent-radar/data/zip-to-place.json";
 
 // z-index ladder so map chrome stops fighting itself.
 const Z = {
-  rail: 20,
-  presets: 22,
-  topTools: 30,
-  drawer: 30,
-  fieldChip: 40,
-  popover: 50,
+  mapControls: 20,
+  rail: 30,
+  topTools: 35,
+  drawer: 40,
+  fieldChip: 45,
+  popover: 60,
 } as const;
 
 // One-line answer to "what am I looking at?" — changes with active preset.
