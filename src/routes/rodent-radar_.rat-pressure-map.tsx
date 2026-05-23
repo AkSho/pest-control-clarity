@@ -755,8 +755,10 @@ function AtlasMap({
     if (!activitySrc || !gapsSrc) return;
 
     const showActivity = activeLayers.has("rodent-activity");
-    const showRing = activeLayers.has("colony-growth");
-    const showGaps = activeLayers.has("data-gaps");
+    // In field mode, suppress ancillary overlays for a calmer single-layer read
+    const fieldMode = mode === "field";
+    const showRing = !fieldMode && activeLayers.has("colony-growth");
+    const showGaps = !fieldMode && activeLayers.has("data-gaps");
 
     activitySrc.setData({
       type: "FeatureCollection",
@@ -769,7 +771,7 @@ function AtlasMap({
               name: city.name,
               activityIndex: city.activityIndex,
               confidence: Math.min(1, Math.max(0.45, city.last12MonthsCount > 0 ? 0.95 : 0.6)),
-              color: markerTone(city.activityBand),
+              color: markerTone(city.activityBand, mode),
               showRing,
             },
           }))
@@ -786,17 +788,29 @@ function AtlasMap({
           }))
         : [],
     });
-  }, [activeLayers, ready, unavailable, verified]);
+  }, [activeLayers, mode, ready, unavailable, verified]);
 
+  // Per-mode basemap paint: desaturate in HC, hide labels in lines-off/field
   useEffect(() => {
-    if (!ready) return;
-    const target = selectedGap ?? selected;
-    mapRef.current?.flyTo({
-      center: [target.lng, target.lat],
-      zoom: target.region === "NYC" || target.region === "NY/NJ metro" ? 8.7 : 9.25,
-      essential: true,
-    });
-  }, [ready, selected, selectedGap]);
+    const map = mapRef.current;
+    if (!map || !ready) return;
+    try {
+      if (mode === "high-contrast") {
+        map.setPaintProperty("cartoDark", "raster-saturation", -1);
+        map.setPaintProperty("cartoDark", "raster-contrast", 0.18);
+        map.setPaintProperty("cartoDark", "raster-opacity", 0.95);
+      } else {
+        map.setPaintProperty("cartoDark", "raster-saturation", 0);
+        map.setPaintProperty("cartoDark", "raster-contrast", 0);
+        map.setPaintProperty("cartoDark", "raster-opacity", 0.85);
+      }
+      // Field mode also bumps hitbox sizes via a runtime stroke widening
+      const widen = mode === "field" ? 1.4 : 1;
+      map.setPaintProperty("rodent-activity-dot", "circle-stroke-width", 1 * widen);
+    } catch {
+      /* layer not yet mounted */
+    }
+  }, [mode, ready]);
 
   return (
     <div className="absolute inset-0">
