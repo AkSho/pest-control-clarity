@@ -1,0 +1,212 @@
+[
+  {
+    "placeId": "jersey-city",
+    "reviewedOn": "2025-02-14",
+    "reviewedSourceName": "Jersey City Open Data Portal",
+    "reviewedSourceUrl": "https://data.jerseycitynj.gov/explore/",
+    "reviewedExplanation": "Portal lists municipal datasets but no rodent-tagged 311 or inspection feed is published as of review. Health Department complaints are intake-only and not exposed."
+  },
+  {
+    "placeId": "newark",
+    "reviewedOn": "2025-02-14",
+    "reviewedSourceName": "Newark Open Data",
+    "reviewedSourceUrl": "https://data.ci.newark.nj.us",
+    "reviewedExplanation": "Newark's open data portal exists but does not currently publish rodent or pest service requests. Inquiries routed through Department of Health & Community Wellness."
+  },
+  {
+    "placeId": "miami",
+    "reviewedOn": "2025-02-14",
+    "reviewedSourceName": "Miami-Dade Open Data Hub",
+    "reviewedSourceUrl": "https://gis-mdc.opendata.arcgis.com/",
+    "reviewedExplanation": "County 311 data is published but rodent-specific tagging is inconsistent. County DOH handles complaints separately and does not publish them."
+  },
+  {
+    "placeId": "houston",
+    "reviewedOn": "2025-02-14",
+    "reviewedSourceName": "City of Houston Open Data",
+    "reviewedSourceUrl": "https://cohgis-mycity.opendata.arcgis.com/",
+    "reviewedExplanation": "311 dataset published but 'Pest Control' bucket bundles non-rodent calls. No standalone rodent feed."
+  },
+  {
+    "placeId": "phoenix",
+    "reviewedOn": "2025-02-14",
+    "reviewedSourceName": "City of Phoenix Open Data",
+    "reviewedSourceUrl": "https://www.phoenixopendata.com/",
+    "reviewedExplanation": "Code Enforcement publishes building cases; rodent-specific calls are routed to Maricopa County Vector Control, which does not publish open data."
+  },
+  {
+    "placeId": "san-antonio",
+    "reviewedOn": "2025-02-14",
+    "reviewedSourceName": "SA 311 Open Data",
+    "reviewedSourceUrl": "https://data.sanantonio.gov/",
+    "reviewedExplanation": "311 dataset available but no rodent-specific category — pest complaints flow to Metropolitan Health District, which does not publish records."
+  },
+  {
+    "placeId": "indianapolis",
+    "reviewedOn": "2025-02-14",
+    "reviewedSourceName": "Indy Open Data — Mayor's Action Center",
+    "reviewedSourceUrl": "https://data.indy.gov/",
+    "reviewedExplanation": "MAC requests published but 'Animal Issue' lacks a rodent flag; rodent complaints handled by Marion County Public Health Department."
+  },
+  {
+    "placeId": "jacksonville",
+    "reviewedOn": "2025-02-14",
+    "reviewedSourceName": "Jacksonville Open Data",
+    "reviewedSourceUrl": "https://data.coj.net/",
+    "reviewedExplanation": "311 categories don't separate rodents. Mosquito Control publishes data; rodent control is contractor-managed and unpublished."
+  },
+  {
+    "placeId": "fort-worth",
+    "reviewedOn": "2025-02-14",
+    "reviewedSourceName": "City of Fort Worth Open Data",
+    "reviewedSourceUrl": "https://data.fortworthtexas.gov/",
+    "reviewedExplanation": "MyFW app data published but pest categories are not split out. Code Compliance handles enforcement off-portal."
+  },
+  {
+    "placeId": "columbus",
+    "reviewedOn": "2025-02-14",
+    "reviewedSourceName": "Columbus 311 Data",
+    "reviewedSourceUrl": "https://opendata.columbus.gov/",
+    "reviewedExplanation": "311 categories include 'Pest Infestation' but Franklin County Public Health handles rodent inspections separately without publishing."
+  },
+  {
+    "placeId": "charlotte",
+    "reviewedOn": "2025-02-14",
+    "reviewedSourceName": "Charlotte Open Data Portal",
+    "reviewedSourceUrl": "https://data.charlottenc.gov/",
+    "reviewedExplanation": "311 'Animal Control' bucket does not split rodents. Mecklenburg County Public Health rodent program data not exposed."
+  },
+  {
+    "placeId": "memphis",
+    "reviewedOn": "2025-02-14",
+    "reviewedSourceName": "Memphis Data Hub",
+    "reviewedSourceUrl": "https://data.memphistn.gov/",
+    "reviewedExplanation": "311 data sparse for pest categories. Shelby County Health Department rodent program operates without open data publication."
+  },
+  {
+    "placeId": "nashville",
+    "reviewedOn": "2025-02-14",
+    "reviewedSourceName": "Nashville Open Data",
+    "reviewedSourceUrl": "https://data.nashville.gov/",
+    "reviewedExplanation": "hubNashville requests published but pest taxonomy lumps rodents with insects; Metro Public Health Pest Management does not publish call logs."
+  },
+  {
+    "placeId": "milwaukee",
+    "reviewedOn": "2025-02-14",
+    "reviewedSourceName": "Milwaukee Open Data Portal",
+    "reviewedSourceUrl": "https://data.milwaukee.gov/",
+    "reviewedExplanation": "DNS Rodent Control is active but inspection logs are not published. 311 requests are not split by rodent type."
+  },
+  {
+    "placeId": "portland",
+    "reviewedOn": "2025-02-14",
+    "reviewedSourceName": "PortlandMaps Open Data",
+    "reviewedSourceUrl": "https://gis-pdx.opendata.arcgis.com/",
+    "reviewedExplanation": "PDX 311 categories don't isolate rodents; Multnomah County Vector Control complaints are tracked internally only."
+  },
+  {
+    "placeId": "las-vegas",
+    "reviewedOn": "2025-02-14",
+    "reviewedSourceName": "Las Vegas Open Data",
+    "reviewedSourceUrl": "https://opendata.lasvegasnevada.gov/",
+    "reviewedExplanation": "Code Enforcement data published; rodent complaints routed to Southern Nevada Health District, which does not publish."
+  },
+  {
+    "placeId": "albuquerque",
+    "reviewedOn": "2025-02-14",
+    "reviewedSourceName": "ABQ Open Data",
+    "reviewedSourceUrl": "https://www.cabq.gov/abq-data",
+    "reviewedExplanation": "311 portal exists but pest categories are sparse. Environmental Health rodent records held internally."
+  },
+  {
+    "placeId": "tucson",
+    "reviewedOn": "2025-02-14",
+    "reviewedSourceName": "City of Tucson Open Data",
+    "reviewedSourceUrl": "https://gisdata.tucsonaz.gov/",
+    "reviewedExplanation": "Code Enforcement publishes property complaints; rodent-specific reports routed to Pima County Health and not exposed."
+  },
+  {
+    "placeId": "raleigh",
+    "reviewedOn": "2025-02-14",
+    "reviewedSourceName": "Raleigh Open Data",
+    "reviewedSourceUrl": "https://data-ral.opendata.arcgis.com/",
+    "reviewedExplanation": "Raleigh hosts substantial open data but no rodent service request dataset is published; Wake County Environmental Health handles inspections without publication."
+  },
+  {
+    "placeId": "omaha",
+    "reviewedOn": "2025-02-14",
+    "reviewedSourceName": "Omaha-Douglas Open Data",
+    "reviewedSourceUrl": "https://dataomaha.com/",
+    "reviewedExplanation": "Mayor's Hotline data is not published in machine-readable form. Douglas County Health rodent program does not publish records."
+  },
+  {
+    "placeId": "long-beach",
+    "reviewedOn": "2025-02-14",
+    "reviewedSourceName": "Long Beach Data",
+    "reviewedSourceUrl": "https://data.longbeach.gov/",
+    "reviewedExplanation": "GoLongBeach app requests are published in summary form only; rodent-specific records are filtered out."
+  },
+  {
+    "placeId": "sacramento",
+    "reviewedOn": "2025-02-14",
+    "reviewedSourceName": "Sacramento Open Data",
+    "reviewedSourceUrl": "https://data.cityofsacramento.org/",
+    "reviewedExplanation": "311 dataset published but rodent reports route to Sacramento County Environmental Management, which does not publish."
+  },
+  {
+    "placeId": "saint-louis",
+    "reviewedOn": "2025-02-14",
+    "reviewedSourceName": "St. Louis Open Data",
+    "reviewedSourceUrl": "https://www.stlouis-mo.gov/data/",
+    "reviewedExplanation": "CSB requests published; Vector Control records held by City Health and not exposed."
+  },
+  {
+    "placeId": "pittsburgh",
+    "reviewedOn": "2025-02-14",
+    "reviewedSourceName": "Western PA Regional Data Center",
+    "reviewedSourceUrl": "https://data.wprdc.org/",
+    "reviewedExplanation": "311 data published; rodent inspections handled by Allegheny County Health Department and not currently exposed in WPRDC catalog."
+  },
+  {
+    "placeId": "cincinnati",
+    "reviewedOn": "2025-02-14",
+    "reviewedSourceName": "Cincinnati CAGIS Open Data",
+    "reviewedSourceUrl": "https://data.cincinnati-oh.gov/",
+    "reviewedExplanation": "Customer Service Requests published; rodent reports go to Cincinnati Health Department's Pest Control program, which doesn't publish call logs."
+  },
+  {
+    "placeId": "buffalo",
+    "reviewedOn": "2025-02-14",
+    "reviewedSourceName": "Open Data Buffalo",
+    "reviewedSourceUrl": "https://data.buffalony.gov/",
+    "reviewedExplanation": "311 dataset exists but rodent-tagged volume is too low to support metric calculation; Erie County Health rat abatement records not published."
+  },
+  {
+    "placeId": "tampa",
+    "reviewedOn": "2025-02-14",
+    "reviewedSourceName": "City of Tampa Open Data",
+    "reviewedSourceUrl": "https://opendata.tampagov.net/",
+    "reviewedExplanation": "Code Enforcement data available but does not break out rodent calls; Hillsborough County Pest Control records held internally."
+  },
+  {
+    "placeId": "honolulu",
+    "reviewedOn": "2025-02-14",
+    "reviewedSourceName": "City and County of Honolulu Open Data",
+    "reviewedSourceUrl": "https://honolulu-cchnl.opendata.arcgis.com/",
+    "reviewedExplanation": "Honolulu 311 data is published but rodent service codes are not separated. Hawaii DOH Vector Control records not exposed."
+  },
+  {
+    "placeId": "anchorage",
+    "reviewedOn": "2025-02-14",
+    "reviewedSourceName": "Anchorage Open Data",
+    "reviewedSourceUrl": "https://data.muni.org/",
+    "reviewedExplanation": "Open data portal active but no rodent dataset published; Alaska's geography keeps Norway rat incursions rare and uncatalogued."
+  },
+  {
+    "placeId": "detroit",
+    "reviewedOn": "2025-02-14",
+    "reviewedSourceName": "Detroit Open Data Portal",
+    "reviewedSourceUrl": "https://data.detroitmi.gov/",
+    "reviewedExplanation": "Improve Detroit requests published; the 'Rodent Extermination' subtype exists but counts are inconsistent enough that we treat the city as a reviewed gap until backfill stabilizes."
+  }
+]
