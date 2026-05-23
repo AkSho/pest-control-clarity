@@ -635,48 +635,78 @@ function RodentRadarAtlasPage() {
             {/* Place list at the bottom, scrolls within the rail */}
             <LegendSection title={`All areas (${filteredPlaces.length})`} subtitle="Click to focus">
               <div className="mt-1 grid gap-px">
-                {filteredPlaces.map((place) =>
-                  "last12MonthsCount" in place ? (
+                {filteredPlaces.map((place) => {
+                  if ("last12MonthsCount" in place) {
+                    return (
+                      <button
+                        key={place.id}
+                        type="button"
+                        onClick={() => selectVerified(place)}
+                        className={`flex items-center justify-between gap-2 rounded px-2 py-1.5 text-left text-xs transition ${
+                          selected.id === place.id && !selectedGap && !selectedAhs
+                            ? "bg-cyan-300/10 text-cyan-100"
+                            : "text-slate-300 hover:bg-white/[0.04]"
+                        }`}
+                      >
+                        <span className="flex items-center gap-2 truncate">
+                          <span
+                            className="h-1.5 w-1.5 shrink-0 rounded-full"
+                            style={{ background: markerTone(place.activityBand, mode) }}
+                          />
+                          <span className="truncate">{place.shortName}</span>
+                        </span>
+                        <span className="shrink-0 text-[0.6rem] uppercase tracking-wider text-slate-500">
+                          {place.provenance === "seeded" ? "sample" : activityBandLabels[place.activityBand]}
+                        </span>
+                      </button>
+                    );
+                  }
+                  if ("rodentEvidencePercent" in place) {
+                    return (
+                      <button
+                        key={place.id}
+                        type="button"
+                        onClick={() => {
+                          setSelectedAhs(place);
+                          setDrawerOpen(true);
+                          updateSearch({ gap: undefined, preset: undefined });
+                        }}
+                        className={`flex items-center justify-between gap-2 rounded px-2 py-1.5 text-left text-xs transition ${
+                          selectedAhs?.id === place.id
+                            ? "bg-slate-300/10 text-slate-100"
+                            : "text-slate-300 hover:bg-white/[0.04]"
+                        }`}
+                      >
+                        <span className="flex items-center gap-2 truncate">
+                          <span className="h-2 w-2 shrink-0 rounded-full border border-slate-300/70" />
+                          <span className="truncate">{place.shortName}</span>
+                        </span>
+                        <span className="shrink-0 text-[0.6rem] uppercase tracking-wider text-slate-500">
+                          ~{place.rodentEvidencePercent}% survey
+                        </span>
+                      </button>
+                    );
+                  }
+                  const gap = place as UnavailableRatPressureGeo;
+                  return (
                     <button
-                      key={place.id}
+                      key={gap.id}
                       type="button"
-                      onClick={() => selectVerified(place)}
+                      onClick={() => { setSelectedAhs(null); selectGap(gap); }}
                       className={`flex items-center justify-between gap-2 rounded px-2 py-1.5 text-left text-xs transition ${
-                        selected.id === place.id && !selectedGap
-                          ? "bg-cyan-300/10 text-cyan-100"
-                          : "text-slate-300 hover:bg-white/[0.04]"
-                      }`}
-                    >
-                      <span className="flex items-center gap-2 truncate">
-                        <span
-                          className="h-1.5 w-1.5 shrink-0 rounded-full"
-                          style={{ background: markerTone(place.activityBand, mode) }}
-                        />
-                        <span className="truncate">{place.shortName}</span>
-                      </span>
-                      <span className="shrink-0 text-[0.6rem] uppercase tracking-wider text-slate-500">
-                        {activityBandLabels[place.activityBand]}
-                      </span>
-                    </button>
-                  ) : (
-                    <button
-                      key={place.id}
-                      type="button"
-                      onClick={() => selectGap(place)}
-                      className={`flex items-center justify-between gap-2 rounded px-2 py-1.5 text-left text-xs transition ${
-                        selectedGap?.id === place.id
+                        selectedGap?.id === gap.id
                           ? "bg-slate-300/10 text-slate-100"
                           : "text-slate-400 hover:bg-white/[0.04]"
                       }`}
                     >
                       <span className="flex items-center gap-2 truncate">
                         <span className="grid h-3 w-3 shrink-0 place-items-center rounded-full border border-slate-500/60 text-[0.55rem] font-bold text-slate-400">?</span>
-                        <span className="truncate">{place.shortName}</span>
+                        <span className="truncate">{gap.shortName}</span>
                       </span>
                       <span className="shrink-0 text-[0.6rem] uppercase tracking-wider text-slate-500">no data</span>
                     </button>
-                  ),
-                )}
+                  );
+                })}
               </div>
             </LegendSection>
           </div>
