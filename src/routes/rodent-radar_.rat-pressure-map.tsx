@@ -799,6 +799,8 @@ function AtlasMap({
     const showGaps = !fieldMode && activeLayers.has("data-gaps");
     const showAhs = !fieldMode && showActivity;
 
+    const metricValues = computeMetricValues(verified, metric);
+
     activitySrc.setData({
       type: "FeatureCollection",
       features: showActivity
@@ -809,6 +811,7 @@ function AtlasMap({
               id: city.id,
               name: city.name,
               activityIndex: city.activityIndex,
+              metricValue: metricValues[city.id] ?? city.activityIndex,
               confidence: Math.min(1, Math.max(0.45, city.last12MonthsCount > 0 ? 0.95 : 0.6)),
               color: markerTone(city.activityBand, mode),
               showRing,
@@ -839,7 +842,7 @@ function AtlasMap({
           }))
         : [],
     });
-  }, [activeLayers, ahsPins, mode, ready, unavailable, verified]);
+  }, [activeLayers, ahsPins, metric, mode, ready, unavailable, verified]);
 
   // Per-mode basemap paint: desaturate in HC, hide labels in lines-off/field
   useEffect(() => {
