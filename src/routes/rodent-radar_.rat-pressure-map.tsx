@@ -173,10 +173,10 @@ function RodentRadarAtlasPage() {
   const [query, setQuery] = useState("");
   const [activeLayers, setActiveLayers] = useState<AtlasLayerId[]>(DEFAULT_LAYERS);
   const [utilityPanel, setUtilityPanel] = useState<UtilityPanel>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const selected = verified.find((city) => city.id === selectedId) ?? verified[0];
   const selectedGap = unavailableRatPressureGeos.find((city) => city.id === selectedGapId) ?? null;
   const activeSet = useMemo(() => new Set(activeLayers), [activeLayers]);
-  const officialRecords = verified.reduce((sum, city) => sum + city.last12MonthsCount, 0);
   const filteredPlaces = [...verified, ...unavailableRatPressureGeos].filter((place) =>
     `${place.name} ${place.region}`.toLowerCase().includes(query.toLowerCase()),
   );
@@ -208,11 +208,13 @@ function RodentRadarAtlasPage() {
   function selectVerified(city: RatPressureResult) {
     setSelectedId(city.id);
     setSelectedGapId("");
+    setDrawerOpen(true);
     setUrl(activeLayers, city.id, "");
   }
 
   function selectGap(city: UnavailableRatPressureGeo) {
     setSelectedGapId(city.id);
+    setDrawerOpen(true);
     setUrl(activeLayers, selectedId, city.id);
   }
 
