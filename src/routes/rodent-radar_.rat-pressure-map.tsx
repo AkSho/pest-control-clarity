@@ -316,7 +316,17 @@ function RodentRadarAtlasPage() {
     gaps: true,
     estimates: true,
   });
+  const [cinematic, setCinematic] = useState(false);
+  const [activeView, setActiveView] = useState<CuratedViewId | null>(null);
+  const [recurringOnly, setRecurringOnly] = useState(false);
+  const [clickedGroup, setClickedGroup] = useState<AddressGroup | null>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
+
+  // Per-report data: the new primary unit. One feature = one filed report.
+  // Loaded once, grouped by address for popup + recurrence detection.
+  const allReports = useMemo(() => getAllReports(), []);
+  const addressGroups = useMemo(() => groupByAddress(allReports), [allReports]);
+  const reportsGeoJSON = useMemo(() => getReportsAsGeoJSON(allReports), [allReports]);
 
   const selected = useMemo(
     () => verified.find((c) => c.id === search.place) ?? verified[0],
