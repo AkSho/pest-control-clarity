@@ -255,7 +255,7 @@ function RodentRadarAtlasPage() {
   const toggleLayer = useCallback(
     (layerId: AtlasLayerId) => {
       const next = activeLayers.includes(layerId)
-        ? activeLayers.filter((id) => id !== layerId)
+        ? activeLayers.filter((id: AtlasLayerId) => id !== layerId)
         : [...activeLayers, layerId];
       const normalized: AtlasLayerId[] = next.includes("rodent-activity")
         ? next
