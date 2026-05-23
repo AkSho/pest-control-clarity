@@ -119,7 +119,7 @@ function PlacePage() {
   const trendSign = place.trendPercent > 0 ? "+" : "";
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
+    <div className="min-h-screen bg-slate-950 text-slate-100" data-display-mode={mode}>
       <div className="mx-auto max-w-3xl px-6 py-10 sm:py-14">
         <Link
           to="/rodent-radar/rat-pressure-map"
