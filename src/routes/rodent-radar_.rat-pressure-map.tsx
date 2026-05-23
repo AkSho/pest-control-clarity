@@ -1192,38 +1192,86 @@ function SelectedDrawer({
   open,
   selected,
   selectedGap,
+  selectedAhs,
   activeLayers,
   onCloseGap,
+  onCloseAhs,
   onClose,
   onOpen,
 }: {
   open: boolean;
   selected: RatPressureResult;
   selectedGap: UnavailableRatPressureGeo | null;
+  selectedAhs: AhsEstimatePin | null;
   activeLayers: Set<AtlasLayerId>;
   onCloseGap: () => void;
+  onCloseAhs: () => void;
   onClose: () => void;
   onOpen: () => void;
 }) {
-  // Closed-by-default: render a small pill until the user opens the drawer.
   if (!open) {
     return (
       <button
         type="button"
         onClick={onOpen}
-        className="absolute bottom-4 right-4 z-20 inline-flex items-center gap-2 rounded-full border border-white/10 bg-slate-950/80 px-3 py-2 text-[0.7rem] font-medium text-slate-400 shadow-lg backdrop-blur transition hover:border-cyan-300/40 hover:text-cyan-100"
+        style={{ zIndex: Z.drawer }}
+        className="absolute bottom-4 right-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-slate-950/80 px-3 py-2 text-[0.7rem] font-medium text-slate-400 shadow-lg backdrop-blur transition hover:border-cyan-300/40 hover:text-cyan-100"
       >
         <CircleDot className="h-3.5 w-3.5" /> click a marker for details
       </button>
     );
   }
 
+  if (selectedAhs) {
+    return (
+      <aside style={{ zIndex: Z.drawer }} className="absolute bottom-4 right-4 w-[min(380px,calc(100vw-2rem))] rounded-xl border border-white/10 bg-slate-950/92 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <div className="text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-slate-400">
+              {PROVENANCE_LABELS["ahs-estimate"]}
+            </div>
+            <h2 className="mt-0.5 truncate text-xl font-semibold tracking-tight">{selectedAhs.name}</h2>
+            <p className="mt-0.5 text-[0.7rem] text-slate-500">{selectedAhs.metroLabel} · AHS {selectedAhs.ahsYear}</p>
+          </div>
+          <button type="button" onClick={() => { onCloseAhs(); onClose(); }} className="rounded p-1 text-slate-500 hover:text-white" aria-label="Close">
+            <X className="h-3.5 w-3.5" />
+          </button>
+        </div>
+
+        <div className="mt-3 rounded-lg border border-slate-300/15 bg-white/[0.03] px-3 py-3">
+          <div className="text-[0.6rem] font-semibold uppercase tracking-wider text-slate-400">
+            Households reporting rodents
+          </div>
+          <div className="mt-1 text-3xl font-semibold text-slate-100 tabular-nums">
+            ~{selectedAhs.rodentEvidencePercent}%
+          </div>
+          <p className="mt-1 text-[0.7rem] leading-relaxed text-slate-400">
+            {METRIC_EXPLAINERS.ahsPercent}
+          </p>
+        </div>
+
+        <p className="mt-3 text-xs leading-relaxed text-slate-300">
+          No city-level rodent dataset exists for {selectedAhs.shortName}. The number above is a metro-area household survey, not a city report count.
+        </p>
+        <p className="mt-2 text-[0.65rem] leading-relaxed text-slate-500">
+          {PROVENANCE_CAVEATS["ahs-estimate"]}
+        </p>
+
+        <div className="mt-3 border-t border-white/8 pt-3">
+          <a href={selectedAhs.ahsTableUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs font-semibold text-cyan-200 hover:underline">
+            Open AHS source <ExternalLink className="h-3 w-3" />
+          </a>
+        </div>
+      </aside>
+    );
+  }
+
   if (selectedGap) {
     return (
-      <aside className="absolute bottom-4 right-4 z-20 w-[min(360px,calc(100vw-2rem))] rounded-xl border border-white/10 bg-slate-950/88 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl">
+      <aside style={{ zIndex: Z.drawer }} className="absolute bottom-4 right-4 w-[min(360px,calc(100vw-2rem))] rounded-xl border border-white/10 bg-slate-950/88 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <div className="text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-slate-500">Data gap</div>
+            <div className="text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-slate-500">No data yet</div>
             <h2 className="mt-0.5 text-xl font-semibold tracking-tight">{selectedGap.name}</h2>
             <p className="mt-0.5 text-xs text-slate-400">{selectedGap.region}</p>
           </div>
@@ -1231,7 +1279,10 @@ function SelectedDrawer({
             <X className="h-3.5 w-3.5" />
           </button>
         </div>
-        <p className="mt-3 text-xs leading-relaxed text-slate-300">{selectedGap.reason}</p>
+        <p className="mt-3 text-xs leading-relaxed text-slate-300">
+          We could not find a clean public rodent dataset for {selectedGap.shortName}. We list it so the gap stays visible.
+        </p>
+        <p className="mt-2 text-[0.65rem] leading-relaxed text-slate-500">{selectedGap.reason}</p>
         <div className="mt-3 rounded-lg border border-white/8 bg-white/[0.03] p-3">
           <div className="text-[0.6rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Source reviewed</div>
           <div className="mt-1 text-sm font-medium">{selectedGap.reviewedSourceName ?? "Source review needed"}</div>
@@ -1249,6 +1300,8 @@ function SelectedDrawer({
   const colony = getColonyGrowthProjection(selected);
   const cohort = comparePlaceToCohort(selected);
   const dot = markerTone(selected.activityBand);
+  const provenance: Provenance = selected.provenance ?? "live";
+  const colonyPlain = plainColonyBlurb(selected.shortName, selected.activityBand);
 
   return (
     <aside
@@ -1283,24 +1336,43 @@ function SelectedDrawer({
         </div>
       </div>
 
+      <p className="mt-3 text-sm leading-relaxed text-slate-200">
+        {plainBandLede(selected.shortName, selected.activityBand, selected.trendPercent)}
+      </p>
+
+      <div className="mt-1 flex items-center gap-2">
+        <span className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[0.6rem] font-semibold uppercase tracking-wider ${
+          provenance === "live"
+            ? "border-emerald-300/40 bg-emerald-400/10 text-emerald-200"
+            : provenance === "seeded"
+              ? "border-yellow-300/40 bg-yellow-400/10 text-yellow-200"
+              : "border-slate-300/30 bg-white/[0.04] text-slate-300"
+        }`}>
+          {PROVENANCE_LABELS[provenance]}
+        </span>
+      </div>
+      <p className="mt-1 text-[0.65rem] leading-relaxed text-slate-500">
+        {PROVENANCE_CAVEATS[provenance]}
+      </p>
+
       <div className="mt-3 grid gap-2.5">
         <MetricRow
           label="Reports last 12 months"
-          source={selected.sourceName}
+          source={METRIC_EXPLAINERS.last12MonthsCount}
           value={formatCount(selected.last12MonthsCount)}
           context={cohort.vsMedianLabel}
         />
         <MetricRow
           label="Reports last 90 days"
-          source={`${selected.recentSharePercent.toFixed(1)}% of yearly volume`}
+          source={METRIC_EXPLAINERS.recent90DayCount}
           value={formatCount(selected.recent90DayCount)}
-          context={cohort.recentVsCohortLabel}
+          context={plainRecentVsCohortLabel(selected.recentSharePercent, cohort.percentile)}
         />
         <MetricRow
           label="Year-over-year change"
-          source="vs previous 12 months"
+          source={METRIC_EXPLAINERS.trendPercent}
           value={`${selected.trendPercent > 0 ? "+" : ""}${selected.trendPercent}%`}
-          context={cohort.trendLabel}
+          context={plainTrendLabel(selected.trendPercent)}
           accent={
             selected.trendPercent >= 5
               ? "warn"
@@ -1314,18 +1386,17 @@ function SelectedDrawer({
       {activeLayers.has("colony-growth") ? (
         <div className="mt-3 rounded-lg border border-purple-300/15 bg-purple-300/[0.06] p-3">
           <div className="flex items-center justify-between gap-2">
-            <div className="text-xs font-semibold text-purple-100">Colony growth (modeled)</div>
+            <div className="text-xs font-semibold text-purple-100">What this could mean</div>
             <div className="text-[0.55rem] uppercase tracking-wider text-purple-200/70">estimate</div>
           </div>
-          <p className="mt-1.5 text-xs leading-relaxed text-slate-300">
-            {selected.shortName} is showing a {colony.estimateRange} trajectory.
-          </p>
-          <p className="mt-1 text-[0.6rem] leading-relaxed text-slate-500">{colony.disclaimer}</p>
+          <p className="mt-1.5 text-xs leading-relaxed text-slate-200">{colonyPlain.headline}</p>
+          <p className="mt-1 text-xs leading-relaxed text-slate-400">{colonyPlain.body}</p>
+          <p className="mt-1 text-[0.6rem] leading-relaxed text-slate-500">{colonyPlain.disclaimer ?? colony.disclaimer}</p>
         </div>
       ) : null}
 
       <div className="mt-3 border-t border-white/8 pt-3 text-[0.65rem] text-slate-500">
-        Confidence: <span className="text-slate-300">{selected.confidence}</span> · {selected.confidenceNote}
+        {plainConfidence(selected.confidence)} · {selected.confidenceNote}
       </div>
       <div className="mt-2 flex items-center justify-between gap-3">
         <Link
@@ -1342,6 +1413,7 @@ function SelectedDrawer({
     </aside>
   );
 }
+
 
 function useLiveCounter() {
   // Deterministic time-based fake until real telemetry is wired.
