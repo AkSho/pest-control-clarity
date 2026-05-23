@@ -93,7 +93,7 @@ function PlacePage() {
 
   const csvHref = useMemo(() => {
     const header = "snapshot_id,place,snapshot_date,query_window,source_filter,last_12_months,prev_12_months,recent_90_days,confidence,methodology,source_name,source_url\n";
-    const rows = snapshots.map((s) => [
+    const rows = snapshots.map((s: PressureMetricSnapshot) => [
       s.id,
       place.name,
       s.snapshotDate,
@@ -161,7 +161,7 @@ function PlacePage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                {snapshots.map((s) => (
+                {snapshots.map((s: PressureMetricSnapshot) => (
                   <tr key={s.id} className="text-slate-200">
                     <td className="px-3 py-2 text-slate-400">{s.snapshotDate}</td>
                     <td className="px-3 py-2 tabular-nums">{formatCount(s.last12MonthsCount)}</td>
