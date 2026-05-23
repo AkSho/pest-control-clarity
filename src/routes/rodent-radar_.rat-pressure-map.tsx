@@ -532,11 +532,25 @@ function RodentRadarAtlasPage() {
       <TopTools
         query={query}
         setQuery={setQuery}
-        onShare={copyShare}
+        onShare={() => setShareOpen((s) => !s)}
         onSources={() => setUtilityPanel(utilityPanel === "sources" ? null : "sources")}
         onMethodology={() => setUtilityPanel(utilityPanel === "methodology" ? null : "methodology")}
         onSettings={() => setUtilityPanel(utilityPanel === "settings" ? null : "settings")}
       />
+
+      {shareOpen ? (
+        <SharePopover
+          onCopy={async () => {
+            await copyShare();
+            setShareOpen(false);
+          }}
+          onDownload={async () => {
+            await downloadMapPng();
+            setShareOpen(false);
+          }}
+          onClose={() => setShareOpen(false)}
+        />
+      ) : null}
 
       <MapUtilityButtons
         onLayers={() => setUtilityPanel(utilityPanel === "settings" ? null : "settings")}
