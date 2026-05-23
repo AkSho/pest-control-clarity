@@ -13,10 +13,8 @@ import {
   Map,
   RefreshCcw,
   Search,
-  Settings,
   Share2,
   ShieldCheck,
-  Tags,
   X,
   type LucideIcon,
 } from "lucide-react";
@@ -821,19 +819,19 @@ function UtilityDrawer({
       ) : null}
 
       {panel === "methodology" ? (
-        <div className="mt-4 space-y-4 text-sm leading-relaxed text-slate-300">
+        <div className="mt-4 space-y-3 text-sm leading-relaxed text-slate-300">
           <p>
-            Rodent Activity uses official public rodent inspections, complaints, or auditable rodent/vermin 311 records. It is not a rat population count.
+            <span className="font-semibold text-slate-100">Rodent Activity</span> uses official public inspections, complaints, and 311 records. It is not a rat population count.
           </p>
           <p>
-            Colony Growth is a modeled layer that explains possible trajectory from the selected activity band. It is separate from official city data.
+            <span className="font-semibold text-slate-100">Colony Growth</span> is a modeled trajectory, separate from official city data.
           </p>
-          <p>
-            Conditions, exposure safety, and data gaps help explain the map. They do not change official Rodent Activity.
+          <p className="text-slate-400">
+            Context, exposure safety, and data gaps help explain the map. They do not change official Rodent Activity.
           </p>
-          <div className="grid gap-2">
-            <Link to="/rodent-radar/terms" className="font-black text-cyan-200 hover:underline">Terms of use</Link>
-            <Link to="/rodent-radar/attribution" className="font-black text-cyan-200 hover:underline">Attribution and data rights</Link>
+          <div className="flex gap-4 pt-2 text-xs">
+            <Link to="/rodent-radar/terms" className="text-cyan-200/80 hover:text-cyan-100 hover:underline">Terms</Link>
+            <Link to="/rodent-radar/attribution" className="text-cyan-200/80 hover:text-cyan-100 hover:underline">Attribution</Link>
           </div>
         </div>
       ) : null}
@@ -921,20 +919,11 @@ function SeasonalityOverlay() {
   );
 }
 
-function StatPill({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3">
-      <div className="text-lg font-black text-slate-100">{value}</div>
-      <div className="mt-0.5 text-[0.62rem] font-black uppercase tracking-[0.14em] text-slate-500">{label}</div>
-    </div>
-  );
-}
-
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3">
-      <div className="text-base font-black text-slate-100">{value}</div>
-      <div className="mt-1 text-[0.62rem] font-black uppercase tracking-[0.14em] text-slate-500">{label}</div>
+    <div className="rounded-md border border-white/8 bg-white/[0.03] px-2 py-1.5">
+      <div className="text-sm font-semibold text-slate-100">{value}</div>
+      <div className="mt-0.5 text-[0.55rem] font-semibold uppercase tracking-wider text-slate-500">{label}</div>
     </div>
   );
 }
