@@ -1044,7 +1044,7 @@ function AtlasMap({
       mapRef.current?.remove();
       mapRef.current = null;
     };
-  }, [onSelectGap, onSelectVerified, unavailable, verified]);
+  }, [ahsPins, onSelectAhs, onSelectGap, onSelectVerified, unavailable, verified]);
 
   // Push data into the vector sources whenever inputs change
   useEffect(() => {
@@ -1052,13 +1052,15 @@ function AtlasMap({
     if (!map || !ready) return;
     const activitySrc = map.getSource("rodent-activity") as MapLibreGeoJSONSource | undefined;
     const gapsSrc = map.getSource("rodent-gaps") as MapLibreGeoJSONSource | undefined;
-    if (!activitySrc || !gapsSrc) return;
+    const ahsSrc = map.getSource("rodent-ahs") as MapLibreGeoJSONSource | undefined;
+    if (!activitySrc || !gapsSrc || !ahsSrc) return;
 
     const showActivity = activeLayers.has("rodent-activity");
     // In field mode, suppress ancillary overlays for a calmer single-layer read
     const fieldMode = mode === "field";
     const showRing = !fieldMode && activeLayers.has("colony-growth");
     const showGaps = !fieldMode && activeLayers.has("data-gaps");
+    const showAhs = !fieldMode && showActivity;
 
     activitySrc.setData({
       type: "FeatureCollection",
@@ -1073,6 +1075,7 @@ function AtlasMap({
               confidence: Math.min(1, Math.max(0.45, city.last12MonthsCount > 0 ? 0.95 : 0.6)),
               color: markerTone(city.activityBand, mode),
               showRing,
+              provenance: city.provenance ?? "live",
             },
           }))
         : [],
@@ -1088,7 +1091,18 @@ function AtlasMap({
           }))
         : [],
     });
-  }, [activeLayers, mode, ready, unavailable, verified]);
+
+    ahsSrc.setData({
+      type: "FeatureCollection",
+      features: showAhs
+        ? ahsPins.map((pin) => ({
+            type: "Feature",
+            geometry: { type: "Point", coordinates: [pin.lng, pin.lat] },
+            properties: { id: pin.id, name: pin.name, pct: pin.rodentEvidencePercent },
+          }))
+        : [],
+    });
+  }, [activeLayers, ahsPins, mode, ready, unavailable, verified]);
 
   // Per-mode basemap paint: desaturate in HC, hide labels in lines-off/field
   useEffect(() => {
@@ -1104,7 +1118,6 @@ function AtlasMap({
         map.setPaintProperty("cartoDark", "raster-contrast", 0);
         map.setPaintProperty("cartoDark", "raster-opacity", 0.85);
       }
-      // Field mode also bumps hitbox sizes via a runtime stroke widening
       const widen = mode === "field" ? 1.4 : 1;
       map.setPaintProperty("rodent-activity-dot", "circle-stroke-width", 1 * widen);
     } catch {
@@ -1114,13 +1127,13 @@ function AtlasMap({
 
   useEffect(() => {
     if (!ready) return;
-    const target = selectedGap ?? selected;
+    const target = selectedAhs ?? selectedGap ?? selected;
     mapRef.current?.flyTo({
       center: [target.lng, target.lat],
       zoom: target.region === "NYC" || target.region === "NY/NJ metro" ? 8.7 : 9.25,
       essential: true,
     });
-  }, [ready, selected, selectedGap]);
+  }, [ready, selected, selectedGap, selectedAhs]);
 
   return (
     <div className="absolute inset-0">
