@@ -251,6 +251,7 @@ function RodentRadarAtlasPage() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [zipNotice, setZipNotice] = useState<string | null>(null);
   const [shareOpen, setShareOpen] = useState(false);
+  const [selectedAhs, setSelectedAhs] = useState<AhsEstimatePin | null>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
 
   const selected = useMemo(
@@ -262,9 +263,18 @@ function RodentRadarAtlasPage() {
     [search.gap],
   );
   const activeSet = useMemo(() => new Set<AtlasLayerId>(activeLayers), [activeLayers]);
-  const filteredPlaces = [...verified, ...unavailableRatPressureGeos].filter((place) =>
+  const filteredPlaces = [...verified, ...ahsEstimatePins, ...unavailableRatPressureGeos].filter((place) =>
     `${place.name} ${place.region}`.toLowerCase().includes(query.toLowerCase()),
   );
+
+  // Honest count for rail header: split by what kind of data backs each pin.
+  const dataMix = useMemo(() => {
+    const live = verified.filter((v) => v.provenance === "live").length;
+    const seeded = verified.filter((v) => v.provenance === "seeded").length;
+    const estimates = ahsEstimatePins.length;
+    const gaps = unavailableRatPressureGeos.length;
+    return { live, seeded, estimates, gaps };
+  }, [verified]);
 
   const updateSearch = useCallback(
     (patch: Partial<RodentRadarSearch>) => {
