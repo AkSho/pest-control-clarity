@@ -87,6 +87,7 @@ const layerColors: Record<AtlasLayerId, string> = {
 
 export const Route = createFileRoute("/rodent-radar_/rat-pressure-map")({
   validateSearch: zodValidator(rodentRadarSearchSchema),
+  search: { middlewares: [retainSearchParams(["mode"])] },
   head: () => ({
     meta: [
       { title: TITLE },
