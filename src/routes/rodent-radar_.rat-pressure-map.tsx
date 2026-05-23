@@ -1045,6 +1045,31 @@ function AtlasMap({
     });
   }, [activeLayers, ahsPins, metric, mode, ready, unavailable, verified]);
 
+  // Push per-report data into the clustered source. When recurringOnly is on,
+  // filter to reports whose address group is recurring.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !ready) return;
+    const src = map.getSource("rodent-reports") as MapLibreGeoJSONSource | undefined;
+    if (!src) return;
+
+    if (!recurringOnly) {
+      src.setData(reportsGeoJSON);
+      return;
+    }
+    const recurringIds = new Set<string>();
+    for (const g of addressGroups) {
+      if (g.isRecurring) for (const r of g.reports) recurringIds.add(r.id);
+    }
+    src.setData({
+      type: "FeatureCollection",
+      features: reportsGeoJSON.features.filter((f) =>
+        recurringIds.has(f.properties.id as string),
+      ),
+    });
+  }, [ready, reportsGeoJSON, recurringOnly, addressGroups]);
+
+
   // Per-mode basemap paint: desaturate in HC, hide labels in lines-off/field
   useEffect(() => {
     const map = mapRef.current;
