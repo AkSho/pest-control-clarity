@@ -540,7 +540,7 @@ function RodentRadarAtlasPage() {
               {LEDE_BY_PRESET[(activePreset ?? "default") as PresetId | "default"]}
             </p>
             <p className="mt-1 text-[0.65rem] uppercase tracking-[0.16em] text-slate-500">
-              {dataMix.live} live · {dataMix.seeded} sample · {dataMix.estimates} estimate · {dataMix.gaps} gap
+              {dataMix.live} live · {dataMix.estimates} estimate · {dataMix.gaps} gap
             </p>
             <p className="mt-1 text-[0.6rem] leading-relaxed text-slate-500">
               Live = official city open data. Sample = published figure being re-verified. Estimate = U.S. household survey. Gap = no clean dataset yet.
