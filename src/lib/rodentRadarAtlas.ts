@@ -129,6 +129,17 @@ const NEWARK_OPEN_DATA_URL = "https://data.ci.newark.nj.us";
 const CDC_HANTA_URL = "https://www.cdc.gov/hantavirus/";
 const CDC_HANTA_PREVENTION_URL = "https://www.cdc.gov/hantavirus/prevention/index.html";
 const CDC_CLEANUP_URL = "https://www.cdc.gov/healthy-pets/rodent-control/clean-up.html";
+const CHICAGO_RODENT_URL = "https://data.cityofchicago.org/Service-Requests/311-Service-Requests/v6vf-nfxy";
+const BOSTON_311_URL = "https://data.boston.gov/dataset/311-service-requests";
+const DC_311_URL =
+  "https://opendata.dc.gov/datasets/DCGIS::311-city-service-requests-in-2025";
+const PHILLY_311_URL = "https://www.opendataphilly.org/dataset/311-service-and-information-requests";
+const SEATTLE_FIF_URL = "https://data.seattle.gov/Community-and-Culture/Find-It-Fix-It-Service-Requests/p3i6-mdy7";
+const TORONTO_311_URL = "https://open.toronto.ca/dataset/311-service-requests-customer-initiated/";
+const DOHMH_VIOLATIONS_URL = "https://data.cityofnewyork.us/Health/DOHMH-New-York-City-Restaurant-Inspection-Results/43nn-pn8j";
+const DSNY_MISSED_URL = "https://data.cityofnewyork.us/City-Government/DSNY-Bulk-Item-Frequency/by5n-fxyh";
+const CHICAGO_FOOD_URL = "https://data.cityofchicago.org/Health-Human-Services/Food-Inspections/4ijn-s7e5";
+const HUD_VACANCY_URL = "https://www.huduser.gov/portal/datasets/usps.html";
 
 export const atlasSources: AtlasSource[] = [
   {
