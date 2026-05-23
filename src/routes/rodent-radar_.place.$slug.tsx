@@ -91,6 +91,7 @@ export const Route = createFileRoute("/rodent-radar_/place/$slug")({
 
 function PlacePage() {
   const { place, snapshots } = Route.useLoaderData();
+  const { mode } = Route.useSearch();
   const dataset = atlasDatasets.find((d) => d.id === place.sourceDatasetId);
   const source = atlasSources.find((s) => s.id === dataset?.sourceId);
   const colony = useMemo(() => getColonyGrowthProjection(place), [place]);
