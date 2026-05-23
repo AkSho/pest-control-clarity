@@ -62,7 +62,7 @@ export type PressureMetricSnapshot = {
   confidence: Confidence;
   confidenceNote: string;
   methodologyNote: string;
-  provenance: Provenance;
+  provenance?: Provenance;
 };
 
 export type ContextLayer = {
