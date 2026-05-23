@@ -540,14 +540,14 @@ function AtlasMap({
           },
         });
 
-        const handleVerifiedClick = (e: maplibregl.MapLayerMouseEvent) => {
+        const handleVerifiedClick = (e: MapLibreLayerMouseEvent) => {
           const f = e.features?.[0];
           if (!f) return;
           const id = f.properties?.id as string | undefined;
           const city = verified.find((c) => c.id === id);
           if (city) onSelectVerified(city);
         };
-        const handleGapClick = (e: maplibregl.MapLayerMouseEvent) => {
+        const handleGapClick = (e: MapLibreLayerMouseEvent) => {
           const f = e.features?.[0];
           if (!f) return;
           const id = f.properties?.id as string | undefined;
@@ -582,8 +582,8 @@ function AtlasMap({
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !ready) return;
-    const activitySrc = map.getSource("rodent-activity") as maplibregl.GeoJSONSource | undefined;
-    const gapsSrc = map.getSource("rodent-gaps") as maplibregl.GeoJSONSource | undefined;
+    const activitySrc = map.getSource("rodent-activity") as MapLibreGeoJSONSource | undefined;
+    const gapsSrc = map.getSource("rodent-gaps") as MapLibreGeoJSONSource | undefined;
     if (!activitySrc || !gapsSrc) return;
 
     const showActivity = activeLayers.has("rodent-activity");
