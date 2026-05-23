@@ -1,0 +1,44 @@
+[
+  {
+    "id": "nyc-rodent-inspection",
+    "name": "NYC Open Data Rodent Inspection",
+    "url": "https://data.cityofnewyork.us/Health/Rodent-Inspection/p937-wjvj",
+    "owner": "New York City",
+    "sourceType": "official-open-data"
+  },
+  {
+    "id": "nyc-311-open-dataset-note",
+    "name": "NYC311 open dataset note",
+    "url": "https://www.nyc.gov/311/nyc311-enhances-service-request-open-dataset.page",
+    "owner": "New York City 311",
+    "sourceType": "official-open-data"
+  },
+  {
+    "id": "datasf-311-cases",
+    "name": "DataSF 311 Cases",
+    "url": "https://data.sfgov.org/City-Infrastructure/311-Cases/vw6y-z8j6",
+    "owner": "City and County of San Francisco",
+    "sourceType": "official-open-data"
+  },
+  {
+    "id": "cdc-hantavirus",
+    "name": "CDC Hantavirus",
+    "url": "https://www.cdc.gov/hantavirus/",
+    "owner": "Centers for Disease Control and Prevention",
+    "sourceType": "official-guidance"
+  },
+  {
+    "id": "cdc-hantavirus-prevention",
+    "name": "CDC Hantavirus prevention",
+    "url": "https://www.cdc.gov/hantavirus/prevention/index.html",
+    "owner": "Centers for Disease Control and Prevention",
+    "sourceType": "official-guidance"
+  },
+  {
+    "id": "cdc-rodent-cleanup",
+    "name": "CDC rodent cleanup guidance",
+    "url": "https://www.cdc.gov/healthy-pets/rodent-control/clean-up.html",
+    "owner": "Centers for Disease Control and Prevention",
+    "sourceType": "official-guidance"
+  }
+]

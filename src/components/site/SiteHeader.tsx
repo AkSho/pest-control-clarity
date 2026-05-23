@@ -109,6 +109,17 @@ export function SiteHeader() {
               </NavigationMenuItem>
 
               <NavigationMenuItem>
+                <NavigationMenuLink asChild>
+                  <Link
+                    to="/rodent-radar"
+                    className="inline-flex h-9 items-center px-3 text-sm font-medium text-ink-foreground/85 transition hover:text-ink-foreground"
+                  >
+                    Rodent Radar
+                  </Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
                 <NavigationMenuTrigger className="!bg-transparent text-ink-foreground/85 hover:!bg-white/5 hover:!text-ink-foreground data-[state=open]:!bg-white/5 data-[state=open]:!text-ink-foreground">
                   Program
                 </NavigationMenuTrigger>
@@ -292,6 +303,14 @@ export function SiteHeader() {
               className="rounded-md px-3 py-2 text-sm font-medium text-ink-foreground hover:bg-white/5"
             >
               The Problem
+            </Link>
+
+            <Link
+              to="/rodent-radar"
+              onClick={() => setOpen(false)}
+              className="rounded-md px-3 py-2 text-sm font-medium text-ink-foreground hover:bg-white/5"
+            >
+              Rodent Radar
             </Link>
 
             {PROGRAM_LINKS.map((p) => (

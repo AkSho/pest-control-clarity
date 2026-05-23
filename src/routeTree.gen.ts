@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as WhyItKeepsComingBackRouteImport } from './routes/why-it-keeps-coming-back'
 import { Route as WhatToExpectRouteImport } from './routes/what-to-expect'
 import { Route as ThankYouRouteImport } from './routes/thank-you'
+import { Route as RodentRadarRouteImport } from './routes/rodent-radar'
 import { Route as RodentFertilityControlRouteImport } from './routes/rodent-fertility-control'
 import { Route as ResultsRouteImport } from './routes/results'
 import { Route as ResourcesRouteImport } from './routes/resources'
@@ -45,6 +46,11 @@ import { Route as SolutionsHoasRouteImport } from './routes/solutions.hoas'
 import { Route as SolutionsGhostKitchensRouteImport } from './routes/solutions.ghost-kitchens'
 import { Route as SolutionsFoodStorageRouteImport } from './routes/solutions.food-storage'
 import { Route as SolutionsSlugRouteImport } from './routes/solutions.$slug'
+import { Route as RodentRadarTermsRouteImport } from './routes/rodent-radar_.terms'
+import { Route as RodentRadarRodentPopulationCalculatorRouteImport } from './routes/rodent-radar_.rodent-population-calculator'
+import { Route as RodentRadarRatPressureMapRouteImport } from './routes/rodent-radar_.rat-pressure-map'
+import { Route as RodentRadarHantavirusRiskCheckerRouteImport } from './routes/rodent-radar_.hantavirus-risk-checker'
+import { Route as RodentRadarAttributionRouteImport } from './routes/rodent-radar_.attribution'
 import { Route as ProductsStarterKitRouteImport } from './routes/products.starter-kit'
 import { Route as ProductsRefillRouteImport } from './routes/products.refill'
 import { Route as AreasAreaSlugRouteImport } from './routes/areas.$areaSlug'
@@ -62,6 +68,11 @@ const WhatToExpectRoute = WhatToExpectRouteImport.update({
 const ThankYouRoute = ThankYouRouteImport.update({
   id: '/thank-you',
   path: '/thank-you',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RodentRadarRoute = RodentRadarRouteImport.update({
+  id: '/rodent-radar',
+  path: '/rodent-radar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RodentFertilityControlRoute = RodentFertilityControlRouteImport.update({
@@ -233,6 +244,34 @@ const SolutionsSlugRoute = SolutionsSlugRouteImport.update({
   path: '/solutions/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RodentRadarTermsRoute = RodentRadarTermsRouteImport.update({
+  id: '/rodent-radar_/terms',
+  path: '/rodent-radar/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RodentRadarRodentPopulationCalculatorRoute =
+  RodentRadarRodentPopulationCalculatorRouteImport.update({
+    id: '/rodent-radar_/rodent-population-calculator',
+    path: '/rodent-radar/rodent-population-calculator',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const RodentRadarRatPressureMapRoute =
+  RodentRadarRatPressureMapRouteImport.update({
+    id: '/rodent-radar_/rat-pressure-map',
+    path: '/rodent-radar/rat-pressure-map',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const RodentRadarHantavirusRiskCheckerRoute =
+  RodentRadarHantavirusRiskCheckerRouteImport.update({
+    id: '/rodent-radar_/hantavirus-risk-checker',
+    path: '/rodent-radar/hantavirus-risk-checker',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const RodentRadarAttributionRoute = RodentRadarAttributionRouteImport.update({
+  id: '/rodent-radar_/attribution',
+  path: '/rodent-radar/attribution',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProductsStarterKitRoute = ProductsStarterKitRouteImport.update({
   id: '/products/starter-kit',
   path: '/products/starter-kit',
@@ -265,12 +304,18 @@ export interface FileRoutesByFullPath {
   '/resources': typeof ResourcesRoute
   '/results': typeof ResultsRoute
   '/rodent-fertility-control': typeof RodentFertilityControlRoute
+  '/rodent-radar': typeof RodentRadarRoute
   '/thank-you': typeof ThankYouRoute
   '/what-to-expect': typeof WhatToExpectRoute
   '/why-it-keeps-coming-back': typeof WhyItKeepsComingBackRoute
   '/areas/$areaSlug': typeof AreasAreaSlugRoute
   '/products/refill': typeof ProductsRefillRoute
   '/products/starter-kit': typeof ProductsStarterKitRoute
+  '/rodent-radar/attribution': typeof RodentRadarAttributionRoute
+  '/rodent-radar/hantavirus-risk-checker': typeof RodentRadarHantavirusRiskCheckerRoute
+  '/rodent-radar/rat-pressure-map': typeof RodentRadarRatPressureMapRoute
+  '/rodent-radar/rodent-population-calculator': typeof RodentRadarRodentPopulationCalculatorRoute
+  '/rodent-radar/terms': typeof RodentRadarTermsRoute
   '/solutions/$slug': typeof SolutionsSlugRoute
   '/solutions/food-storage': typeof SolutionsFoodStorageRoute
   '/solutions/ghost-kitchens': typeof SolutionsGhostKitchensRoute
@@ -306,12 +351,18 @@ export interface FileRoutesByTo {
   '/resources': typeof ResourcesRoute
   '/results': typeof ResultsRoute
   '/rodent-fertility-control': typeof RodentFertilityControlRoute
+  '/rodent-radar': typeof RodentRadarRoute
   '/thank-you': typeof ThankYouRoute
   '/what-to-expect': typeof WhatToExpectRoute
   '/why-it-keeps-coming-back': typeof WhyItKeepsComingBackRoute
   '/areas/$areaSlug': typeof AreasAreaSlugRoute
   '/products/refill': typeof ProductsRefillRoute
   '/products/starter-kit': typeof ProductsStarterKitRoute
+  '/rodent-radar/attribution': typeof RodentRadarAttributionRoute
+  '/rodent-radar/hantavirus-risk-checker': typeof RodentRadarHantavirusRiskCheckerRoute
+  '/rodent-radar/rat-pressure-map': typeof RodentRadarRatPressureMapRoute
+  '/rodent-radar/rodent-population-calculator': typeof RodentRadarRodentPopulationCalculatorRoute
+  '/rodent-radar/terms': typeof RodentRadarTermsRoute
   '/solutions/$slug': typeof SolutionsSlugRoute
   '/solutions/food-storage': typeof SolutionsFoodStorageRoute
   '/solutions/ghost-kitchens': typeof SolutionsGhostKitchensRoute
@@ -348,12 +399,18 @@ export interface FileRoutesById {
   '/resources': typeof ResourcesRoute
   '/results': typeof ResultsRoute
   '/rodent-fertility-control': typeof RodentFertilityControlRoute
+  '/rodent-radar': typeof RodentRadarRoute
   '/thank-you': typeof ThankYouRoute
   '/what-to-expect': typeof WhatToExpectRoute
   '/why-it-keeps-coming-back': typeof WhyItKeepsComingBackRoute
   '/areas/$areaSlug': typeof AreasAreaSlugRoute
   '/products/refill': typeof ProductsRefillRoute
   '/products/starter-kit': typeof ProductsStarterKitRoute
+  '/rodent-radar_/attribution': typeof RodentRadarAttributionRoute
+  '/rodent-radar_/hantavirus-risk-checker': typeof RodentRadarHantavirusRiskCheckerRoute
+  '/rodent-radar_/rat-pressure-map': typeof RodentRadarRatPressureMapRoute
+  '/rodent-radar_/rodent-population-calculator': typeof RodentRadarRodentPopulationCalculatorRoute
+  '/rodent-radar_/terms': typeof RodentRadarTermsRoute
   '/solutions/$slug': typeof SolutionsSlugRoute
   '/solutions/food-storage': typeof SolutionsFoodStorageRoute
   '/solutions/ghost-kitchens': typeof SolutionsGhostKitchensRoute
@@ -391,12 +448,18 @@ export interface FileRouteTypes {
     | '/resources'
     | '/results'
     | '/rodent-fertility-control'
+    | '/rodent-radar'
     | '/thank-you'
     | '/what-to-expect'
     | '/why-it-keeps-coming-back'
     | '/areas/$areaSlug'
     | '/products/refill'
     | '/products/starter-kit'
+    | '/rodent-radar/attribution'
+    | '/rodent-radar/hantavirus-risk-checker'
+    | '/rodent-radar/rat-pressure-map'
+    | '/rodent-radar/rodent-population-calculator'
+    | '/rodent-radar/terms'
     | '/solutions/$slug'
     | '/solutions/food-storage'
     | '/solutions/ghost-kitchens'
@@ -432,12 +495,18 @@ export interface FileRouteTypes {
     | '/resources'
     | '/results'
     | '/rodent-fertility-control'
+    | '/rodent-radar'
     | '/thank-you'
     | '/what-to-expect'
     | '/why-it-keeps-coming-back'
     | '/areas/$areaSlug'
     | '/products/refill'
     | '/products/starter-kit'
+    | '/rodent-radar/attribution'
+    | '/rodent-radar/hantavirus-risk-checker'
+    | '/rodent-radar/rat-pressure-map'
+    | '/rodent-radar/rodent-population-calculator'
+    | '/rodent-radar/terms'
     | '/solutions/$slug'
     | '/solutions/food-storage'
     | '/solutions/ghost-kitchens'
@@ -473,12 +542,18 @@ export interface FileRouteTypes {
     | '/resources'
     | '/results'
     | '/rodent-fertility-control'
+    | '/rodent-radar'
     | '/thank-you'
     | '/what-to-expect'
     | '/why-it-keeps-coming-back'
     | '/areas/$areaSlug'
     | '/products/refill'
     | '/products/starter-kit'
+    | '/rodent-radar_/attribution'
+    | '/rodent-radar_/hantavirus-risk-checker'
+    | '/rodent-radar_/rat-pressure-map'
+    | '/rodent-radar_/rodent-population-calculator'
+    | '/rodent-radar_/terms'
     | '/solutions/$slug'
     | '/solutions/food-storage'
     | '/solutions/ghost-kitchens'
@@ -515,12 +590,18 @@ export interface RootRouteChildren {
   ResourcesRoute: typeof ResourcesRoute
   ResultsRoute: typeof ResultsRoute
   RodentFertilityControlRoute: typeof RodentFertilityControlRoute
+  RodentRadarRoute: typeof RodentRadarRoute
   ThankYouRoute: typeof ThankYouRoute
   WhatToExpectRoute: typeof WhatToExpectRoute
   WhyItKeepsComingBackRoute: typeof WhyItKeepsComingBackRoute
   AreasAreaSlugRoute: typeof AreasAreaSlugRoute
   ProductsRefillRoute: typeof ProductsRefillRoute
   ProductsStarterKitRoute: typeof ProductsStarterKitRoute
+  RodentRadarAttributionRoute: typeof RodentRadarAttributionRoute
+  RodentRadarHantavirusRiskCheckerRoute: typeof RodentRadarHantavirusRiskCheckerRoute
+  RodentRadarRatPressureMapRoute: typeof RodentRadarRatPressureMapRoute
+  RodentRadarRodentPopulationCalculatorRoute: typeof RodentRadarRodentPopulationCalculatorRoute
+  RodentRadarTermsRoute: typeof RodentRadarTermsRoute
   SolutionsSlugRoute: typeof SolutionsSlugRoute
   SolutionsFoodStorageRoute: typeof SolutionsFoodStorageRoute
   SolutionsGhostKitchensRoute: typeof SolutionsGhostKitchensRoute
@@ -562,6 +643,13 @@ declare module '@tanstack/react-router' {
       path: '/thank-you'
       fullPath: '/thank-you'
       preLoaderRoute: typeof ThankYouRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rodent-radar': {
+      id: '/rodent-radar'
+      path: '/rodent-radar'
+      fullPath: '/rodent-radar'
+      preLoaderRoute: typeof RodentRadarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/rodent-fertility-control': {
@@ -795,6 +883,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SolutionsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/rodent-radar_/terms': {
+      id: '/rodent-radar_/terms'
+      path: '/rodent-radar/terms'
+      fullPath: '/rodent-radar/terms'
+      preLoaderRoute: typeof RodentRadarTermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rodent-radar_/rodent-population-calculator': {
+      id: '/rodent-radar_/rodent-population-calculator'
+      path: '/rodent-radar/rodent-population-calculator'
+      fullPath: '/rodent-radar/rodent-population-calculator'
+      preLoaderRoute: typeof RodentRadarRodentPopulationCalculatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rodent-radar_/rat-pressure-map': {
+      id: '/rodent-radar_/rat-pressure-map'
+      path: '/rodent-radar/rat-pressure-map'
+      fullPath: '/rodent-radar/rat-pressure-map'
+      preLoaderRoute: typeof RodentRadarRatPressureMapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rodent-radar_/hantavirus-risk-checker': {
+      id: '/rodent-radar_/hantavirus-risk-checker'
+      path: '/rodent-radar/hantavirus-risk-checker'
+      fullPath: '/rodent-radar/hantavirus-risk-checker'
+      preLoaderRoute: typeof RodentRadarHantavirusRiskCheckerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rodent-radar_/attribution': {
+      id: '/rodent-radar_/attribution'
+      path: '/rodent-radar/attribution'
+      fullPath: '/rodent-radar/attribution'
+      preLoaderRoute: typeof RodentRadarAttributionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/products/starter-kit': {
       id: '/products/starter-kit'
       path: '/products/starter-kit'
@@ -835,12 +958,19 @@ const rootRouteChildren: RootRouteChildren = {
   ResourcesRoute: ResourcesRoute,
   ResultsRoute: ResultsRoute,
   RodentFertilityControlRoute: RodentFertilityControlRoute,
+  RodentRadarRoute: RodentRadarRoute,
   ThankYouRoute: ThankYouRoute,
   WhatToExpectRoute: WhatToExpectRoute,
   WhyItKeepsComingBackRoute: WhyItKeepsComingBackRoute,
   AreasAreaSlugRoute: AreasAreaSlugRoute,
   ProductsRefillRoute: ProductsRefillRoute,
   ProductsStarterKitRoute: ProductsStarterKitRoute,
+  RodentRadarAttributionRoute: RodentRadarAttributionRoute,
+  RodentRadarHantavirusRiskCheckerRoute: RodentRadarHantavirusRiskCheckerRoute,
+  RodentRadarRatPressureMapRoute: RodentRadarRatPressureMapRoute,
+  RodentRadarRodentPopulationCalculatorRoute:
+    RodentRadarRodentPopulationCalculatorRoute,
+  RodentRadarTermsRoute: RodentRadarTermsRoute,
   SolutionsSlugRoute: SolutionsSlugRoute,
   SolutionsFoodStorageRoute: SolutionsFoodStorageRoute,
   SolutionsGhostKitchensRoute: SolutionsGhostKitchensRoute,
@@ -863,3 +993,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

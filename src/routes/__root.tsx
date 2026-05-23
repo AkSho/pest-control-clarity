@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -119,15 +120,17 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const isAtlasRoute = pathname === "/rodent-radar/rat-pressure-map";
 
   return (
     <QueryClientProvider client={queryClient}>
       <div className="flex min-h-screen flex-col">
-        <SiteHeader />
+        {!isAtlasRoute ? <SiteHeader /> : null}
         <main className="flex-1">
           <Outlet />
         </main>
-        <SiteFooter />
+        {!isAtlasRoute ? <SiteFooter /> : null}
       </div>
     </QueryClientProvider>
   );

@@ -217,6 +217,157 @@
     color: var(--color-ink-foreground);
   }
 
+  .rat-pressure-marker {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 2px solid white;
+    border-radius: 9999px;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 800;
+    box-shadow: 0 10px 24px oklch(0.18 0.03 250 / 0.22);
+    cursor: pointer;
+    transition: transform 160ms ease, box-shadow 160ms ease;
+  }
+
+  .rat-pressure-marker:hover {
+    transform: scale(1.08);
+    box-shadow: 0 12px 30px oklch(0.18 0.03 250 / 0.28);
+  }
+
+  .rat-pressure-marker-low {
+    background-color: oklch(0.55 0.16 155);
+  }
+
+  .rat-pressure-marker-moderate {
+    background-color: oklch(0.72 0.15 85);
+  }
+
+  .rat-pressure-marker-high {
+    background-color: oklch(0.65 0.18 45);
+  }
+
+  .rat-pressure-marker-severe {
+    background-color: oklch(0.58 0.22 25);
+  }
+
+  .rat-pressure-marker-season-active {
+    box-shadow:
+      0 0 0 5px oklch(0.76 0.12 85 / 0.18),
+      0 10px 24px oklch(0.18 0.03 250 / 0.22);
+  }
+
+  .rat-pressure-marker-season-high {
+    box-shadow:
+      0 0 0 7px oklch(0.72 0.15 60 / 0.22),
+      0 0 0 13px oklch(0.72 0.15 60 / 0.08),
+      0 10px 24px oklch(0.18 0.03 250 / 0.22);
+  }
+
+  .rat-pressure-marker-season-severe {
+    box-shadow:
+      0 0 0 8px oklch(0.66 0.19 35 / 0.26),
+      0 0 0 16px oklch(0.66 0.19 35 / 0.1),
+      0 10px 24px oklch(0.18 0.03 250 / 0.22);
+  }
+
+  .rat-pressure-marker-confidence-high {
+    border-color: oklch(0.99 0.01 95);
+    outline: 3px solid oklch(0.62 0.14 160 / 0.42);
+    outline-offset: 2px;
+  }
+
+  .rat-pressure-marker-confidence-medium {
+    border-color: oklch(0.99 0.01 95);
+    outline: 3px dashed oklch(0.58 0.11 250 / 0.5);
+    outline-offset: 2px;
+  }
+
+  .rat-pressure-marker-watchlist {
+    border-color: oklch(0.99 0.01 95);
+    background-color: oklch(0.34 0.03 250);
+    color: oklch(0.99 0.01 95);
+    box-shadow:
+      0 0 0 6px oklch(0.34 0.03 250 / 0.14),
+      0 10px 24px oklch(0.18 0.03 250 / 0.22);
+  }
+
+  .rat-pressure-marker-watchlist-selected {
+    transform: scale(1.08);
+    box-shadow:
+      0 0 0 8px oklch(0.54 0.12 250 / 0.18),
+      0 14px 30px oklch(0.18 0.03 250 / 0.26);
+  }
+
+  .rodent-atlas-marker {
+    display: grid;
+    place-items: center;
+    border: 2px solid oklch(0.98 0.03 210);
+    border-radius: 9999px;
+    cursor: pointer;
+    opacity: 0.92;
+    transition: opacity 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+  }
+
+  .rodent-atlas-marker::after {
+    width: 34%;
+    height: 34%;
+    border-radius: 9999px;
+    background: oklch(0.99 0.02 210 / 0.92);
+    content: "";
+  }
+
+  .rodent-atlas-marker:hover,
+  .rodent-atlas-marker:focus-visible {
+    opacity: 1;
+    outline: none;
+    transform: scale(1.12);
+  }
+
+  .rodent-atlas-colony-ring {
+    pointer-events: none;
+    border: 2px dashed;
+    border-radius: 9999px;
+    opacity: 0.88;
+    animation: rodent-atlas-pulse 2.8s ease-in-out infinite;
+  }
+
+  .rodent-atlas-gap-marker {
+    display: grid;
+    width: 2rem;
+    height: 2rem;
+    place-items: center;
+    border: 1px solid oklch(0.88 0.03 250 / 0.72);
+    border-radius: 9999px;
+    background: oklch(0.18 0.03 250 / 0.86);
+    color: oklch(0.88 0.03 250);
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 900;
+    box-shadow: 0 0 0 6px oklch(0.88 0.03 250 / 0.1);
+    transition: transform 160ms ease, border-color 160ms ease, color 160ms ease;
+  }
+
+  .rodent-atlas-gap-marker:hover,
+  .rodent-atlas-gap-marker-selected {
+    border-color: oklch(0.91 0.11 230);
+    color: oklch(0.91 0.11 230);
+    transform: scale(1.12);
+  }
+
+  @keyframes rodent-atlas-pulse {
+    0%, 100% {
+      opacity: 0.42;
+      transform: scale(0.92);
+    }
+    50% {
+      opacity: 0.92;
+      transform: scale(1.08);
+    }
+  }
+
   /* ── Type scale (Grüns-equivalent, applied to Evolve palette) ── */
   .pdp-h1 {
     font-size: clamp(2.625rem, 4vw + 1rem, 3.5rem);

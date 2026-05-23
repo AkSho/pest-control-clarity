@@ -37,6 +37,8 @@ export function SiteFooter() {
           </div>
           <ul className="mt-4 space-y-2 text-sm">
             <li><Link to="/why-it-keeps-coming-back" className="hover:text-brand">The Problem</Link></li>
+            <li><Link to="/rodent-radar" className="hover:text-brand">Rodent Radar</Link></li>
+            <li><Link to="/rodent-radar/rodent-population-calculator" className="hover:text-brand">Rodent population calculator</Link></li>
             <li><Link to="/how-it-works" className="hover:text-brand">How it works</Link></li>
             <li><Link to="/rodent-fertility-control" className="hover:text-brand">Rodent fertility control</Link></li>
             <li><Link to="/does-rat-birth-control-work" className="hover:text-brand">Does rat birth control work?</Link></li>
