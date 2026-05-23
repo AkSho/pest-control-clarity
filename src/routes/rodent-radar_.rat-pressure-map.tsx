@@ -507,7 +507,7 @@ function RodentRadarAtlasPage() {
 
       {/* Recurring sites toggle — small pill above layer cards */}
       {!cinematic ? (
-        <div className="pointer-events-auto absolute bottom-[3.25rem] left-1/2 z-[35] -translate-x-1/2">
+        <div className="pointer-events-auto absolute left-1/2 top-4 z-[35] -translate-x-1/2">
           <button
             type="button"
             onClick={() => setRecurringOnly((v) => !v)}
