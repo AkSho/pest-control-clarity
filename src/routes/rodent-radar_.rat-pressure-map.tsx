@@ -462,12 +462,19 @@ function RodentRadarAtlasPage() {
       <AtlasMap
         verified={verified}
         unavailable={unavailableRatPressureGeos}
+        ahsPins={ahsEstimatePins}
         selected={selected}
         selectedGap={selectedGap}
+        selectedAhs={selectedAhs}
         activeLayers={activeSet as Set<AtlasLayerId>}
         mode={mode}
-        onSelectVerified={selectVerified}
-        onSelectGap={selectGap}
+        onSelectVerified={(c) => { setSelectedAhs(null); selectVerified(c); }}
+        onSelectGap={(c) => { setSelectedAhs(null); selectGap(c); }}
+        onSelectAhs={(c) => {
+          setSelectedAhs(c);
+          setDrawerOpen(true);
+          updateSearch({ gap: undefined, preset: undefined });
+        }}
         mapRef={mapRef}
       />
 
