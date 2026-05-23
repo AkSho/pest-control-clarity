@@ -664,7 +664,7 @@ export const pressureMetricSnapshots: PressureMetricSnapshot[] = [
     confidence: "high",
     confidenceNote: "Direct official DC 311 rodent inspection and treatment service requests.",
     methodologyNote: "Counts are public service requests, not unique rats or confirmed infestations.",
-    provenance: "seeded",
+    provenance: "live",
   },
 ];
 
