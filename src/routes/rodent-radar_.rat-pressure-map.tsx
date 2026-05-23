@@ -927,10 +927,42 @@ function AtlasMap({
         map.on("click", "rodent-gaps-symbol", handleGapClick);
         map.on("click", "rodent-ahs-ring", handleAhsClick);
         map.on("click", "rodent-ahs-dot", handleAhsClick);
-        for (const lid of ["rodent-activity-dot", "rodent-activity-glow", "rodent-gaps-symbol", "rodent-ahs-ring", "rodent-ahs-dot"]) {
+
+        // Cluster click — zoom in to expand
+        map.on("click", "rodent-reports-clusters", (e) => {
+          const f = e.features?.[0];
+          if (!f) return;
+          const clusterId = f.properties?.cluster_id as number | undefined;
+          const src = map.getSource("rodent-reports") as MapLibreGeoJSONSource | undefined;
+          if (clusterId == null || !src) return;
+          src.getClusterExpansionZoom(clusterId).then((zoom) => {
+            const coords = (f.geometry as GeoJSON.Point).coordinates as [number, number];
+            map.easeTo({ center: coords, zoom: Math.min(zoom + 0.2, 16), duration: 600 });
+          }).catch(() => {});
+        });
+
+        // Single report click — find nearest address group → open popup
+        map.on("click", "rodent-reports-points", (e) => {
+          const f = e.features?.[0];
+          if (!f) return;
+          const coords = (f.geometry as GeoJSON.Point).coordinates as [number, number];
+          const group = findGroupAt(addressGroups, coords[1], coords[0]);
+          if (group) onSelectGroup(group);
+        });
+
+        for (const lid of [
+          "rodent-activity-dot",
+          "rodent-activity-glow",
+          "rodent-gaps-symbol",
+          "rodent-ahs-ring",
+          "rodent-ahs-dot",
+          "rodent-reports-clusters",
+          "rodent-reports-points",
+        ]) {
           map.on("mouseenter", lid, () => { map.getCanvas().style.cursor = "pointer"; });
           map.on("mouseleave", lid, () => { map.getCanvas().style.cursor = ""; });
         }
+
 
         setReady(true);
         // Mark canvas ready for thumbnail capture once the basemap settles
