@@ -470,21 +470,15 @@ function RodentRadarAtlasPage() {
     [],
   );
 
-  // Wired-but-unused-yet hooks ensure module side effects are kept and TS
-  // recognizes the imports as live while the per-report MapLibre layer
-  // integration lands incrementally.
-  void allReports;
-  void addressGroups;
-  void reportsGeoJSON;
-  void recurringOnly;
-  void clickedGroup;
-  void RECENCY_RAMP;
-  void RECENCY_COLOR_EXPRESSION;
-  void CLUSTER_RADIUS_EXPRESSION;
-  void findGroupAt;
+  // Cinematic mode strips all chrome and leaves the map. Keep the toggle
+  // mounted so users can ESC back out.
+  const onSelectGroup = useCallback((g: AddressGroup | null) => {
+    setClickedGroup(g);
+  }, []);
+
 
   return (
-    <div className="h-screen overflow-hidden bg-[#05080d] text-slate-100">
+    <div className={`h-screen overflow-hidden bg-[#05080d] text-slate-100 ${cinematic ? "cinematic-mode" : ""}`}>
       <AtlasMap
         verified={mapVerified}
         unavailable={mapGaps}
@@ -499,83 +493,123 @@ function RodentRadarAtlasPage() {
         onSelectGap={selectGap}
         onSelectAhs={handleSelectAhs}
         mapRef={mapRef}
+        reportsGeoJSON={reportsGeoJSON}
+        addressGroups={addressGroups}
+        recurringOnly={recurringOnly}
+        onSelectGroup={onSelectGroup}
       />
 
+      {/* Cinematic toggle + curated views — always mounted, hidden by CSS in cinematic */}
+      <CinematicToggle cinematic={cinematic} onToggle={() => setCinematic((v) => !v)} />
+      {!cinematic ? (
+        <CuratedViews activeId={activeView} onSelect={handleCuratedView} />
+      ) : null}
 
-      <AtlasSidebar
-        metric={metric}
-        onMetricChange={setMetric}
-        verified={verified}
-        gaps={unavailableRatPressureGeos}
-        ahsPins={ahsEstimatePins}
-        query={query}
-        onQueryChange={setQuery}
-        selectedVerifiedId={selected?.id}
-        selectedGapId={selectedGap?.id}
-        selectedAhsId={selectedAhs?.id}
-        showCoverage={showCoverage}
-        onShowCoverageChange={setShowCoverage}
-        onSelectVerified={selectVerified}
-        onSelectGap={selectGap}
-        onSelectAhs={handleSelectAhs}
-        markerColor={(band: ActivityBand) => markerTone(band, mode)}
-        dataMix={dataMix}
-      />
+      {/* Recurring sites toggle — small pill above layer cards */}
+      {!cinematic ? (
+        <div className="pointer-events-auto absolute left-1/2 top-[4.5rem] z-[35] -translate-x-1/2">
+          <button
+            type="button"
+            onClick={() => setRecurringOnly((v) => !v)}
+            className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[0.65rem] font-medium uppercase tracking-[0.18em] backdrop-blur transition ${
+              recurringOnly
+                ? "border-cyan-300/40 bg-cyan-400/10 text-cyan-100"
+                : "border-white/10 bg-slate-950/70 text-slate-400 hover:text-slate-100"
+            }`}
+            title="Highlight addresses with ≥3 reports across ≥6 months"
+          >
+            <Activity className="h-3 w-3" />
+            {recurringOnly ? "Showing recurring sites" : "Recurring sites only"}
+          </button>
+        </div>
+      ) : null}
 
-      <AtlasToolbar query={query} onQueryChange={setQuery} />
+      {/* Per-report popup, anchored to clicked address group */}
+      {clickedGroup ? (
+        <div className="pointer-events-none absolute right-4 top-20 z-[55] flex">
+          <ReportPopup group={clickedGroup} onClose={() => setClickedGroup(null)} />
+        </div>
+      ) : null}
 
-      {/* Bottom-left docked layer cards — OGW pattern */}
-      <div
-        className="pointer-events-auto absolute bottom-4 left-[316px] hidden flex-col gap-2 md:flex"
-        style={{ zIndex: 35 }}
-      >
-        <LayerCard
-          title="Official activity"
-          subtitle="Always on — the map's spine"
-          items={officialLayer}
-          activeLayers={activeLayers}
-          onToggle={toggleLayer}
-        />
-        <LayerCard
-          title="Conditions"
-          subtitle="Context, not signal"
-          items={conditionLayers}
-          activeLayers={activeLayers}
-          onToggle={toggleLayer}
-          defaultOpen={false}
-        />
-        <LayerCard
-          title="Modeled"
-          subtitle="Interpretive — confirm before enabling"
-          items={modeledLayers}
-          activeLayers={activeLayers}
-          onToggle={toggleLayer}
-          defaultOpen={false}
-        />
-        <LayerCard
-          title="Guidance"
-          subtitle="CDC-aligned overlays"
-          items={guidanceLayers}
-          activeLayers={activeLayers}
-          onToggle={toggleLayer}
-          defaultOpen={false}
-        />
-      </div>
+      {!cinematic ? (
+        <>
+          <AtlasSidebar
+            metric={metric}
+            onMetricChange={setMetric}
+            verified={verified}
+            gaps={unavailableRatPressureGeos}
+            ahsPins={ahsEstimatePins}
+            query={query}
+            onQueryChange={setQuery}
+            selectedVerifiedId={selected?.id}
+            selectedGapId={selectedGap?.id}
+            selectedAhsId={selectedAhs?.id}
+            showCoverage={showCoverage}
+            onShowCoverageChange={setShowCoverage}
+            onSelectVerified={selectVerified}
+            onSelectGap={selectGap}
+            onSelectAhs={handleSelectAhs}
+            markerColor={(band: ActivityBand) => markerTone(band, mode)}
+            dataMix={dataMix}
+          />
 
-      <SelectedDrawer
-        open={drawerOpen}
-        selected={selected}
-        selectedGap={selectedGap}
-        selectedAhs={selectedAhs}
-        activeLayers={activeSet}
-        onCloseGap={() => updateSearch({ gap: undefined })}
-        onCloseAhs={() => setSelectedAhs(null)}
-        onClose={() => setDrawerOpen(false)}
-        onOpen={() => setDrawerOpen(true)}
-      />
+          <AtlasToolbar query={query} onQueryChange={setQuery} />
+
+          {/* Bottom-left docked layer cards — OGW pattern */}
+          <div
+            className="pointer-events-auto absolute bottom-4 left-[316px] hidden flex-col gap-2 md:flex"
+            style={{ zIndex: 35 }}
+          >
+            <LayerCard
+              title="Official activity"
+              subtitle="Always on — the map's spine"
+              items={officialLayer}
+              activeLayers={activeLayers}
+              onToggle={toggleLayer}
+            />
+            <LayerCard
+              title="Conditions"
+              subtitle="Context, not signal"
+              items={conditionLayers}
+              activeLayers={activeLayers}
+              onToggle={toggleLayer}
+              defaultOpen={false}
+            />
+            <LayerCard
+              title="Modeled"
+              subtitle="Interpretive — confirm before enabling"
+              items={modeledLayers}
+              activeLayers={activeLayers}
+              onToggle={toggleLayer}
+              defaultOpen={false}
+            />
+            <LayerCard
+              title="Guidance"
+              subtitle="CDC-aligned overlays"
+              items={guidanceLayers}
+              activeLayers={activeLayers}
+              onToggle={toggleLayer}
+              defaultOpen={false}
+            />
+          </div>
+
+          <SelectedDrawer
+            open={drawerOpen}
+            selected={selected}
+            selectedGap={selectedGap}
+            selectedAhs={selectedAhs}
+            activeLayers={activeSet}
+            onCloseGap={() => updateSearch({ gap: undefined })}
+            onCloseAhs={() => setSelectedAhs(null)}
+            onClose={() => setDrawerOpen(false)}
+            onOpen={() => setDrawerOpen(true)}
+          />
+        </>
+      ) : null}
     </div>
   );
 }
+
 
 
 function AtlasMap({
@@ -592,6 +626,10 @@ function AtlasMap({
   onSelectGap,
   onSelectAhs,
   mapRef: externalMapRef,
+  reportsGeoJSON,
+  addressGroups,
+  recurringOnly,
+  onSelectGroup,
 }: {
   verified: RatPressureResult[];
   unavailable: UnavailableRatPressureGeo[];
@@ -606,7 +644,12 @@ function AtlasMap({
   onSelectGap: (city: UnavailableRatPressureGeo) => void;
   onSelectAhs: (city: AhsEstimatePin) => void;
   mapRef?: React.MutableRefObject<MapLibreMap | null>;
+  reportsGeoJSON: ReturnType<typeof getReportsAsGeoJSON>;
+  addressGroups: AddressGroup[];
+  recurringOnly: boolean;
+  onSelectGroup: (g: AddressGroup | null) => void;
 }) {
+
   const containerRef = useRef<HTMLDivElement | null>(null);
   const internalMapRef = useRef<MapLibreMap | null>(null);
   const mapRef = externalMapRef ?? internalMapRef;
@@ -791,6 +834,73 @@ function AtlasMap({
           },
         });
 
+        // ============ PER-REPORT LAYER (the new primary unit) ============
+        // Clustered point source — one feature = one filed report.
+        // At low zoom they collapse into count bubbles (real quantity);
+        // at zoom ≥ 13 each report renders as its own colored dot (recency).
+        map.addSource("rodent-reports", {
+          type: "geojson",
+          data: { type: "FeatureCollection", features: [] },
+          cluster: true,
+          clusterRadius: 40,
+          clusterMaxZoom: 12,
+        });
+
+        // Cluster bubbles — size = log(point_count), cyan with translucent halo
+        map.addLayer({
+          id: "rodent-reports-clusters",
+          type: "circle",
+          source: "rodent-reports",
+          filter: ["has", "point_count"],
+          paint: {
+            "circle-radius": CLUSTER_RADIUS_EXPRESSION as never,
+            "circle-color": "#22d3ee",
+            "circle-opacity": 0.18,
+            "circle-stroke-color": "#67e8f9",
+            "circle-stroke-width": 1.25,
+            "circle-stroke-opacity": 0.85,
+          },
+        });
+
+        // Cluster count label
+        map.addLayer({
+          id: "rodent-reports-cluster-count",
+          type: "symbol",
+          source: "rodent-reports",
+          filter: ["has", "point_count"],
+          layout: {
+            "text-field": ["get", "point_count_abbreviated"],
+            "text-size": 11,
+            "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+          },
+          paint: {
+            "text-color": "#e0fbff",
+            "text-halo-color": "#06121a",
+            "text-halo-width": 1.25,
+          },
+        });
+
+        // Unclustered single reports — recency-colored dot
+        map.addLayer({
+          id: "rodent-reports-points",
+          type: "circle",
+          source: "rodent-reports",
+          filter: ["!", ["has", "point_count"]],
+          paint: {
+            "circle-radius": [
+              "interpolate", ["linear"], ["zoom"],
+              10, 2.5,
+              13, 4,
+              16, 6,
+            ],
+            "circle-color": RECENCY_COLOR_EXPRESSION as never,
+            "circle-opacity": 0.9,
+            "circle-stroke-color": "#06121a",
+            "circle-stroke-width": 0.5,
+          },
+        });
+
+
         const handleVerifiedClick = (e: MapLibreLayerMouseEvent) => {
           const f = e.features?.[0];
           if (!f) return;
@@ -817,10 +927,42 @@ function AtlasMap({
         map.on("click", "rodent-gaps-symbol", handleGapClick);
         map.on("click", "rodent-ahs-ring", handleAhsClick);
         map.on("click", "rodent-ahs-dot", handleAhsClick);
-        for (const lid of ["rodent-activity-dot", "rodent-activity-glow", "rodent-gaps-symbol", "rodent-ahs-ring", "rodent-ahs-dot"]) {
+
+        // Cluster click — zoom in to expand
+        map.on("click", "rodent-reports-clusters", (e) => {
+          const f = e.features?.[0];
+          if (!f) return;
+          const clusterId = f.properties?.cluster_id as number | undefined;
+          const src = map.getSource("rodent-reports") as MapLibreGeoJSONSource | undefined;
+          if (clusterId == null || !src) return;
+          src.getClusterExpansionZoom(clusterId).then((zoom) => {
+            const coords = (f.geometry as GeoJSON.Point).coordinates as [number, number];
+            map.easeTo({ center: coords, zoom: Math.min(zoom + 0.2, 16), duration: 600 });
+          }).catch(() => {});
+        });
+
+        // Single report click — find nearest address group → open popup
+        map.on("click", "rodent-reports-points", (e) => {
+          const f = e.features?.[0];
+          if (!f) return;
+          const coords = (f.geometry as GeoJSON.Point).coordinates as [number, number];
+          const group = findGroupAt(addressGroups, coords[1], coords[0]);
+          if (group) onSelectGroup(group);
+        });
+
+        for (const lid of [
+          "rodent-activity-dot",
+          "rodent-activity-glow",
+          "rodent-gaps-symbol",
+          "rodent-ahs-ring",
+          "rodent-ahs-dot",
+          "rodent-reports-clusters",
+          "rodent-reports-points",
+        ]) {
           map.on("mouseenter", lid, () => { map.getCanvas().style.cursor = "pointer"; });
           map.on("mouseleave", lid, () => { map.getCanvas().style.cursor = ""; });
         }
+
 
         setReady(true);
         // Mark canvas ready for thumbnail capture once the basemap settles
@@ -902,6 +1044,31 @@ function AtlasMap({
         : [],
     });
   }, [activeLayers, ahsPins, metric, mode, ready, unavailable, verified]);
+
+  // Push per-report data into the clustered source. When recurringOnly is on,
+  // filter to reports whose address group is recurring.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !ready) return;
+    const src = map.getSource("rodent-reports") as MapLibreGeoJSONSource | undefined;
+    if (!src) return;
+
+    if (!recurringOnly) {
+      src.setData(reportsGeoJSON);
+      return;
+    }
+    const recurringIds = new Set<string>();
+    for (const g of addressGroups) {
+      if (g.isRecurring) for (const r of g.reports) recurringIds.add(r.id);
+    }
+    src.setData({
+      type: "FeatureCollection",
+      features: reportsGeoJSON.features.filter((f) =>
+        recurringIds.has(f.properties.id as string),
+      ),
+    });
+  }, [ready, reportsGeoJSON, recurringOnly, addressGroups]);
+
 
   // Per-mode basemap paint: desaturate in HC, hide labels in lines-off/field
   useEffect(() => {
