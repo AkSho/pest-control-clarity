@@ -41,6 +41,14 @@ export type AtlasDataset = {
   activityUse: "official-activity" | "context" | "guidance";
 };
 
+export type Provenance =
+  | "live"
+  | "seeded"
+  | "inspections-housing"
+  | "inspections-commercial"
+  | "ahs-estimate"
+  | "unavailable";
+
 export type PressureMetricSnapshot = {
   id: string;
   placeId: string;
@@ -54,6 +62,7 @@ export type PressureMetricSnapshot = {
   confidence: Confidence;
   confidenceNote: string;
   methodologyNote: string;
+  provenance: Provenance;
 };
 
 export type ContextLayer = {
