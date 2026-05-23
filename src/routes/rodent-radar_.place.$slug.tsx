@@ -20,6 +20,8 @@ function buildCanonical(slug: string) {
 }
 
 export const Route = createFileRoute("/rodent-radar_/place/$slug")({
+  validateSearch: zodValidator(placeSearchSchema),
+  search: { middlewares: [retainSearchParams(["mode"])] },
   loader: ({ params }) => {
     const results = getRatPressureResults();
     const place = results.find((r) => r.id === params.slug);
