@@ -302,6 +302,32 @@ function RodentRadarAtlasPage() {
     [updateSearch],
   );
 
+  // Stable handlers for AtlasMap. Inline lambdas here caused the map-init
+  // useEffect (deps include onSelect*) to tear down + rebuild the map on
+  // every parent render, leaving the canvas blank after closing the drawer.
+  const handleSelectVerified = useCallback(
+    (c: RatPressureResult) => {
+      setSelectedAhs(null);
+      selectVerified(c);
+    },
+    [selectVerified],
+  );
+  const handleSelectGap = useCallback(
+    (c: UnavailableRatPressureGeo) => {
+      setSelectedAhs(null);
+      selectGap(c);
+    },
+    [selectGap],
+  );
+  const handleSelectAhs = useCallback(
+    (c: AhsEstimatePin) => {
+      setSelectedAhs(c);
+      setDrawerOpen(true);
+      updateSearch({ gap: undefined, preset: undefined });
+    },
+    [updateSearch],
+  );
+
   const toggleLayer = useCallback(
     (layerId: AtlasLayerId) => {
       const next = activeLayers.includes(layerId)
