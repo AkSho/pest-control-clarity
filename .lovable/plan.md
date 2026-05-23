@@ -1,82 +1,62 @@
-Final chunk. Three things ship together: shareable URL state, four display modes, and four preset views with real map-snapshot thumbnails.
+## Chunk E (final): close out display modes, presets, thumbnails, share
 
-## 1. URL state via TanStack validateSearch + zod
+Goal: make the URL-state scaffolding from the last chunk actually visible and shareable, then stop feature work.
 
-Migrate the rat-pressure-map route from raw `URLSearchParams` to `validateSearch` with `zodValidator(fallback(...))`.
+### 1. Re-wire `DisplayModePicker` into the rail
+- Restore the JSX in `RodentRadarAtlasPage` between the Layers and Places sections (it was removed to unblock the build).
+- Bind to `search.mode` via `updateSearch({ mode, preset: undefined })`.
 
-Schema fields:
-- `layers` — string array of visible layer ids (default: the `defaultVisible: true` set)
-- `place` — selected place id, optional
-- `mode` — `"standard" | "high-contrast" | "lines-off" | "field"`, default `standard`
-- `zoom` — number, default 3.2
-- `center` — `[number, number]` tuple (lng, lat), default `[-96, 38]`
-- `window` — `"12mo" | "90d" | "30d"`, default `12mo`
-- `preset` — optional preset id, used only to mark which chip is active
+### 2. Apply `mode` to the MapLibre map
+- Pass `mode` from `RodentRadarAtlasPage` into `AtlasMap`.
+- `markerTone(band, mode)` already exists — thread `mode` into the activity feature builder (line 752) and into the paint expression where marker color is read.
+- Per mode:
+  - `standard` — current paint.
+  - `high-contrast` — desaturated basemap (set `raster-saturation: -1`, `raster-contrast: 0.15` on the basemap layer) + HC marker tones.
+  - `lines-off` — hide the `place_label` / `road_label` / boundary symbol layers via `setLayoutProperty(id, "visibility", "none")`.
+  - `field` — same as `lines-off` plus single-layer mode (force `activeLayers` paint to only render `rodent-activity` + selected place, ignore other overlays in the paint expression — search state is untouched so toggling out of field restores everything).
 
-Wire `Route.useSearch()` + `useNavigate({ from })` everywhere the old `URLSearchParams` writes happened. Map pan/zoom writes throttled at 500ms to keep history clean. `retainSearchParams(["mode"])` so display mode survives drill-down to a place page (place page reads it for its own theming).
+### 3. Field-view mobile layout
+- When `mode === "field"` AND viewport `< 768px`, collapse the left rail entirely and render a bottom sheet (`fixed inset-x-0 bottom-0`) with: selected place name, activity band chip, one-tap "open details" button.
+- Enlarge MapLibre hitboxes: increase `circle-radius` interpolation by ~1.4× in field mode.
+- Hide `TopTools` search input in field mode; keep only the mode picker access via `MapUtilityButtons`.
 
-## 2. Display modes
+### 4. `retainSearchParams(["mode"])` middleware
+- Add to the route's `search.middlewares` so drilling into `/rodent-radar/place/$slug` and back preserves the display mode.
+- Also add to the `place.$slug` route's `validateSearch` (extend with just `mode`) so the link round-trips.
 
-Four modes, exposed as a radio in the existing "Display" tile (currently shows static):
+### 5. Playwright preset thumbnails
+- Add `playwright` as a devDependency.
+- New `scripts/build-preset-thumbnails.ts`:
+  - Spawns `vite preview` on a free port (after a one-shot build).
+  - Launches chromium headless at 1024×640, DPR 2.
+  - For each of the 4 presets, navigates to `/rodent-radar/rat-pressure-map?preset={id}&__thumb=1`.
+  - Waits for `[data-map-ready="true"]` (new attribute set in `AtlasMap` after `map.on('idle')` fires once).
+  - Crops to 40×24 of the map canvas, downsamples to 80×48@2x PNG, writes to `public/rodent-radar/presets/{id}.png`.
+- Hook into `package.json` as `"prebuild": "tsx scripts/build-preset-thumbnails.ts || echo 'thumbnails skipped'"` (non-fatal — fallback to CSS gradient chip if PNG missing at runtime).
+- `PresetBar` chips: if `/rodent-radar/presets/{id}.png` exists, render a 40×24 `<img>` to the left of the label; otherwise current icon.
 
-- **Standard** — current globe + atmospheric chrome.
-- **High-contrast** — basemap desaturated, marker palette swapped to WCAG-AA tokens (`--activity-*-hc` variants added to `src/styles.css`), satellite overlays hidden.
-- **Lines-off** — hides the decorative satellite labels and constellation, keeps the data. Quiet/print-friendly.
-- **Field view** — single-layer (rodent-activity only), rail collapses to a bottom sheet, marker hitboxes enlarged. Optimized for the 375-414px viewport that's actually phones.
+### 6. PNG share artifact
+- Replace `copyShare` with a small menu (popover): "Copy link" (current behavior) + "Download PNG".
+- "Download PNG" calls `mapRef.current?.getCanvas().toBlob(...)` and triggers a download named `rodent-radar-{place|preset}-{YYYYMMDD}.png`.
+- Add a watermark via a second canvas pass: bottom-right `Rodent Radar · cloakd-removals.cloud` in `--activity-low` color.
 
-Each mode is a class on the map shell root (`data-display-mode={mode}`), plus a small style branch in the MapLibre paint config (read mode from state, recompute paint expressions in a `useEffect`). No new components — just conditional class + style branches.
+### Files
 
-## 3. Preset views
+- `src/routes/rodent-radar_.rat-pressure-map.tsx` — restore DisplayModePicker JSX, thread `mode` into AtlasMap, map paint branches, field-view bottom sheet, share menu, `data-map-ready` attr.
+- `src/lib/rodentRadarSearch.ts` — export `placeSearchSchema` (just `mode`) for the slug route.
+- `src/routes/rodent-radar_.place.$slug.tsx` — `validateSearch: zodValidator(placeSearchSchema)`, apply `data-display-mode` on root.
+- `scripts/build-preset-thumbnails.ts` — new.
+- `package.json` — add `playwright` devDep, `tsx` if not present, `prebuild` script.
+- `public/rodent-radar/presets/{winning,seasonal,gaps,your-block}.png` — generated.
+- `src/styles.css` — bottom-sheet animation + watermark color tokens already covered by HC tokens.
 
-Four chips in the top utility bar, each a one-click navigate that writes a full search-state into the URL:
+### Out of scope (per "stop and ship")
 
-1. **Where rats are winning** — `layers=[rodent-activity]`, `window=12mo`, center/zoom framed on top 5 places by activityIndex.
-2. **The seasonal swing** — `layers=[rodent-activity, seasonality]`, `window=90d`, CONUS view.
-3. **Data gaps in America** — `layers=[data-gaps]`, full globe zoom (1.4), shows only `?` markers.
-4. **Your block** — runs `navigator.geolocation.getCurrentPosition()`. On grant: center on lat/lng, zoom 11. On deny / unsupported / timeout: opens a small inline ZIP input (US/Canada FSA). Geocoding is local-only against a static `public/rodent-radar/data/zip-to-place.json` (~40KB, ~50 ZIPs covering only our verified places + their neighbors); ZIP outside coverage → centers on the nearest covered place with a small "nearest covered place: {name}" pill. No external geocoder.
+- Embeddable iframe
+- Programmatic SEO city pages beyond the existing `place.$slug` route
+- New verified cities / freshness badges
+- Server-side preset PNG rendering
 
-Chips render with a tiny PNG thumbnail (40×24) on the left, label on the right. Active preset gets a 1px cyan ring.
+### After this chunk
 
-## 4. Preset thumbnails (Playwright)
-
-New script `scripts/build-preset-thumbnails.ts` runs in `package.json`'s `prebuild`:
-
-- Spins up the dev server on a free port.
-- Launches Playwright (chromium, headless, 1024×640 viewport).
-- For each of the 4 presets, navigates to the preset URL, waits for `data-map-ready="true"` (we'll emit this attribute when MapLibre's `idle` event fires after the basemap+sources settle), screenshots the map canvas at 320×192, downsamples to 80×48 @2x.
-- Writes to `public/rodent-radar/presets/{id}.png`.
-- Adds a `.gitignore` exception so the PNGs commit.
-
-Playwright is dev-only (`bun add -d playwright @playwright/test`). CI/dev-server impact: ~12s added to first build, then cached. If Playwright fails (sandbox without chromium), the chips fall back to a CSS gradient — page never breaks.
-
-## 5. Share view
-
-The existing top-right "Share" icon currently copies the bare URL. Now it:
-- Copies the canonical URL (already correct, since state is in the URL).
-- Optionally generates a PNG of the current map canvas (`map.getCanvas().toBlob()`) and offers a download. Pure client-side, no server.
-
-## Files touched
-
-- `src/routes/rodent-radar_.rat-pressure-map.tsx` — `validateSearch`, mode/preset wiring, chip row, share PNG.
-- `src/lib/rodentRadarSearch.ts` (new) — zod schema + types, exported for the place page to read `mode`.
-- `src/styles.css` — `--activity-*-hc` tokens, `[data-display-mode="field"]` overrides.
-- `src/routes/rodent-radar_.place.$slug.tsx` — read `mode` from search, apply matching theme class.
-- `public/rodent-radar/data/zip-to-place.json` (new) — small ZIP/FSA → placeId lookup, hand-built from the 8 verified cities.
-- `scripts/build-preset-thumbnails.ts` (new), `package.json` prebuild hook.
-- `public/rodent-radar/presets/*.png` (generated).
-
-## Technical notes
-
-- `validateSearch` runs on every navigation; `fallback(...)` is mandatory (per the search-params skill) so bad URLs degrade instead of throwing.
-- Tuple `center` is JSON-serializable, fine for TanStack's default search serializer.
-- `retainSearchParams` lives on the parent `/rodent-radar` route, not root, so the marketing site stays clean.
-- ZIP lookup is fully client-side; no PII leaves the browser, geolocation only used in-memory.
-- All new state mutations go through `navigate({ search: (prev) => ... })` per the search-params skill (function form, never object form).
-
-## Out of scope (still)
-
-Embeddable iframe, push alerts, user accounts, server-side rendering of preset PNGs, programmatic SEO city pages.
-
-## After this chunk
-
-OGW gap closes for real. We will have: globe basemap, vector grammar, 9 cities of verified data + 4 context overlays, per-place citation pages with JSON-LD, and shareable URL state with 4 preset views. Stop point.
+OGW gap closes: globe basemap, vector grammar, 9 verified cities + 4 context overlays, per-place citation pages, shareable URL state, 4 preset views with real thumbnails, PNG export, four display modes including a phone-friendly field mode. Then we publish and pause feature work.
