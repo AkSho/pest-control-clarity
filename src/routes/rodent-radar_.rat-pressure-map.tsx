@@ -70,7 +70,7 @@ import zipToPlaceData from "../../public/rodent-radar/data/zip-to-place.json";
 import { AtlasSidebar, type MetricKey } from "@/components/rodent-radar/AtlasSidebar";
 import { LayerCard, type LayerCardItem } from "@/components/rodent-radar/LayerCard";
 import { AtlasToolbar } from "@/components/rodent-radar/AtlasToolbar";
-import type { ActivityBand as ActivityBandT } from "@/lib/rodentRadar";
+
 
 // z-index ladder so map chrome stops fighting itself.
 const Z = {
