@@ -544,6 +544,7 @@ export const pressureMetricSnapshots: PressureMetricSnapshot[] = [
     confidence: "high",
     confidenceNote: "Direct official rodent inspection dataset.",
     methodologyNote: "Counts are inspection records, not unique rats or unique properties.",
+    provenance: "live",
   },
   {
     id: "manhattan-2026-05-21",
