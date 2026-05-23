@@ -1029,6 +1029,24 @@ function MobileTopBar({
   );
 }
 
+function SatelliteChrome() {
+  return (
+    <div className="pointer-events-none absolute inset-0 select-none text-[0.55rem] font-medium uppercase tracking-[0.28em] text-slate-400/45">
+      <div className="absolute left-4 top-4 flex items-center gap-1.5">
+        <span className="h-1 w-1 rounded-full bg-cyan-300/70" />
+        NOAA-20 · pass 18:42 UTC
+      </div>
+      <div className="absolute right-4 top-4 flex items-center gap-1.5">
+        SENTINEL-1A · ASC 142
+        <span className="h-1 w-1 rounded-full bg-emerald-300/70" />
+      </div>
+      <div className="absolute bottom-4 right-4 text-slate-500/40">
+        lat 39.0°N · lon −88.0°W · globe ortho
+      </div>
+    </div>
+  );
+}
+
 function ConditionsOverlay() {
   return (
     <div className="pointer-events-none absolute inset-0">
