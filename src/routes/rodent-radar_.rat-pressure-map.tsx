@@ -1494,6 +1494,65 @@ function Metric({ label, value }: { label: string; value: string }) {
   );
 }
 
+function LegendSection({
+  title,
+  subtitle,
+  children,
+}: {
+  title: string;
+  subtitle?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="mt-5 first:mt-0">
+      <div className="flex items-baseline justify-between gap-2">
+        <h3 className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-slate-400">
+          {title}
+        </h3>
+        {subtitle ? (
+          <span className="text-[0.55rem] uppercase tracking-wider text-slate-600">{subtitle}</span>
+        ) : null}
+      </div>
+      <div className="mt-2">{children}</div>
+    </section>
+  );
+}
+
+function MetricRow({
+  label,
+  source,
+  value,
+  context,
+  accent = "muted",
+}: {
+  label: string;
+  source: string;
+  value: string;
+  context: string;
+  accent?: "good" | "warn" | "muted";
+}) {
+  const accentClass =
+    accent === "good"
+      ? "text-emerald-200"
+      : accent === "warn"
+        ? "text-rose-200"
+        : "text-slate-100";
+  return (
+    <div className="rounded-lg border border-white/8 bg-white/[0.03] px-3 py-2">
+      <div className="flex items-baseline justify-between gap-3">
+        <div className="min-w-0">
+          <div className="text-[0.65rem] font-semibold uppercase tracking-wider text-slate-400">
+            {label}
+          </div>
+          <div className="mt-0.5 truncate text-[0.6rem] text-slate-500">{source}</div>
+        </div>
+        <div className={`shrink-0 text-base font-semibold tabular-nums ${accentClass}`}>{value}</div>
+      </div>
+      <div className="mt-1 text-[0.7rem] leading-relaxed text-slate-300">{context}</div>
+    </div>
+  );
+}
+
 function compactNumber(value: number) {
   return new Intl.NumberFormat("en-US", {
     notation: "compact",
