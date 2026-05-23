@@ -559,6 +559,7 @@ export const pressureMetricSnapshots: PressureMetricSnapshot[] = [
     confidence: "high",
     confidenceNote: "Direct official rodent inspection dataset.",
     methodologyNote: "Counts are inspection records, not unique rats or unique properties.",
+    provenance: "live",
   },
   {
     id: "bronx-2026-05-21",
@@ -573,6 +574,7 @@ export const pressureMetricSnapshots: PressureMetricSnapshot[] = [
     confidence: "high",
     confidenceNote: "Direct official rodent inspection dataset.",
     methodologyNote: "Counts are inspection records, not unique rats or unique properties.",
+    provenance: "live",
   },
   {
     id: "queens-2026-05-21",
@@ -587,6 +589,7 @@ export const pressureMetricSnapshots: PressureMetricSnapshot[] = [
     confidence: "high",
     confidenceNote: "Direct official rodent inspection dataset.",
     methodologyNote: "Counts are inspection records, not unique rats or unique properties.",
+    provenance: "live",
   },
   {
     id: "staten-island-2026-05-21",
@@ -601,6 +604,7 @@ export const pressureMetricSnapshots: PressureMetricSnapshot[] = [
     confidence: "high",
     confidenceNote: "Direct official rodent inspection dataset.",
     methodologyNote: "Counts are inspection records, not unique rats or unique properties.",
+    provenance: "live",
   },
   {
     id: "san-francisco-2026-05-21",
@@ -615,6 +619,7 @@ export const pressureMetricSnapshots: PressureMetricSnapshot[] = [
     confidence: "medium",
     confidenceNote: "Official 311 cases filtered by rodent/vermin terms; category also includes insect infestation wording.",
     methodologyNote: "Counts are public service requests, not unique rats or confirmed infestations.",
+    provenance: "live",
   },
   {
     id: "chicago-2026-05-23",
@@ -644,6 +649,7 @@ export const pressureMetricSnapshots: PressureMetricSnapshot[] = [
     confidence: "high",
     confidenceNote: "Direct official Boston 311 rodent-taxonomy service requests.",
     methodologyNote: "Counts are public service requests, not unique rats or confirmed infestations.",
+    provenance: "seeded",
   },
   {
     id: "washington-dc-2026-05-23",
@@ -658,49 +664,18 @@ export const pressureMetricSnapshots: PressureMetricSnapshot[] = [
     confidence: "high",
     confidenceNote: "Direct official DC 311 rodent inspection and treatment service requests.",
     methodologyNote: "Counts are public service requests, not unique rats or confirmed infestations.",
+    provenance: "seeded",
   },
 ];
 
 export const watchlistPlaces: WatchlistPlace[] = [
-  {
-    placeId: "jersey-city",
-    reason: "Jersey City has an open data portal, but no clean citywide rodent complaint or inspection dataset was confirmed in the portal review.",
-    reviewedSourceName: "Jersey City Open Data",
-    reviewedSourceUrl: JERSEY_CITY_OPEN_DATA_URL,
-    reviewedOn: "2026-05-21",
-    reviewNote: "Portal search did not confirm a citywide 311, rodent, vermin, or health-inspection dataset suitable for pressure scoring.",
-  },
-  {
-    placeId: "newark",
-    reason: "Newark has official health/rodent-control information, but no accessible public rodent complaint dataset was confirmed for scoring.",
-    reviewedSourceName: "Newark Open Data",
-    reviewedSourceUrl: NEWARK_OPEN_DATA_URL,
-    reviewedOn: "2026-05-21",
-    reviewNote: "The open-data endpoint could not be audited from this environment, and no filterable rodent complaint dataset was confirmed.",
-  },
-  {
-    placeId: "oakland",
-    reason: "Oakland publishes official 311-style service requests, but the reviewed category and description fields did not expose a clean rodent/vermin request type.",
-    reviewedSourceName: "Service requests received by the Oakland Call Center (OAK 311)",
-    reviewedSourceUrl: OAKLAND_311_SOURCE_URL,
-    reviewedOn: "2026-05-21",
-    reviewNote: "Reviewed DESCRIPTION and REQCATEGORY fields; keyword matches were false positives rather than a reliable rodent taxonomy.",
-  },
-  {
-    placeId: "san-jose",
-    reason: "San Jose publishes official 311 service request CSVs, but the reviewed service-type/category fields did not include a rodent or vermin type.",
-    reviewedSourceName: "San Jose 311 Service Request Data",
-    reviewedSourceUrl: SAN_JOSE_311_SOURCE_URL,
-    reviewedOn: "2026-05-21",
-    reviewNote: "Reviewed current service type and category values; no rodent, rat, mice, or vermin service type was found.",
-  },
   {
     placeId: "philadelphia",
     reason: "Philadelphia publishes 311 service & information requests via OpenDataPhilly, but the public_cases_fc service_name field does not include a dedicated rodent/rat/vermin service type usable for scoring.",
     reviewedSourceName: "OpenDataPhilly — 311 Service & Information Requests",
     reviewedSourceUrl: PHILLY_311_URL,
     reviewedOn: "2026-05-23",
-    reviewNote: "Carto SQL probe of service_name returned no rodent/rat/vermin/mice/pest types in the last 12 months; rodent-language only appears as free-text in the subject field, which is not a stable taxonomy.",
+    reviewNote: "Carto SQL probe of service_name returned no rodent/rat/vermin/mice/pest types in the last 12 months; rodent-language only appears as free-text in the subject field, which is not a stable taxonomy. Housing-inspection feed (L&I) is the planned proxy.",
   },
   {
     placeId: "seattle",
@@ -708,7 +683,7 @@ export const watchlistPlaces: WatchlistPlace[] = [
     reviewedSourceName: "Seattle Find It, Fix It Service Requests",
     reviewedSourceUrl: SEATTLE_FIF_URL,
     reviewedOn: "2026-05-23",
-    reviewNote: "Reviewed dataset categories; no rodent / rat / vermin service type. Sewer baiting points are a separate, narrow operations dataset and not citywide complaints.",
+    reviewNote: "Reviewed dataset categories; no rodent / rat / vermin service type. King County restaurant-inspection violations are the planned proxy.",
   },
   {
     placeId: "toronto",
@@ -716,7 +691,7 @@ export const watchlistPlaces: WatchlistPlace[] = [
     reviewedSourceName: "Toronto Open Data — 311 Service Requests (Customer Initiated)",
     reviewedSourceUrl: TORONTO_311_URL,
     reviewedOn: "2026-05-23",
-    reviewNote: "Reviewed 311 service request categories; no auditable rodent or vermin service type was found suitable for activity scoring.",
+    reviewNote: "Reviewed 311 service request categories; no auditable rodent or vermin service type was found. DineSafe restaurant inspections are the planned proxy.",
   },
 ];
 

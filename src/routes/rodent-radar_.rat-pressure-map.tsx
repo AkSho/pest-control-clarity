@@ -30,6 +30,8 @@ import {
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { activityBandLabels, type ActivityBand } from "@/lib/rodentRadar";
 import {
+  ahsEstimatePins,
+  AHS_META,
   comparePlaceToCohort,
   exposureGuidance,
   formatCount,
@@ -37,10 +39,20 @@ import {
   getAtlasSourceCards,
   getColonyGrowthProjection,
   getRatPressureResults,
+  METRIC_EXPLAINERS,
+  plainBandLede,
+  plainColonyBlurb,
+  plainConfidence,
+  plainRecentVsCohortLabel,
+  plainTrendLabel,
   PRESSURE_BAND_THRESHOLDS,
+  PROVENANCE_CAVEATS,
+  PROVENANCE_LABELS,
   unavailableRatPressureGeos,
+  type AhsEstimatePin,
   type AtlasLayerDefinition,
   type PlaceCohortComparison,
+  type Provenance,
   type RatPressureResult,
   type UnavailableRatPressureGeo,
 } from "@/lib/ratPressureMap";
@@ -58,12 +70,12 @@ import zipToPlaceData from "../../public/rodent-radar/data/zip-to-place.json";
 
 // z-index ladder so map chrome stops fighting itself.
 const Z = {
-  rail: 20,
-  presets: 22,
-  topTools: 30,
-  drawer: 30,
-  fieldChip: 40,
-  popover: 50,
+  mapControls: 20,
+  rail: 30,
+  topTools: 35,
+  drawer: 40,
+  fieldChip: 45,
+  popover: 60,
 } as const;
 
 // One-line answer to "what am I looking at?" — changes with active preset.
@@ -239,6 +251,7 @@ function RodentRadarAtlasPage() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [zipNotice, setZipNotice] = useState<string | null>(null);
   const [shareOpen, setShareOpen] = useState(false);
+  const [selectedAhs, setSelectedAhs] = useState<AhsEstimatePin | null>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
 
   const selected = useMemo(
@@ -250,9 +263,18 @@ function RodentRadarAtlasPage() {
     [search.gap],
   );
   const activeSet = useMemo(() => new Set<AtlasLayerId>(activeLayers), [activeLayers]);
-  const filteredPlaces = [...verified, ...unavailableRatPressureGeos].filter((place) =>
+  const filteredPlaces = [...verified, ...ahsEstimatePins, ...unavailableRatPressureGeos].filter((place) =>
     `${place.name} ${place.region}`.toLowerCase().includes(query.toLowerCase()),
   );
+
+  // Honest count for rail header: split by what kind of data backs each pin.
+  const dataMix = useMemo(() => {
+    const live = verified.filter((v) => v.provenance === "live").length;
+    const seeded = verified.filter((v) => v.provenance === "seeded").length;
+    const estimates = ahsEstimatePins.length;
+    const gaps = unavailableRatPressureGeos.length;
+    return { live, seeded, estimates, gaps };
+  }, [verified]);
 
   const updateSearch = useCallback(
     (patch: Partial<RodentRadarSearch>) => {
@@ -440,12 +462,19 @@ function RodentRadarAtlasPage() {
       <AtlasMap
         verified={verified}
         unavailable={unavailableRatPressureGeos}
+        ahsPins={ahsEstimatePins}
         selected={selected}
         selectedGap={selectedGap}
+        selectedAhs={selectedAhs}
         activeLayers={activeSet as Set<AtlasLayerId>}
         mode={mode}
-        onSelectVerified={selectVerified}
-        onSelectGap={selectGap}
+        onSelectVerified={(c) => { setSelectedAhs(null); selectVerified(c); }}
+        onSelectGap={(c) => { setSelectedAhs(null); selectGap(c); }}
+        onSelectAhs={(c) => {
+          setSelectedAhs(c);
+          setDrawerOpen(true);
+          updateSearch({ gap: undefined, preset: undefined });
+        }}
         mapRef={mapRef}
       />
 
@@ -489,7 +518,10 @@ function RodentRadarAtlasPage() {
               {LEDE_BY_PRESET[(activePreset ?? "default") as PresetId | "default"]}
             </p>
             <p className="mt-1 text-[0.65rem] uppercase tracking-[0.16em] text-slate-500">
-              {verified.length} verified areas · updated monthly
+              {dataMix.live} live · {dataMix.seeded} sample · {dataMix.estimates} estimate · {dataMix.gaps} gap
+            </p>
+            <p className="mt-1 text-[0.6rem] leading-relaxed text-slate-500">
+              Live = official city open data. Sample = published figure being re-verified. Estimate = U.S. household survey. Gap = no clean dataset yet.
             </p>
           </div>
 
@@ -613,48 +645,78 @@ function RodentRadarAtlasPage() {
             {/* Place list at the bottom, scrolls within the rail */}
             <LegendSection title={`All areas (${filteredPlaces.length})`} subtitle="Click to focus">
               <div className="mt-1 grid gap-px">
-                {filteredPlaces.map((place) =>
-                  "last12MonthsCount" in place ? (
+                {filteredPlaces.map((place) => {
+                  if ("last12MonthsCount" in place) {
+                    return (
+                      <button
+                        key={place.id}
+                        type="button"
+                        onClick={() => selectVerified(place)}
+                        className={`flex items-center justify-between gap-2 rounded px-2 py-1.5 text-left text-xs transition ${
+                          selected.id === place.id && !selectedGap && !selectedAhs
+                            ? "bg-cyan-300/10 text-cyan-100"
+                            : "text-slate-300 hover:bg-white/[0.04]"
+                        }`}
+                      >
+                        <span className="flex items-center gap-2 truncate">
+                          <span
+                            className="h-1.5 w-1.5 shrink-0 rounded-full"
+                            style={{ background: markerTone(place.activityBand, mode) }}
+                          />
+                          <span className="truncate">{place.shortName}</span>
+                        </span>
+                        <span className="shrink-0 text-[0.6rem] uppercase tracking-wider text-slate-500">
+                          {place.provenance === "seeded" ? "sample" : activityBandLabels[place.activityBand]}
+                        </span>
+                      </button>
+                    );
+                  }
+                  if ("rodentEvidencePercent" in place) {
+                    return (
+                      <button
+                        key={place.id}
+                        type="button"
+                        onClick={() => {
+                          setSelectedAhs(place);
+                          setDrawerOpen(true);
+                          updateSearch({ gap: undefined, preset: undefined });
+                        }}
+                        className={`flex items-center justify-between gap-2 rounded px-2 py-1.5 text-left text-xs transition ${
+                          selectedAhs?.id === place.id
+                            ? "bg-slate-300/10 text-slate-100"
+                            : "text-slate-300 hover:bg-white/[0.04]"
+                        }`}
+                      >
+                        <span className="flex items-center gap-2 truncate">
+                          <span className="h-2 w-2 shrink-0 rounded-full border border-slate-300/70" />
+                          <span className="truncate">{place.shortName}</span>
+                        </span>
+                        <span className="shrink-0 text-[0.6rem] uppercase tracking-wider text-slate-500">
+                          ~{place.rodentEvidencePercent}% survey
+                        </span>
+                      </button>
+                    );
+                  }
+                  const gap = place as UnavailableRatPressureGeo;
+                  return (
                     <button
-                      key={place.id}
+                      key={gap.id}
                       type="button"
-                      onClick={() => selectVerified(place)}
+                      onClick={() => { setSelectedAhs(null); selectGap(gap); }}
                       className={`flex items-center justify-between gap-2 rounded px-2 py-1.5 text-left text-xs transition ${
-                        selected.id === place.id && !selectedGap
-                          ? "bg-cyan-300/10 text-cyan-100"
-                          : "text-slate-300 hover:bg-white/[0.04]"
-                      }`}
-                    >
-                      <span className="flex items-center gap-2 truncate">
-                        <span
-                          className="h-1.5 w-1.5 shrink-0 rounded-full"
-                          style={{ background: markerTone(place.activityBand, mode) }}
-                        />
-                        <span className="truncate">{place.shortName}</span>
-                      </span>
-                      <span className="shrink-0 text-[0.6rem] uppercase tracking-wider text-slate-500">
-                        {activityBandLabels[place.activityBand]}
-                      </span>
-                    </button>
-                  ) : (
-                    <button
-                      key={place.id}
-                      type="button"
-                      onClick={() => selectGap(place)}
-                      className={`flex items-center justify-between gap-2 rounded px-2 py-1.5 text-left text-xs transition ${
-                        selectedGap?.id === place.id
+                        selectedGap?.id === gap.id
                           ? "bg-slate-300/10 text-slate-100"
                           : "text-slate-400 hover:bg-white/[0.04]"
                       }`}
                     >
                       <span className="flex items-center gap-2 truncate">
                         <span className="grid h-3 w-3 shrink-0 place-items-center rounded-full border border-slate-500/60 text-[0.55rem] font-bold text-slate-400">?</span>
-                        <span className="truncate">{place.shortName}</span>
+                        <span className="truncate">{gap.shortName}</span>
                       </span>
                       <span className="shrink-0 text-[0.6rem] uppercase tracking-wider text-slate-500">no data</span>
                     </button>
-                  ),
-                )}
+                  );
+                })}
               </div>
             </LegendSection>
           </div>
@@ -704,8 +766,10 @@ function RodentRadarAtlasPage() {
         open={drawerOpen}
         selected={selected}
         selectedGap={selectedGap}
+        selectedAhs={selectedAhs}
         activeLayers={activeSet}
         onCloseGap={() => updateSearch({ gap: undefined })}
+        onCloseAhs={() => setSelectedAhs(null)}
         onClose={() => setDrawerOpen(false)}
         onOpen={() => setDrawerOpen(true)}
       />
@@ -727,22 +791,28 @@ function RodentRadarAtlasPage() {
 function AtlasMap({
   verified,
   unavailable,
+  ahsPins,
   selected,
   selectedGap,
+  selectedAhs,
   activeLayers,
   mode,
   onSelectVerified,
   onSelectGap,
+  onSelectAhs,
   mapRef: externalMapRef,
 }: {
   verified: RatPressureResult[];
   unavailable: UnavailableRatPressureGeo[];
+  ahsPins: AhsEstimatePin[];
   selected: RatPressureResult;
   selectedGap: UnavailableRatPressureGeo | null;
+  selectedAhs: AhsEstimatePin | null;
   activeLayers: Set<AtlasLayerId>;
   mode: DisplayMode;
   onSelectVerified: (city: RatPressureResult) => void;
   onSelectGap: (city: UnavailableRatPressureGeo) => void;
+  onSelectAhs: (city: AhsEstimatePin) => void;
   mapRef?: React.MutableRefObject<MapLibreMap | null>;
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -817,6 +887,10 @@ function AtlasMap({
           type: "geojson",
           data: { type: "FeatureCollection", features: [] },
         });
+        map.addSource("rodent-ahs", {
+          type: "geojson",
+          data: { type: "FeatureCollection", features: [] },
+        });
 
         // Outer colony-growth ring (rendered first, behind the dot)
         map.addLayer({
@@ -838,7 +912,7 @@ function AtlasMap({
           },
         });
 
-        // Soft glow halo
+        // Soft glow halo. Sample/seeded snapshots use a dashed-feeling lower opacity.
         map.addLayer({
           id: "rodent-activity-glow",
           type: "circle",
@@ -851,12 +925,12 @@ function AtlasMap({
               10, ["+", 24, ["*", ["get", "activityIndex"], 0.22]],
             ],
             "circle-color": ["get", "color"],
-            "circle-opacity": ["*", 0.22, ["get", "confidence"]],
+            "circle-opacity": ["*", ["case", ["==", ["get", "provenance"], "seeded"], 0.12, 0.22], ["get", "confidence"]],
             "circle-blur": 0.9,
           },
         });
 
-        // Solid activity dot
+        // Solid activity dot — outlined differently for live vs seeded.
         map.addLayer({
           id: "rodent-activity-dot",
           type: "circle",
@@ -868,14 +942,43 @@ function AtlasMap({
               6, ["+", 5.5, ["*", ["get", "activityIndex"], 0.045]],
               10, ["+", 9, ["*", ["get", "activityIndex"], 0.08]],
             ],
-            "circle-color": ["get", "color"],
+            "circle-color": ["case", ["==", ["get", "provenance"], "seeded"], "#0b0f1a", ["get", "color"]],
             "circle-opacity": ["max", 0.7, ["get", "confidence"]],
-            "circle-stroke-color": "#0b0f1a",
-            "circle-stroke-width": 1,
+            "circle-stroke-color": ["get", "color"],
+            "circle-stroke-width": ["case", ["==", ["get", "provenance"], "seeded"], 1.8, 1],
           },
         });
 
-        // Data-gap "?" symbol
+        // AHS estimate pin — hollow ring (different shape so it doesn't read as live).
+        map.addLayer({
+          id: "rodent-ahs-ring",
+          type: "circle",
+          source: "rodent-ahs",
+          paint: {
+            "circle-radius": [
+              "interpolate", ["linear"], ["zoom"],
+              2, 6,
+              6, 9,
+              10, 14,
+            ],
+            "circle-color": "transparent",
+            "circle-stroke-color": "#94a3b8",
+            "circle-stroke-width": 1.6,
+            "circle-stroke-opacity": 0.85,
+          },
+        });
+        map.addLayer({
+          id: "rodent-ahs-dot",
+          type: "circle",
+          source: "rodent-ahs",
+          paint: {
+            "circle-radius": 2.2,
+            "circle-color": "#cbd5e1",
+            "circle-opacity": 0.85,
+          },
+        });
+
+        // Data-gap "?" symbol — only for places where we have nothing yet.
         map.addLayer({
           id: "rodent-gaps-symbol",
           type: "symbol",
@@ -908,10 +1011,19 @@ function AtlasMap({
           const city = unavailable.find((c) => c.id === id);
           if (city) onSelectGap(city);
         };
+        const handleAhsClick = (e: MapLibreLayerMouseEvent) => {
+          const f = e.features?.[0];
+          if (!f) return;
+          const id = f.properties?.id as string | undefined;
+          const pin = ahsPins.find((c) => c.id === id);
+          if (pin) onSelectAhs(pin);
+        };
         map.on("click", "rodent-activity-dot", handleVerifiedClick);
         map.on("click", "rodent-activity-glow", handleVerifiedClick);
         map.on("click", "rodent-gaps-symbol", handleGapClick);
-        for (const lid of ["rodent-activity-dot", "rodent-activity-glow", "rodent-gaps-symbol"]) {
+        map.on("click", "rodent-ahs-ring", handleAhsClick);
+        map.on("click", "rodent-ahs-dot", handleAhsClick);
+        for (const lid of ["rodent-activity-dot", "rodent-activity-glow", "rodent-gaps-symbol", "rodent-ahs-ring", "rodent-ahs-dot"]) {
           map.on("mouseenter", lid, () => { map.getCanvas().style.cursor = "pointer"; });
           map.on("mouseleave", lid, () => { map.getCanvas().style.cursor = ""; });
         }
@@ -934,7 +1046,7 @@ function AtlasMap({
       mapRef.current?.remove();
       mapRef.current = null;
     };
-  }, [onSelectGap, onSelectVerified, unavailable, verified]);
+  }, [ahsPins, onSelectAhs, onSelectGap, onSelectVerified, unavailable, verified]);
 
   // Push data into the vector sources whenever inputs change
   useEffect(() => {
@@ -942,13 +1054,15 @@ function AtlasMap({
     if (!map || !ready) return;
     const activitySrc = map.getSource("rodent-activity") as MapLibreGeoJSONSource | undefined;
     const gapsSrc = map.getSource("rodent-gaps") as MapLibreGeoJSONSource | undefined;
-    if (!activitySrc || !gapsSrc) return;
+    const ahsSrc = map.getSource("rodent-ahs") as MapLibreGeoJSONSource | undefined;
+    if (!activitySrc || !gapsSrc || !ahsSrc) return;
 
     const showActivity = activeLayers.has("rodent-activity");
     // In field mode, suppress ancillary overlays for a calmer single-layer read
     const fieldMode = mode === "field";
     const showRing = !fieldMode && activeLayers.has("colony-growth");
     const showGaps = !fieldMode && activeLayers.has("data-gaps");
+    const showAhs = !fieldMode && showActivity;
 
     activitySrc.setData({
       type: "FeatureCollection",
@@ -963,6 +1077,7 @@ function AtlasMap({
               confidence: Math.min(1, Math.max(0.45, city.last12MonthsCount > 0 ? 0.95 : 0.6)),
               color: markerTone(city.activityBand, mode),
               showRing,
+              provenance: city.provenance ?? "live",
             },
           }))
         : [],
@@ -978,7 +1093,18 @@ function AtlasMap({
           }))
         : [],
     });
-  }, [activeLayers, mode, ready, unavailable, verified]);
+
+    ahsSrc.setData({
+      type: "FeatureCollection",
+      features: showAhs
+        ? ahsPins.map((pin) => ({
+            type: "Feature",
+            geometry: { type: "Point", coordinates: [pin.lng, pin.lat] },
+            properties: { id: pin.id, name: pin.name, pct: pin.rodentEvidencePercent },
+          }))
+        : [],
+    });
+  }, [activeLayers, ahsPins, mode, ready, unavailable, verified]);
 
   // Per-mode basemap paint: desaturate in HC, hide labels in lines-off/field
   useEffect(() => {
@@ -994,7 +1120,6 @@ function AtlasMap({
         map.setPaintProperty("cartoDark", "raster-contrast", 0);
         map.setPaintProperty("cartoDark", "raster-opacity", 0.85);
       }
-      // Field mode also bumps hitbox sizes via a runtime stroke widening
       const widen = mode === "field" ? 1.4 : 1;
       map.setPaintProperty("rodent-activity-dot", "circle-stroke-width", 1 * widen);
     } catch {
@@ -1004,13 +1129,13 @@ function AtlasMap({
 
   useEffect(() => {
     if (!ready) return;
-    const target = selectedGap ?? selected;
+    const target = selectedAhs ?? selectedGap ?? selected;
     mapRef.current?.flyTo({
       center: [target.lng, target.lat],
       zoom: target.region === "NYC" || target.region === "NY/NJ metro" ? 8.7 : 9.25,
       essential: true,
     });
-  }, [ready, selected, selectedGap]);
+  }, [ready, selected, selectedGap, selectedAhs]);
 
   return (
     <div className="absolute inset-0">
@@ -1067,38 +1192,86 @@ function SelectedDrawer({
   open,
   selected,
   selectedGap,
+  selectedAhs,
   activeLayers,
   onCloseGap,
+  onCloseAhs,
   onClose,
   onOpen,
 }: {
   open: boolean;
   selected: RatPressureResult;
   selectedGap: UnavailableRatPressureGeo | null;
+  selectedAhs: AhsEstimatePin | null;
   activeLayers: Set<AtlasLayerId>;
   onCloseGap: () => void;
+  onCloseAhs: () => void;
   onClose: () => void;
   onOpen: () => void;
 }) {
-  // Closed-by-default: render a small pill until the user opens the drawer.
   if (!open) {
     return (
       <button
         type="button"
         onClick={onOpen}
-        className="absolute bottom-4 right-4 z-20 inline-flex items-center gap-2 rounded-full border border-white/10 bg-slate-950/80 px-3 py-2 text-[0.7rem] font-medium text-slate-400 shadow-lg backdrop-blur transition hover:border-cyan-300/40 hover:text-cyan-100"
+        style={{ zIndex: Z.drawer }}
+        className="absolute bottom-4 right-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-slate-950/80 px-3 py-2 text-[0.7rem] font-medium text-slate-400 shadow-lg backdrop-blur transition hover:border-cyan-300/40 hover:text-cyan-100"
       >
         <CircleDot className="h-3.5 w-3.5" /> click a marker for details
       </button>
     );
   }
 
+  if (selectedAhs) {
+    return (
+      <aside style={{ zIndex: Z.drawer }} className="absolute bottom-4 right-4 w-[min(380px,calc(100vw-2rem))] rounded-xl border border-white/10 bg-slate-950/92 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <div className="text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-slate-400">
+              {PROVENANCE_LABELS["ahs-estimate"]}
+            </div>
+            <h2 className="mt-0.5 truncate text-xl font-semibold tracking-tight">{selectedAhs.name}</h2>
+            <p className="mt-0.5 text-[0.7rem] text-slate-500">{selectedAhs.metroLabel} · AHS {selectedAhs.ahsYear}</p>
+          </div>
+          <button type="button" onClick={() => { onCloseAhs(); onClose(); }} className="rounded p-1 text-slate-500 hover:text-white" aria-label="Close">
+            <X className="h-3.5 w-3.5" />
+          </button>
+        </div>
+
+        <div className="mt-3 rounded-lg border border-slate-300/15 bg-white/[0.03] px-3 py-3">
+          <div className="text-[0.6rem] font-semibold uppercase tracking-wider text-slate-400">
+            Households reporting rodents
+          </div>
+          <div className="mt-1 text-3xl font-semibold text-slate-100 tabular-nums">
+            ~{selectedAhs.rodentEvidencePercent}%
+          </div>
+          <p className="mt-1 text-[0.7rem] leading-relaxed text-slate-400">
+            {METRIC_EXPLAINERS.ahsPercent}
+          </p>
+        </div>
+
+        <p className="mt-3 text-xs leading-relaxed text-slate-300">
+          No city-level rodent dataset exists for {selectedAhs.shortName}. The number above is a metro-area household survey, not a city report count.
+        </p>
+        <p className="mt-2 text-[0.65rem] leading-relaxed text-slate-500">
+          {PROVENANCE_CAVEATS["ahs-estimate"]}
+        </p>
+
+        <div className="mt-3 border-t border-white/8 pt-3">
+          <a href={selectedAhs.ahsTableUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs font-semibold text-cyan-200 hover:underline">
+            Open AHS source <ExternalLink className="h-3 w-3" />
+          </a>
+        </div>
+      </aside>
+    );
+  }
+
   if (selectedGap) {
     return (
-      <aside className="absolute bottom-4 right-4 z-20 w-[min(360px,calc(100vw-2rem))] rounded-xl border border-white/10 bg-slate-950/88 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl">
+      <aside style={{ zIndex: Z.drawer }} className="absolute bottom-4 right-4 w-[min(360px,calc(100vw-2rem))] rounded-xl border border-white/10 bg-slate-950/88 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <div className="text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-slate-500">Data gap</div>
+            <div className="text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-slate-500">No data yet</div>
             <h2 className="mt-0.5 text-xl font-semibold tracking-tight">{selectedGap.name}</h2>
             <p className="mt-0.5 text-xs text-slate-400">{selectedGap.region}</p>
           </div>
@@ -1106,7 +1279,10 @@ function SelectedDrawer({
             <X className="h-3.5 w-3.5" />
           </button>
         </div>
-        <p className="mt-3 text-xs leading-relaxed text-slate-300">{selectedGap.reason}</p>
+        <p className="mt-3 text-xs leading-relaxed text-slate-300">
+          We could not find a clean public rodent dataset for {selectedGap.shortName}. We list it so the gap stays visible.
+        </p>
+        <p className="mt-2 text-[0.65rem] leading-relaxed text-slate-500">{selectedGap.reason}</p>
         <div className="mt-3 rounded-lg border border-white/8 bg-white/[0.03] p-3">
           <div className="text-[0.6rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Source reviewed</div>
           <div className="mt-1 text-sm font-medium">{selectedGap.reviewedSourceName ?? "Source review needed"}</div>
@@ -1124,6 +1300,8 @@ function SelectedDrawer({
   const colony = getColonyGrowthProjection(selected);
   const cohort = comparePlaceToCohort(selected);
   const dot = markerTone(selected.activityBand);
+  const provenance: Provenance = selected.provenance ?? "live";
+  const colonyPlain = plainColonyBlurb(selected.shortName, selected.activityBand);
 
   return (
     <aside
@@ -1158,24 +1336,43 @@ function SelectedDrawer({
         </div>
       </div>
 
+      <p className="mt-3 text-sm leading-relaxed text-slate-200">
+        {plainBandLede(selected.shortName, selected.activityBand, selected.trendPercent)}
+      </p>
+
+      <div className="mt-1 flex items-center gap-2">
+        <span className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[0.6rem] font-semibold uppercase tracking-wider ${
+          provenance === "live"
+            ? "border-emerald-300/40 bg-emerald-400/10 text-emerald-200"
+            : provenance === "seeded"
+              ? "border-yellow-300/40 bg-yellow-400/10 text-yellow-200"
+              : "border-slate-300/30 bg-white/[0.04] text-slate-300"
+        }`}>
+          {PROVENANCE_LABELS[provenance]}
+        </span>
+      </div>
+      <p className="mt-1 text-[0.65rem] leading-relaxed text-slate-500">
+        {PROVENANCE_CAVEATS[provenance]}
+      </p>
+
       <div className="mt-3 grid gap-2.5">
         <MetricRow
           label="Reports last 12 months"
-          source={selected.sourceName}
+          source={METRIC_EXPLAINERS.last12MonthsCount}
           value={formatCount(selected.last12MonthsCount)}
           context={cohort.vsMedianLabel}
         />
         <MetricRow
           label="Reports last 90 days"
-          source={`${selected.recentSharePercent.toFixed(1)}% of yearly volume`}
+          source={METRIC_EXPLAINERS.recent90DayCount}
           value={formatCount(selected.recent90DayCount)}
-          context={cohort.recentVsCohortLabel}
+          context={plainRecentVsCohortLabel(selected.recentSharePercent, cohort.percentile)}
         />
         <MetricRow
           label="Year-over-year change"
-          source="vs previous 12 months"
+          source={METRIC_EXPLAINERS.trendPercent}
           value={`${selected.trendPercent > 0 ? "+" : ""}${selected.trendPercent}%`}
-          context={cohort.trendLabel}
+          context={plainTrendLabel(selected.trendPercent)}
           accent={
             selected.trendPercent >= 5
               ? "warn"
@@ -1189,18 +1386,17 @@ function SelectedDrawer({
       {activeLayers.has("colony-growth") ? (
         <div className="mt-3 rounded-lg border border-purple-300/15 bg-purple-300/[0.06] p-3">
           <div className="flex items-center justify-between gap-2">
-            <div className="text-xs font-semibold text-purple-100">Colony growth (modeled)</div>
+            <div className="text-xs font-semibold text-purple-100">What this could mean</div>
             <div className="text-[0.55rem] uppercase tracking-wider text-purple-200/70">estimate</div>
           </div>
-          <p className="mt-1.5 text-xs leading-relaxed text-slate-300">
-            {selected.shortName} is showing a {colony.estimateRange} trajectory.
-          </p>
-          <p className="mt-1 text-[0.6rem] leading-relaxed text-slate-500">{colony.disclaimer}</p>
+          <p className="mt-1.5 text-xs leading-relaxed text-slate-200">{colonyPlain.headline}</p>
+          <p className="mt-1 text-xs leading-relaxed text-slate-400">{colonyPlain.body}</p>
+          <p className="mt-1 text-[0.6rem] leading-relaxed text-slate-500">{colonyPlain.disclaimer ?? colony.disclaimer}</p>
         </div>
       ) : null}
 
       <div className="mt-3 border-t border-white/8 pt-3 text-[0.65rem] text-slate-500">
-        Confidence: <span className="text-slate-300">{selected.confidence}</span> · {selected.confidenceNote}
+        {plainConfidence(selected.confidence)} · {selected.confidenceNote}
       </div>
       <div className="mt-2 flex items-center justify-between gap-3">
         <Link
@@ -1217,6 +1413,7 @@ function SelectedDrawer({
     </aside>
   );
 }
+
 
 function useLiveCounter() {
   // Deterministic time-based fake until real telemetry is wired.
