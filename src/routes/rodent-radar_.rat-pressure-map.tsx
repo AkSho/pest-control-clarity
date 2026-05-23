@@ -812,6 +812,16 @@ function AtlasMap({
     }
   }, [mode, ready]);
 
+  useEffect(() => {
+    if (!ready) return;
+    const target = selectedGap ?? selected;
+    mapRef.current?.flyTo({
+      center: [target.lng, target.lat],
+      zoom: target.region === "NYC" || target.region === "NY/NJ metro" ? 8.7 : 9.25,
+      essential: true,
+    });
+  }, [ready, selected, selectedGap]);
+
   return (
     <div className="absolute inset-0">
       <div ref={containerRef} className="h-full w-full" />
