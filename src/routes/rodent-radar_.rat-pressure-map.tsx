@@ -213,6 +213,8 @@ function RodentRadarAtlasPage() {
   const [utilityPanel, setUtilityPanel] = useState<UtilityPanel>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [zipNotice, setZipNotice] = useState<string | null>(null);
+  const [shareOpen, setShareOpen] = useState(false);
+  const mapRef = useRef<MapLibreMap | null>(null);
 
   const selected = useMemo(
     () => verified.find((c) => c.id === search.place) ?? verified[0],
