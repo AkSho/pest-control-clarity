@@ -221,7 +221,7 @@ function RodentRadarAtlasPage() {
     () => unavailableRatPressureGeos.find((c) => c.id === search.gap) ?? null,
     [search.gap],
   );
-  const activeSet = useMemo(() => new Set(activeLayers), [activeLayers]);
+  const activeSet = useMemo(() => new Set<AtlasLayerId>(activeLayers), [activeLayers]);
   const filteredPlaces = [...verified, ...unavailableRatPressureGeos].filter((place) =>
     `${place.name} ${place.region}`.toLowerCase().includes(query.toLowerCase()),
   );
