@@ -384,11 +384,6 @@ function RodentRadarAtlasPage() {
   const mapGaps = showCoverage.gaps ? unavailableRatPressureGeos : [];
   const mapAhs = showCoverage.estimates ? ahsEstimatePins : [];
 
-  // Reference `metric` so the dependency stays tracked — wiring metric into
-  // the marker scaling happens in a follow-up loop, but storing the choice in
-  // URL is already shareable via the toolbar.
-  void metric;
-
   return (
     <div className="h-screen overflow-hidden bg-[#05080d] text-slate-100">
       <AtlasMap
@@ -400,11 +395,13 @@ function RodentRadarAtlasPage() {
         selectedAhs={selectedAhs}
         activeLayers={activeSet as Set<AtlasLayerId>}
         mode={mode}
+        metric={metric}
         onSelectVerified={selectVerified}
         onSelectGap={selectGap}
         onSelectAhs={handleSelectAhs}
         mapRef={mapRef}
       />
+
 
       <AtlasSidebar
         metric={metric}
