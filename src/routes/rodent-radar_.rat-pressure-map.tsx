@@ -834,6 +834,73 @@ function AtlasMap({
           },
         });
 
+        // ============ PER-REPORT LAYER (the new primary unit) ============
+        // Clustered point source — one feature = one filed report.
+        // At low zoom they collapse into count bubbles (real quantity);
+        // at zoom ≥ 13 each report renders as its own colored dot (recency).
+        map.addSource("rodent-reports", {
+          type: "geojson",
+          data: { type: "FeatureCollection", features: [] },
+          cluster: true,
+          clusterRadius: 40,
+          clusterMaxZoom: 12,
+        });
+
+        // Cluster bubbles — size = log(point_count), cyan with translucent halo
+        map.addLayer({
+          id: "rodent-reports-clusters",
+          type: "circle",
+          source: "rodent-reports",
+          filter: ["has", "point_count"],
+          paint: {
+            "circle-radius": CLUSTER_RADIUS_EXPRESSION as unknown as maplibregl.ExpressionSpecification,
+            "circle-color": "#22d3ee",
+            "circle-opacity": 0.18,
+            "circle-stroke-color": "#67e8f9",
+            "circle-stroke-width": 1.25,
+            "circle-stroke-opacity": 0.85,
+          },
+        });
+
+        // Cluster count label
+        map.addLayer({
+          id: "rodent-reports-cluster-count",
+          type: "symbol",
+          source: "rodent-reports",
+          filter: ["has", "point_count"],
+          layout: {
+            "text-field": ["get", "point_count_abbreviated"],
+            "text-size": 11,
+            "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+          },
+          paint: {
+            "text-color": "#e0fbff",
+            "text-halo-color": "#06121a",
+            "text-halo-width": 1.25,
+          },
+        });
+
+        // Unclustered single reports — recency-colored dot
+        map.addLayer({
+          id: "rodent-reports-points",
+          type: "circle",
+          source: "rodent-reports",
+          filter: ["!", ["has", "point_count"]],
+          paint: {
+            "circle-radius": [
+              "interpolate", ["linear"], ["zoom"],
+              10, 2.5,
+              13, 4,
+              16, 6,
+            ],
+            "circle-color": RECENCY_COLOR_EXPRESSION as unknown as maplibregl.ExpressionSpecification,
+            "circle-opacity": 0.9,
+            "circle-stroke-color": "#06121a",
+            "circle-stroke-width": 0.5,
+          },
+        });
+
+
         const handleVerifiedClick = (e: MapLibreLayerMouseEvent) => {
           const f = e.features?.[0];
           if (!f) return;
