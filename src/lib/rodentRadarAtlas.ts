@@ -629,6 +629,7 @@ export const pressureMetricSnapshots: PressureMetricSnapshot[] = [
     confidence: "high",
     confidenceNote: "Direct official rodent baiting / rat complaint service requests from the City of Chicago.",
     methodologyNote: "Counts are public service requests, not unique rats or confirmed infestations.",
+    provenance: "seeded",
   },
   {
     id: "boston-2026-05-23",
