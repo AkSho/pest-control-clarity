@@ -512,9 +512,7 @@ function RodentRadarAtlasPage() {
           panel={utilityPanel}
           layers={layers}
           activeLayers={activeLayers}
-          mode={mode}
           onToggle={toggleLayer}
-          onMode={(m) => updateSearch({ mode: m, preset: undefined })}
           onClose={() => setUtilityPanel(null)}
         />
       ) : null}
