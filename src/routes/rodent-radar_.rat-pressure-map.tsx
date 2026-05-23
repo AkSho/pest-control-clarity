@@ -1122,66 +1122,97 @@ function SelectedDrawer({
   }
 
   const colony = getColonyGrowthProjection(selected);
+  const cohort = comparePlaceToCohort(selected);
+  const dot = markerTone(selected.activityBand);
 
   return (
-    <aside className="absolute bottom-4 right-4 z-20 w-[min(360px,calc(100vw-2rem))] rounded-xl border border-white/10 bg-slate-950/88 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl">
+    <aside
+      style={{ zIndex: Z.drawer }}
+      className="absolute bottom-4 right-4 w-[min(380px,calc(100vw-2rem))] rounded-xl border border-white/10 bg-slate-950/92 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl"
+    >
       <div className="flex items-start justify-between gap-3">
-        <div>
-          <div className="text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-cyan-200/80">Selected area</div>
-          <h2 className="mt-0.5 text-xl font-semibold tracking-tight">{selected.name}</h2>
-          <p className="mt-0.5 text-xs text-slate-400">
-            {selected.geo} · {selected.snapshotDate}
+        <div className="min-w-0">
+          <div className="text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-cyan-200/80">
+            {selected.geo}
+          </div>
+          <h2 className="mt-0.5 truncate text-xl font-semibold tracking-tight">{selected.name}</h2>
+          <p className="mt-0.5 text-[0.7rem] text-slate-500">
+            Snapshot {selected.snapshotDate} · {cohort.topPercentLabel}
           </p>
         </div>
-        <div className="flex items-center gap-1.5">
-          <span className={`rounded-full border px-2 py-0.5 text-[0.6rem] font-semibold uppercase tracking-wider ${bandTone(selected.activityBand)}`}>
-            {activityBandLabels[selected.activityBand]}
-          </span>
-          <button type="button" onClick={onClose} className="rounded p-1 text-slate-500 hover:text-white">
-            <X className="h-3.5 w-3.5" />
-          </button>
+        <button type="button" onClick={onClose} className="rounded p-1 text-slate-500 hover:text-white" aria-label="Close">
+          <X className="h-3.5 w-3.5" />
+        </button>
+      </div>
+
+      <div className="mt-3 flex items-center gap-2 rounded-lg border border-white/8 bg-white/[0.03] px-3 py-2">
+        <span
+          className="h-2.5 w-2.5 shrink-0 rounded-full"
+          style={{ background: dot, boxShadow: `0 0 8px ${dot}88` }}
+        />
+        <div className="text-xs font-semibold text-slate-100">
+          {activityBandLabels[selected.activityBand]} pressure
+        </div>
+        <div className="ml-auto text-[0.6rem] uppercase tracking-wider text-slate-500">
+          activity index {selected.activityIndex}
         </div>
       </div>
 
-      <div className="mt-3 grid grid-cols-3 gap-1.5">
-        <Metric label="Official" value={formatCount(selected.last12MonthsCount)} />
-        <Metric label="Recent" value={formatCount(selected.recent90DayCount)} />
-        <Metric label="Change" value={`${selected.trendPercent > 0 ? "+" : ""}${selected.trendPercent}%`} />
+      <div className="mt-3 grid gap-2.5">
+        <MetricRow
+          label="Reports last 12 months"
+          source={selected.sourceName}
+          value={formatCount(selected.last12MonthsCount)}
+          context={cohort.vsMedianLabel}
+        />
+        <MetricRow
+          label="Reports last 90 days"
+          source={`${selected.recentSharePercent.toFixed(1)}% of yearly volume`}
+          value={formatCount(selected.recent90DayCount)}
+          context={cohort.recentVsCohortLabel}
+        />
+        <MetricRow
+          label="Year-over-year change"
+          source="vs previous 12 months"
+          value={`${selected.trendPercent > 0 ? "+" : ""}${selected.trendPercent}%`}
+          context={cohort.trendLabel}
+          accent={
+            selected.trendPercent >= 5
+              ? "warn"
+              : selected.trendPercent <= -5
+                ? "good"
+                : "muted"
+          }
+        />
       </div>
 
       {activeLayers.has("colony-growth") ? (
         <div className="mt-3 rounded-lg border border-purple-300/15 bg-purple-300/[0.06] p-3">
           <div className="flex items-center justify-between gap-2">
-            <div className="text-xs font-semibold text-purple-100">Colony Growth</div>
-            <div className="text-[0.55rem] uppercase tracking-wider text-purple-200/70">modeled</div>
+            <div className="text-xs font-semibold text-purple-100">Colony growth (modeled)</div>
+            <div className="text-[0.55rem] uppercase tracking-wider text-purple-200/70">estimate</div>
           </div>
           <p className="mt-1.5 text-xs leading-relaxed text-slate-300">
             {selected.shortName} is showing a {colony.estimateRange} trajectory.
           </p>
-          <div className="mt-2 flex gap-3 text-[0.65rem] font-medium text-slate-400">
-            <div>30d: {colony.days30}</div>
-            <div>60d: {colony.days60}</div>
-            <div>90d: {colony.days90}</div>
-          </div>
+          <p className="mt-1 text-[0.6rem] leading-relaxed text-slate-500">{colony.disclaimer}</p>
         </div>
       ) : null}
 
-      <div className="mt-3 flex items-center justify-between gap-2 border-t border-white/8 pt-3">
-        <div className="text-[0.65rem] text-slate-500">
-          confidence: <span className="text-slate-300">{selected.confidence}</span>
-        </div>
-        <div className="flex items-center gap-3">
-          <Link
-            to="/rodent-radar/place/$slug"
-            params={{ slug: selected.id }}
-            className="text-xs font-semibold text-cyan-200 hover:underline"
-          >
-            View {selected.shortName} page →
-          </Link>
-          <a href={selected.sourceUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs font-semibold text-cyan-200 hover:underline">
-            Source <ExternalLink className="h-3 w-3" />
-          </a>
-        </div>
+      <div className="mt-3 border-t border-white/8 pt-3 text-[0.65rem] text-slate-500">
+        Confidence: <span className="text-slate-300">{selected.confidence}</span> · {selected.confidenceNote}
+      </div>
+      <div className="mt-2 flex items-center justify-between gap-3">
+        <Link
+          to="/rodent-radar/place/$slug"
+          params={{ slug: selected.id }}
+          className="text-xs font-semibold text-cyan-200 hover:underline"
+        >
+          View {selected.shortName} page →
+        </Link>
+        <a href={selected.sourceUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs font-semibold text-cyan-200 hover:underline">
+          Open source <ExternalLink className="h-3 w-3" />
+        </a>
       </div>
     </aside>
   );
