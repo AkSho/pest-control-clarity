@@ -885,6 +885,10 @@ function AtlasMap({
           type: "geojson",
           data: { type: "FeatureCollection", features: [] },
         });
+        map.addSource("rodent-ahs", {
+          type: "geojson",
+          data: { type: "FeatureCollection", features: [] },
+        });
 
         // Outer colony-growth ring (rendered first, behind the dot)
         map.addLayer({
@@ -906,7 +910,7 @@ function AtlasMap({
           },
         });
 
-        // Soft glow halo
+        // Soft glow halo. Sample/seeded snapshots use a dashed-feeling lower opacity.
         map.addLayer({
           id: "rodent-activity-glow",
           type: "circle",
@@ -919,12 +923,12 @@ function AtlasMap({
               10, ["+", 24, ["*", ["get", "activityIndex"], 0.22]],
             ],
             "circle-color": ["get", "color"],
-            "circle-opacity": ["*", 0.22, ["get", "confidence"]],
+            "circle-opacity": ["*", ["case", ["==", ["get", "provenance"], "seeded"], 0.12, 0.22], ["get", "confidence"]],
             "circle-blur": 0.9,
           },
         });
 
-        // Solid activity dot
+        // Solid activity dot — outlined differently for live vs seeded.
         map.addLayer({
           id: "rodent-activity-dot",
           type: "circle",
@@ -936,14 +940,43 @@ function AtlasMap({
               6, ["+", 5.5, ["*", ["get", "activityIndex"], 0.045]],
               10, ["+", 9, ["*", ["get", "activityIndex"], 0.08]],
             ],
-            "circle-color": ["get", "color"],
+            "circle-color": ["case", ["==", ["get", "provenance"], "seeded"], "#0b0f1a", ["get", "color"]],
             "circle-opacity": ["max", 0.7, ["get", "confidence"]],
-            "circle-stroke-color": "#0b0f1a",
-            "circle-stroke-width": 1,
+            "circle-stroke-color": ["get", "color"],
+            "circle-stroke-width": ["case", ["==", ["get", "provenance"], "seeded"], 1.8, 1],
           },
         });
 
-        // Data-gap "?" symbol
+        // AHS estimate pin — hollow ring (different shape so it doesn't read as live).
+        map.addLayer({
+          id: "rodent-ahs-ring",
+          type: "circle",
+          source: "rodent-ahs",
+          paint: {
+            "circle-radius": [
+              "interpolate", ["linear"], ["zoom"],
+              2, 6,
+              6, 9,
+              10, 14,
+            ],
+            "circle-color": "transparent",
+            "circle-stroke-color": "#94a3b8",
+            "circle-stroke-width": 1.6,
+            "circle-stroke-opacity": 0.85,
+          },
+        });
+        map.addLayer({
+          id: "rodent-ahs-dot",
+          type: "circle",
+          source: "rodent-ahs",
+          paint: {
+            "circle-radius": 2.2,
+            "circle-color": "#cbd5e1",
+            "circle-opacity": 0.85,
+          },
+        });
+
+        // Data-gap "?" symbol — only for places where we have nothing yet.
         map.addLayer({
           id: "rodent-gaps-symbol",
           type: "symbol",
@@ -976,10 +1009,19 @@ function AtlasMap({
           const city = unavailable.find((c) => c.id === id);
           if (city) onSelectGap(city);
         };
+        const handleAhsClick = (e: MapLibreLayerMouseEvent) => {
+          const f = e.features?.[0];
+          if (!f) return;
+          const id = f.properties?.id as string | undefined;
+          const pin = ahsPins.find((c) => c.id === id);
+          if (pin) onSelectAhs(pin);
+        };
         map.on("click", "rodent-activity-dot", handleVerifiedClick);
         map.on("click", "rodent-activity-glow", handleVerifiedClick);
         map.on("click", "rodent-gaps-symbol", handleGapClick);
-        for (const lid of ["rodent-activity-dot", "rodent-activity-glow", "rodent-gaps-symbol"]) {
+        map.on("click", "rodent-ahs-ring", handleAhsClick);
+        map.on("click", "rodent-ahs-dot", handleAhsClick);
+        for (const lid of ["rodent-activity-dot", "rodent-activity-glow", "rodent-gaps-symbol", "rodent-ahs-ring", "rodent-ahs-dot"]) {
           map.on("mouseenter", lid, () => { map.getCanvas().style.cursor = "pointer"; });
           map.on("mouseleave", lid, () => { map.getCanvas().style.cursor = ""; });
         }
