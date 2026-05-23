@@ -771,22 +771,23 @@ function AtlasMap({
           },
         });
 
-        // Data-gap "?" symbol — only for places where we have nothing yet.
+        // Data-gap marker — small dashed-outline ring, no fill. Replaces the
+        // illegible "?" glyph. Reads as "designed absence" not "broken tile."
         map.addLayer({
           id: "rodent-gaps-symbol",
-          type: "symbol",
+          type: "circle",
           source: "rodent-gaps",
-          layout: {
-            "text-field": "?",
-            "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
-            "text-size": 14,
-            "text-allow-overlap": true,
-          },
           paint: {
-            "text-color": "#cbd5e1",
-            "text-halo-color": "#0b0f1a",
-            "text-halo-width": 1.6,
-            "text-opacity": 0.85,
+            "circle-radius": [
+              "interpolate", ["linear"], ["zoom"],
+              2, 4,
+              6, 6,
+              10, 9,
+            ],
+            "circle-color": "transparent",
+            "circle-stroke-color": "#64748b",
+            "circle-stroke-width": 1.2,
+            "circle-stroke-opacity": 0.7,
           },
         });
 
