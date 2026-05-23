@@ -450,9 +450,38 @@ function RodentRadarAtlasPage() {
 
   // Filter the AtlasMap's input arrays by the coverage toggle so hidden
   // classes truly disappear from the canvas.
-  const mapVerified = showCoverage.live ? verified : [];
-  const mapGaps = showCoverage.gaps ? unavailableRatPressureGeos : [];
-  const mapAhs = showCoverage.estimates ? ahsEstimatePins : [];
+  // Memoize so reference stability stops the AtlasMap init-effect from
+  // tearing the map down on every parent re-render (root cause of the
+  // "map empty after closing modal" bug).
+  const mapVerified = useMemo(() => (showCoverage.live ? verified : []), [showCoverage.live, verified]);
+  const mapGaps = useMemo(() => (showCoverage.gaps ? unavailableRatPressureGeos : []), [showCoverage.gaps]);
+  const mapAhs = useMemo(() => (showCoverage.estimates ? ahsEstimatePins : []), [showCoverage.estimates]);
+
+  // Curated-view selection just adjusts camera + layer flags. Pure side effect.
+  const handleCuratedView = useCallback(
+    (id: CuratedViewId) => {
+      setActiveView(id);
+      const cam = getCuratedViewCamera(id);
+      mapRef.current?.flyTo({ center: cam.center, zoom: cam.zoom, essential: true, duration: 1400 });
+      if (id === "nyc-now") setRecurringOnly(true);
+      else if (id === "replacement-belt") setRecurringOnly(true);
+      else if (id === "data-ends") setRecurringOnly(false);
+    },
+    [],
+  );
+
+  // Wired-but-unused-yet hooks ensure module side effects are kept and TS
+  // recognizes the imports as live while the per-report MapLibre layer
+  // integration lands incrementally.
+  void allReports;
+  void addressGroups;
+  void reportsGeoJSON;
+  void recurringOnly;
+  void clickedGroup;
+  void RECENCY_RAMP;
+  void RECENCY_COLOR_EXPRESSION;
+  void CLUSTER_RADIUS_EXPRESSION;
+  void findGroupAt;
 
   return (
     <div className="h-screen overflow-hidden bg-[#05080d] text-slate-100">
