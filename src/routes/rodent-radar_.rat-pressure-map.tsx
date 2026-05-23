@@ -128,26 +128,6 @@ export const Route = createFileRoute("/rodent-radar_/rat-pressure-map")({
 });
 
 
-function parseLayers(value: string | null): AtlasLayerId[] {
-  const allowed = new Set(getAtlasLayerDefinitions().map((layer) => layer.id));
-  if (!value) return DEFAULT_LAYERS;
-  const parsed = value.split(",").filter((id): id is AtlasLayerId => allowed.has(id));
-  return parsed.length ? parsed : DEFAULT_LAYERS;
-}
-
-function getShareUrl(city: RatPressureResult | UnavailableRatPressureGeo) {
-  if (typeof window === "undefined") return "";
-  const url = new URL(window.location.href);
-  if ("last12MonthsCount" in city) {
-    url.searchParams.set("city", city.id);
-    url.searchParams.delete("watchlist");
-  } else {
-    url.searchParams.set("watchlist", city.id);
-    url.searchParams.delete("city");
-  }
-  return url.toString();
-}
-
 function bandTone(band: ActivityBand) {
   const tones: Record<ActivityBand, string> = {
     low: "text-emerald-200 border-emerald-300/40 bg-emerald-400/10",
@@ -158,18 +138,64 @@ function bandTone(band: ActivityBand) {
   return tones[band];
 }
 
-function markerTone(band: ActivityBand) {
-  const tones: Record<ActivityBand, string> = {
-    low: "#34d399",
-    moderate: "#facc15",
-    high: "#fb923c",
-    severe: "#fb7185",
-  };
-  return tones[band];
+const MARKER_TONES_STANDARD: Record<ActivityBand, string> = {
+  low: "#34d399",
+  moderate: "#facc15",
+  high: "#fb923c",
+  severe: "#fb7185",
+};
+
+const MARKER_TONES_HC: Record<ActivityBand, string> = {
+  low: "#6ee7b7",
+  moderate: "#fde047",
+  high: "#ffb86b",
+  severe: "#ff8fa3",
+};
+
+function markerTone(band: ActivityBand, mode: DisplayMode) {
+  return (mode === "high-contrast" ? MARKER_TONES_HC : MARKER_TONES_STANDARD)[band];
+}
+
+type PresetMeta = {
+  id: PresetId;
+  label: string;
+  hint: string;
+  icon: LucideIcon;
+};
+
+const PRESETS: PresetMeta[] = [
+  { id: "winning", label: "Where rats are winning", hint: "Top activity, 12 mo", icon: Sparkles },
+  { id: "seasonal", label: "The seasonal swing", hint: "Recent 90 d", icon: Snowflake },
+  { id: "gaps", label: "Data gaps in America", hint: "Cities without clean data", icon: AlertCircle },
+  { id: "your-block", label: "Your block", hint: "Geolocate or ZIP", icon: MapPin },
+];
+
+type PresetApply = {
+  layers: AtlasLayerId[];
+  window: "12mo" | "90d" | "30d";
+  zoom?: number;
+  center?: [number, number];
+  place?: string;
+};
+
+function nearestPlaceByCoord(lat: number, lng: number, candidates: RatPressureResult[]) {
+  let best = candidates[0];
+  let bestDist = Number.POSITIVE_INFINITY;
+  for (const c of candidates) {
+    const d = (c.lat - lat) ** 2 + (c.lng - lng) ** 2;
+    if (d < bestDist) {
+      bestDist = d;
+      best = c;
+    }
+  }
+  return best;
 }
 
 function RodentRadarAtlasPage() {
   const verified = useMemo(() => getRatPressureResults(), []);
+  const search = Route.useSearch();
+  const navigate = useNavigate({ from: Route.fullPath });
+
   const layers = useMemo(
     () => getAtlasLayerDefinitions().filter((layer): layer is AtlasLayerDefinition & { id: AtlasLayerId } =>
       DEFAULT_LAYERS.includes(layer.id as AtlasLayerId) ||
@@ -177,91 +203,191 @@ function RodentRadarAtlasPage() {
     ),
     [],
   );
-  const [selectedId, setSelectedId] = useState(verified[0]?.id ?? "");
-  const [selectedGapId, setSelectedGapId] = useState("");
+
+  const activeLayers = search.layers;
+  const mode = search.mode;
+  const activePreset = search.preset;
   const [query, setQuery] = useState("");
-  const [activeLayers, setActiveLayers] = useState<AtlasLayerId[]>(DEFAULT_LAYERS);
   const [utilityPanel, setUtilityPanel] = useState<UtilityPanel>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const selected = verified.find((city) => city.id === selectedId) ?? verified[0];
-  const selectedGap = unavailableRatPressureGeos.find((city) => city.id === selectedGapId) ?? null;
+  const [zipNotice, setZipNotice] = useState<string | null>(null);
+
+  const selected = useMemo(
+    () => verified.find((c) => c.id === search.place) ?? verified[0],
+    [verified, search.place],
+  );
+  const selectedGap = useMemo(
+    () => unavailableRatPressureGeos.find((c) => c.id === search.gap) ?? null,
+    [search.gap],
+  );
   const activeSet = useMemo(() => new Set(activeLayers), [activeLayers]);
   const filteredPlaces = [...verified, ...unavailableRatPressureGeos].filter((place) =>
     `${place.name} ${place.region}`.toLowerCase().includes(query.toLowerCase()),
   );
 
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const city = params.get("city");
-    const watchlist = params.get("watchlist");
-    if (city && verified.some((place) => place.id === city)) setSelectedId(city);
-    if (watchlist && unavailableRatPressureGeos.some((place) => place.id === watchlist)) {
-      setSelectedGapId(watchlist);
+  const updateSearch = useCallback(
+    (patch: Partial<typeof search> & { preset?: PresetId | undefined }) => {
+      navigate({
+        search: (prev) => ({ ...prev, ...patch }),
+        replace: true,
+      });
+    },
+    [navigate],
+  );
+
+  const selectVerified = useCallback(
+    (city: RatPressureResult) => {
+      setDrawerOpen(true);
+      updateSearch({ place: city.id, gap: undefined, preset: undefined });
+    },
+    [updateSearch],
+  );
+
+  const selectGap = useCallback(
+    (city: UnavailableRatPressureGeo) => {
+      setDrawerOpen(true);
+      updateSearch({ gap: city.id, preset: undefined });
+    },
+    [updateSearch],
+  );
+
+  const toggleLayer = useCallback(
+    (layerId: AtlasLayerId) => {
+      const next = activeLayers.includes(layerId)
+        ? activeLayers.filter((id) => id !== layerId)
+        : [...activeLayers, layerId];
+      const normalized: AtlasLayerId[] = next.includes("rodent-activity")
+        ? next
+        : ["rodent-activity", ...next];
+      const dropGap = !normalized.includes("data-gaps");
+      updateSearch({
+        layers: normalized,
+        gap: dropGap ? undefined : search.gap,
+        preset: undefined,
+      });
+    },
+    [activeLayers, search.gap, updateSearch],
+  );
+
+  const applyPreset = useCallback(
+    (presetId: PresetId, override?: PresetApply) => {
+      const recipe: Record<PresetId, PresetApply> = {
+        winning: (() => {
+          const top = [...verified].sort((a, b) => b.activityIndex - a.activityIndex).slice(0, 5);
+          const avgLng = top.reduce((s, c) => s + c.lng, 0) / top.length;
+          const avgLat = top.reduce((s, c) => s + c.lat, 0) / top.length;
+          return {
+            layers: ["rodent-activity"] as AtlasLayerId[],
+            window: "12mo",
+            center: [avgLng, avgLat] as [number, number],
+            zoom: 3.6,
+            place: top[0]?.id,
+          };
+        })(),
+        seasonal: {
+          layers: ["rodent-activity", "seasonality"],
+          window: "90d",
+          center: [-96, 38],
+          zoom: 3.2,
+        },
+        gaps: {
+          layers: ["data-gaps"],
+          window: "12mo",
+          center: [-40, 28],
+          zoom: 1.6,
+        },
+        "your-block": override ?? {
+          layers: ["rodent-activity"],
+          window: "12mo",
+        },
+      };
+      const apply = override ?? recipe[presetId];
+      setZipNotice(null);
+      updateSearch({
+        layers: apply.layers,
+        window: apply.window,
+        zoom: apply.zoom,
+        center: apply.center,
+        place: apply.place ?? search.place,
+        gap: presetId === "gaps" ? search.gap : undefined,
+        preset: presetId,
+      });
+    },
+    [search.gap, search.place, updateSearch, verified],
+  );
+
+  const handleYourBlockGeo = useCallback(() => {
+    if (typeof navigator === "undefined" || !navigator.geolocation) {
+      setZipNotice("Geolocation unavailable. Enter a US ZIP.");
+      return;
     }
-    setActiveLayers(parseLayers(params.get("layers")));
-  }, [verified]);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        const nearest = nearestPlaceByCoord(latitude, longitude, verified);
+        applyPreset("your-block", {
+          layers: ["rodent-activity"],
+          window: "12mo",
+          center: [longitude, latitude],
+          zoom: 10,
+          place: nearest?.id,
+        });
+        setZipNotice(`Nearest covered place: ${nearest?.shortName}`);
+      },
+      () => {
+        setZipNotice("Location denied. Enter a US ZIP.");
+      },
+      { timeout: 7000 },
+    );
+  }, [applyPreset, verified]);
 
-  function setUrl(nextLayers = activeLayers, cityId = selectedId, gapId = selectedGapId) {
-    const url = new URL(window.location.href);
-    if (gapId) {
-      url.searchParams.set("watchlist", gapId);
-      url.searchParams.delete("city");
-    } else {
-      url.searchParams.set("city", cityId);
-      url.searchParams.delete("watchlist");
-    }
-    url.searchParams.set("layers", nextLayers.join(","));
-    window.history.replaceState({}, "", url);
-  }
+  const handleZipSubmit = useCallback(
+    (zip: string) => {
+      const clean = zip.trim().slice(0, 5);
+      const placeId = ZIP_TO_PLACE[clean];
+      if (placeId) {
+        const place = verified.find((p) => p.id === placeId);
+        if (place) {
+          applyPreset("your-block", {
+            layers: ["rodent-activity"],
+            window: "12mo",
+            center: [place.lng, place.lat],
+            zoom: 10,
+            place: place.id,
+          });
+          setZipNotice(`Covered: ${place.shortName}`);
+          return;
+        }
+      }
+      setZipNotice("ZIP not in coverage. Try a NYC, Chicago, Boston, DC, or SF ZIP.");
+    },
+    [applyPreset, verified],
+  );
 
-  function selectVerified(city: RatPressureResult) {
-    setSelectedId(city.id);
-    setSelectedGapId("");
-    setDrawerOpen(true);
-    setUrl(activeLayers, city.id, "");
-  }
-
-  function selectGap(city: UnavailableRatPressureGeo) {
-    setSelectedGapId(city.id);
-    setDrawerOpen(true);
-    setUrl(activeLayers, selectedId, city.id);
-  }
-
-  function toggleLayer(layerId: AtlasLayerId) {
-    const next = activeLayers.includes(layerId)
-      ? activeLayers.filter((id) => id !== layerId)
-      : [...activeLayers, layerId];
-    const normalized: AtlasLayerId[] = next.includes("rodent-activity") ? next : ["rodent-activity", ...next];
-    setActiveLayers(normalized);
-    if (!normalized.includes("data-gaps")) {
-      setSelectedGapId("");
-      setUrl(normalized, selectedId, "");
-    } else {
-      setUrl(normalized);
-    }
-  }
-
-  async function copyShare() {
-    const place = selectedGap ?? selected;
-    const label = "last12MonthsCount" in place
-      ? `${place.name}: ${formatCount(place.last12MonthsCount)} official rodent records, ${activityBandLabels[place.activityBand]} activity. ${getShareUrl(place)}`
-      : `${place.name}: data gap, source reviewed. ${getShareUrl(place)}`;
-    await navigator.clipboard?.writeText(label);
-  }
+  const copyShare = useCallback(async () => {
+    if (typeof window === "undefined") return;
+    await navigator.clipboard?.writeText(window.location.href);
+  }, []);
 
   return (
-    <div className="h-screen overflow-hidden bg-[#05080d] text-slate-100">
+    <div
+      className="h-screen overflow-hidden bg-[#05080d] text-slate-100"
+      data-display-mode={mode}
+    >
       <AtlasMap
         verified={verified}
         unavailable={unavailableRatPressureGeos}
         selected={selected}
         selectedGap={selectedGap}
         activeLayers={activeSet}
+        mode={mode}
+        initialCenter={search.center}
+        initialZoom={search.zoom}
         onSelectVerified={selectVerified}
         onSelectGap={selectGap}
       />
 
-      <aside className="absolute left-4 top-4 z-20 hidden max-h-[calc(100vh-2rem)] w-[300px] overflow-hidden rounded-2xl border border-white/8 bg-slate-950/82 shadow-2xl shadow-cyan-950/30 backdrop-blur-xl lg:block">
+      <aside className="atlas-rail absolute left-4 top-4 z-20 hidden max-h-[calc(100vh-2rem)] w-[300px] overflow-hidden rounded-2xl border border-white/8 bg-slate-950/82 shadow-2xl shadow-cyan-950/30 backdrop-blur-xl lg:block">
         <div className="flex max-h-[calc(100vh-2rem)] flex-col">
           <div className="border-b border-white/8 px-5 py-4">
             <div className="flex items-baseline gap-2">
@@ -290,6 +416,9 @@ function RodentRadarAtlasPage() {
               ))}
             </div>
 
+            <div className="mt-6 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-slate-500">Display</div>
+            <DisplayModePicker mode={mode} onChange={(m) => updateSearch({ mode: m, preset: undefined })} />
+
             <div className="mt-6 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-slate-500">Places</div>
             <div className="mt-2 grid gap-px">
               {filteredPlaces.map((place) =>
@@ -307,7 +436,7 @@ function RodentRadarAtlasPage() {
                     <span className="flex items-center gap-2 truncate">
                       <span
                         className="h-1.5 w-1.5 shrink-0 rounded-full"
-                        style={{ background: markerTone(place.activityBand) }}
+                        style={{ background: markerTone(place.activityBand, mode) }}
                       />
                       <span className="truncate">{place.shortName}</span>
                     </span>
@@ -347,6 +476,14 @@ function RodentRadarAtlasPage() {
         setQuery={setQuery}
       />
 
+      <PresetBar
+        active={activePreset}
+        onApply={applyPreset}
+        onYourBlockGeo={handleYourBlockGeo}
+        onZipSubmit={handleZipSubmit}
+        zipNotice={zipNotice}
+      />
+
       <TopTools
         query={query}
         setQuery={setQuery}
@@ -367,7 +504,7 @@ function RodentRadarAtlasPage() {
         selected={selected}
         selectedGap={selectedGap}
         activeLayers={activeSet}
-        onCloseGap={() => setSelectedGapId("")}
+        onCloseGap={() => updateSearch({ gap: undefined })}
         onClose={() => setDrawerOpen(false)}
         onOpen={() => setDrawerOpen(true)}
       />
@@ -377,13 +514,16 @@ function RodentRadarAtlasPage() {
           panel={utilityPanel}
           layers={layers}
           activeLayers={activeLayers}
+          mode={mode}
           onToggle={toggleLayer}
+          onMode={(m) => updateSearch({ mode: m, preset: undefined })}
           onClose={() => setUtilityPanel(null)}
         />
       ) : null}
     </div>
   );
 }
+
 
 function AtlasMap({
   verified,
