@@ -470,18 +470,12 @@ function RodentRadarAtlasPage() {
     [],
   );
 
-  // Wired-but-unused-yet hooks ensure module side effects are kept and TS
-  // recognizes the imports as live while the per-report MapLibre layer
-  // integration lands incrementally.
-  void allReports;
-  void addressGroups;
-  void reportsGeoJSON;
-  void recurringOnly;
-  void clickedGroup;
-  void RECENCY_RAMP;
-  void RECENCY_COLOR_EXPRESSION;
-  void CLUSTER_RADIUS_EXPRESSION;
-  void findGroupAt;
+  // Cinematic mode strips all chrome and leaves the map. Keep the toggle
+  // mounted so users can ESC back out.
+  const onSelectGroup = useCallback((g: AddressGroup | null) => {
+    setClickedGroup(g);
+  }, []);
+
 
   return (
     <div className="h-screen overflow-hidden bg-[#05080d] text-slate-100">
