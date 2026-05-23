@@ -85,6 +85,8 @@ const layerColors: Record<AtlasLayerId, string> = {
 };
 
 export const Route = createFileRoute("/rodent-radar_/rat-pressure-map")({
+export const Route = createFileRoute("/rodent-radar_/rat-pressure-map")({
+  validateSearch: zodValidator(rodentRadarSearchSchema),
   head: () => ({
     meta: [
       { title: TITLE },
@@ -125,6 +127,7 @@ export const Route = createFileRoute("/rodent-radar_/rat-pressure-map")({
   }),
   component: RodentRadarAtlasPage,
 });
+
 
 function parseLayers(value: string | null): AtlasLayerId[] {
   const allowed = new Set(getAtlasLayerDefinitions().map((layer) => layer.id));
