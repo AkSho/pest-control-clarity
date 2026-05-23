@@ -30,14 +30,17 @@ import {
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { activityBandLabels, type ActivityBand } from "@/lib/rodentRadar";
 import {
+  comparePlaceToCohort,
   exposureGuidance,
   formatCount,
   getAtlasLayerDefinitions,
   getAtlasSourceCards,
   getColonyGrowthProjection,
   getRatPressureResults,
+  PRESSURE_BAND_THRESHOLDS,
   unavailableRatPressureGeos,
   type AtlasLayerDefinition,
+  type PlaceCohortComparison,
   type RatPressureResult,
   type UnavailableRatPressureGeo,
 } from "@/lib/ratPressureMap";
@@ -52,6 +55,25 @@ import {
   type RodentRadarSearch,
 } from "@/lib/rodentRadarSearch";
 import zipToPlaceData from "../../public/rodent-radar/data/zip-to-place.json";
+
+// z-index ladder so map chrome stops fighting itself.
+const Z = {
+  rail: 20,
+  presets: 22,
+  topTools: 30,
+  drawer: 30,
+  fieldChip: 40,
+  popover: 50,
+} as const;
+
+// One-line answer to "what am I looking at?" — changes with active preset.
+const LEDE_BY_PRESET: Record<PresetId | "default", string> = {
+  default: "Where rodent pressure is worst right now, by verified city data.",
+  winning: "Areas where rats are winning over the last 12 months.",
+  seasonal: "How rodent activity shifts across the last 90 days.",
+  gaps: "Cities where we don't have verified data yet.",
+  "your-block": "Rodent pressure near a ZIP or your current location.",
+};
 
 type MapLibreModule = typeof import("maplibre-gl");
 type MapLibreMap = import("maplibre-gl").Map;
@@ -435,7 +457,24 @@ function RodentRadarAtlasPage() {
         />
       ) : null}
 
-      <aside className="atlas-rail absolute left-4 top-4 z-20 hidden max-h-[calc(100vh-2rem)] w-[300px] overflow-hidden rounded-2xl border border-white/8 bg-slate-950/82 shadow-2xl shadow-cyan-950/30 backdrop-blur-xl lg:block">
+      {mode === "field" ? (
+        <button
+          type="button"
+          onClick={() => updateSearch({ mode: "standard" })}
+          style={{ zIndex: Z.fieldChip }}
+          className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full border border-cyan-300/40 bg-slate-950/90 px-3 py-2 text-xs font-semibold text-cyan-100 shadow-2xl backdrop-blur transition hover:bg-cyan-300/15"
+        >
+          <X className="h-3.5 w-3.5" />
+          Exit field view
+        </button>
+      ) : null}
+
+      <aside
+        style={{ zIndex: Z.rail }}
+        className={`atlas-rail absolute left-4 top-4 hidden max-h-[calc(100vh-2rem)] w-[320px] overflow-hidden rounded-2xl border border-white/8 bg-slate-950/82 shadow-2xl shadow-cyan-950/30 backdrop-blur-xl lg:block ${
+          mode === "field" ? "lg:hidden" : ""
+        }`}
+      >
         <div className="flex max-h-[calc(100vh-2rem)] flex-col">
           <div className="border-b border-white/8 px-5 py-4">
             <div className="flex items-baseline gap-2">
@@ -446,72 +485,178 @@ function RodentRadarAtlasPage() {
                 beta
               </span>
             </div>
-            <p className="mt-1.5 text-xs leading-relaxed text-slate-400">
-              Public rodent data, for people who live with the consequences.
+            <p className="mt-1.5 text-xs leading-relaxed text-slate-300">
+              {LEDE_BY_PRESET[(activePreset ?? "default") as PresetId | "default"]}
+            </p>
+            <p className="mt-1 text-[0.65rem] uppercase tracking-[0.16em] text-slate-500">
+              {verified.length} verified areas · updated monthly
             </p>
           </div>
 
           <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
-            <div className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-slate-500">Layers</div>
-            <div className="mt-2 grid gap-px">
-              {layers.map((layer) => (
-                <LayerRow
-                  key={layer.id}
-                  layer={layer}
-                  active={activeLayers.includes(layer.id)}
-                  onToggle={() => toggleLayer(layer.id)}
-                />
+            {/* Legend: pressure bands (the colored dots on the map) */}
+            <LegendSection title="Pressure band" subtitle="Color of each dot on the map">
+              {PRESSURE_BAND_THRESHOLDS.map((band) => (
+                <div key={band.band} className="flex items-center gap-2 py-1">
+                  <span
+                    className="h-2.5 w-2.5 shrink-0 rounded-full"
+                    style={{
+                      background: markerTone(band.band, mode),
+                      boxShadow: `0 0 8px ${markerTone(band.band, mode)}66`,
+                    }}
+                  />
+                  <span className="text-xs font-semibold text-slate-200">{band.label}</span>
+                  <span className="ml-auto text-[0.6rem] uppercase tracking-wider text-slate-500">
+                    index ≥ {band.minIndex}
+                  </span>
+                </div>
               ))}
-            </div>
+              <p className="mt-1 text-[0.65rem] leading-relaxed text-slate-500">
+                Activity index combines inspections, complaints, and recent share — not a population count.
+              </p>
+            </LegendSection>
 
-            <div className="mt-6 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-slate-500">Display</div>
-            <DisplayModePicker mode={mode} onChange={(m) => updateSearch({ mode: m, preset: undefined })} />
+            <LegendSection title="Dot size" subtitle="How loud the area is">
+              <div className="flex items-end gap-3 py-1">
+                {[5, 9, 14].map((r, i) => (
+                  <div key={r} className="flex flex-col items-center gap-1">
+                    <span
+                      className="rounded-full"
+                      style={{
+                        width: r * 2,
+                        height: r * 2,
+                        background: markerTone("high", mode),
+                        opacity: 0.85,
+                      }}
+                    />
+                    <span className="text-[0.55rem] uppercase tracking-wider text-slate-500">
+                      {["small", "mid", "loud"][i]}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <p className="mt-1 text-[0.65rem] leading-relaxed text-slate-500">
+                Bigger dot = higher activity index. Halo opacity = data confidence.
+              </p>
+            </LegendSection>
 
-            <div className="mt-6 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-slate-500">Places</div>
-            <div className="mt-2 grid gap-px">
-              {filteredPlaces.map((place) =>
-                "last12MonthsCount" in place ? (
-                  <button
-                    key={place.id}
-                    type="button"
-                    onClick={() => selectVerified(place)}
-                    className={`flex items-center justify-between gap-2 rounded px-2 py-1.5 text-left text-xs transition ${
-                      selected.id === place.id && !selectedGap
-                        ? "bg-cyan-300/10 text-cyan-100"
-                        : "text-slate-300 hover:bg-white/[0.04]"
-                    }`}
-                  >
-                    <span className="flex items-center gap-2 truncate">
-                      <span
-                        className="h-1.5 w-1.5 shrink-0 rounded-full"
-                        style={{ background: markerTone(place.activityBand, mode) }}
-                      />
-                      <span className="truncate">{place.shortName}</span>
-                    </span>
-                    <span className="shrink-0 text-[0.6rem] uppercase tracking-wider text-slate-500">
-                      {activityBandLabels[place.activityBand]}
-                    </span>
-                  </button>
-                ) : (
-                  <button
-                    key={place.id}
-                    type="button"
-                    onClick={() => selectGap(place)}
-                    className={`flex items-center justify-between gap-2 rounded px-2 py-1.5 text-left text-xs transition ${
-                      selectedGap?.id === place.id
-                        ? "bg-slate-300/10 text-slate-100"
-                        : "text-slate-400 hover:bg-white/[0.04]"
-                    }`}
-                  >
-                    <span className="flex items-center gap-2 truncate">
-                      <span className="grid h-3 w-3 shrink-0 place-items-center rounded-full border border-slate-500/60 text-[0.55rem] font-bold text-slate-400">?</span>
-                      <span className="truncate">{place.shortName}</span>
-                    </span>
-                    <span className="shrink-0 text-[0.6rem] uppercase tracking-wider text-slate-500">gap</span>
-                  </button>
-                ),
-              )}
-            </div>
+            {/* Preset views — collapsible "lenses" matching OGW pattern */}
+            <LegendSection title="Preset views" subtitle="Switch the story this map tells">
+              <div className="mt-1 grid gap-1">
+                {PRESETS.map((p) => {
+                  const Icon = p.icon;
+                  const isActive = activePreset === p.id;
+                  return (
+                    <button
+                      key={p.id}
+                      type="button"
+                      onClick={() => {
+                        if (p.id === "your-block") handleYourBlockGeo();
+                        else applyPreset(p.id);
+                      }}
+                      className={`flex items-center gap-2 rounded px-2 py-1.5 text-left text-xs transition ${
+                        isActive
+                          ? "bg-cyan-300/10 text-cyan-100"
+                          : "text-slate-300 hover:bg-white/[0.04]"
+                      }`}
+                    >
+                      <Icon className="h-3.5 w-3.5 shrink-0 text-cyan-200/70" />
+                      <span className="flex-1 truncate font-medium">{p.label}</span>
+                      <span className="shrink-0 text-[0.55rem] uppercase tracking-wider text-slate-500">
+                        {p.hint}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+              {activePreset === "your-block" ? (
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    const zip = (e.currentTarget.elements.namedItem("zip") as HTMLInputElement)?.value ?? "";
+                    handleZipSubmit(zip);
+                  }}
+                  className="mt-2 flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs"
+                >
+                  <input
+                    name="zip"
+                    placeholder="US ZIP"
+                    inputMode="numeric"
+                    maxLength={5}
+                    className="w-20 bg-transparent text-slate-100 placeholder-slate-500 focus:outline-none"
+                  />
+                  <button type="submit" className="rounded-full bg-cyan-300/20 px-2 py-0.5 text-cyan-100">Go</button>
+                  {zipNotice ? <span className="truncate text-[0.65rem] text-slate-400">{zipNotice}</span> : null}
+                </form>
+              ) : null}
+            </LegendSection>
+
+            {/* Context overlays — secondary, optional */}
+            <LegendSection title="Show on map" subtitle="Optional overlays">
+              <div className="mt-1 grid gap-px">
+                {layers.map((layer) => (
+                  <LayerRow
+                    key={layer.id}
+                    layer={layer}
+                    active={activeLayers.includes(layer.id)}
+                    onToggle={() => toggleLayer(layer.id)}
+                  />
+                ))}
+              </div>
+            </LegendSection>
+
+            {/* Display mode — last, since it's about how, not what */}
+            <LegendSection title="Display mode" subtitle="Adjust for context, not data">
+              <DisplayModePicker mode={mode} onChange={(m) => updateSearch({ mode: m, preset: undefined })} />
+            </LegendSection>
+
+            {/* Place list at the bottom, scrolls within the rail */}
+            <LegendSection title={`All areas (${filteredPlaces.length})`} subtitle="Click to focus">
+              <div className="mt-1 grid gap-px">
+                {filteredPlaces.map((place) =>
+                  "last12MonthsCount" in place ? (
+                    <button
+                      key={place.id}
+                      type="button"
+                      onClick={() => selectVerified(place)}
+                      className={`flex items-center justify-between gap-2 rounded px-2 py-1.5 text-left text-xs transition ${
+                        selected.id === place.id && !selectedGap
+                          ? "bg-cyan-300/10 text-cyan-100"
+                          : "text-slate-300 hover:bg-white/[0.04]"
+                      }`}
+                    >
+                      <span className="flex items-center gap-2 truncate">
+                        <span
+                          className="h-1.5 w-1.5 shrink-0 rounded-full"
+                          style={{ background: markerTone(place.activityBand, mode) }}
+                        />
+                        <span className="truncate">{place.shortName}</span>
+                      </span>
+                      <span className="shrink-0 text-[0.6rem] uppercase tracking-wider text-slate-500">
+                        {activityBandLabels[place.activityBand]}
+                      </span>
+                    </button>
+                  ) : (
+                    <button
+                      key={place.id}
+                      type="button"
+                      onClick={() => selectGap(place)}
+                      className={`flex items-center justify-between gap-2 rounded px-2 py-1.5 text-left text-xs transition ${
+                        selectedGap?.id === place.id
+                          ? "bg-slate-300/10 text-slate-100"
+                          : "text-slate-400 hover:bg-white/[0.04]"
+                      }`}
+                    >
+                      <span className="flex items-center gap-2 truncate">
+                        <span className="grid h-3 w-3 shrink-0 place-items-center rounded-full border border-slate-500/60 text-[0.55rem] font-bold text-slate-400">?</span>
+                        <span className="truncate">{place.shortName}</span>
+                      </span>
+                      <span className="shrink-0 text-[0.6rem] uppercase tracking-wider text-slate-500">no data</span>
+                    </button>
+                  ),
+                )}
+              </div>
+            </LegendSection>
           </div>
         </div>
       </aside>
@@ -524,13 +669,7 @@ function RodentRadarAtlasPage() {
         setQuery={setQuery}
       />
 
-      <PresetBar
-        active={activePreset}
-        onApply={applyPreset}
-        onYourBlockGeo={handleYourBlockGeo}
-        onZipSubmit={handleZipSubmit}
-        zipNotice={zipNotice}
-      />
+      {/* PresetBar moved into the legend rail. Suppress duplicate top-center chrome. */}
 
       <TopTools
         query={query}
@@ -983,66 +1122,97 @@ function SelectedDrawer({
   }
 
   const colony = getColonyGrowthProjection(selected);
+  const cohort = comparePlaceToCohort(selected);
+  const dot = markerTone(selected.activityBand);
 
   return (
-    <aside className="absolute bottom-4 right-4 z-20 w-[min(360px,calc(100vw-2rem))] rounded-xl border border-white/10 bg-slate-950/88 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl">
+    <aside
+      style={{ zIndex: Z.drawer }}
+      className="absolute bottom-4 right-4 w-[min(380px,calc(100vw-2rem))] rounded-xl border border-white/10 bg-slate-950/92 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl"
+    >
       <div className="flex items-start justify-between gap-3">
-        <div>
-          <div className="text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-cyan-200/80">Selected area</div>
-          <h2 className="mt-0.5 text-xl font-semibold tracking-tight">{selected.name}</h2>
-          <p className="mt-0.5 text-xs text-slate-400">
-            {selected.geo} · {selected.snapshotDate}
+        <div className="min-w-0">
+          <div className="text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-cyan-200/80">
+            {selected.geo}
+          </div>
+          <h2 className="mt-0.5 truncate text-xl font-semibold tracking-tight">{selected.name}</h2>
+          <p className="mt-0.5 text-[0.7rem] text-slate-500">
+            Snapshot {selected.snapshotDate} · {cohort.topPercentLabel}
           </p>
         </div>
-        <div className="flex items-center gap-1.5">
-          <span className={`rounded-full border px-2 py-0.5 text-[0.6rem] font-semibold uppercase tracking-wider ${bandTone(selected.activityBand)}`}>
-            {activityBandLabels[selected.activityBand]}
-          </span>
-          <button type="button" onClick={onClose} className="rounded p-1 text-slate-500 hover:text-white">
-            <X className="h-3.5 w-3.5" />
-          </button>
+        <button type="button" onClick={onClose} className="rounded p-1 text-slate-500 hover:text-white" aria-label="Close">
+          <X className="h-3.5 w-3.5" />
+        </button>
+      </div>
+
+      <div className="mt-3 flex items-center gap-2 rounded-lg border border-white/8 bg-white/[0.03] px-3 py-2">
+        <span
+          className="h-2.5 w-2.5 shrink-0 rounded-full"
+          style={{ background: dot, boxShadow: `0 0 8px ${dot}88` }}
+        />
+        <div className="text-xs font-semibold text-slate-100">
+          {activityBandLabels[selected.activityBand]} pressure
+        </div>
+        <div className="ml-auto text-[0.6rem] uppercase tracking-wider text-slate-500">
+          activity index {selected.activityIndex}
         </div>
       </div>
 
-      <div className="mt-3 grid grid-cols-3 gap-1.5">
-        <Metric label="Official" value={formatCount(selected.last12MonthsCount)} />
-        <Metric label="Recent" value={formatCount(selected.recent90DayCount)} />
-        <Metric label="Change" value={`${selected.trendPercent > 0 ? "+" : ""}${selected.trendPercent}%`} />
+      <div className="mt-3 grid gap-2.5">
+        <MetricRow
+          label="Reports last 12 months"
+          source={selected.sourceName}
+          value={formatCount(selected.last12MonthsCount)}
+          context={cohort.vsMedianLabel}
+        />
+        <MetricRow
+          label="Reports last 90 days"
+          source={`${selected.recentSharePercent.toFixed(1)}% of yearly volume`}
+          value={formatCount(selected.recent90DayCount)}
+          context={cohort.recentVsCohortLabel}
+        />
+        <MetricRow
+          label="Year-over-year change"
+          source="vs previous 12 months"
+          value={`${selected.trendPercent > 0 ? "+" : ""}${selected.trendPercent}%`}
+          context={cohort.trendLabel}
+          accent={
+            selected.trendPercent >= 5
+              ? "warn"
+              : selected.trendPercent <= -5
+                ? "good"
+                : "muted"
+          }
+        />
       </div>
 
       {activeLayers.has("colony-growth") ? (
         <div className="mt-3 rounded-lg border border-purple-300/15 bg-purple-300/[0.06] p-3">
           <div className="flex items-center justify-between gap-2">
-            <div className="text-xs font-semibold text-purple-100">Colony Growth</div>
-            <div className="text-[0.55rem] uppercase tracking-wider text-purple-200/70">modeled</div>
+            <div className="text-xs font-semibold text-purple-100">Colony growth (modeled)</div>
+            <div className="text-[0.55rem] uppercase tracking-wider text-purple-200/70">estimate</div>
           </div>
           <p className="mt-1.5 text-xs leading-relaxed text-slate-300">
             {selected.shortName} is showing a {colony.estimateRange} trajectory.
           </p>
-          <div className="mt-2 flex gap-3 text-[0.65rem] font-medium text-slate-400">
-            <div>30d: {colony.days30}</div>
-            <div>60d: {colony.days60}</div>
-            <div>90d: {colony.days90}</div>
-          </div>
+          <p className="mt-1 text-[0.6rem] leading-relaxed text-slate-500">{colony.disclaimer}</p>
         </div>
       ) : null}
 
-      <div className="mt-3 flex items-center justify-between gap-2 border-t border-white/8 pt-3">
-        <div className="text-[0.65rem] text-slate-500">
-          confidence: <span className="text-slate-300">{selected.confidence}</span>
-        </div>
-        <div className="flex items-center gap-3">
-          <Link
-            to="/rodent-radar/place/$slug"
-            params={{ slug: selected.id }}
-            className="text-xs font-semibold text-cyan-200 hover:underline"
-          >
-            View {selected.shortName} page →
-          </Link>
-          <a href={selected.sourceUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs font-semibold text-cyan-200 hover:underline">
-            Source <ExternalLink className="h-3 w-3" />
-          </a>
-        </div>
+      <div className="mt-3 border-t border-white/8 pt-3 text-[0.65rem] text-slate-500">
+        Confidence: <span className="text-slate-300">{selected.confidence}</span> · {selected.confidenceNote}
+      </div>
+      <div className="mt-2 flex items-center justify-between gap-3">
+        <Link
+          to="/rodent-radar/place/$slug"
+          params={{ slug: selected.id }}
+          className="text-xs font-semibold text-cyan-200 hover:underline"
+        >
+          View {selected.shortName} page →
+        </Link>
+        <a href={selected.sourceUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs font-semibold text-cyan-200 hover:underline">
+          Open source <ExternalLink className="h-3 w-3" />
+        </a>
       </div>
     </aside>
   );
@@ -1079,7 +1249,6 @@ function TopTools({
   const tools = [
     { label: "Share", icon: Share2, action: onShare },
     { label: "Reset", icon: RefreshCcw, action: () => window.location.assign("/rodent-radar/rat-pressure-map") },
-    { label: "Map style", icon: Map, action: onSettings },
     { label: "Sources", icon: Database, action: onSources },
     { label: "How to read this", icon: Info, action: onMethodology },
   ];
@@ -1320,6 +1489,65 @@ function Metric({ label, value }: { label: string; value: string }) {
     <div className="rounded-md border border-white/8 bg-white/[0.03] px-2 py-1.5">
       <div className="text-sm font-semibold text-slate-100">{value}</div>
       <div className="mt-0.5 text-[0.55rem] font-semibold uppercase tracking-wider text-slate-500">{label}</div>
+    </div>
+  );
+}
+
+function LegendSection({
+  title,
+  subtitle,
+  children,
+}: {
+  title: string;
+  subtitle?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="mt-5 first:mt-0">
+      <div className="flex items-baseline justify-between gap-2">
+        <h3 className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-slate-400">
+          {title}
+        </h3>
+        {subtitle ? (
+          <span className="text-[0.55rem] uppercase tracking-wider text-slate-600">{subtitle}</span>
+        ) : null}
+      </div>
+      <div className="mt-2">{children}</div>
+    </section>
+  );
+}
+
+function MetricRow({
+  label,
+  source,
+  value,
+  context,
+  accent = "muted",
+}: {
+  label: string;
+  source: string;
+  value: string;
+  context: string;
+  accent?: "good" | "warn" | "muted";
+}) {
+  const accentClass =
+    accent === "good"
+      ? "text-emerald-200"
+      : accent === "warn"
+        ? "text-rose-200"
+        : "text-slate-100";
+  return (
+    <div className="rounded-lg border border-white/8 bg-white/[0.03] px-3 py-2">
+      <div className="flex items-baseline justify-between gap-3">
+        <div className="min-w-0">
+          <div className="text-[0.65rem] font-semibold uppercase tracking-wider text-slate-400">
+            {label}
+          </div>
+          <div className="mt-0.5 truncate text-[0.6rem] text-slate-500">{source}</div>
+        </div>
+        <div className={`shrink-0 text-base font-semibold tabular-nums ${accentClass}`}>{value}</div>
+      </div>
+      <div className="mt-1 text-[0.7rem] leading-relaxed text-slate-300">{context}</div>
     </div>
   );
 }

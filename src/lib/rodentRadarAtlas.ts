@@ -988,3 +988,92 @@ export function getColonyGrowthProjection(city: RatPressureResult): ColonyGrowth
 export function formatCount(value: number) {
   return new Intl.NumberFormat("en-US").format(value);
 }
+
+export type PressureBandThreshold = {
+  band: ActivityBand;
+  label: string;
+  description: string;
+  minIndex: number;
+};
+
+// Activity-index thresholds used in bandFromScore() above. Kept in sync there.
+export const PRESSURE_BAND_THRESHOLDS: PressureBandThreshold[] = [
+  { band: "severe", label: "Severe", description: "Top tier of activity index (≥75)", minIndex: 75 },
+  { band: "high", label: "High", description: "Above the national median (50–74)", minIndex: 50 },
+  { band: "moderate", label: "Moderate", description: "Regular activity, manageable (25–49)", minIndex: 25 },
+  { band: "low", label: "Low", description: "Sparse activity (<25)", minIndex: 0 },
+];
+
+export type PlaceCohortComparison = {
+  rank: number;
+  total: number;
+  percentile: number;
+  topPercentLabel: string;
+  vsMedianLabel: string;
+  trendLabel: string;
+  recentVsCohortLabel: string;
+};
+
+/**
+ * Compare a place against the full verified cohort so the selection panel
+ * can replace raw integers with plain-English context.
+ */
+export function comparePlaceToCohort(place: RatPressureResult): PlaceCohortComparison {
+  const cohort = getRatPressureResults();
+  const sorted = [...cohort].sort((a, b) => b.activityIndex - a.activityIndex);
+  const rank = sorted.findIndex((p) => p.id === place.id) + 1;
+  const total = sorted.length;
+  const percentile = total > 0 ? Math.round((rank / total) * 100) : 100;
+  const topPercentLabel =
+    percentile <= 10
+      ? `Top 10% of ${total} tracked areas`
+      : percentile <= 25
+        ? `Top 25% of ${total} tracked areas`
+        : percentile <= 50
+          ? `Top half of ${total} tracked areas`
+          : `Bottom half of ${total} tracked areas`;
+
+  const counts = cohort.map((p) => p.last12MonthsCount).sort((a, b) => a - b);
+  const median = counts.length ? counts[Math.floor(counts.length / 2)] : 0;
+  const vsMedian = median > 0 ? (place.last12MonthsCount - median) / median : 0;
+  const vsMedianLabel =
+    vsMedian >= 0.5
+      ? "Well above tracked median"
+      : vsMedian >= 0.1
+        ? "Above tracked median"
+        : vsMedian <= -0.5
+          ? "Well below tracked median"
+          : vsMedian <= -0.1
+            ? "Below tracked median"
+            : "Near tracked median";
+
+  const trendLabel =
+    place.trendPercent >= 10
+      ? "Rising"
+      : place.trendPercent >= 2
+        ? "Slight rise"
+        : place.trendPercent <= -10
+          ? "Falling"
+          : place.trendPercent <= -2
+            ? "Slight decline"
+            : "Roughly stable";
+
+  const cohortRecentShare =
+    cohort.reduce((sum, p) => sum + p.recentSharePercent, 0) / (cohort.length || 1);
+  const recentVsCohortLabel =
+    place.recentSharePercent >= cohortRecentShare + 3
+      ? "Recent activity is accelerating vs other tracked areas"
+      : place.recentSharePercent <= cohortRecentShare - 3
+        ? "Recent activity is cooling vs other tracked areas"
+        : "Recent activity in line with other tracked areas";
+
+  return {
+    rank,
+    total,
+    percentile,
+    topPercentLabel,
+    vsMedianLabel,
+    trendLabel,
+    recentVsCohortLabel,
+  };
+}
