@@ -373,6 +373,40 @@ function RodentRadarAtlasPage() {
     await navigator.clipboard?.writeText(window.location.href);
   }, []);
 
+  const downloadMapPng = useCallback(async () => {
+    const map = mapRef.current;
+    if (!map) return;
+    const canvas = map.getCanvas();
+    // Composite a watermark onto a clone so the source canvas is untouched
+    const w = canvas.width;
+    const h = canvas.height;
+    const out = document.createElement("canvas");
+    out.width = w;
+    out.height = h;
+    const ctx = out.getContext("2d");
+    if (!ctx) return;
+    ctx.drawImage(canvas, 0, 0);
+    ctx.fillStyle = "rgba(110, 231, 183, 0.85)";
+    ctx.font = `${Math.max(12, Math.round(w / 110))}px "Inter", system-ui, sans-serif`;
+    ctx.textAlign = "right";
+    ctx.textBaseline = "bottom";
+    ctx.shadowColor = "rgba(0,0,0,0.6)";
+    ctx.shadowBlur = 6;
+    ctx.fillText("Rodent Radar · cloakd-removals.cloud", w - 16, h - 16);
+    out.toBlob((blob) => {
+      if (!blob) return;
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      const stamp = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+      const label = search.preset ?? search.place ?? "atlas";
+      a.href = url;
+      a.download = `rodent-radar-${label}-${stamp}.png`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }, "image/png");
+  }, [search.preset, search.place]);
+
+
   return (
     <div
       className="h-screen overflow-hidden bg-[#05080d] text-slate-100"
