@@ -488,6 +488,7 @@ function AtlasMap({
   selectedAhs,
   activeLayers,
   mode,
+  metric,
   onSelectVerified,
   onSelectGap,
   onSelectAhs,
@@ -501,6 +502,7 @@ function AtlasMap({
   selectedAhs: AhsEstimatePin | null;
   activeLayers: Set<AtlasLayerId>;
   mode: DisplayMode;
+  metric: MetricKey;
   onSelectVerified: (city: RatPressureResult) => void;
   onSelectGap: (city: UnavailableRatPressureGeo) => void;
   onSelectAhs: (city: AhsEstimatePin) => void;
