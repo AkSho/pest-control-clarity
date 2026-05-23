@@ -339,6 +339,8 @@ function RodentRadarAtlasPage() {
       />
 
       <TopTools
+        query={query}
+        setQuery={setQuery}
         onShare={copyShare}
         onSources={() => setUtilityPanel(utilityPanel === "sources" ? null : "sources")}
         onMethodology={() => setUtilityPanel(utilityPanel === "methodology" ? null : "methodology")}
@@ -348,13 +350,17 @@ function RodentRadarAtlasPage() {
       <MapUtilityButtons
         onLayers={() => setUtilityPanel(utilityPanel === "settings" ? null : "settings")}
         onSources={() => setUtilityPanel(utilityPanel === "sources" ? null : "sources")}
+        onMethodology={() => setUtilityPanel(utilityPanel === "methodology" ? null : "methodology")}
       />
 
       <SelectedDrawer
+        open={drawerOpen}
         selected={selected}
         selectedGap={selectedGap}
         activeLayers={activeSet}
         onCloseGap={() => setSelectedGapId("")}
+        onClose={() => setDrawerOpen(false)}
+        onOpen={() => setDrawerOpen(true)}
       />
 
       {utilityPanel ? (
