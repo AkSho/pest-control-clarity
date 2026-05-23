@@ -224,20 +224,20 @@ function rawMetric(city: RatPressureResult, metric: MetricKey): number {
 
 function computeMetricValues(cities: RatPressureResult[], metric: MetricKey) {
   const raws = cities.map((c) => rawMetric(c, metric));
+  const out: Record<string, number> = {};
   if (metric === "index") {
-    return new Map(cities.map((c, i) => [c.id, raws[i]]));
+    cities.forEach((c, i) => { out[c.id] = raws[i]; });
+    return out;
   }
   if (metric === "trend12mo") {
-    // Shift -100..200 → 0..100 (centered at 0% → 33)
-    return new Map(
-      cities.map((c, i) => {
-        const v = raws[i];
-        return [c.id, Math.max(0, Math.min(100, ((v + 100) / 300) * 100))];
-      }),
-    );
+    cities.forEach((c, i) => {
+      out[c.id] = Math.max(0, Math.min(100, ((raws[i] + 100) / 300) * 100));
+    });
+    return out;
   }
   const max = Math.max(1, ...raws);
-  return new Map(cities.map((c, i) => [c.id, (raws[i] / max) * 100]));
+  cities.forEach((c, i) => { out[c.id] = (raws[i] / max) * 100; });
+  return out;
 }
 
 type PresetMeta = {
