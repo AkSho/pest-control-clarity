@@ -46,5 +46,11 @@ export const rodentRadarSearchSchema = z.object({
   zoom: fallback(z.number().finite().min(0).max(20).optional(), undefined),
   center: fallback(centerSchema, undefined),
 });
-
 export type RodentRadarSearch = z.infer<typeof rodentRadarSearchSchema>;
+
+// Lightweight schema for the per-place page so display mode survives the round-trip.
+export const placeSearchSchema = z.object({
+  mode: fallback(z.enum(DISPLAY_MODES), "standard").default("standard"),
+});
+export type PlaceSearch = z.infer<typeof placeSearchSchema>;
+
