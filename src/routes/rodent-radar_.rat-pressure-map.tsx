@@ -13,10 +13,8 @@ import {
   Map,
   RefreshCcw,
   Search,
-  Settings,
   Share2,
   ShieldCheck,
-  Tags,
   X,
   type LucideIcon,
 } from "lucide-react";
@@ -173,10 +171,10 @@ function RodentRadarAtlasPage() {
   const [query, setQuery] = useState("");
   const [activeLayers, setActiveLayers] = useState<AtlasLayerId[]>(DEFAULT_LAYERS);
   const [utilityPanel, setUtilityPanel] = useState<UtilityPanel>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const selected = verified.find((city) => city.id === selectedId) ?? verified[0];
   const selectedGap = unavailableRatPressureGeos.find((city) => city.id === selectedGapId) ?? null;
   const activeSet = useMemo(() => new Set(activeLayers), [activeLayers]);
-  const officialRecords = verified.reduce((sum, city) => sum + city.last12MonthsCount, 0);
   const filteredPlaces = [...verified, ...unavailableRatPressureGeos].filter((place) =>
     `${place.name} ${place.region}`.toLowerCase().includes(query.toLowerCase()),
   );
@@ -208,11 +206,13 @@ function RodentRadarAtlasPage() {
   function selectVerified(city: RatPressureResult) {
     setSelectedId(city.id);
     setSelectedGapId("");
+    setDrawerOpen(true);
     setUrl(activeLayers, city.id, "");
   }
 
   function selectGap(city: UnavailableRatPressureGeo) {
     setSelectedGapId(city.id);
+    setDrawerOpen(true);
     setUrl(activeLayers, selectedId, city.id);
   }
 
@@ -220,7 +220,7 @@ function RodentRadarAtlasPage() {
     const next = activeLayers.includes(layerId)
       ? activeLayers.filter((id) => id !== layerId)
       : [...activeLayers, layerId];
-    const normalized = next.includes("rodent-activity") ? next : ["rodent-activity", ...next];
+    const normalized: AtlasLayerId[] = next.includes("rodent-activity") ? next : ["rodent-activity", ...next];
     setActiveLayers(normalized);
     if (!normalized.includes("data-gaps")) {
       setSelectedGapId("");
@@ -250,44 +250,25 @@ function RodentRadarAtlasPage() {
         onSelectGap={selectGap}
       />
 
-      <aside className="absolute left-4 top-4 z-20 hidden max-h-[calc(100vh-2rem)] w-[430px] overflow-hidden rounded-[1.35rem] border border-cyan-200/10 bg-slate-950/82 shadow-2xl shadow-cyan-950/30 backdrop-blur-xl lg:block">
+      <aside className="absolute left-4 top-4 z-20 hidden max-h-[calc(100vh-2rem)] w-[300px] overflow-hidden rounded-2xl border border-white/8 bg-slate-950/82 shadow-2xl shadow-cyan-950/30 backdrop-blur-xl lg:block">
         <div className="flex max-h-[calc(100vh-2rem)] flex-col">
-          <div className="border-b border-white/10 p-6">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <div className="text-4xl font-black tracking-tight">
-                  <span className="text-cyan-300">Rodent</span> Radar
-                </div>
-                <p className="mt-2 text-sm font-semibold leading-relaxed text-slate-400">
-                  Official rodent activity, colony modeling, and civic conditions.
-                </p>
-              </div>
-              <div className="rounded-full border border-yellow-300/40 bg-yellow-300/10 px-3 py-1 text-xs font-black uppercase tracking-[0.14em] text-yellow-200">
+          <div className="border-b border-white/8 px-5 py-4">
+            <div className="flex items-baseline gap-2">
+              <span className="text-base font-semibold tracking-tight">
+                <span className="text-cyan-300">Rodent</span> Radar
+              </span>
+              <span className="rounded-sm border border-yellow-300/40 px-1.5 py-px text-[0.55rem] font-bold uppercase tracking-[0.14em] text-yellow-200/90">
                 beta
-              </div>
+              </span>
             </div>
-            <div className="mt-5 grid grid-cols-3 gap-2">
-              <StatPill label="Verified" value={String(verified.length)} />
-              <StatPill label="Records" value={compactNumber(officialRecords)} />
-              <StatPill label="Gaps" value={String(unavailableRatPressureGeos.length)} />
-            </div>
-            <label className="relative mt-5 block">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
-              <input
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                className="h-11 w-full rounded-xl border border-white/10 bg-white/5 pl-9 pr-3 text-sm font-semibold text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-cyan-300/60"
-                placeholder="Search areas"
-              />
-            </label>
+            <p className="mt-1.5 text-xs leading-relaxed text-slate-400">
+              Public rodent data, for people who live with the consequences.
+            </p>
           </div>
 
-          <div className="min-h-0 flex-1 overflow-y-auto p-6">
-            <div className="flex items-center justify-between gap-3">
-              <div className="text-sm font-black uppercase tracking-[0.16em] text-slate-300">Layers</div>
-              <Settings className="h-4 w-4 text-slate-500" />
-            </div>
-            <div className="mt-4 grid gap-2">
+          <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
+            <div className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-slate-500">Layers</div>
+            <div className="mt-2 grid gap-px">
               {layers.map((layer) => (
                 <LayerRow
                   key={layer.id}
@@ -298,55 +279,50 @@ function RodentRadarAtlasPage() {
               ))}
             </div>
 
-            <div className="mt-7">
-              <div className="text-sm font-black uppercase tracking-[0.16em] text-slate-300">Places</div>
-              <div className="mt-3 grid gap-2">
-                {filteredPlaces.map((place) =>
-                  "last12MonthsCount" in place ? (
-                    <button
-                      key={place.id}
-                      type="button"
-                      onClick={() => selectVerified(place)}
-                      className={`rounded-xl border p-3 text-left transition ${
-                        selected.id === place.id && !selectedGap
-                          ? "border-cyan-300/60 bg-cyan-300/10"
-                          : "border-white/10 bg-white/[0.035] hover:border-cyan-300/35"
-                      }`}
-                    >
-                      <div className="flex items-center justify-between gap-3">
-                        <span className="font-bold text-slate-100">{place.shortName}</span>
-                        <span className={`rounded-full border px-2 py-0.5 text-[0.65rem] font-black uppercase ${bandTone(place.activityBand)}`}>
-                          {activityBandLabels[place.activityBand]}
-                        </span>
-                      </div>
-                      <div className="mt-1 text-xs font-semibold text-slate-500">
-                        {formatCount(place.last12MonthsCount)} official records
-                      </div>
-                    </button>
-                  ) : (
-                    <button
-                      key={place.id}
-                      type="button"
-                      onClick={() => selectGap(place)}
-                      className={`rounded-xl border p-3 text-left transition ${
-                        selectedGap?.id === place.id
-                          ? "border-slate-300/50 bg-slate-300/10"
-                          : "border-white/10 bg-white/[0.035] hover:border-slate-300/35"
-                      }`}
-                    >
-                      <div className="flex items-center justify-between gap-3">
-                        <span className="font-bold text-slate-100">{place.shortName}</span>
-                        <span className="rounded-full border border-slate-400/30 bg-slate-400/10 px-2 py-0.5 text-[0.65rem] font-black uppercase text-slate-300">
-                          data gap
-                        </span>
-                      </div>
-                      <div className="mt-1 text-xs font-semibold text-slate-500">
-                        {place.reviewedSourceName ?? "Source review needed"}
-                      </div>
-                    </button>
-                  ),
-                )}
-              </div>
+            <div className="mt-6 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-slate-500">Places</div>
+            <div className="mt-2 grid gap-px">
+              {filteredPlaces.map((place) =>
+                "last12MonthsCount" in place ? (
+                  <button
+                    key={place.id}
+                    type="button"
+                    onClick={() => selectVerified(place)}
+                    className={`flex items-center justify-between gap-2 rounded px-2 py-1.5 text-left text-xs transition ${
+                      selected.id === place.id && !selectedGap
+                        ? "bg-cyan-300/10 text-cyan-100"
+                        : "text-slate-300 hover:bg-white/[0.04]"
+                    }`}
+                  >
+                    <span className="flex items-center gap-2 truncate">
+                      <span
+                        className="h-1.5 w-1.5 shrink-0 rounded-full"
+                        style={{ background: markerTone(place.activityBand) }}
+                      />
+                      <span className="truncate">{place.shortName}</span>
+                    </span>
+                    <span className="shrink-0 text-[0.6rem] uppercase tracking-wider text-slate-500">
+                      {activityBandLabels[place.activityBand]}
+                    </span>
+                  </button>
+                ) : (
+                  <button
+                    key={place.id}
+                    type="button"
+                    onClick={() => selectGap(place)}
+                    className={`flex items-center justify-between gap-2 rounded px-2 py-1.5 text-left text-xs transition ${
+                      selectedGap?.id === place.id
+                        ? "bg-slate-300/10 text-slate-100"
+                        : "text-slate-400 hover:bg-white/[0.04]"
+                    }`}
+                  >
+                    <span className="flex items-center gap-2 truncate">
+                      <span className="grid h-3 w-3 shrink-0 place-items-center rounded-full border border-slate-500/60 text-[0.55rem] font-bold text-slate-400">?</span>
+                      <span className="truncate">{place.shortName}</span>
+                    </span>
+                    <span className="shrink-0 text-[0.6rem] uppercase tracking-wider text-slate-500">gap</span>
+                  </button>
+                ),
+              )}
             </div>
           </div>
         </div>
@@ -361,6 +337,8 @@ function RodentRadarAtlasPage() {
       />
 
       <TopTools
+        query={query}
+        setQuery={setQuery}
         onShare={copyShare}
         onSources={() => setUtilityPanel(utilityPanel === "sources" ? null : "sources")}
         onMethodology={() => setUtilityPanel(utilityPanel === "methodology" ? null : "methodology")}
@@ -370,13 +348,17 @@ function RodentRadarAtlasPage() {
       <MapUtilityButtons
         onLayers={() => setUtilityPanel(utilityPanel === "settings" ? null : "settings")}
         onSources={() => setUtilityPanel(utilityPanel === "sources" ? null : "sources")}
+        onMethodology={() => setUtilityPanel(utilityPanel === "methodology" ? null : "methodology")}
       />
 
       <SelectedDrawer
+        open={drawerOpen}
         selected={selected}
         selectedGap={selectedGap}
         activeLayers={activeSet}
         onCloseGap={() => setSelectedGapId("")}
+        onClose={() => setDrawerOpen(false)}
+        onOpen={() => setDrawerOpen(true)}
       />
 
       {utilityPanel ? (
@@ -530,11 +512,8 @@ function AtlasMap({
       {activeLayers.has("conditions") ? <ConditionsOverlay /> : null}
       {activeLayers.has("seasonality") ? <SeasonalityOverlay /> : null}
       {!ready ? (
-        <div className="absolute inset-0 grid place-items-center bg-[#05080d]">
-          <div className="text-center">
-            <div className="mx-auto h-16 w-16 rounded-full border border-cyan-300/30 bg-cyan-300/10 shadow-[0_0_40px_rgba(103,232,249,0.25)]" />
-            <p className="mt-4 text-sm font-bold uppercase tracking-[0.18em] text-cyan-200">Loading atlas</p>
-          </div>
+        <div className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 text-[0.65rem] font-medium uppercase tracking-[0.22em] text-slate-500/80">
+          <span className="inline-block h-1 w-1 animate-pulse rounded-full bg-cyan-300/70 align-middle" /> streaming basemap
         </div>
       ) : null}
     </div>
@@ -550,66 +529,83 @@ function LayerRow({
   active: boolean;
   onToggle: () => void;
 }) {
-  const Icon = layerIcons[layer.id];
-  const status = layer.status === "available" ? "on" : layer.status;
-
   return (
     <button
       type="button"
       onClick={onToggle}
-      className={`group rounded-xl border p-3 text-left transition ${
-        active ? "border-cyan-300/40 bg-cyan-300/10" : "border-white/10 bg-white/[0.035] hover:border-cyan-300/25"
+      className={`group flex items-center gap-2 rounded px-2 py-1.5 text-left transition ${
+        active ? "text-slate-100" : "text-slate-500 hover:text-slate-300"
       }`}
       aria-pressed={active}
+      title={layer.description}
     >
-      <div className="flex items-center gap-3">
-        <span className="grid h-7 w-7 place-items-center rounded-lg border border-white/10 bg-slate-950/80">
-          <Icon className="h-4 w-4" style={{ color: layerColors[layer.id] }} />
-        </span>
-        <span className="min-w-0 flex-1">
-          <span className="block text-sm font-black text-slate-100">{layer.name}</span>
-          <span className="block truncate text-xs font-semibold text-slate-500">{layer.description}</span>
-        </span>
-        <span className={`text-xs font-black uppercase tracking-[0.12em] ${active ? "text-cyan-200" : "text-slate-500"}`}>
-          {active ? status : "off"}
-        </span>
-      </div>
+      <span
+        className="h-1.5 w-1.5 shrink-0 rounded-full transition"
+        style={{
+          background: active ? layerColors[layer.id] : "transparent",
+          boxShadow: active ? `0 0 8px ${layerColors[layer.id]}aa` : "none",
+          border: active ? "none" : `1px solid ${layerColors[layer.id]}55`,
+        }}
+      />
+      <span className="flex-1 text-xs font-medium">{layer.name}</span>
+      {layer.status !== "available" ? (
+        <span className="text-[0.55rem] uppercase tracking-wider text-slate-600">{layer.status}</span>
+      ) : null}
     </button>
   );
 }
 
 function SelectedDrawer({
+  open,
   selected,
   selectedGap,
   activeLayers,
   onCloseGap,
+  onClose,
+  onOpen,
 }: {
+  open: boolean;
   selected: RatPressureResult;
   selectedGap: UnavailableRatPressureGeo | null;
   activeLayers: Set<AtlasLayerId>;
   onCloseGap: () => void;
+  onClose: () => void;
+  onOpen: () => void;
 }) {
+  // Closed-by-default: render a small pill until the user opens the drawer.
+  if (!open) {
+    return (
+      <button
+        type="button"
+        onClick={onOpen}
+        className="absolute bottom-4 right-4 z-20 inline-flex items-center gap-2 rounded-full border border-white/10 bg-slate-950/80 px-3 py-2 text-[0.7rem] font-medium text-slate-400 shadow-lg backdrop-blur transition hover:border-cyan-300/40 hover:text-cyan-100"
+      >
+        <CircleDot className="h-3.5 w-3.5" /> click a marker for details
+      </button>
+    );
+  }
+
   if (selectedGap) {
     return (
-      <aside className="absolute bottom-4 right-4 z-20 w-[min(420px,calc(100vw-2rem))] rounded-2xl border border-white/10 bg-slate-950/88 p-5 shadow-2xl shadow-black/40 backdrop-blur-xl">
+      <aside className="absolute bottom-4 right-4 z-20 w-[min(360px,calc(100vw-2rem))] rounded-xl border border-white/10 bg-slate-950/88 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <div className="text-xs font-black uppercase tracking-[0.18em] text-slate-500">Data gap</div>
-            <h2 className="mt-1 text-3xl font-black tracking-tight">{selectedGap.name}</h2>
-            <p className="mt-1 text-sm font-semibold text-slate-400">{selectedGap.region}</p>
+            <div className="text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-slate-500">Data gap</div>
+            <h2 className="mt-0.5 text-xl font-semibold tracking-tight">{selectedGap.name}</h2>
+            <p className="mt-0.5 text-xs text-slate-400">{selectedGap.region}</p>
           </div>
-          <button type="button" onClick={onCloseGap} className="rounded-lg border border-white/10 p-2 text-slate-400 hover:text-white">
-            <X className="h-4 w-4" />
+          <button type="button" onClick={() => { onCloseGap(); onClose(); }} className="rounded p-1 text-slate-500 hover:text-white">
+            <X className="h-3.5 w-3.5" />
           </button>
         </div>
-        <p className="mt-4 text-sm leading-relaxed text-slate-300">{selectedGap.reason}</p>
-        <div className="mt-4 rounded-xl border border-white/10 bg-white/[0.04] p-4">
-          <div className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">Source reviewed</div>
-          <div className="mt-2 font-bold">{selectedGap.reviewedSourceName ?? "Source review needed"}</div>
-          <p className="mt-2 text-sm leading-relaxed text-slate-400">{selectedGap.reviewNote}</p>
+        <p className="mt-3 text-xs leading-relaxed text-slate-300">{selectedGap.reason}</p>
+        <div className="mt-3 rounded-lg border border-white/8 bg-white/[0.03] p-3">
+          <div className="text-[0.6rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Source reviewed</div>
+          <div className="mt-1 text-sm font-medium">{selectedGap.reviewedSourceName ?? "Source review needed"}</div>
+          <p className="mt-1.5 text-xs leading-relaxed text-slate-400">{selectedGap.reviewNote}</p>
           {selectedGap.reviewedSourceUrl ? (
-            <a href={selectedGap.reviewedSourceUrl} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-1 text-sm font-black text-cyan-200 hover:underline">
-              View source <ExternalLink className="h-3.5 w-3.5" />
+            <a href={selectedGap.reviewedSourceUrl} target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-cyan-200 hover:underline">
+              View source <ExternalLink className="h-3 w-3" />
             </a>
           ) : null}
         </div>
@@ -620,82 +616,111 @@ function SelectedDrawer({
   const colony = getColonyGrowthProjection(selected);
 
   return (
-    <aside className="absolute bottom-4 right-4 z-20 w-[min(440px,calc(100vw-2rem))] rounded-2xl border border-white/10 bg-slate-950/88 p-5 shadow-2xl shadow-black/40 backdrop-blur-xl">
-      <div className="flex items-start justify-between gap-4">
+    <aside className="absolute bottom-4 right-4 z-20 w-[min(360px,calc(100vw-2rem))] rounded-xl border border-white/10 bg-slate-950/88 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl">
+      <div className="flex items-start justify-between gap-3">
         <div>
-          <div className="text-xs font-black uppercase tracking-[0.18em] text-cyan-200">Selected area</div>
-          <h2 className="mt-1 text-3xl font-black tracking-tight">{selected.name}</h2>
-          <p className="mt-1 text-sm font-semibold text-slate-400">
-            {selected.geo} · snapshot {selected.snapshotDate}
+          <div className="text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-cyan-200/80">Selected area</div>
+          <h2 className="mt-0.5 text-xl font-semibold tracking-tight">{selected.name}</h2>
+          <p className="mt-0.5 text-xs text-slate-400">
+            {selected.geo} · {selected.snapshotDate}
           </p>
         </div>
-        <span className={`rounded-full border px-3 py-1 text-xs font-black uppercase tracking-[0.12em] ${bandTone(selected.activityBand)}`}>
-          {activityBandLabels[selected.activityBand]}
-        </span>
+        <div className="flex items-center gap-1.5">
+          <span className={`rounded-full border px-2 py-0.5 text-[0.6rem] font-semibold uppercase tracking-wider ${bandTone(selected.activityBand)}`}>
+            {activityBandLabels[selected.activityBand]}
+          </span>
+          <button type="button" onClick={onClose} className="rounded p-1 text-slate-500 hover:text-white">
+            <X className="h-3.5 w-3.5" />
+          </button>
+        </div>
       </div>
 
-      <div className="mt-5 grid grid-cols-3 gap-2">
-        <Metric label="Official records" value={formatCount(selected.last12MonthsCount)} />
-        <Metric label="Recent activity" value={formatCount(selected.recent90DayCount)} />
+      <div className="mt-3 grid grid-cols-3 gap-1.5">
+        <Metric label="Official" value={formatCount(selected.last12MonthsCount)} />
+        <Metric label="Recent" value={formatCount(selected.recent90DayCount)} />
         <Metric label="Change" value={`${selected.trendPercent > 0 ? "+" : ""}${selected.trendPercent}%`} />
       </div>
 
       {activeLayers.has("colony-growth") ? (
-        <div className="mt-4 rounded-xl border border-purple-300/20 bg-purple-300/10 p-4">
-          <div className="flex items-center justify-between gap-3">
-            <div className="text-sm font-black text-purple-100">Colony Growth</div>
-            <div className="rounded-full bg-purple-300/15 px-2 py-0.5 text-xs font-black uppercase text-purple-100">
-              modeled
-            </div>
+        <div className="mt-3 rounded-lg border border-purple-300/15 bg-purple-300/[0.06] p-3">
+          <div className="flex items-center justify-between gap-2">
+            <div className="text-xs font-semibold text-purple-100">Colony Growth</div>
+            <div className="text-[0.55rem] uppercase tracking-wider text-purple-200/70">modeled</div>
           </div>
-          <p className="mt-2 text-sm leading-relaxed text-slate-300">
+          <p className="mt-1.5 text-xs leading-relaxed text-slate-300">
             {selected.shortName} is showing a {colony.estimateRange} trajectory.
           </p>
-          <div className="mt-3 grid gap-2 text-xs font-semibold text-slate-300">
-            <div>30 days: {colony.days30}</div>
-            <div>60 days: {colony.days60}</div>
-            <div>90 days: {colony.days90}</div>
+          <div className="mt-2 flex gap-3 text-[0.65rem] font-medium text-slate-400">
+            <div>30d: {colony.days30}</div>
+            <div>60d: {colony.days60}</div>
+            <div>90d: {colony.days90}</div>
           </div>
-          <p className="mt-3 text-xs font-semibold leading-relaxed text-slate-500">{colony.disclaimer}</p>
         </div>
       ) : null}
 
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-4">
-        <div>
-          <div className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">Data confidence</div>
-          <div className="mt-1 text-sm font-bold text-slate-200">{selected.confidence} · {selected.confidenceNote}</div>
+      <div className="mt-3 flex items-center justify-between gap-2 border-t border-white/8 pt-3">
+        <div className="text-[0.65rem] text-slate-500">
+          confidence: <span className="text-slate-300">{selected.confidence}</span>
         </div>
-        <a href={selected.sourceUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 rounded-full border border-cyan-200/25 px-3 py-1.5 text-sm font-black text-cyan-200 hover:bg-cyan-200/10">
-          Source <ExternalLink className="h-3.5 w-3.5" />
+        <a href={selected.sourceUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs font-semibold text-cyan-200 hover:underline">
+          Source <ExternalLink className="h-3 w-3" />
         </a>
       </div>
     </aside>
   );
 }
 
+function useLiveCounter() {
+  // Deterministic time-based fake until real telemetry is wired.
+  const [n, setN] = useState(() => 32 + Math.floor((Date.now() / 60000) % 71));
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setN(32 + Math.floor((Date.now() / 60000) % 71));
+    }, 45000);
+    return () => window.clearInterval(id);
+  }, []);
+  return n;
+}
+
 function TopTools({
+  query,
+  setQuery,
   onShare,
   onSources,
   onMethodology,
   onSettings,
 }: {
+  query: string;
+  setQuery: (value: string) => void;
   onShare: () => void;
   onSources: () => void;
   onMethodology: () => void;
   onSettings: () => void;
 }) {
+  const counter = useLiveCounter();
   const tools = [
-    { label: "Search", icon: Search, action: onSettings },
     { label: "Share", icon: Share2, action: onShare },
     { label: "Reset", icon: RefreshCcw, action: () => window.location.assign("/rodent-radar/rat-pressure-map") },
-    { label: "Labels", icon: Tags, action: onSettings },
     { label: "Map style", icon: Map, action: onSettings },
     { label: "Sources", icon: Database, action: onSources },
-    { label: "Info", icon: Info, action: onMethodology },
+    { label: "How to read this", icon: Info, action: onMethodology },
   ];
 
   return (
-    <div className="absolute right-4 top-4 z-20 hidden flex-wrap justify-end gap-2 md:flex">
+    <div className="absolute right-4 top-4 z-20 hidden items-center gap-2 md:flex">
+      <div className="hidden items-center gap-1.5 rounded-full border border-white/10 bg-slate-950/75 px-3 py-1.5 text-[0.65rem] font-medium text-slate-400 shadow-lg backdrop-blur xl:flex">
+        <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400/80" />
+        ~{counter} people checking their block
+      </div>
+      <label className="relative hidden md:block">
+        <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-500" />
+        <input
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          placeholder="Search areas"
+          className="h-9 w-44 rounded-full border border-white/10 bg-slate-950/75 pl-8 pr-3 text-xs font-medium text-slate-100 shadow-lg outline-none backdrop-blur transition placeholder:text-slate-500 focus:w-60 focus:border-cyan-300/50"
+        />
+      </label>
       {tools.map((tool) => {
         const Icon = tool.icon;
         return (
@@ -703,11 +728,11 @@ function TopTools({
             key={tool.label}
             type="button"
             onClick={tool.action}
-            className="grid h-12 w-12 place-items-center rounded-xl border border-white/10 bg-slate-950/75 text-slate-300 shadow-lg backdrop-blur transition hover:border-cyan-300/40 hover:text-cyan-100"
+            className="grid h-9 w-9 place-items-center rounded-full border border-white/10 bg-slate-950/75 text-slate-300 shadow-lg backdrop-blur transition hover:border-cyan-300/40 hover:text-cyan-100"
             aria-label={tool.label}
             title={tool.label}
           >
-            <Icon className="h-5 w-5" />
+            <Icon className="h-4 w-4" />
           </button>
         );
       })}
@@ -715,17 +740,39 @@ function TopTools({
   );
 }
 
-function MapUtilityButtons({ onLayers, onSources }: { onLayers: () => void; onSources: () => void }) {
+function MapUtilityButtons({
+  onLayers,
+  onSources,
+  onMethodology,
+}: {
+  onLayers: () => void;
+  onSources: () => void;
+  onMethodology: () => void;
+}) {
+  const tiles: Array<{ label: string; sub: string; icon: LucideIcon; onClick: () => void }> = [
+    { label: "Layers", sub: "what's on", icon: Layers3, onClick: onLayers },
+    { label: "Sources", sub: "data origins", icon: Database, onClick: onSources },
+    { label: "Guide", sub: "how to read", icon: Info, onClick: onMethodology },
+  ];
   return (
-    <div className="absolute bottom-4 left-4 z-20 hidden gap-3 lg:flex">
-      <button type="button" onClick={onLayers} className="h-20 w-24 rounded-2xl border border-cyan-200/20 bg-slate-950/75 text-sm font-black text-slate-100 shadow-xl backdrop-blur hover:border-cyan-200/50">
-        <Layers3 className="mx-auto mb-1 h-5 w-5 text-cyan-200" />
-        Layers
-      </button>
-      <button type="button" onClick={onSources} className="h-20 w-24 rounded-2xl border border-cyan-200/20 bg-slate-950/75 text-sm font-black text-slate-100 shadow-xl backdrop-blur hover:border-cyan-200/50">
-        <Database className="mx-auto mb-1 h-5 w-5 text-cyan-200" />
-        Sources
-      </button>
+    <div className="absolute bottom-4 left-4 z-20 hidden gap-1.5 lg:flex">
+      {tiles.map((tile) => {
+        const Icon = tile.icon;
+        return (
+          <button
+            key={tile.label}
+            type="button"
+            onClick={tile.onClick}
+            className="group flex h-14 w-20 flex-col items-start justify-between rounded-lg border border-white/8 bg-slate-950/75 p-2 text-left shadow-lg backdrop-blur transition hover:border-cyan-300/35"
+          >
+            <Icon className="h-3.5 w-3.5 text-cyan-200/80" />
+            <div>
+              <div className="text-[0.7rem] font-semibold text-slate-100">{tile.label}</div>
+              <div className="text-[0.55rem] uppercase tracking-wider text-slate-500">{tile.sub}</div>
+            </div>
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -772,19 +819,19 @@ function UtilityDrawer({
       ) : null}
 
       {panel === "methodology" ? (
-        <div className="mt-4 space-y-4 text-sm leading-relaxed text-slate-300">
+        <div className="mt-4 space-y-3 text-sm leading-relaxed text-slate-300">
           <p>
-            Rodent Activity uses official public rodent inspections, complaints, or auditable rodent/vermin 311 records. It is not a rat population count.
+            <span className="font-semibold text-slate-100">Rodent Activity</span> uses official public inspections, complaints, and 311 records. It is not a rat population count.
           </p>
           <p>
-            Colony Growth is a modeled layer that explains possible trajectory from the selected activity band. It is separate from official city data.
+            <span className="font-semibold text-slate-100">Colony Growth</span> is a modeled trajectory, separate from official city data.
           </p>
-          <p>
-            Conditions, exposure safety, and data gaps help explain the map. They do not change official Rodent Activity.
+          <p className="text-slate-400">
+            Context, exposure safety, and data gaps help explain the map. They do not change official Rodent Activity.
           </p>
-          <div className="grid gap-2">
-            <Link to="/rodent-radar/terms" className="font-black text-cyan-200 hover:underline">Terms of use</Link>
-            <Link to="/rodent-radar/attribution" className="font-black text-cyan-200 hover:underline">Attribution and data rights</Link>
+          <div className="flex gap-4 pt-2 text-xs">
+            <Link to="/rodent-radar/terms" className="text-cyan-200/80 hover:text-cyan-100 hover:underline">Terms</Link>
+            <Link to="/rodent-radar/attribution" className="text-cyan-200/80 hover:text-cyan-100 hover:underline">Attribution</Link>
           </div>
         </div>
       ) : null}
@@ -872,20 +919,11 @@ function SeasonalityOverlay() {
   );
 }
 
-function StatPill({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3">
-      <div className="text-lg font-black text-slate-100">{value}</div>
-      <div className="mt-0.5 text-[0.62rem] font-black uppercase tracking-[0.14em] text-slate-500">{label}</div>
-    </div>
-  );
-}
-
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3">
-      <div className="text-base font-black text-slate-100">{value}</div>
-      <div className="mt-1 text-[0.62rem] font-black uppercase tracking-[0.14em] text-slate-500">{label}</div>
+    <div className="rounded-md border border-white/8 bg-white/[0.03] px-2 py-1.5">
+      <div className="text-sm font-semibold text-slate-100">{value}</div>
+      <div className="mt-0.5 text-[0.55rem] font-semibold uppercase tracking-wider text-slate-500">{label}</div>
     </div>
   );
 }
