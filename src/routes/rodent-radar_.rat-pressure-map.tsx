@@ -478,7 +478,7 @@ function RodentRadarAtlasPage() {
 
 
   return (
-    <div className="h-screen overflow-hidden bg-[#05080d] text-slate-100">
+    <div className={`h-screen overflow-hidden bg-[#05080d] text-slate-100 ${cinematic ? "cinematic-mode" : ""}`}>
       <AtlasMap
         verified={mapVerified}
         unavailable={mapGaps}
@@ -493,83 +493,123 @@ function RodentRadarAtlasPage() {
         onSelectGap={selectGap}
         onSelectAhs={handleSelectAhs}
         mapRef={mapRef}
+        reportsGeoJSON={reportsGeoJSON}
+        addressGroups={addressGroups}
+        recurringOnly={recurringOnly}
+        onSelectGroup={onSelectGroup}
       />
 
+      {/* Cinematic toggle + curated views — always mounted, hidden by CSS in cinematic */}
+      <CinematicToggle cinematic={cinematic} onToggle={() => setCinematic((v) => !v)} />
+      {!cinematic ? (
+        <CuratedViews activeId={activeView} onSelect={handleCuratedView} />
+      ) : null}
 
-      <AtlasSidebar
-        metric={metric}
-        onMetricChange={setMetric}
-        verified={verified}
-        gaps={unavailableRatPressureGeos}
-        ahsPins={ahsEstimatePins}
-        query={query}
-        onQueryChange={setQuery}
-        selectedVerifiedId={selected?.id}
-        selectedGapId={selectedGap?.id}
-        selectedAhsId={selectedAhs?.id}
-        showCoverage={showCoverage}
-        onShowCoverageChange={setShowCoverage}
-        onSelectVerified={selectVerified}
-        onSelectGap={selectGap}
-        onSelectAhs={handleSelectAhs}
-        markerColor={(band: ActivityBand) => markerTone(band, mode)}
-        dataMix={dataMix}
-      />
+      {/* Recurring sites toggle — small pill above layer cards */}
+      {!cinematic ? (
+        <div className="pointer-events-auto absolute bottom-[3.25rem] left-1/2 z-[35] -translate-x-1/2">
+          <button
+            type="button"
+            onClick={() => setRecurringOnly((v) => !v)}
+            className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[0.65rem] font-medium uppercase tracking-[0.18em] backdrop-blur transition ${
+              recurringOnly
+                ? "border-cyan-300/40 bg-cyan-400/10 text-cyan-100"
+                : "border-white/10 bg-slate-950/70 text-slate-400 hover:text-slate-100"
+            }`}
+            title="Highlight addresses with ≥3 reports across ≥6 months"
+          >
+            <Activity className="h-3 w-3" />
+            {recurringOnly ? "Showing recurring sites" : "Recurring sites only"}
+          </button>
+        </div>
+      ) : null}
 
-      <AtlasToolbar query={query} onQueryChange={setQuery} />
+      {/* Per-report popup, anchored to clicked address group */}
+      {clickedGroup ? (
+        <div className="pointer-events-none absolute right-4 top-20 z-[55] flex">
+          <ReportPopup group={clickedGroup} onClose={() => setClickedGroup(null)} />
+        </div>
+      ) : null}
 
-      {/* Bottom-left docked layer cards — OGW pattern */}
-      <div
-        className="pointer-events-auto absolute bottom-4 left-[316px] hidden flex-col gap-2 md:flex"
-        style={{ zIndex: 35 }}
-      >
-        <LayerCard
-          title="Official activity"
-          subtitle="Always on — the map's spine"
-          items={officialLayer}
-          activeLayers={activeLayers}
-          onToggle={toggleLayer}
-        />
-        <LayerCard
-          title="Conditions"
-          subtitle="Context, not signal"
-          items={conditionLayers}
-          activeLayers={activeLayers}
-          onToggle={toggleLayer}
-          defaultOpen={false}
-        />
-        <LayerCard
-          title="Modeled"
-          subtitle="Interpretive — confirm before enabling"
-          items={modeledLayers}
-          activeLayers={activeLayers}
-          onToggle={toggleLayer}
-          defaultOpen={false}
-        />
-        <LayerCard
-          title="Guidance"
-          subtitle="CDC-aligned overlays"
-          items={guidanceLayers}
-          activeLayers={activeLayers}
-          onToggle={toggleLayer}
-          defaultOpen={false}
-        />
-      </div>
+      {!cinematic ? (
+        <>
+          <AtlasSidebar
+            metric={metric}
+            onMetricChange={setMetric}
+            verified={verified}
+            gaps={unavailableRatPressureGeos}
+            ahsPins={ahsEstimatePins}
+            query={query}
+            onQueryChange={setQuery}
+            selectedVerifiedId={selected?.id}
+            selectedGapId={selectedGap?.id}
+            selectedAhsId={selectedAhs?.id}
+            showCoverage={showCoverage}
+            onShowCoverageChange={setShowCoverage}
+            onSelectVerified={selectVerified}
+            onSelectGap={selectGap}
+            onSelectAhs={handleSelectAhs}
+            markerColor={(band: ActivityBand) => markerTone(band, mode)}
+            dataMix={dataMix}
+          />
 
-      <SelectedDrawer
-        open={drawerOpen}
-        selected={selected}
-        selectedGap={selectedGap}
-        selectedAhs={selectedAhs}
-        activeLayers={activeSet}
-        onCloseGap={() => updateSearch({ gap: undefined })}
-        onCloseAhs={() => setSelectedAhs(null)}
-        onClose={() => setDrawerOpen(false)}
-        onOpen={() => setDrawerOpen(true)}
-      />
+          <AtlasToolbar query={query} onQueryChange={setQuery} />
+
+          {/* Bottom-left docked layer cards — OGW pattern */}
+          <div
+            className="pointer-events-auto absolute bottom-4 left-[316px] hidden flex-col gap-2 md:flex"
+            style={{ zIndex: 35 }}
+          >
+            <LayerCard
+              title="Official activity"
+              subtitle="Always on — the map's spine"
+              items={officialLayer}
+              activeLayers={activeLayers}
+              onToggle={toggleLayer}
+            />
+            <LayerCard
+              title="Conditions"
+              subtitle="Context, not signal"
+              items={conditionLayers}
+              activeLayers={activeLayers}
+              onToggle={toggleLayer}
+              defaultOpen={false}
+            />
+            <LayerCard
+              title="Modeled"
+              subtitle="Interpretive — confirm before enabling"
+              items={modeledLayers}
+              activeLayers={activeLayers}
+              onToggle={toggleLayer}
+              defaultOpen={false}
+            />
+            <LayerCard
+              title="Guidance"
+              subtitle="CDC-aligned overlays"
+              items={guidanceLayers}
+              activeLayers={activeLayers}
+              onToggle={toggleLayer}
+              defaultOpen={false}
+            />
+          </div>
+
+          <SelectedDrawer
+            open={drawerOpen}
+            selected={selected}
+            selectedGap={selectedGap}
+            selectedAhs={selectedAhs}
+            activeLayers={activeSet}
+            onCloseGap={() => updateSearch({ gap: undefined })}
+            onCloseAhs={() => setSelectedAhs(null)}
+            onClose={() => setDrawerOpen(false)}
+            onOpen={() => setDrawerOpen(true)}
+          />
+        </>
+      ) : null}
     </div>
   );
 }
+
 
 
 function AtlasMap({
