@@ -1,0 +1,36 @@
+{
+  "source": "American Housing Survey, Selected Conditions — evidence of rodents in last 12 months",
+  "sourceUrl": "https://www.census.gov/programs-surveys/ahs.html",
+  "ahsYear": 2023,
+  "note": "Metro-level household survey. AHS asks if anyone in the household has seen signs of rodents in the past 12 months. Numbers are estimates for the full metro, not just the city named.",
+  "metros": [
+    {
+      "placeId": "jersey-city",
+      "metroLabel": "New York-Newark-Jersey City, NY-NJ-PA",
+      "rodentEvidencePercent": 13.4,
+      "households": 7480000,
+      "ahsTableUrl": "https://www.census.gov/programs-surveys/ahs/data/2023/ahs-2023-public-use-file--puf-/2023-ahs-metropolitan-puf-microdata.html"
+    },
+    {
+      "placeId": "newark",
+      "metroLabel": "New York-Newark-Jersey City, NY-NJ-PA",
+      "rodentEvidencePercent": 13.4,
+      "households": 7480000,
+      "ahsTableUrl": "https://www.census.gov/programs-surveys/ahs/data/2023/ahs-2023-public-use-file--puf-/2023-ahs-metropolitan-puf-microdata.html"
+    },
+    {
+      "placeId": "oakland",
+      "metroLabel": "San Francisco-Oakland-Berkeley, CA",
+      "rodentEvidencePercent": 11.2,
+      "households": 1810000,
+      "ahsTableUrl": "https://www.census.gov/programs-surveys/ahs/data/2023/ahs-2023-public-use-file--puf-/2023-ahs-metropolitan-puf-microdata.html"
+    },
+    {
+      "placeId": "san-jose",
+      "metroLabel": "San Jose-Sunnyvale-Santa Clara, CA",
+      "rodentEvidencePercent": 8.7,
+      "households": 700000,
+      "ahsTableUrl": "https://www.census.gov/programs-surveys/ahs/data/2023/ahs-2023-public-use-file--puf-/2023-ahs-metropolitan-puf-microdata.html"
+    }
+  ]
+}

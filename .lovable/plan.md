@@ -1,108 +1,104 @@
-# Rodent Radar map — clarity audit & fix plan
 
-## What OpenGridWorks does right (reference audit)
+# Chunk G — Clarity, Honesty & Coverage
 
-Looked at opengridworks.com/. Why it reads instantly:
+Goal: kill remaining overlaps, rewrite every panel to 8th-grade English, be honest about what's mocked vs. real, and replace mystery "?" pins with sourced data (live counts, inspection-based counts, or AHS household estimates).
 
-1. **Persistent labeled rail** — title ("Power Plants"), BETA chip, what's shown ("Operating plants"), then explicit **legends that ARE the filters**:
-   - Technology → colored dot per category (Solar, Wind, Nuclear…)
-   - Size (MW) → concentric circles labeled 5GW / 2.5GW / 1GW / 500MW / 100MW
-   - Transmission → line-weight legend by kV band
-   - Zoom & bubble-size readout always visible
-2. **Every number has a unit.** "MW", "kV", "BETA". Nothing is a raw integer.
-3. **One noun per panel.** The rail is "what these dots mean", not mixed modes/presets/places.
-4. **Top tools = verbs** (search, save, history, replay, presets, layers, basemap, share). The left rail = nouns.
-5. **Mode switches are never destructive.** Spotlight, NASA basemap, layers — all toggle from a control that stays visible.
+---
 
-## What Rodent Radar does wrong today (against OGW + your feedback)
+## Audit findings (what's actually on the map today)
 
-| # | Issue | Evidence |
+- **6 truly live**: Brooklyn, Manhattan, Bronx, Queens, Staten Island, San Francisco — backed by the CSV.
+- **3 seeded but labeled "high confidence"**: Chicago, Boston, DC are hardcoded in `rodentRadarAtlas.ts` with hand-entered numbers. **That's the "mocked data" you sensed.**
+- **7 "?" gap pins**: Jersey City, Newark, Oakland, San Jose, Philadelphia, Seattle, Toronto — honest gaps with no clean rodent-typed 311 feed.
+- **Jargon source**: `getColonyGrowthProjection()` produces lines like "established colony pattern trajectory" by gluing band labels together.
+
+---
+
+## 1. Overlap & chrome cleanup
+
+File: `src/routes/rodent-radar_.rat-pressure-map.tsx` (+ small `Z` constant pass).
+
+- **Rail header bleed** → wrap title/BETA/meta in a `<header>` with bottom border and `pr-12`; clamp scroll area below it so the header never scrolls under TopTools.
+- **Bottom tabs clipped** → move `Layers / Sources / Guide` into a `sticky bottom-0` footer inside the rail (solid bg + top border).
+- **"Click a marker for details" hint** → relocate to top-center of the map, auto-hide after first selection, `pointer-events-none`.
+- **Z-index ladder**: `mapControls: 20, rail: 30, topTools: 35, fieldChip: 40, drawer: 50, popover: 60`.
+
+## 2. Plain-English rewrite (8th grade, direct & factual)
+
+Files: `src/lib/rodentRadarAtlas.ts` (copy maps), `rat-pressure-map.tsx` (selection panel + lede).
+
+| Where | Before | After |
 |---|---|---|
-| 1 | No legend explains the dots. Severity bands (Severe/High/Moderate/Low), confidence opacity, and place-type sizing are baked into MapLibre paint expressions with nothing visible on screen. | rat-pressure-map.tsx lines 715–824 |
-| 2 | Selection panel is six unlabeled stats. "87,537", "29,330", "-2%", "Severe", "high" have no units, no comparison frame, no source. | lines 991–1032 |
-| 3 | Vocabulary collision. "Layers", "datasets", "places", "modes", "presets" are four overlapping ideas with no glossary. A first-timer can't tell which control changes what. | LayerPanel, PresetBar, DisplayModePicker, TopTools all visible at once |
-| 4 | Field mode is a trap. Hides rail + TopTools with no chip to return. | line 431, FieldBottomSheet |
-| 5 | Overlapping chrome. PresetBar (top), TopTools (top-right), DisplayModePicker (right rail), SharePopover, FieldBottomSheet, LayerPanel all compete in the same upper band, especially at 889px viewport. | rail at line 468 + TopTools 535 + PresetBar 527 |
-| 6 | No "what is this map" lede. OGW's title + BETA chip + "Operating plants" answers it in 3 words. Ours just shows controls. |  |
+| Colony band | "established colony pattern" | "Lots of rats living here" |
+| Selection lede | "Manhattan is showing a established colony pattern trajectory." | "Manhattan has heavy rat activity. Reports are down 12% from last year." |
+| Trend | "Recent activity is accelerating vs other tracked areas" | "Activity is rising faster than other cities we track." |
+| Confidence | "high" | "High — based on official city data." |
 
-## Plan
+Add a `metricExplainers` map. Every number in the selection panel gets a one-line "What this means" caption (e.g. `87,537` → "Public rat reports filed with NYC in the last year.").
 
-### Chunk F1 — Selection panel rewrite (item 2, your top complaint)
+## 3. Honesty pass: provenance & gap-pin restyle
 
-Replace the 6-metric grid with a **labeled, contextualized card**:
+`src/lib/rodentRadarAtlas.ts`, `rat-pressure-map.tsx`.
 
-```text
-┌────────────────────────────────────────────┐
-│ NYC BOROUGH                          [×]   │
-│ Brooklyn                                   │
-│ ──────────────────────────────────────     │
-│ Pressure band                              │
-│ ● Severe — top 10% of tracked US areas     │
-│                                            │
-│ Estimated active rats                      │
-│ 87,537   high confidence                   │
-│ Colony growth trend: stable (−2% vs 90d)   │
-│                                            │
-│ DOHMH inspections, last 12 months          │
-│ 29,330   ↑ above NYC median                │
-│ Recent 90 d: 7,180                         │
-│                                            │
-│ Snapshot dated 2026-05-21 · NYC DOHMH      │
-│ [View Brooklyn page →]  [Source ↗]         │
-└────────────────────────────────────────────┘
-```
+- Add `provenance: "live" | "seeded" | "inspections-commercial" | "inspections-housing" | "ahs-estimate" | "unavailable"` to `RatPressureResult` / pin model.
+- Dot styling per provenance:
+  - **live** → solid filled.
+  - **seeded** → dashed halo + "Sample — verifying source" badge.
+  - **inspections-*** → solid with small wrench glyph + caveat in drawer.
+  - **ahs-estimate** → hollow ring + "Survey estimate" label.
+- Replace mystery "?" with outlined dot + "Survey estimate" or "No data yet" hover label depending on provenance.
+- Rail header count: replace "9 verified areas" with honest split — e.g. "6 live · 3 sample · 3 inspections · 4 estimates" — driven by the data.
 
-Every number gets: a **label**, a **unit/source**, and a **comparison** ("top 10%", "above median", "vs 90d"). Pull comparisons from `pressureMetricSnapshots` / `getRatPressureResults` — already computed, just unused in UI.
+## 4. Mini visual polish (OGW alignment)
 
-Add a small `MetricRow` component (`label` / `value` / `unit` / `context`) and delete the bare `Metric` grid.
+- Rail titles `text-sm uppercase tracking-wider`; body `text-sm leading-relaxed`.
+- Right-align numeric values in legend rows (OGW-style `7,231 | 157.8GW`).
+- Thin section separators (`border-t border-white/5`), no full dividers.
 
-### Chunk F2 — Legend rail (item 1 + 3, the "what am I looking at" fix)
+## 5. Data sources — tiered gap fill
 
-Convert the right-side rail into an OGW-style **labeled legend** that doubles as filters. New top-to-bottom order:
+No more mystery pins. Every dot is live, inspection-based, or a sourced survey estimate.
 
-1. **Title block** — "Rat Pressure Map" + BETA chip + 1-line subtitle: "Verified rodent activity across U.S. cities · updated monthly".
-2. **Pressure bands** — 4 swatches (Severe / High / Moderate / Low) with the count threshold per band. Click = filter map.
-3. **Place type** — 3 sized dots (Borough / City / Neighborhood) showing the size encoding.
-4. **Confidence** — opacity ramp legend ("Lower opacity = lower data confidence").
-5. **Context overlays** (the existing `contextLayers`) — kept as toggles but moved under a "Show on map" header, so they read as overlays, not the primary content.
-6. **Display mode** — moved to the bottom as a small segmented control with tooltips: Standard ("default"), High-contrast ("daylight outdoors"), Lines-off ("hide grids"), Field ("phone in hand").
+### 5a. Live Chicago (real fetch)
+- `scripts/fetch-rodent-snapshots.ts` (new) — generalized SODA-API puller. Hits `data.cityofchicago.org/resource/v6vf-nfxy.json?$where=sr_type='Rodent Baiting/Rat Complaint' …`. Computes 12mo / prev-12mo / 90d. Writes to `rat-pressure-snapshots.csv`. Run once this chunk; commit the refreshed CSV. Chicago flips to `provenance: "live"`.
 
-This collapses the LayerPanel + DisplayModePicker into one cohesive rail and gives every glyph on the map a textual explanation.
+### 5b. Promote 3 gap pins to live via inspection feeds
+- **Philadelphia** → OpenDataPhilly L&I `violations` filtered for `RODENT`/`INFESTATION`/`VERMIN` + Phila food inspections. `provenance: "inspections-housing"`.
+- **Seattle** → Public Health Seattle & King County restaurant inspections, violation code "rodents, insects, animals present". `provenance: "inspections-commercial"`.
+- **Toronto** → DineSafe infraction "Operator failed to ensure premises is free of pests". `provenance: "inspections-commercial"`.
+- Each gets a caveat in the drawer ("Source: restaurant inspections, not residential complaints").
+- Seeded into the CSV by the same script (or static JSON adapter if SODA shape differs).
 
-### Chunk F3 — Field mode escape hatch (item 4)
+### 5c. Convert 4 remaining gaps to AHS estimates
+- **Jersey City, Newark, Oakland, San Jose** → American Housing Survey "Selected Conditions — evidence of rodents in last 12 months" metro-level percentages. AHS is the only federally-published direct rodent-prevalence measure.
+- Seed `public/rodent-radar/data/ahs-rodent-estimates.json` with the 4 metros (manually pulled from AHS 2023 tables, source URL recorded per row).
+- Render as hollow estimate pins: "~9% of households reported rodents in past year — American Housing Survey, NY/NJ metro 2023." Single number, no trend, no rank.
 
-Add a **persistent floating "Exit field mode" chip** top-left when `mode === "field"`. Renders outside the rail so it survives mobile bottom-sheet layout. One click → `updateSearch({ mode: "standard" })`. While in Field mode, also keep the search icon from TopTools visible as a single round button (no other top tools).
+### 5d. Honest fallback for Chicago/Boston/DC seeded numbers
+- If 5a script generalizes to Boston (`data.boston.gov` 311 with rodent types) and DC (`311.dc.gov` ServiceCode `S0301`) cleanly within this chunk, wire them live too. Otherwise keep `provenance: "seeded"` with the dashed-halo badge until next pass — never claim "high confidence" again.
 
-### Chunk F4 — Overlap cleanup (item 5)
+### 5e. Global context layers (toggleable, applied to ALL pins)
+- **AHS overlay** — every dot can show "and X% of households here reported rodents" as a secondary number. This is the "weave correlated data" answer.
+- **CDC NNDSS** — state-level leptospirosis/hantavirus tint. Static `public/rodent-radar/data/cdc-zoonotic.json` + regeneration script. Wired to "Why it matters" framing.
+- **NOAA winter temp anomaly** — county-level annual anomaly seeded JSON. Powers the "Seasonal swing" preset honestly (currently shows trends with no climate input).
 
-- Move **PresetBar** from the top edge into a collapsible "Preset views" section at the top of the rail (matches OGW's "Show preset views" disclosure).
-- TopTools shrinks to: Search, Share, History/Reset. Layers + display mode are now in the rail, removing the duplicate.
-- Add a `z-index` ladder constants block at the top of the file so popovers/sheets/chips don't fight (rail=20, topTools=30, fieldChip=40, popover=50).
-- On viewports `< 1024px`, rail collapses to an icon strip with a "Legend" reopen tab (mirrors `tanstack-route-architecture`'s mini-collapse pattern from shadcn sidebar guidance).
+### Out of scope
+- LA MyLA311 rodent feed — defer to next chunk (real but needs its own adapter).
+- USDA / EPA — reference links in `Sources` tab only.
 
-### Chunk F5 — "What is this map" lede (item 6)
-
-Top of rail gets a one-line **explainer** that changes with the active preset/mode so users always know which lens they're looking through:
-
-- Default: "Where rat pressure is worst right now."
-- Seasonal preset: "How rat activity shifts across seasons."
-- Gaps preset: "Where we don't have verified data yet."
-- Your-block preset: "Conditions near a ZIP you enter."
-
-This is the "all three jobs with a clear mode switch" you picked.
+---
 
 ## Files touched
 
-- `src/routes/rodent-radar_.rat-pressure-map.tsx` — selection panel, rail composition, Field exit chip, z-index ladder, lede line. Most of the change is here.
-- `src/lib/rodentRadarAtlas.ts` — small helper: `getPressureBandThresholds()` and `comparePlaceToCohort(place)` returning `{ percentile, vsMedian, trendLabel }`. Pure computation over existing data, no schema change.
-- `src/lib/rodentRadarSearch.ts` — no change (mode + preset already retained).
+- `src/routes/rodent-radar_.rat-pressure-map.tsx` — overlap fix, copy rewrite, provenance badges, lede, hint relocation.
+- `src/lib/rodentRadarAtlas.ts` — copy maps, `provenance` field, `metricExplainers`, new context layers, AHS pin type.
+- `public/rodent-radar/data/rat-pressure-snapshots.csv` — refreshed with live Chicago (+ Boston/DC if script generalizes).
+- `public/rodent-radar/data/ahs-rodent-estimates.json` (new) — 4 AHS metros.
+- `public/rodent-radar/data/cdc-zoonotic.json` (new), `public/rodent-radar/data/noaa-temp-anomaly.json` (new).
+- `scripts/fetch-rodent-snapshots.ts` (new) — generalized 311 puller.
 
-## Out of scope
+## What ships at the end
 
-- No new data sources, no new cities, no map tile changes.
-- No copy changes outside the map page.
-- Mobile bottom-sheet visual polish stays as-is beyond the Field exit chip.
+A map with **zero mystery pins**. Every dot is one of: live city count, inspection-based count (clearly captioned), or AHS household-survey estimate (clearly captioned). Every number has a plain-English explanation. No chrome overlaps. "Seasonal swing" and "Data gaps" presets are backed by real CDC and NOAA layers. Header count is honest about the data mix.
 
-## After this chunk
-
-The map answers, in 5 seconds, "what am I looking at" via the rail; every clicked area answers "what do these numbers mean" via labeled context; and Field mode can always be exited. Then we ship.
+After Chunk G: stop and ship.

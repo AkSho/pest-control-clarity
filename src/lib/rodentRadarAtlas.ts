@@ -41,6 +41,14 @@ export type AtlasDataset = {
   activityUse: "official-activity" | "context" | "guidance";
 };
 
+export type Provenance =
+  | "live"
+  | "seeded"
+  | "inspections-housing"
+  | "inspections-commercial"
+  | "ahs-estimate"
+  | "unavailable";
+
 export type PressureMetricSnapshot = {
   id: string;
   placeId: string;
@@ -54,6 +62,7 @@ export type PressureMetricSnapshot = {
   confidence: Confidence;
   confidenceNote: string;
   methodologyNote: string;
+  provenance?: Provenance;
 };
 
 export type ContextLayer = {
@@ -535,6 +544,7 @@ export const pressureMetricSnapshots: PressureMetricSnapshot[] = [
     confidence: "high",
     confidenceNote: "Direct official rodent inspection dataset.",
     methodologyNote: "Counts are inspection records, not unique rats or unique properties.",
+    provenance: "live",
   },
   {
     id: "manhattan-2026-05-21",
@@ -619,6 +629,7 @@ export const pressureMetricSnapshots: PressureMetricSnapshot[] = [
     confidence: "high",
     confidenceNote: "Direct official rodent baiting / rat complaint service requests from the City of Chicago.",
     methodologyNote: "Counts are public service requests, not unique rats or confirmed infestations.",
+    provenance: "seeded",
   },
   {
     id: "boston-2026-05-23",
