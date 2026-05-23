@@ -1,6 +1,15 @@
 import type { ActivityBand, Confidence } from "@/lib/rodentRadar";
 
-export type AtlasRegion = "NYC" | "Bay Area" | "NY/NJ metro" | "United States";
+export type AtlasRegion =
+  | "NYC"
+  | "Bay Area"
+  | "NY/NJ metro"
+  | "United States"
+  | "Midwest"
+  | "Northeast"
+  | "Mid-Atlantic"
+  | "Pacific Northwest"
+  | "Canada";
 
 export type AtlasPlace = {
   id: string;
@@ -129,6 +138,17 @@ const NEWARK_OPEN_DATA_URL = "https://data.ci.newark.nj.us";
 const CDC_HANTA_URL = "https://www.cdc.gov/hantavirus/";
 const CDC_HANTA_PREVENTION_URL = "https://www.cdc.gov/hantavirus/prevention/index.html";
 const CDC_CLEANUP_URL = "https://www.cdc.gov/healthy-pets/rodent-control/clean-up.html";
+const CHICAGO_RODENT_URL = "https://data.cityofchicago.org/Service-Requests/311-Service-Requests/v6vf-nfxy";
+const BOSTON_311_URL = "https://data.boston.gov/dataset/311-service-requests";
+const DC_311_URL =
+  "https://opendata.dc.gov/datasets/DCGIS::311-city-service-requests-in-2025";
+const PHILLY_311_URL = "https://www.opendataphilly.org/dataset/311-service-and-information-requests";
+const SEATTLE_FIF_URL = "https://data.seattle.gov/Community-and-Culture/Find-It-Fix-It-Service-Requests/p3i6-mdy7";
+const TORONTO_311_URL = "https://open.toronto.ca/dataset/311-service-requests-customer-initiated/";
+const DOHMH_VIOLATIONS_URL = "https://data.cityofnewyork.us/Health/DOHMH-New-York-City-Restaurant-Inspection-Results/43nn-pn8j";
+const DSNY_MISSED_URL = "https://data.cityofnewyork.us/City-Government/DSNY-Bulk-Item-Frequency/by5n-fxyh";
+const CHICAGO_FOOD_URL = "https://data.cityofchicago.org/Health-Human-Services/Food-Inspections/4ijn-s7e5";
+const HUD_VACANCY_URL = "https://www.huduser.gov/portal/datasets/usps.html";
 
 export const atlasSources: AtlasSource[] = [
   {
@@ -173,6 +193,76 @@ export const atlasSources: AtlasSource[] = [
     owner: "Centers for Disease Control and Prevention",
     sourceType: "official-guidance",
   },
+  {
+    id: "chicago-311",
+    name: "Chicago 311 Service Requests",
+    url: CHICAGO_RODENT_URL,
+    owner: "City of Chicago",
+    sourceType: "official-open-data",
+  },
+  {
+    id: "boston-311",
+    name: "Boston 311 Service Requests",
+    url: BOSTON_311_URL,
+    owner: "City of Boston",
+    sourceType: "official-open-data",
+  },
+  {
+    id: "dc-311",
+    name: "Washington DC 311 City Service Requests",
+    url: DC_311_URL,
+    owner: "District of Columbia",
+    sourceType: "official-open-data",
+  },
+  {
+    id: "philly-311",
+    name: "Philadelphia 311 Service & Information Requests",
+    url: PHILLY_311_URL,
+    owner: "City of Philadelphia",
+    sourceType: "official-open-data",
+  },
+  {
+    id: "seattle-fif",
+    name: "Seattle Find It, Fix It Service Requests",
+    url: SEATTLE_FIF_URL,
+    owner: "City of Seattle",
+    sourceType: "official-open-data",
+  },
+  {
+    id: "toronto-311",
+    name: "Toronto 311 Service Requests (Customer Initiated)",
+    url: TORONTO_311_URL,
+    owner: "City of Toronto",
+    sourceType: "official-open-data",
+  },
+  {
+    id: "nyc-dohmh-violations",
+    name: "NYC DOHMH Restaurant Inspection Results",
+    url: DOHMH_VIOLATIONS_URL,
+    owner: "NYC Department of Health and Mental Hygiene",
+    sourceType: "context",
+  },
+  {
+    id: "nyc-dsny-bulk",
+    name: "NYC DSNY Bulk Item Frequency",
+    url: DSNY_MISSED_URL,
+    owner: "NYC Department of Sanitation",
+    sourceType: "context",
+  },
+  {
+    id: "chicago-food-inspections",
+    name: "Chicago Food Inspections",
+    url: CHICAGO_FOOD_URL,
+    owner: "City of Chicago",
+    sourceType: "context",
+  },
+  {
+    id: "hud-vacancy",
+    name: "HUD USPS Vacancy Data",
+    url: HUD_VACANCY_URL,
+    owner: "U.S. Department of Housing and Urban Development",
+    sourceType: "context",
+  },
 ];
 
 export const atlasDatasets: AtlasDataset[] = [
@@ -195,6 +285,76 @@ export const atlasDatasets: AtlasDataset[] = [
     updateCadence: "Official open data portal",
     filterNote: "service fields containing rodent or vermin",
     activityUse: "official-activity",
+  },
+  {
+    id: "v6vf-nfxy",
+    sourceId: "chicago-311",
+    name: "311 Service Requests — Rodent Baiting / Rat Complaint",
+    url: CHICAGO_RODENT_URL,
+    geography: "City of Chicago",
+    updateCadence: "Daily on Chicago Open Data",
+    filterNote: "sr_type = 'Rodent Baiting/Rat Complaint', filtered by created_date",
+    activityUse: "official-activity",
+  },
+  {
+    id: "boston-311-rodent",
+    sourceId: "boston-311",
+    name: "311 Service Requests — Rodent Activity / Mice / Rat Bite",
+    url: BOSTON_311_URL,
+    geography: "City of Boston",
+    updateCadence: "Daily, split by year resource",
+    filterNote: "type IN (Rodent Activity, Mice Infestation - Residential, Rat Bite), filtered by open_dt",
+    activityUse: "official-activity",
+  },
+  {
+    id: "dc-311-s0301",
+    sourceId: "dc-311",
+    name: "311 City Service Requests — Rodent Inspection and Treatment (S0301)",
+    url: DC_311_URL,
+    geography: "District of Columbia",
+    updateCadence: "Daily, split by year layer",
+    filterNote: "SERVICECODE = 'S0301', filtered by ADDDATE",
+    activityUse: "official-activity",
+  },
+  {
+    id: "nyc-dohmh-violations-ds",
+    sourceId: "nyc-dohmh-violations",
+    name: "DOHMH violations: evidence of mice / rats / live roaches",
+    url: DOHMH_VIOLATIONS_URL,
+    geography: "NYC",
+    updateCadence: "Updated regularly",
+    filterNote: "violation_description LIKE '%mice%' OR '%rats%' over rolling window",
+    activityUse: "context",
+  },
+  {
+    id: "nyc-dsny-bulk-ds",
+    sourceId: "nyc-dsny-bulk",
+    name: "DSNY collection signals (bulk + missed collection context)",
+    url: DSNY_MISSED_URL,
+    geography: "NYC",
+    updateCadence: "Updated regularly",
+    filterNote: "Bulk collection frequency, used as sanitation pressure context",
+    activityUse: "context",
+  },
+  {
+    id: "chicago-food-inspections-ds",
+    sourceId: "chicago-food-inspections",
+    name: "Chicago food establishment inspections — rodent / pest evidence",
+    url: CHICAGO_FOOD_URL,
+    geography: "City of Chicago",
+    updateCadence: "Updated regularly",
+    filterNote: "violations LIKE '%RODENT%' OR '%PEST%', commercial pressure context",
+    activityUse: "context",
+  },
+  {
+    id: "hud-vacancy-ds",
+    sourceId: "hud-vacancy",
+    name: "HUD USPS residential / business vacancy",
+    url: HUD_VACANCY_URL,
+    geography: "United States, ZIP / tract",
+    updateCadence: "Quarterly",
+    filterNote: "Vacancy rate as built-environment context, registration required",
+    activityUse: "context",
   },
 ];
 
@@ -299,6 +459,66 @@ export const atlasPlaces: AtlasPlace[] = [
     lng: -121.8863,
     transparencyStatus: "partial",
   },
+  {
+    id: "chicago",
+    name: "Chicago",
+    shortName: "Chicago",
+    region: "Midwest",
+    geo: "City",
+    lat: 41.8781,
+    lng: -87.6298,
+    transparencyStatus: "verified",
+  },
+  {
+    id: "boston",
+    name: "Boston",
+    shortName: "Boston",
+    region: "Northeast",
+    geo: "City",
+    lat: 42.3601,
+    lng: -71.0589,
+    transparencyStatus: "verified",
+  },
+  {
+    id: "washington-dc",
+    name: "Washington, DC",
+    shortName: "DC",
+    region: "Mid-Atlantic",
+    geo: "City / federal district",
+    lat: 38.9072,
+    lng: -77.0369,
+    transparencyStatus: "verified",
+  },
+  {
+    id: "philadelphia",
+    name: "Philadelphia",
+    shortName: "Philadelphia",
+    region: "Northeast",
+    geo: "City",
+    lat: 39.9526,
+    lng: -75.1652,
+    transparencyStatus: "not-found",
+  },
+  {
+    id: "seattle",
+    name: "Seattle",
+    shortName: "Seattle",
+    region: "Pacific Northwest",
+    geo: "City",
+    lat: 47.6062,
+    lng: -122.3321,
+    transparencyStatus: "not-found",
+  },
+  {
+    id: "toronto",
+    name: "Toronto",
+    shortName: "Toronto",
+    region: "Canada",
+    geo: "City",
+    lat: 43.6532,
+    lng: -79.3832,
+    transparencyStatus: "not-found",
+  },
 ];
 
 export const pressureMetricSnapshots: PressureMetricSnapshot[] = [
@@ -386,6 +606,48 @@ export const pressureMetricSnapshots: PressureMetricSnapshot[] = [
     confidenceNote: "Official 311 cases filtered by rodent/vermin terms; category also includes insect infestation wording.",
     methodologyNote: "Counts are public service requests, not unique rats or confirmed infestations.",
   },
+  {
+    id: "chicago-2026-05-23",
+    placeId: "chicago",
+    datasetId: "v6vf-nfxy",
+    snapshotDate: "2026-05-23",
+    queryWindow: "2025-05-23 through 2026-05-23",
+    sourceFilter: "sr_type = 'Rodent Baiting/Rat Complaint', created_date in window",
+    last12MonthsCount: 44925,
+    previous12MonthsCount: 44449,
+    recent90DayCount: 10291,
+    confidence: "high",
+    confidenceNote: "Direct official rodent baiting / rat complaint service requests from the City of Chicago.",
+    methodologyNote: "Counts are public service requests, not unique rats or confirmed infestations.",
+  },
+  {
+    id: "boston-2026-05-23",
+    placeId: "boston",
+    datasetId: "boston-311-rodent",
+    snapshotDate: "2026-05-23",
+    queryWindow: "2025-05-23 through 2026-05-23",
+    sourceFilter: "type IN (Rodent Activity, Mice Infestation - Residential, Rat Bite), open_dt in window, joined across 2025+2026 yearly resources",
+    last12MonthsCount: 5916,
+    previous12MonthsCount: 5203,
+    recent90DayCount: 1306,
+    confidence: "high",
+    confidenceNote: "Direct official Boston 311 rodent-taxonomy service requests.",
+    methodologyNote: "Counts are public service requests, not unique rats or confirmed infestations.",
+  },
+  {
+    id: "washington-dc-2026-05-23",
+    placeId: "washington-dc",
+    datasetId: "dc-311-s0301",
+    snapshotDate: "2026-05-23",
+    queryWindow: "2025-05-23 through 2026-05-23",
+    sourceFilter: "SERVICECODE = 'S0301' (Rodent Inspection and Treatment), ADDDATE in window, joined across 2024/2025/2026 yearly layers",
+    last12MonthsCount: 5116,
+    previous12MonthsCount: 3831,
+    recent90DayCount: 2683,
+    confidence: "high",
+    confidenceNote: "Direct official DC 311 rodent inspection and treatment service requests.",
+    methodologyNote: "Counts are public service requests, not unique rats or confirmed infestations.",
+  },
 ];
 
 export const watchlistPlaces: WatchlistPlace[] = [
@@ -421,37 +683,71 @@ export const watchlistPlaces: WatchlistPlace[] = [
     reviewedOn: "2026-05-21",
     reviewNote: "Reviewed current service type and category values; no rodent, rat, mice, or vermin service type was found.",
   },
+  {
+    placeId: "philadelphia",
+    reason: "Philadelphia publishes 311 service & information requests via OpenDataPhilly, but the public_cases_fc service_name field does not include a dedicated rodent/rat/vermin service type usable for scoring.",
+    reviewedSourceName: "OpenDataPhilly — 311 Service & Information Requests",
+    reviewedSourceUrl: PHILLY_311_URL,
+    reviewedOn: "2026-05-23",
+    reviewNote: "Carto SQL probe of service_name returned no rodent/rat/vermin/mice/pest types in the last 12 months; rodent-language only appears as free-text in the subject field, which is not a stable taxonomy.",
+  },
+  {
+    placeId: "seattle",
+    reason: "Seattle's Find It, Fix It dataset does not expose a citywide rodent or vermin service request type; rodent control is handled by Public Health — Seattle & King County rather than the city portal.",
+    reviewedSourceName: "Seattle Find It, Fix It Service Requests",
+    reviewedSourceUrl: SEATTLE_FIF_URL,
+    reviewedOn: "2026-05-23",
+    reviewNote: "Reviewed dataset categories; no rodent / rat / vermin service type. Sewer baiting points are a separate, narrow operations dataset and not citywide complaints.",
+  },
+  {
+    placeId: "toronto",
+    reason: "Toronto's 311 customer-initiated dataset does not separately categorize rodent complaints; rodent inspections are a Toronto Public Health responsibility without a comparable open data feed.",
+    reviewedSourceName: "Toronto Open Data — 311 Service Requests (Customer Initiated)",
+    reviewedSourceUrl: TORONTO_311_URL,
+    reviewedOn: "2026-05-23",
+    reviewNote: "Reviewed 311 service request categories; no auditable rodent or vermin service type was found suitable for activity scoring.",
+  },
 ];
 
 export const contextLayers: ContextLayer[] = [
   {
-    id: "sanitation-context",
-    name: "Sanitation context",
+    id: "dohmh-restaurant-rodent",
+    name: "NYC restaurant rodent evidence",
     label: "Context only",
-    description: "Trash, waste, and sanitation signals can help explain where rodent pressure may become visible.",
-    sourceRequirement: "Official city sanitation or 311 datasets only.",
-    scoringNote: "Context only. Not included in official Rodent Activity.",
-    status: "planned",
+    description: "DOHMH inspection violations citing 'evidence of mice / rats / live roaches' in NYC food establishments.",
+    sourceRequirement: "NYC DOHMH Restaurant Inspection Results dataset, filtered by rodent-related violation codes.",
+    scoringNote: "Context only. Helps explain commercial-corridor pressure; not included in official Rodent Activity.",
+    status: "available-now",
   },
   {
-    id: "restaurant-violations",
-    name: "Restaurant rodent violations",
+    id: "dsny-collection-pressure",
+    name: "NYC sanitation collection pressure",
     label: "Context only",
-    description: "Food-establishment rodent violations can help PMPs and local readers understand commercial pressure.",
-    sourceRequirement: "Official inspection datasets with auditable rodent violation fields.",
-    scoringNote: "Context only unless promoted through a future official-activity review.",
-    status: "planned",
+    description: "DSNY bulk-collection frequency as a sanitation pressure proxy where rodent activity is most visible.",
+    sourceRequirement: "DSNY Bulk Item Frequency or missed-collection dataset, aggregated by community district.",
+    scoringNote: "Context only. Sanitation signals are correlated with rodent visibility but not identical to activity.",
+    status: "available-now",
   },
   {
-    id: "built-environment",
-    name: "Built environment",
+    id: "chicago-food-rodent",
+    name: "Chicago food inspection rodent evidence",
     label: "Context only",
-    description: "Density, housing age, transit, alleys, and land-use context can make the atlas more explorable.",
-    sourceRequirement: "Public civic datasets or federal datasets with clear geography.",
-    scoringNote: "Context only. Not included in official Rodent Activity.",
+    description: "Chicago food establishment inspections citing rodent or pest evidence in the violations narrative.",
+    sourceRequirement: "City of Chicago Food Inspections dataset, filtered for violations containing 'RODENT' or 'PEST'.",
+    scoringNote: "Context only. Complements the Chicago Rodent Baiting activity layer with commercial-side signal.",
+    status: "available-now",
+  },
+  {
+    id: "hud-vacancy",
+    name: "Vacant property pressure (HUD/USPS)",
+    label: "Context only",
+    description: "Residential and business vacancy as a built-environment context layer; vacant buildings often become rodent harborage.",
+    sourceRequirement: "HUD USPS vacancy data, ZIP or tract resolution; registration required.",
+    scoringNote: "Context only. Helps explain replacement pressure but is not a rodent activity measurement.",
     status: "planned",
   },
 ];
+
 
 export const atlasLayerDefinitions: AtlasLayerDefinition[] = [
   {
