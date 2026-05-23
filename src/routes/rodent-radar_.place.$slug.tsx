@@ -9,6 +9,7 @@ import {
   getColonyGrowthProjection,
   getRatPressureResults,
   pressureMetricSnapshots,
+  type PressureMetricSnapshot,
 } from "@/lib/rodentRadarAtlas";
 
 const SITE_ORIGIN = "https://opengridworks.example"; // canonical origin placeholder; replaced by hosting domain in head meta

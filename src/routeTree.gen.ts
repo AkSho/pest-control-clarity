@@ -54,6 +54,7 @@ import { Route as RodentRadarAttributionRouteImport } from './routes/rodent-rada
 import { Route as ProductsStarterKitRouteImport } from './routes/products.starter-kit'
 import { Route as ProductsRefillRouteImport } from './routes/products.refill'
 import { Route as AreasAreaSlugRouteImport } from './routes/areas.$areaSlug'
+import { Route as RodentRadarPlaceSlugRouteImport } from './routes/rodent-radar_.place.$slug'
 
 const WhyItKeepsComingBackRoute = WhyItKeepsComingBackRouteImport.update({
   id: '/why-it-keeps-coming-back',
@@ -287,6 +288,11 @@ const AreasAreaSlugRoute = AreasAreaSlugRouteImport.update({
   path: '/areas/$areaSlug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RodentRadarPlaceSlugRoute = RodentRadarPlaceSlugRouteImport.update({
+  id: '/rodent-radar_/place/$slug',
+  path: '/rodent-radar/place/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -334,6 +340,7 @@ export interface FileRoutesByFullPath {
   '/vs/viking-pest-control': typeof VsVikingPestControlRoute
   '/vs/western-pest-services': typeof VsWesternPestServicesRoute
   '/areas/': typeof AreasIndexRoute
+  '/rodent-radar/place/$slug': typeof RodentRadarPlaceSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -381,6 +388,7 @@ export interface FileRoutesByTo {
   '/vs/viking-pest-control': typeof VsVikingPestControlRoute
   '/vs/western-pest-services': typeof VsWesternPestServicesRoute
   '/areas': typeof AreasIndexRoute
+  '/rodent-radar/place/$slug': typeof RodentRadarPlaceSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -429,6 +437,7 @@ export interface FileRoutesById {
   '/vs/viking-pest-control': typeof VsVikingPestControlRoute
   '/vs/western-pest-services': typeof VsWesternPestServicesRoute
   '/areas/': typeof AreasIndexRoute
+  '/rodent-radar_/place/$slug': typeof RodentRadarPlaceSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -478,6 +487,7 @@ export interface FileRouteTypes {
     | '/vs/viking-pest-control'
     | '/vs/western-pest-services'
     | '/areas/'
+    | '/rodent-radar/place/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -525,6 +535,7 @@ export interface FileRouteTypes {
     | '/vs/viking-pest-control'
     | '/vs/western-pest-services'
     | '/areas'
+    | '/rodent-radar/place/$slug'
   id:
     | '__root__'
     | '/'
@@ -572,6 +583,7 @@ export interface FileRouteTypes {
     | '/vs/viking-pest-control'
     | '/vs/western-pest-services'
     | '/areas/'
+    | '/rodent-radar_/place/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -620,6 +632,7 @@ export interface RootRouteChildren {
   VsVikingPestControlRoute: typeof VsVikingPestControlRoute
   VsWesternPestServicesRoute: typeof VsWesternPestServicesRoute
   AreasIndexRoute: typeof AreasIndexRoute
+  RodentRadarPlaceSlugRoute: typeof RodentRadarPlaceSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -939,6 +952,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AreasAreaSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/rodent-radar_/place/$slug': {
+      id: '/rodent-radar_/place/$slug'
+      path: '/rodent-radar/place/$slug'
+      fullPath: '/rodent-radar/place/$slug'
+      preLoaderRoute: typeof RodentRadarPlaceSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -989,6 +1009,7 @@ const rootRouteChildren: RootRouteChildren = {
   VsVikingPestControlRoute: VsVikingPestControlRoute,
   VsWesternPestServicesRoute: VsWesternPestServicesRoute,
   AreasIndexRoute: AreasIndexRoute,
+  RodentRadarPlaceSlugRoute: RodentRadarPlaceSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
