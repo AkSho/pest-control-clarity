@@ -1,104 +1,226 @@
+## Goal
 
-# Chunk G — Clarity, Honesty & Coverage
+Rebuild `/rodent-radar/rat-pressure-map` so a first-time consumer thinks, within 5 seconds:
 
-Goal: kill remaining overlaps, rewrite every panel to 8th-grade English, be honest about what's mocked vs. real, and replace mystery "?" pins with sourced data (live counts, inspection-based counts, or AHS household estimates).
+> "Rodent activity is not random. There's a public-data trail. My area has a pattern."
 
----
+And, by the time they leave the drawer:
 
-## Audit findings (what's actually on the map today)
+> "Traditional control reacts to sightings. Cloakd reveals the replacement cycle behind them."
 
-- **6 truly live**: Brooklyn, Manhattan, Bronx, Queens, Staten Island, San Francisco — backed by the CSV.
-- **3 seeded but labeled "high confidence"**: Chicago, Boston, DC are hardcoded in `rodentRadarAtlas.ts` with hand-entered numbers. **That's the "mocked data" you sensed.**
-- **7 "?" gap pins**: Jersey City, Newark, Oakland, San Jose, Philadelphia, Seattle, Toronto — honest gaps with no clean rodent-typed 311 feed.
-- **Jargon source**: `getColonyGrowthProjection()` produces lines like "established colony pattern trajectory" by gluing band labels together.
+Map = facts only. Drawer = interpretation. No CTAs inside the drawer.
 
 ---
 
-## 1. Overlap & chrome cleanup
+## Strategic guardrails (locked)
 
-File: `src/routes/rodent-radar_.rat-pressure-map.tsx` (+ small `Z` constant pass).
-
-- **Rail header bleed** → wrap title/BETA/meta in a `<header>` with bottom border and `pr-12`; clamp scroll area below it so the header never scrolls under TopTools.
-- **Bottom tabs clipped** → move `Layers / Sources / Guide` into a `sticky bottom-0` footer inside the rail (solid bg + top border).
-- **"Click a marker for details" hint** → relocate to top-center of the map, auto-hide after first selection, `pointer-events-none`.
-- **Z-index ladder**: `mapControls: 20, rail: 30, topTools: 35, fieldChip: 40, drawer: 50, popover: 60`.
-
-## 2. Plain-English rewrite (8th grade, direct & factual)
-
-Files: `src/lib/rodentRadarAtlas.ts` (copy maps), `rat-pressure-map.tsx` (selection panel + lede).
-
-| Where | Before | After |
-|---|---|---|
-| Colony band | "established colony pattern" | "Lots of rats living here" |
-| Selection lede | "Manhattan is showing a established colony pattern trajectory." | "Manhattan has heavy rat activity. Reports are down 12% from last year." |
-| Trend | "Recent activity is accelerating vs other tracked areas" | "Activity is rising faster than other cities we track." |
-| Confidence | "high" | "High — based on official city data." |
-
-Add a `metricExplainers` map. Every number in the selection panel gets a one-line "What this means" caption (e.g. `87,537` → "Public rat reports filed with NYC in the last year.").
-
-## 3. Honesty pass: provenance & gap-pin restyle
-
-`src/lib/rodentRadarAtlas.ts`, `rat-pressure-map.tsx`.
-
-- Add `provenance: "live" | "seeded" | "inspections-commercial" | "inspections-housing" | "ahs-estimate" | "unavailable"` to `RatPressureResult` / pin model.
-- Dot styling per provenance:
-  - **live** → solid filled.
-  - **seeded** → dashed halo + "Sample — verifying source" badge.
-  - **inspections-*** → solid with small wrench glyph + caveat in drawer.
-  - **ahs-estimate** → hollow ring + "Survey estimate" label.
-- Replace mystery "?" with outlined dot + "Survey estimate" or "No data yet" hover label depending on provenance.
-- Rail header count: replace "9 verified areas" with honest split — e.g. "6 live · 3 sample · 3 inspections · 4 estimates" — driven by the data.
-
-## 4. Mini visual polish (OGW alignment)
-
-- Rail titles `text-sm uppercase tracking-wider`; body `text-sm leading-relaxed`.
-- Right-align numeric values in legend rows (OGW-style `7,231 | 157.8GW`).
-- Thin section separators (`border-t border-white/5`), no full dividers.
-
-## 5. Data sources — tiered gap fill
-
-No more mystery pins. Every dot is live, inspection-based, or a sourced survey estimate.
-
-### 5a. Live Chicago (real fetch)
-- `scripts/fetch-rodent-snapshots.ts` (new) — generalized SODA-API puller. Hits `data.cityofchicago.org/resource/v6vf-nfxy.json?$where=sr_type='Rodent Baiting/Rat Complaint' …`. Computes 12mo / prev-12mo / 90d. Writes to `rat-pressure-snapshots.csv`. Run once this chunk; commit the refreshed CSV. Chicago flips to `provenance: "live"`.
-
-### 5b. Promote 3 gap pins to live via inspection feeds
-- **Philadelphia** → OpenDataPhilly L&I `violations` filtered for `RODENT`/`INFESTATION`/`VERMIN` + Phila food inspections. `provenance: "inspections-housing"`.
-- **Seattle** → Public Health Seattle & King County restaurant inspections, violation code "rodents, insects, animals present". `provenance: "inspections-commercial"`.
-- **Toronto** → DineSafe infraction "Operator failed to ensure premises is free of pests". `provenance: "inspections-commercial"`.
-- Each gets a caveat in the drawer ("Source: restaurant inspections, not residential complaints").
-- Seeded into the CSV by the same script (or static JSON adapter if SODA shape differs).
-
-### 5c. Convert 4 remaining gaps to AHS estimates
-- **Jersey City, Newark, Oakland, San Jose** → American Housing Survey "Selected Conditions — evidence of rodents in last 12 months" metro-level percentages. AHS is the only federally-published direct rodent-prevalence measure.
-- Seed `public/rodent-radar/data/ahs-rodent-estimates.json` with the 4 metros (manually pulled from AHS 2023 tables, source URL recorded per row).
-- Render as hollow estimate pins: "~9% of households reported rodents in past year — American Housing Survey, NY/NJ metro 2023." Single number, no trend, no rank.
-
-### 5d. Honest fallback for Chicago/Boston/DC seeded numbers
-- If 5a script generalizes to Boston (`data.boston.gov` 311 with rodent types) and DC (`311.dc.gov` ServiceCode `S0301`) cleanly within this chunk, wire them live too. Otherwise keep `provenance: "seeded"` with the dashed-halo badge until next pass — never claim "high confidence" again.
-
-### 5e. Global context layers (toggleable, applied to ALL pins)
-- **AHS overlay** — every dot can show "and X% of households here reported rodents" as a secondary number. This is the "weave correlated data" answer.
-- **CDC NNDSS** — state-level leptospirosis/hantavirus tint. Static `public/rodent-radar/data/cdc-zoonotic.json` + regeneration script. Wired to "Why it matters" framing.
-- **NOAA winter temp anomaly** — county-level annual anomaly seeded JSON. Powers the "Seasonal swing" preset honestly (currently shows trends with no climate input).
-
-### Out of scope
-- LA MyLA311 rodent feed — defer to next chunk (real but needs its own adapter).
-- USDA / EPA — reference links in `Sources` tab only.
+- **Brand**: Cloakd. Purge any "PestPro" / "Rodent Radar by PestPro" copy.
+- **Map = Official Rodent Activity only**: inspections + complaints + clean 311. No mock data, no AHS-derived activity, no estimated rat population, no "rats per person."
+- **Reviewed Data Gaps are first-class**: ~50 metros visible at all times. If we don't have a clean source, the metro renders as an outlined "data-gap" marker (OGW's padlock equivalent) with a reviewed-source explainer in the drawer.
+- **Colony Growth is gated**: toggleable layer, but visually distinct (diagonal-stripe rendering, not dots) + one-click confirm with disclaimer before enabling; primary expression lives in the drawer per-city.
+- **No CTA in the drawer.** Atlas stays neutral. Cloakd narrative lives in page chrome (sidebar footer, methodology page).
+- **Cinematic / guided-tour mode is deferred.** Build the atlas foundation first.
 
 ---
 
-## Files touched
+## Information architecture (full OGW-style clone, US-only)
 
-- `src/routes/rodent-radar_.rat-pressure-map.tsx` — overlap fix, copy rewrite, provenance badges, lede, hint relocation.
-- `src/lib/rodentRadarAtlas.ts` — copy maps, `provenance` field, `metricExplainers`, new context layers, AHS pin type.
-- `public/rodent-radar/data/rat-pressure-snapshots.csv` — refreshed with live Chicago (+ Boston/DC if script generalizes).
-- `public/rodent-radar/data/ahs-rodent-estimates.json` (new) — 4 AHS metros.
-- `public/rodent-radar/data/cdc-zoonotic.json` (new), `public/rodent-radar/data/noaa-temp-anomaly.json` (new).
-- `scripts/fetch-rodent-snapshots.ts` (new) — generalized 311 puller.
+```text
+┌──────────────────────────────────────────────────────────────┐
+│  [⌘K search] [share] [bookmark] [history]                    │  ← slim top toolbar
+├────────────┬─────────────────────────────────────────────────┤
+│ Sidebar    │                                                 │
+│            │                                                 │
+│ Cloakd     │                                                 │
+│ Rodent     │              MAP FILLS VIEWPORT                 │
+│ Radar      │         (city dots + gap markers)               │
+│            │                                                 │
+│ Metric     │                                                 │
+│ Legend     │                                                 │
+│ Size scale │                                                 │
+│ Confidence │                                                 │
+│ key        │                                                 │
+│            │                                                 │
+│ Filters    │  ┌────────┐ ┌──────────┐ ┌──────────┐           │
+│            │  │ Layers │ │ Climate  │ │ Map Type │  ← docked│
+│ "About the │  └────────┘ └──────────┘ └──────────┘    cards │
+│  data"     │                                       (bottom-L)│
+│ footer     │                                                 │
+└────────────┴─────────────────────────────────────────────────┘
+```
 
-## What ships at the end
+- **Single left sidebar** (replaces current rail + tools + drawer split): brand → primary metric selector → legend → bubble-size scale → confidence key → filters → "About the data" footer link.
+- **Three bottom-left docked cards**: Layers (grouped POINTS / AREAS), Climate (NOAA overlays), Map Type (terrain / satellite / dark). Layers panel expands upward when clicked.
+- **Slim top toolbar**: ⌘K search, share (state-encoded URL with `?layers=…&metric=…&city=…`), bookmark (deferred, just a tooltip "coming soon" lock icon), history (deferred).
+- **City click → drawer** (keep existing slide-over surface). This is the ONLY modal surface.
+- **Fixes the existing drawer-close bug**: map disappears after closing a city drawer until refresh. Root cause is almost certainly state cleanup in the current `rat-pressure-map.tsx` — patch as part of the rebuild.
 
-A map with **zero mystery pins**. Every dot is one of: live city count, inspection-based count (clearly captioned), or AHS household-survey estimate (clearly captioned). Every number has a plain-English explanation. No chrome overlaps. "Seasonal swing" and "Data gaps" presets are backed by real CDC and NOAA layers. Header count is honest about the data mix.
+---
 
-After Chunk G: stop and ship.
+## Data layer
+
+### 1. One connector interface, four adapters
+
+`src/lib/rodent-sources/` (new):
+
+```text
+src/lib/rodent-sources/
+├── types.ts              # RodentActivitySource interface
+├── adapters/
+│   ├── socrata.ts
+│   ├── arcgis.ts
+│   ├── open311.ts
+│   └── ckan.ts
+├── normalize.ts          # ACS join + 4 normalizations
+└── fetch-all.ts          # script entry
+```
+
+Every adapter outputs a single normalized record shape:
+
+```ts
+type RodentActivityRecord = {
+  recordedAt: string;         // ISO
+  zip: string;                // primary geocode
+  tract?: string;             // drill-down
+  category: 'inspection' | 'complaint' | 'service_request';
+  rawType: string;            // e.g. "Rodent", "Vermin", "RAT SIGHTING"
+  resolved?: boolean;
+  sourceId: string;           // FK to RodentActivitySource
+};
+
+type RodentActivitySource = {
+  id: string;
+  city: string;
+  state: string;
+  name: string;                // human-readable
+  url: string;                 // citizen-facing portal page
+  endpoint: string;            // API URL we pull from
+  type: 'socrata' | 'arcgis' | 'open311' | 'ckan' | 'static' | 'gap';
+  filterRule: string;          // plain-English filter we apply
+  snapshotDate: string;
+  confidence: 'high' | 'medium' | 'low';
+  comparabilityNote: string;
+  reviewedExplanation?: string; // required when type='gap'
+};
+```
+
+### 2. Phase A cities (launch set, ~18-22)
+
+Cities we already know have clean rodent-coded datasets:
+
+NYC, Chicago, LA, SF, Seattle, Boston, DC, Austin, Dallas, Pittsburgh, Baltimore, New Orleans, Minneapolis, Denver, Nashville, Philadelphia, Portland-OR, Atlanta, Houston, San Diego, Phoenix, Detroit.
+
+Each gets a JSON snapshot at `public/rodent-radar/data/cities/{slug}.json` with:
+- 12-month total + per-1k-residents + per-1k-housing-units + per-sq-mile
+- Prior 12-month for YoY delta
+- 90-day recent + per-10k recent
+- Top 5 ZIPs by volume
+- Top 3 ZIPs by 90-day spike (persistence signal)
+- Source metadata (RodentActivitySource above)
+
+### 3. Reviewed Data Gaps (fills out the ~50)
+
+For ~30 more major metros where we've reviewed sources and found none clean enough:
+- Render as an outlined hollow marker on the map (visually distinct from live dots).
+- Drawer shows: "We reviewed [N] potential sources. Here's why none qualified." with links to the portals we evaluated.
+- A `gap-explanations.json` file holds these.
+
+### 4. Context layers (toggleable, separate)
+
+| Layer | Source | Visual | Notes |
+|---|---|---|---|
+| Climate: winter temp anomaly | NOAA NCEI | Choropleth overlay (climate divisions) | Already partially built |
+| Climate: precipitation anomaly | NOAA | Choropleth | New |
+| Restaurant rodent/vermin violations | City inspection datasets coded for rodent | Small triangle markers | Only where coding is explicit; otherwise omitted |
+| Housing age + vacancy + density | Census ACS | Choropleth at ZCTA | Context only |
+| Transit corridors | OSM | Line overlay | Context only |
+| Colony Growth (modeled) | Derived | Diagonal-stripe overlay | Gated: confirm dialog first |
+
+All context layers live in the Layers docked card grouped under AREAS / LINES / POINTS like OGW. Toggling them does NOT alter the Official Activity dot encoding.
+
+---
+
+## Visual encoding (map dots)
+
+- **Color** = primary metric band (default: 90-day per-10k-residents). 5 bands using existing pressure palette.
+- **Size** = absolute 12-month complaint volume (sqrt scale).
+- **Stroke** = trend vs prior 12-month: solid (flat), thick (rising), dashed (falling).
+- **Opacity + ring** = confidence:
+  - High: 100% opacity, no extra ring
+  - Medium: 70% opacity, thin ring
+  - Low: 40% opacity, dashed ring
+- **Data gap**: hollow outlined marker, no fill, lock-icon glyph inside.
+
+Sidebar legend mirrors this exactly — every encoding has a visible swatch.
+
+---
+
+## City drawer (the Cloakd narrative arc)
+
+Four beats, no CTA:
+
+1. **Activity** — "Here's what's officially reported."
+   - Big number: 12-month total + per-10k-residents
+   - Source line with link + snapshot date + confidence chip
+2. **Persistence** — "Reports keep coming, in the same places."
+   - 90-day vs prior-period delta
+   - Top 3 ZIPs by spike, mini bar chart
+3. **Trajectory (Colony Growth interpretation)** — "This is what replacement looks like in this area."
+   - Plain-English paragraph: "Repeated activity at the same ZIPs over [N] months suggests an established colony cycle, where removing visible rodents creates capacity for the next generation rather than ending the pattern."
+   - Explicitly framed as interpretation, not city data. No number.
+4. **What public data can't tell you** — methodology limits, link to attribution page.
+
+No CTA, no "buy Cloakd" button, no per-city sales line. The Cloakd story is *implicit in beat 3* — readers reach the conclusion themselves.
+
+---
+
+## Files to change / create
+
+**Create**
+- `src/lib/rodent-sources/types.ts`
+- `src/lib/rodent-sources/adapters/{socrata,arcgis,open311,ckan}.ts`
+- `src/lib/rodent-sources/normalize.ts`
+- `src/lib/rodent-sources/fetch-all.ts` (script)
+- `src/components/rodent-radar/AtlasSidebar.tsx`
+- `src/components/rodent-radar/LayerCard.tsx` (reusable for Layers/Climate/MapType)
+- `src/components/rodent-radar/ConfidenceKey.tsx`
+- `src/components/rodent-radar/CityDrawer.tsx` (refactor of existing drawer with 4-beat structure)
+- `public/rodent-radar/data/cities/{slug}.json` × ~20
+- `public/rodent-radar/data/gap-explanations.json`
+- `public/rodent-radar/data/noaa-precip-anomaly.json`
+
+**Edit**
+- `src/routes/rodent-radar_.rat-pressure-map.tsx` (rewrite layout, fix drawer-close bug)
+- `src/lib/rodentRadarAtlas.ts` (collapse provenance to `live | gap`)
+- `src/lib/rodentRadarProvenance.ts` (kill `seeded`, `ahs-estimate`)
+- `src/routes/rodent-radar.tsx` (purge "PestPro", swap to Cloakd brand wording)
+- Any page referencing the rat map's hero copy
+
+**Delete**
+- `public/rodent-radar/data/rat-pressure-snapshots.csv`
+- `public/rodent-radar/data/rat-pressure-snapshots.json`
+- `public/rodent-radar/data/ahs-rodent-estimates.json` (or demote to a clearly-labeled context layer; default = delete)
+
+---
+
+## Acceptance criteria
+
+1. Brand reads "Cloakd" everywhere; no "PestPro" string remains.
+2. ~50 US metros visible at all times — every one is either a live Official Activity pin or a hollow reviewed-gap marker.
+3. Zero mock / seeded / AHS-as-activity records on the map.
+4. Sidebar + three docked layer cards + top toolbar; no rail + tools + drawer split.
+5. Map fills viewport at all sizes ≥ 1024px wide.
+6. Closing a city drawer leaves the map fully populated (no refresh required).
+7. Every live dot exposes source URL + filter rule + snapshot date + confidence.
+8. Colony Growth requires a confirm dialog before its layer enables; appears as a stripe overlay, not as dots.
+9. City drawer follows the 4-beat structure and contains zero CTA buttons or product mentions.
+10. Share URL round-trips state: `?layers=…&metric=…&city=…` opens the same view.
+
+## Out of scope (explicit)
+
+- Cinematic / guided-tour mode (next chunk)
+- Bookmark history (lock icon for now)
+- Phase B cities beyond the ~50 launch set
+- Tract-level choropleth (ZCTA only for v1)
+- Canada / global / world toggle
+- Per-user accounts, saved views
