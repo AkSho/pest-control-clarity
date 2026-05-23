@@ -559,6 +559,7 @@ export const pressureMetricSnapshots: PressureMetricSnapshot[] = [
     confidence: "high",
     confidenceNote: "Direct official rodent inspection dataset.",
     methodologyNote: "Counts are inspection records, not unique rats or unique properties.",
+    provenance: "live",
   },
   {
     id: "bronx-2026-05-21",
@@ -573,6 +574,7 @@ export const pressureMetricSnapshots: PressureMetricSnapshot[] = [
     confidence: "high",
     confidenceNote: "Direct official rodent inspection dataset.",
     methodologyNote: "Counts are inspection records, not unique rats or unique properties.",
+    provenance: "live",
   },
   {
     id: "queens-2026-05-21",
@@ -587,6 +589,7 @@ export const pressureMetricSnapshots: PressureMetricSnapshot[] = [
     confidence: "high",
     confidenceNote: "Direct official rodent inspection dataset.",
     methodologyNote: "Counts are inspection records, not unique rats or unique properties.",
+    provenance: "live",
   },
   {
     id: "staten-island-2026-05-21",
@@ -601,6 +604,7 @@ export const pressureMetricSnapshots: PressureMetricSnapshot[] = [
     confidence: "high",
     confidenceNote: "Direct official rodent inspection dataset.",
     methodologyNote: "Counts are inspection records, not unique rats or unique properties.",
+    provenance: "live",
   },
   {
     id: "san-francisco-2026-05-21",
@@ -615,6 +619,7 @@ export const pressureMetricSnapshots: PressureMetricSnapshot[] = [
     confidence: "medium",
     confidenceNote: "Official 311 cases filtered by rodent/vermin terms; category also includes insect infestation wording.",
     methodologyNote: "Counts are public service requests, not unique rats or confirmed infestations.",
+    provenance: "live",
   },
   {
     id: "chicago-2026-05-23",
@@ -644,6 +649,7 @@ export const pressureMetricSnapshots: PressureMetricSnapshot[] = [
     confidence: "high",
     confidenceNote: "Direct official Boston 311 rodent-taxonomy service requests.",
     methodologyNote: "Counts are public service requests, not unique rats or confirmed infestations.",
+    provenance: "seeded",
   },
   {
     id: "washington-dc-2026-05-23",
@@ -658,6 +664,7 @@ export const pressureMetricSnapshots: PressureMetricSnapshot[] = [
     confidence: "high",
     confidenceNote: "Direct official DC 311 rodent inspection and treatment service requests.",
     methodologyNote: "Counts are public service requests, not unique rats or confirmed infestations.",
+    provenance: "seeded",
   },
 ];
 
