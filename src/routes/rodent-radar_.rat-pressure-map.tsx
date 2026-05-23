@@ -222,7 +222,7 @@ function RodentRadarAtlasPage() {
     const next = activeLayers.includes(layerId)
       ? activeLayers.filter((id) => id !== layerId)
       : [...activeLayers, layerId];
-    const normalized = next.includes("rodent-activity") ? next : ["rodent-activity", ...next];
+    const normalized: AtlasLayerId[] = next.includes("rodent-activity") ? next : ["rodent-activity", ...next];
     setActiveLayers(normalized);
     if (!normalized.includes("data-gaps")) {
       setSelectedGapId("");
@@ -252,44 +252,25 @@ function RodentRadarAtlasPage() {
         onSelectGap={selectGap}
       />
 
-      <aside className="absolute left-4 top-4 z-20 hidden max-h-[calc(100vh-2rem)] w-[430px] overflow-hidden rounded-[1.35rem] border border-cyan-200/10 bg-slate-950/82 shadow-2xl shadow-cyan-950/30 backdrop-blur-xl lg:block">
+      <aside className="absolute left-4 top-4 z-20 hidden max-h-[calc(100vh-2rem)] w-[300px] overflow-hidden rounded-2xl border border-white/8 bg-slate-950/82 shadow-2xl shadow-cyan-950/30 backdrop-blur-xl lg:block">
         <div className="flex max-h-[calc(100vh-2rem)] flex-col">
-          <div className="border-b border-white/10 p-6">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <div className="text-4xl font-black tracking-tight">
-                  <span className="text-cyan-300">Rodent</span> Radar
-                </div>
-                <p className="mt-2 text-sm font-semibold leading-relaxed text-slate-400">
-                  Official rodent activity, colony modeling, and civic conditions.
-                </p>
-              </div>
-              <div className="rounded-full border border-yellow-300/40 bg-yellow-300/10 px-3 py-1 text-xs font-black uppercase tracking-[0.14em] text-yellow-200">
+          <div className="border-b border-white/8 px-5 py-4">
+            <div className="flex items-baseline gap-2">
+              <span className="text-base font-semibold tracking-tight">
+                <span className="text-cyan-300">Rodent</span> Radar
+              </span>
+              <span className="rounded-sm border border-yellow-300/40 px-1.5 py-px text-[0.55rem] font-bold uppercase tracking-[0.14em] text-yellow-200/90">
                 beta
-              </div>
+              </span>
             </div>
-            <div className="mt-5 grid grid-cols-3 gap-2">
-              <StatPill label="Verified" value={String(verified.length)} />
-              <StatPill label="Records" value={compactNumber(officialRecords)} />
-              <StatPill label="Gaps" value={String(unavailableRatPressureGeos.length)} />
-            </div>
-            <label className="relative mt-5 block">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
-              <input
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                className="h-11 w-full rounded-xl border border-white/10 bg-white/5 pl-9 pr-3 text-sm font-semibold text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-cyan-300/60"
-                placeholder="Search areas"
-              />
-            </label>
+            <p className="mt-1.5 text-xs leading-relaxed text-slate-400">
+              Public rodent data, for people who live with the consequences.
+            </p>
           </div>
 
-          <div className="min-h-0 flex-1 overflow-y-auto p-6">
-            <div className="flex items-center justify-between gap-3">
-              <div className="text-sm font-black uppercase tracking-[0.16em] text-slate-300">Layers</div>
-              <Settings className="h-4 w-4 text-slate-500" />
-            </div>
-            <div className="mt-4 grid gap-2">
+          <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
+            <div className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-slate-500">Layers</div>
+            <div className="mt-2 grid gap-px">
               {layers.map((layer) => (
                 <LayerRow
                   key={layer.id}
@@ -300,55 +281,50 @@ function RodentRadarAtlasPage() {
               ))}
             </div>
 
-            <div className="mt-7">
-              <div className="text-sm font-black uppercase tracking-[0.16em] text-slate-300">Places</div>
-              <div className="mt-3 grid gap-2">
-                {filteredPlaces.map((place) =>
-                  "last12MonthsCount" in place ? (
-                    <button
-                      key={place.id}
-                      type="button"
-                      onClick={() => selectVerified(place)}
-                      className={`rounded-xl border p-3 text-left transition ${
-                        selected.id === place.id && !selectedGap
-                          ? "border-cyan-300/60 bg-cyan-300/10"
-                          : "border-white/10 bg-white/[0.035] hover:border-cyan-300/35"
-                      }`}
-                    >
-                      <div className="flex items-center justify-between gap-3">
-                        <span className="font-bold text-slate-100">{place.shortName}</span>
-                        <span className={`rounded-full border px-2 py-0.5 text-[0.65rem] font-black uppercase ${bandTone(place.activityBand)}`}>
-                          {activityBandLabels[place.activityBand]}
-                        </span>
-                      </div>
-                      <div className="mt-1 text-xs font-semibold text-slate-500">
-                        {formatCount(place.last12MonthsCount)} official records
-                      </div>
-                    </button>
-                  ) : (
-                    <button
-                      key={place.id}
-                      type="button"
-                      onClick={() => selectGap(place)}
-                      className={`rounded-xl border p-3 text-left transition ${
-                        selectedGap?.id === place.id
-                          ? "border-slate-300/50 bg-slate-300/10"
-                          : "border-white/10 bg-white/[0.035] hover:border-slate-300/35"
-                      }`}
-                    >
-                      <div className="flex items-center justify-between gap-3">
-                        <span className="font-bold text-slate-100">{place.shortName}</span>
-                        <span className="rounded-full border border-slate-400/30 bg-slate-400/10 px-2 py-0.5 text-[0.65rem] font-black uppercase text-slate-300">
-                          data gap
-                        </span>
-                      </div>
-                      <div className="mt-1 text-xs font-semibold text-slate-500">
-                        {place.reviewedSourceName ?? "Source review needed"}
-                      </div>
-                    </button>
-                  ),
-                )}
-              </div>
+            <div className="mt-6 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-slate-500">Places</div>
+            <div className="mt-2 grid gap-px">
+              {filteredPlaces.map((place) =>
+                "last12MonthsCount" in place ? (
+                  <button
+                    key={place.id}
+                    type="button"
+                    onClick={() => selectVerified(place)}
+                    className={`flex items-center justify-between gap-2 rounded px-2 py-1.5 text-left text-xs transition ${
+                      selected.id === place.id && !selectedGap
+                        ? "bg-cyan-300/10 text-cyan-100"
+                        : "text-slate-300 hover:bg-white/[0.04]"
+                    }`}
+                  >
+                    <span className="flex items-center gap-2 truncate">
+                      <span
+                        className="h-1.5 w-1.5 shrink-0 rounded-full"
+                        style={{ background: markerTone(place.activityBand) }}
+                      />
+                      <span className="truncate">{place.shortName}</span>
+                    </span>
+                    <span className="shrink-0 text-[0.6rem] uppercase tracking-wider text-slate-500">
+                      {activityBandLabels[place.activityBand]}
+                    </span>
+                  </button>
+                ) : (
+                  <button
+                    key={place.id}
+                    type="button"
+                    onClick={() => selectGap(place)}
+                    className={`flex items-center justify-between gap-2 rounded px-2 py-1.5 text-left text-xs transition ${
+                      selectedGap?.id === place.id
+                        ? "bg-slate-300/10 text-slate-100"
+                        : "text-slate-400 hover:bg-white/[0.04]"
+                    }`}
+                  >
+                    <span className="flex items-center gap-2 truncate">
+                      <span className="grid h-3 w-3 shrink-0 place-items-center rounded-full border border-slate-500/60 text-[0.55rem] font-bold text-slate-400">?</span>
+                      <span className="truncate">{place.shortName}</span>
+                    </span>
+                    <span className="shrink-0 text-[0.6rem] uppercase tracking-wider text-slate-500">gap</span>
+                  </button>
+                ),
+              )}
             </div>
           </div>
         </div>
