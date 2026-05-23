@@ -199,6 +199,47 @@ function markerTone(band: ActivityBand, mode: DisplayMode = "standard") {
   return (mode === "high-contrast" ? MARKER_TONES_HC : MARKER_TONES_STANDARD)[band];
 }
 
+// Normalize a chosen metric to a 0..100 scale so the map's circle-radius
+// interpolation reads one consistent property regardless of which metric the
+// user picked. activityIndex is already 0..100; the rest get rescaled against
+// the dataset's own max so the loudest place reads "loud" on every metric.
+function rawMetric(city: RatPressureResult, metric: MetricKey): number {
+  switch (metric) {
+    case "recent90":
+      return city.recent90DayCount;
+    case "absolute12mo":
+      return city.last12MonthsCount;
+    case "trend12mo": {
+      // Year-over-year % change, clamped to a reasonable range so a single
+      // outlier doesn't flatten everyone else.
+      const prev = Math.max(1, city.previous12MonthsCount);
+      const pct = ((city.last12MonthsCount - prev) / prev) * 100;
+      return Math.max(-100, Math.min(200, pct));
+    }
+    case "index":
+    default:
+      return city.activityIndex;
+  }
+}
+
+function computeMetricValues(cities: RatPressureResult[], metric: MetricKey) {
+  const raws = cities.map((c) => rawMetric(c, metric));
+  if (metric === "index") {
+    return new Map(cities.map((c, i) => [c.id, raws[i]]));
+  }
+  if (metric === "trend12mo") {
+    // Shift -100..200 → 0..100 (centered at 0% → 33)
+    return new Map(
+      cities.map((c, i) => {
+        const v = raws[i];
+        return [c.id, Math.max(0, Math.min(100, ((v + 100) / 300) * 100))];
+      }),
+    );
+  }
+  const max = Math.max(1, ...raws);
+  return new Map(cities.map((c, i) => [c.id, (raws[i] / max) * 100]));
+}
+
 type PresetMeta = {
   id: PresetId;
   label: string;
