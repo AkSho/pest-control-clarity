@@ -70,6 +70,25 @@ import zipToPlaceData from "../../public/rodent-radar/data/zip-to-place.json";
 import { AtlasSidebar, type MetricKey } from "@/components/rodent-radar/AtlasSidebar";
 import { LayerCard, type LayerCardItem } from "@/components/rodent-radar/LayerCard";
 import { AtlasToolbar } from "@/components/rodent-radar/AtlasToolbar";
+import { CinematicToggle } from "@/components/rodent-radar/CinematicToggle";
+import {
+  CuratedViews,
+  getCuratedViewCamera,
+  type CuratedViewId,
+} from "@/components/rodent-radar/CuratedViews";
+import { ReportPopup } from "@/components/rodent-radar/ReportPopup";
+import {
+  getAllReports,
+  getReportsAsGeoJSON,
+  groupByAddress,
+  findGroupAt,
+  type AddressGroup,
+} from "@/lib/rodent-radar/reports";
+import {
+  CLUSTER_RADIUS_EXPRESSION,
+  RECENCY_COLOR_EXPRESSION,
+  RECENCY_RAMP,
+} from "@/lib/rodent-radar/encoding";
 
 
 // z-index ladder so map chrome stops fighting itself.
