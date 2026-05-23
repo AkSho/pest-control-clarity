@@ -1,4 +1,5 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, retainSearchParams } from "@tanstack/react-router";
+import { zodValidator } from "@tanstack/zod-adapter";
 import { ArrowLeft, Download, ExternalLink, Link as LinkIcon } from "lucide-react";
 import { useMemo } from "react";
 import {
@@ -11,6 +12,7 @@ import {
   pressureMetricSnapshots,
   type PressureMetricSnapshot,
 } from "@/lib/rodentRadarAtlas";
+import { placeSearchSchema } from "@/lib/rodentRadarSearch";
 
 const SITE_ORIGIN = "https://opengridworks.example"; // canonical origin placeholder; replaced by hosting domain in head meta
 function buildCanonical(slug: string) {
