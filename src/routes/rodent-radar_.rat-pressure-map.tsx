@@ -226,9 +226,9 @@ function RodentRadarAtlasPage() {
   );
 
   const updateSearch = useCallback(
-    (patch: Partial<typeof search> & { preset?: PresetId | undefined }) => {
+    (patch: Partial<RodentRadarSearch>) => {
       navigate({
-        search: (prev) => ({ ...prev, ...patch }),
+        search: (prev: RodentRadarSearch) => ({ ...prev, ...patch }),
         replace: true,
       });
     },
