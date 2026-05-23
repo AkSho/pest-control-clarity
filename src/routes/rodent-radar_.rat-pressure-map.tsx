@@ -558,37 +558,56 @@ function LayerRow({
 }
 
 function SelectedDrawer({
+  open,
   selected,
   selectedGap,
   activeLayers,
   onCloseGap,
+  onClose,
+  onOpen,
 }: {
+  open: boolean;
   selected: RatPressureResult;
   selectedGap: UnavailableRatPressureGeo | null;
   activeLayers: Set<AtlasLayerId>;
   onCloseGap: () => void;
+  onClose: () => void;
+  onOpen: () => void;
 }) {
+  // Closed-by-default: render a small pill until the user opens the drawer.
+  if (!open) {
+    return (
+      <button
+        type="button"
+        onClick={onOpen}
+        className="absolute bottom-4 right-4 z-20 inline-flex items-center gap-2 rounded-full border border-white/10 bg-slate-950/80 px-3 py-2 text-[0.7rem] font-medium text-slate-400 shadow-lg backdrop-blur transition hover:border-cyan-300/40 hover:text-cyan-100"
+      >
+        <CircleDot className="h-3.5 w-3.5" /> click a marker for details
+      </button>
+    );
+  }
+
   if (selectedGap) {
     return (
-      <aside className="absolute bottom-4 right-4 z-20 w-[min(420px,calc(100vw-2rem))] rounded-2xl border border-white/10 bg-slate-950/88 p-5 shadow-2xl shadow-black/40 backdrop-blur-xl">
+      <aside className="absolute bottom-4 right-4 z-20 w-[min(360px,calc(100vw-2rem))] rounded-xl border border-white/10 bg-slate-950/88 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <div className="text-xs font-black uppercase tracking-[0.18em] text-slate-500">Data gap</div>
-            <h2 className="mt-1 text-3xl font-black tracking-tight">{selectedGap.name}</h2>
-            <p className="mt-1 text-sm font-semibold text-slate-400">{selectedGap.region}</p>
+            <div className="text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-slate-500">Data gap</div>
+            <h2 className="mt-0.5 text-xl font-semibold tracking-tight">{selectedGap.name}</h2>
+            <p className="mt-0.5 text-xs text-slate-400">{selectedGap.region}</p>
           </div>
-          <button type="button" onClick={onCloseGap} className="rounded-lg border border-white/10 p-2 text-slate-400 hover:text-white">
-            <X className="h-4 w-4" />
+          <button type="button" onClick={() => { onCloseGap(); onClose(); }} className="rounded p-1 text-slate-500 hover:text-white">
+            <X className="h-3.5 w-3.5" />
           </button>
         </div>
-        <p className="mt-4 text-sm leading-relaxed text-slate-300">{selectedGap.reason}</p>
-        <div className="mt-4 rounded-xl border border-white/10 bg-white/[0.04] p-4">
-          <div className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">Source reviewed</div>
-          <div className="mt-2 font-bold">{selectedGap.reviewedSourceName ?? "Source review needed"}</div>
-          <p className="mt-2 text-sm leading-relaxed text-slate-400">{selectedGap.reviewNote}</p>
+        <p className="mt-3 text-xs leading-relaxed text-slate-300">{selectedGap.reason}</p>
+        <div className="mt-3 rounded-lg border border-white/8 bg-white/[0.03] p-3">
+          <div className="text-[0.6rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Source reviewed</div>
+          <div className="mt-1 text-sm font-medium">{selectedGap.reviewedSourceName ?? "Source review needed"}</div>
+          <p className="mt-1.5 text-xs leading-relaxed text-slate-400">{selectedGap.reviewNote}</p>
           {selectedGap.reviewedSourceUrl ? (
-            <a href={selectedGap.reviewedSourceUrl} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-1 text-sm font-black text-cyan-200 hover:underline">
-              View source <ExternalLink className="h-3.5 w-3.5" />
+            <a href={selectedGap.reviewedSourceUrl} target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-cyan-200 hover:underline">
+              View source <ExternalLink className="h-3 w-3" />
             </a>
           ) : null}
         </div>
@@ -599,82 +618,111 @@ function SelectedDrawer({
   const colony = getColonyGrowthProjection(selected);
 
   return (
-    <aside className="absolute bottom-4 right-4 z-20 w-[min(440px,calc(100vw-2rem))] rounded-2xl border border-white/10 bg-slate-950/88 p-5 shadow-2xl shadow-black/40 backdrop-blur-xl">
-      <div className="flex items-start justify-between gap-4">
+    <aside className="absolute bottom-4 right-4 z-20 w-[min(360px,calc(100vw-2rem))] rounded-xl border border-white/10 bg-slate-950/88 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl">
+      <div className="flex items-start justify-between gap-3">
         <div>
-          <div className="text-xs font-black uppercase tracking-[0.18em] text-cyan-200">Selected area</div>
-          <h2 className="mt-1 text-3xl font-black tracking-tight">{selected.name}</h2>
-          <p className="mt-1 text-sm font-semibold text-slate-400">
-            {selected.geo} · snapshot {selected.snapshotDate}
+          <div className="text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-cyan-200/80">Selected area</div>
+          <h2 className="mt-0.5 text-xl font-semibold tracking-tight">{selected.name}</h2>
+          <p className="mt-0.5 text-xs text-slate-400">
+            {selected.geo} · {selected.snapshotDate}
           </p>
         </div>
-        <span className={`rounded-full border px-3 py-1 text-xs font-black uppercase tracking-[0.12em] ${bandTone(selected.activityBand)}`}>
-          {activityBandLabels[selected.activityBand]}
-        </span>
+        <div className="flex items-center gap-1.5">
+          <span className={`rounded-full border px-2 py-0.5 text-[0.6rem] font-semibold uppercase tracking-wider ${bandTone(selected.activityBand)}`}>
+            {activityBandLabels[selected.activityBand]}
+          </span>
+          <button type="button" onClick={onClose} className="rounded p-1 text-slate-500 hover:text-white">
+            <X className="h-3.5 w-3.5" />
+          </button>
+        </div>
       </div>
 
-      <div className="mt-5 grid grid-cols-3 gap-2">
-        <Metric label="Official records" value={formatCount(selected.last12MonthsCount)} />
-        <Metric label="Recent activity" value={formatCount(selected.recent90DayCount)} />
+      <div className="mt-3 grid grid-cols-3 gap-1.5">
+        <Metric label="Official" value={formatCount(selected.last12MonthsCount)} />
+        <Metric label="Recent" value={formatCount(selected.recent90DayCount)} />
         <Metric label="Change" value={`${selected.trendPercent > 0 ? "+" : ""}${selected.trendPercent}%`} />
       </div>
 
       {activeLayers.has("colony-growth") ? (
-        <div className="mt-4 rounded-xl border border-purple-300/20 bg-purple-300/10 p-4">
-          <div className="flex items-center justify-between gap-3">
-            <div className="text-sm font-black text-purple-100">Colony Growth</div>
-            <div className="rounded-full bg-purple-300/15 px-2 py-0.5 text-xs font-black uppercase text-purple-100">
-              modeled
-            </div>
+        <div className="mt-3 rounded-lg border border-purple-300/15 bg-purple-300/[0.06] p-3">
+          <div className="flex items-center justify-between gap-2">
+            <div className="text-xs font-semibold text-purple-100">Colony Growth</div>
+            <div className="text-[0.55rem] uppercase tracking-wider text-purple-200/70">modeled</div>
           </div>
-          <p className="mt-2 text-sm leading-relaxed text-slate-300">
+          <p className="mt-1.5 text-xs leading-relaxed text-slate-300">
             {selected.shortName} is showing a {colony.estimateRange} trajectory.
           </p>
-          <div className="mt-3 grid gap-2 text-xs font-semibold text-slate-300">
-            <div>30 days: {colony.days30}</div>
-            <div>60 days: {colony.days60}</div>
-            <div>90 days: {colony.days90}</div>
+          <div className="mt-2 flex gap-3 text-[0.65rem] font-medium text-slate-400">
+            <div>30d: {colony.days30}</div>
+            <div>60d: {colony.days60}</div>
+            <div>90d: {colony.days90}</div>
           </div>
-          <p className="mt-3 text-xs font-semibold leading-relaxed text-slate-500">{colony.disclaimer}</p>
         </div>
       ) : null}
 
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-4">
-        <div>
-          <div className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">Data confidence</div>
-          <div className="mt-1 text-sm font-bold text-slate-200">{selected.confidence} · {selected.confidenceNote}</div>
+      <div className="mt-3 flex items-center justify-between gap-2 border-t border-white/8 pt-3">
+        <div className="text-[0.65rem] text-slate-500">
+          confidence: <span className="text-slate-300">{selected.confidence}</span>
         </div>
-        <a href={selected.sourceUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 rounded-full border border-cyan-200/25 px-3 py-1.5 text-sm font-black text-cyan-200 hover:bg-cyan-200/10">
-          Source <ExternalLink className="h-3.5 w-3.5" />
+        <a href={selected.sourceUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs font-semibold text-cyan-200 hover:underline">
+          Source <ExternalLink className="h-3 w-3" />
         </a>
       </div>
     </aside>
   );
 }
 
+function useLiveCounter() {
+  // Deterministic time-based fake until real telemetry is wired.
+  const [n, setN] = useState(() => 32 + Math.floor((Date.now() / 60000) % 71));
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setN(32 + Math.floor((Date.now() / 60000) % 71));
+    }, 45000);
+    return () => window.clearInterval(id);
+  }, []);
+  return n;
+}
+
 function TopTools({
+  query,
+  setQuery,
   onShare,
   onSources,
   onMethodology,
   onSettings,
 }: {
+  query: string;
+  setQuery: (value: string) => void;
   onShare: () => void;
   onSources: () => void;
   onMethodology: () => void;
   onSettings: () => void;
 }) {
+  const counter = useLiveCounter();
   const tools = [
-    { label: "Search", icon: Search, action: onSettings },
     { label: "Share", icon: Share2, action: onShare },
     { label: "Reset", icon: RefreshCcw, action: () => window.location.assign("/rodent-radar/rat-pressure-map") },
-    { label: "Labels", icon: Tags, action: onSettings },
     { label: "Map style", icon: Map, action: onSettings },
     { label: "Sources", icon: Database, action: onSources },
-    { label: "Info", icon: Info, action: onMethodology },
+    { label: "How to read this", icon: Info, action: onMethodology },
   ];
 
   return (
-    <div className="absolute right-4 top-4 z-20 hidden flex-wrap justify-end gap-2 md:flex">
+    <div className="absolute right-4 top-4 z-20 hidden items-center gap-2 md:flex">
+      <div className="hidden items-center gap-1.5 rounded-full border border-white/10 bg-slate-950/75 px-3 py-1.5 text-[0.65rem] font-medium text-slate-400 shadow-lg backdrop-blur xl:flex">
+        <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400/80" />
+        ~{counter} people checking their block
+      </div>
+      <label className="relative hidden md:block">
+        <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-500" />
+        <input
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          placeholder="Search areas"
+          className="h-9 w-44 rounded-full border border-white/10 bg-slate-950/75 pl-8 pr-3 text-xs font-medium text-slate-100 shadow-lg outline-none backdrop-blur transition placeholder:text-slate-500 focus:w-60 focus:border-cyan-300/50"
+        />
+      </label>
       {tools.map((tool) => {
         const Icon = tool.icon;
         return (
@@ -682,11 +730,11 @@ function TopTools({
             key={tool.label}
             type="button"
             onClick={tool.action}
-            className="grid h-12 w-12 place-items-center rounded-xl border border-white/10 bg-slate-950/75 text-slate-300 shadow-lg backdrop-blur transition hover:border-cyan-300/40 hover:text-cyan-100"
+            className="grid h-9 w-9 place-items-center rounded-full border border-white/10 bg-slate-950/75 text-slate-300 shadow-lg backdrop-blur transition hover:border-cyan-300/40 hover:text-cyan-100"
             aria-label={tool.label}
             title={tool.label}
           >
-            <Icon className="h-5 w-5" />
+            <Icon className="h-4 w-4" />
           </button>
         );
       })}
@@ -694,17 +742,39 @@ function TopTools({
   );
 }
 
-function MapUtilityButtons({ onLayers, onSources }: { onLayers: () => void; onSources: () => void }) {
+function MapUtilityButtons({
+  onLayers,
+  onSources,
+  onMethodology,
+}: {
+  onLayers: () => void;
+  onSources: () => void;
+  onMethodology: () => void;
+}) {
+  const tiles: Array<{ label: string; sub: string; icon: LucideIcon; onClick: () => void }> = [
+    { label: "Layers", sub: "what's on", icon: Layers3, onClick: onLayers },
+    { label: "Sources", sub: "data origins", icon: Database, onClick: onSources },
+    { label: "Guide", sub: "how to read", icon: Info, onClick: onMethodology },
+  ];
   return (
-    <div className="absolute bottom-4 left-4 z-20 hidden gap-3 lg:flex">
-      <button type="button" onClick={onLayers} className="h-20 w-24 rounded-2xl border border-cyan-200/20 bg-slate-950/75 text-sm font-black text-slate-100 shadow-xl backdrop-blur hover:border-cyan-200/50">
-        <Layers3 className="mx-auto mb-1 h-5 w-5 text-cyan-200" />
-        Layers
-      </button>
-      <button type="button" onClick={onSources} className="h-20 w-24 rounded-2xl border border-cyan-200/20 bg-slate-950/75 text-sm font-black text-slate-100 shadow-xl backdrop-blur hover:border-cyan-200/50">
-        <Database className="mx-auto mb-1 h-5 w-5 text-cyan-200" />
-        Sources
-      </button>
+    <div className="absolute bottom-4 left-4 z-20 hidden gap-1.5 lg:flex">
+      {tiles.map((tile) => {
+        const Icon = tile.icon;
+        return (
+          <button
+            key={tile.label}
+            type="button"
+            onClick={tile.onClick}
+            className="group flex h-14 w-20 flex-col items-start justify-between rounded-lg border border-white/8 bg-slate-950/75 p-2 text-left shadow-lg backdrop-blur transition hover:border-cyan-300/35"
+          >
+            <Icon className="h-3.5 w-3.5 text-cyan-200/80" />
+            <div>
+              <div className="text-[0.7rem] font-semibold text-slate-100">{tile.label}</div>
+              <div className="text-[0.55rem] uppercase tracking-wider text-slate-500">{tile.sub}</div>
+            </div>
+          </button>
+        );
+      })}
     </div>
   );
 }
