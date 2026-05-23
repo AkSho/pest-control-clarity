@@ -153,7 +153,7 @@ const MARKER_TONES_HC: Record<ActivityBand, string> = {
   severe: "#ff8fa3",
 };
 
-function markerTone(band: ActivityBand, mode: DisplayMode) {
+function markerTone(band: ActivityBand, mode: DisplayMode = "standard") {
   return (mode === "high-contrast" ? MARKER_TONES_HC : MARKER_TONES_STANDARD)[band];
 }
 
