@@ -788,9 +788,18 @@ function SelectedDrawer({
         <div className="text-[0.65rem] text-slate-500">
           confidence: <span className="text-slate-300">{selected.confidence}</span>
         </div>
-        <a href={selected.sourceUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs font-semibold text-cyan-200 hover:underline">
-          Source <ExternalLink className="h-3 w-3" />
-        </a>
+        <div className="flex items-center gap-3">
+          <Link
+            to="/rodent-radar/place/$slug"
+            params={{ slug: selected.id }}
+            className="text-xs font-semibold text-cyan-200 hover:underline"
+          >
+            View {selected.shortName} page →
+          </Link>
+          <a href={selected.sourceUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs font-semibold text-cyan-200 hover:underline">
+            Source <ExternalLink className="h-3 w-3" />
+          </a>
+        </div>
       </div>
     </aside>
   );
