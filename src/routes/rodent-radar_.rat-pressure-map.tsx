@@ -853,7 +853,7 @@ function AtlasMap({
           source: "rodent-reports",
           filter: ["has", "point_count"],
           paint: {
-            "circle-radius": CLUSTER_RADIUS_EXPRESSION as unknown as maplibregl.ExpressionSpecification,
+            "circle-radius": CLUSTER_RADIUS_EXPRESSION as never,
             "circle-color": "#22d3ee",
             "circle-opacity": 0.18,
             "circle-stroke-color": "#67e8f9",
