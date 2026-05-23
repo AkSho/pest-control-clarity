@@ -1,4 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { zodValidator } from "@tanstack/zod-adapter";
 import {
   Activity,
   AlertCircle,
@@ -11,14 +12,19 @@ import {
   Info,
   Layers3,
   Map,
+  MapPin,
   RefreshCcw,
   Search,
   Share2,
   ShieldCheck,
+  Snowflake,
+  Sparkles,
+  Sun,
+  Wifi,
   X,
   type LucideIcon,
 } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { activityBandLabels, type ActivityBand } from "@/lib/rodentRadar";
 import {
   exposureGuidance,
@@ -32,20 +38,21 @@ import {
   type RatPressureResult,
   type UnavailableRatPressureGeo,
 } from "@/lib/ratPressureMap";
+import {
+  DEFAULT_LAYERS,
+  DISPLAY_MODES,
+  PRESET_IDS,
+  rodentRadarSearchSchema,
+  type AtlasLayerId,
+  type DisplayMode,
+  type PresetId,
+} from "@/lib/rodentRadarSearch";
+import zipToPlaceData from "../../public/rodent-radar/data/zip-to-place.json";
 
 type MapLibreModule = typeof import("maplibre-gl");
 type MapLibreMap = import("maplibre-gl").Map;
 type MapLibreLayerMouseEvent = import("maplibre-gl").MapLayerMouseEvent;
 type MapLibreGeoJSONSource = import("maplibre-gl").GeoJSONSource;
-
-type AtlasLayerId =
-  | "rodent-activity"
-  | "colony-growth"
-  | "recent-reports"
-  | "seasonality"
-  | "conditions"
-  | "data-gaps"
-  | "exposure-safety";
 
 type UtilityPanel = "sources" | "methodology" | "settings" | null;
 
@@ -53,8 +60,9 @@ const TITLE = "Rodent Radar: Rodent Activity Atlas";
 const DESCRIPTION =
   "Explore official rodent activity, colony growth modeling, civic conditions, data gaps, and exposure-safety guidance in a dark interactive atlas.";
 const CANONICAL_URL = "https://cloakd-removals.cloud/rodent-radar/rat-pressure-map";
-const DEFAULT_LAYERS: AtlasLayerId[] = ["rodent-activity", "recent-reports", "seasonality", "data-gaps"];
 const SOURCES = getAtlasSourceCards();
+const ZIP_TO_PLACE = (zipToPlaceData as { zips: Record<string, string> }).zips;
+
 
 const layerIcons: Record<AtlasLayerId, LucideIcon> = {
   "rodent-activity": Activity,
