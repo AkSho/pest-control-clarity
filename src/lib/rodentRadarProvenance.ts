@@ -4,17 +4,11 @@
  * rodentRadarAtlas.ts to keep that file's invariants simple.
  */
 import ahsData from "../../public/rodent-radar/data/ahs-rodent-estimates.json";
-import type { AtlasPlace } from "@/lib/rodentRadarAtlas";
+import type { AtlasPlace, Provenance } from "@/lib/rodentRadarAtlas";
 import { atlasPlaces } from "@/lib/rodentRadarAtlas";
 import type { ActivityBand, Confidence } from "@/lib/rodentRadar";
 
-export type Provenance =
-  | "live"
-  | "seeded"
-  | "inspections-housing"
-  | "inspections-commercial"
-  | "ahs-estimate"
-  | "unavailable";
+export type { Provenance };
 
 /**
  * Short plain-English label shown next to a number so a visitor knows
