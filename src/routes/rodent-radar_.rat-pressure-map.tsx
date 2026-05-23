@@ -393,7 +393,6 @@ function AtlasMap({
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
-  const markersRef = useRef<MapLibreMarker[]>([]);
   const maplibreRef = useRef<MapLibreModule | null>(null);
   const [ready, setReady] = useState(false);
 
@@ -407,96 +406,221 @@ function AtlasMap({
       if (!containerRef.current || cancelled) return;
 
       maplibreRef.current = maplibre;
-      mapRef.current = new maplibre.Map({
+      const map = new maplibre.Map({
         container: containerRef.current,
         style: {
           version: 8,
+          glyphs: "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
           sources: {
             cartoDark: {
               type: "raster",
-              tiles: ["https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png"],
+              tiles: [
+                "https://a.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png",
+                "https://b.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png",
+                "https://c.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png",
+              ],
               tileSize: 256,
               attribution: "© CARTO © OpenStreetMap contributors",
             },
           },
-          layers: [{ id: "cartoDark", type: "raster", source: "cartoDark" }],
+          layers: [
+            { id: "bg", type: "background", paint: { "background-color": "#05070d" } },
+            { id: "cartoDark", type: "raster", source: "cartoDark", paint: { "raster-opacity": 0.85 } },
+          ],
         },
-        center: [-88, 39],
-        zoom: 3.2,
+        center: [-40, 28],
+        zoom: 1.6,
         attributionControl: false,
+        // @ts-expect-error globe projection added in maplibre-gl v5
+        projection: { type: "globe" },
       });
-      mapRef.current.addControl(new maplibre.AttributionControl({ compact: true }), "bottom-right");
-      setReady(true);
+      mapRef.current = map;
+      map.addControl(new maplibre.AttributionControl({ compact: true }), "bottom-right");
+
+      map.on("load", () => {
+        if (cancelled) return;
+        // Atmospheric sky / fog around the globe (silent satellite chrome)
+        try {
+          map.setSky?.({
+            "sky-color": "#0b1220",
+            "sky-horizon-blend": 0.6,
+            "horizon-color": "#1a2233",
+            "horizon-fog-blend": 0.6,
+            "fog-color": "#05070d",
+            "fog-ground-blend": 0.9,
+          } as Record<string, unknown>);
+        } catch {
+          /* sky not supported */
+        }
+
+        // Vector sources (GeoJSON, built from in-memory data)
+        map.addSource("rodent-activity", {
+          type: "geojson",
+          data: { type: "FeatureCollection", features: [] },
+        });
+        map.addSource("rodent-gaps", {
+          type: "geojson",
+          data: { type: "FeatureCollection", features: [] },
+        });
+
+        // Outer colony-growth ring (rendered first, behind the dot)
+        map.addLayer({
+          id: "rodent-activity-ring",
+          type: "circle",
+          source: "rodent-activity",
+          filter: ["==", ["get", "showRing"], true],
+          paint: {
+            "circle-radius": [
+              "interpolate", ["linear"], ["zoom"],
+              2, ["+", 14, ["*", ["get", "activityIndex"], 0.06]],
+              6, ["+", 22, ["*", ["get", "activityIndex"], 0.18]],
+              10, ["+", 38, ["*", ["get", "activityIndex"], 0.3]],
+            ],
+            "circle-color": "transparent",
+            "circle-stroke-color": ["get", "color"],
+            "circle-stroke-width": 1.25,
+            "circle-stroke-opacity": 0.45,
+          },
+        });
+
+        // Soft glow halo
+        map.addLayer({
+          id: "rodent-activity-glow",
+          type: "circle",
+          source: "rodent-activity",
+          paint: {
+            "circle-radius": [
+              "interpolate", ["linear"], ["zoom"],
+              2, ["+", 8, ["*", ["get", "activityIndex"], 0.05]],
+              6, ["+", 14, ["*", ["get", "activityIndex"], 0.12]],
+              10, ["+", 24, ["*", ["get", "activityIndex"], 0.22]],
+            ],
+            "circle-color": ["get", "color"],
+            "circle-opacity": ["*", 0.22, ["get", "confidence"]],
+            "circle-blur": 0.9,
+          },
+        });
+
+        // Solid activity dot
+        map.addLayer({
+          id: "rodent-activity-dot",
+          type: "circle",
+          source: "rodent-activity",
+          paint: {
+            "circle-radius": [
+              "interpolate", ["linear"], ["zoom"],
+              2, ["+", 3.2, ["*", ["get", "activityIndex"], 0.02]],
+              6, ["+", 5.5, ["*", ["get", "activityIndex"], 0.045]],
+              10, ["+", 9, ["*", ["get", "activityIndex"], 0.08]],
+            ],
+            "circle-color": ["get", "color"],
+            "circle-opacity": ["max", 0.7, ["get", "confidence"]],
+            "circle-stroke-color": "#0b0f1a",
+            "circle-stroke-width": 1,
+          },
+        });
+
+        // Data-gap "?" symbol
+        map.addLayer({
+          id: "rodent-gaps-symbol",
+          type: "symbol",
+          source: "rodent-gaps",
+          layout: {
+            "text-field": "?",
+            "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+            "text-size": 14,
+            "text-allow-overlap": true,
+          },
+          paint: {
+            "text-color": "#cbd5e1",
+            "text-halo-color": "#0b0f1a",
+            "text-halo-width": 1.6,
+            "text-opacity": 0.85,
+          },
+        });
+
+        const handleVerifiedClick = (e: maplibregl.MapLayerMouseEvent) => {
+          const f = e.features?.[0];
+          if (!f) return;
+          const id = f.properties?.id as string | undefined;
+          const city = verified.find((c) => c.id === id);
+          if (city) onSelectVerified(city);
+        };
+        const handleGapClick = (e: maplibregl.MapLayerMouseEvent) => {
+          const f = e.features?.[0];
+          if (!f) return;
+          const id = f.properties?.id as string | undefined;
+          const city = unavailable.find((c) => c.id === id);
+          if (city) onSelectGap(city);
+        };
+        map.on("click", "rodent-activity-dot", handleVerifiedClick);
+        map.on("click", "rodent-activity-glow", handleVerifiedClick);
+        map.on("click", "rodent-gaps-symbol", handleGapClick);
+        for (const lid of ["rodent-activity-dot", "rodent-activity-glow", "rodent-gaps-symbol"]) {
+          map.on("mouseenter", lid, () => { map.getCanvas().style.cursor = "pointer"; });
+          map.on("mouseleave", lid, () => { map.getCanvas().style.cursor = ""; });
+        }
+
+        setReady(true);
+        // Ease into the working view once the globe is up
+        window.setTimeout(() => {
+          map.easeTo({ center: [-88, 39], zoom: 3.2, duration: 1800 });
+        }, 350);
+      });
     }
 
     void loadMap();
     return () => {
       cancelled = true;
-      markersRef.current.forEach((marker) => marker.remove());
       mapRef.current?.remove();
       mapRef.current = null;
     };
-  }, []);
+  }, [onSelectGap, onSelectVerified, unavailable, verified]);
 
+  // Push data into the vector sources whenever inputs change
   useEffect(() => {
     const map = mapRef.current;
-    const maplibre = maplibreRef.current;
-    if (!map || !maplibre || !ready) return;
+    if (!map || !ready) return;
+    const activitySrc = map.getSource("rodent-activity") as maplibregl.GeoJSONSource | undefined;
+    const gapsSrc = map.getSource("rodent-gaps") as maplibregl.GeoJSONSource | undefined;
+    if (!activitySrc || !gapsSrc) return;
 
-    markersRef.current.forEach((marker) => marker.remove());
-    const markers: MapLibreMarker[] = [];
+    const showActivity = activeLayers.has("rodent-activity");
+    const showRing = activeLayers.has("colony-growth");
+    const showGaps = activeLayers.has("data-gaps");
 
-    if (activeLayers.has("rodent-activity")) {
-      for (const city of verified) {
-        const el = document.createElement("button");
-        const color = markerTone(city.activityBand);
-        const size = 30 + Math.min(26, Math.max(0, city.activityIndex - 40) * 0.7);
-        el.type = "button";
-        el.className = "rodent-atlas-marker";
-        el.style.width = `${size}px`;
-        el.style.height = `${size}px`;
-        el.style.background = color;
-        el.style.boxShadow = `0 0 0 7px ${color}26, 0 0 28px ${color}aa`;
-        el.setAttribute(
-          "aria-label",
-          `${city.name}: ${activityBandLabels[city.activityBand]} rodent activity, ${formatCount(city.last12MonthsCount)} official records`,
-        );
-        el.addEventListener("click", (event) => {
-          event.stopPropagation();
-          onSelectVerified(city);
-        });
-        markers.push(new maplibre.Marker({ element: el, anchor: "center" }).setLngLat([city.lng, city.lat]).addTo(map));
+    activitySrc.setData({
+      type: "FeatureCollection",
+      features: showActivity
+        ? verified.map((city) => ({
+            type: "Feature",
+            geometry: { type: "Point", coordinates: [city.lng, city.lat] },
+            properties: {
+              id: city.id,
+              name: city.name,
+              activityIndex: city.activityIndex,
+              confidence: Math.min(1, Math.max(0.45, city.last12MonthsCount > 0 ? 0.95 : 0.6)),
+              color: markerTone(city.activityBand),
+              showRing,
+            },
+          }))
+        : [],
+    });
 
-        if (activeLayers.has("colony-growth")) {
-          const ring = document.createElement("div");
-          ring.className = "rodent-atlas-colony-ring";
-          ring.style.width = `${size + 32}px`;
-          ring.style.height = `${size + 32}px`;
-          ring.style.borderColor = `${layerColors["colony-growth"]}88`;
-          markers.push(new maplibre.Marker({ element: ring, anchor: "center" }).setLngLat([city.lng, city.lat]).addTo(map));
-        }
-      }
-    }
-
-    if (activeLayers.has("data-gaps")) {
-      for (const city of unavailable) {
-        const el = document.createElement("button");
-        el.type = "button";
-        el.className = `rodent-atlas-gap-marker ${selectedGap?.id === city.id ? "rodent-atlas-gap-marker-selected" : ""}`;
-        el.textContent = "?";
-        el.setAttribute("aria-label", `${city.name}: official rodent activity data gap`);
-        el.addEventListener("click", (event) => {
-          event.stopPropagation();
-          onSelectGap(city);
-        });
-        markers.push(new maplibre.Marker({ element: el, anchor: "center" }).setLngLat([city.lng, city.lat]).addTo(map));
-      }
-    }
-
-    markersRef.current = markers;
-  }, [activeLayers, onSelectGap, onSelectVerified, ready, selectedGap, unavailable, verified]);
+    gapsSrc.setData({
+      type: "FeatureCollection",
+      features: showGaps
+        ? unavailable.map((city) => ({
+            type: "Feature",
+            geometry: { type: "Point", coordinates: [city.lng, city.lat] },
+            properties: { id: city.id, name: city.name },
+          }))
+        : [],
+    });
+  }, [activeLayers, ready, unavailable, verified]);
 
   useEffect(() => {
+    if (!ready) return;
     const target = selectedGap ?? selected;
     mapRef.current?.flyTo({
       center: [target.lng, target.lat],
@@ -508,7 +632,8 @@ function AtlasMap({
   return (
     <div className="absolute inset-0">
       <div ref={containerRef} className="h-full w-full" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(34,211,238,0.14),transparent_30%),radial-gradient(circle_at_25%_80%,rgba(168,85,247,0.14),transparent_28%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(34,211,238,0.10),transparent_35%),radial-gradient(circle_at_25%_80%,rgba(168,85,247,0.10),transparent_32%)]" />
+      <SatelliteChrome />
       {activeLayers.has("conditions") ? <ConditionsOverlay /> : null}
       {activeLayers.has("seasonality") ? <SeasonalityOverlay /> : null}
       {!ready ? (
