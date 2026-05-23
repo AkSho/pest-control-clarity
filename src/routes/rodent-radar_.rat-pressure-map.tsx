@@ -669,13 +669,7 @@ function RodentRadarAtlasPage() {
         setQuery={setQuery}
       />
 
-      <PresetBar
-        active={activePreset}
-        onApply={applyPreset}
-        onYourBlockGeo={handleYourBlockGeo}
-        onZipSubmit={handleZipSubmit}
-        zipNotice={zipNotice}
-      />
+      {/* PresetBar moved into the legend rail. Suppress duplicate top-center chrome. */}
 
       <TopTools
         query={query}
