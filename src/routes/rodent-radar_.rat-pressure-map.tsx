@@ -1,14 +1,17 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, retainSearchParams, useNavigate } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import {
   Activity,
   AlertCircle,
   BarChart3,
+  Check,
   CircleDot,
+  Copy,
   Crosshair,
   Database,
   ExternalLink,
   Globe2,
+  ImageDown,
   Info,
   Layers3,
   Map,
@@ -87,6 +90,7 @@ const layerColors: Record<AtlasLayerId, string> = {
 
 export const Route = createFileRoute("/rodent-radar_/rat-pressure-map")({
   validateSearch: zodValidator(rodentRadarSearchSchema),
+  search: { middlewares: [retainSearchParams(["mode"])] },
   head: () => ({
     meta: [
       { title: TITLE },
@@ -212,6 +216,8 @@ function RodentRadarAtlasPage() {
   const [utilityPanel, setUtilityPanel] = useState<UtilityPanel>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [zipNotice, setZipNotice] = useState<string | null>(null);
+  const [shareOpen, setShareOpen] = useState(false);
+  const mapRef = useRef<MapLibreMap | null>(null);
 
   const selected = useMemo(
     () => verified.find((c) => c.id === search.place) ?? verified[0],
@@ -370,6 +376,40 @@ function RodentRadarAtlasPage() {
     await navigator.clipboard?.writeText(window.location.href);
   }, []);
 
+  const downloadMapPng = useCallback(async () => {
+    const map = mapRef.current;
+    if (!map) return;
+    const canvas = map.getCanvas();
+    // Composite a watermark onto a clone so the source canvas is untouched
+    const w = canvas.width;
+    const h = canvas.height;
+    const out = document.createElement("canvas");
+    out.width = w;
+    out.height = h;
+    const ctx = out.getContext("2d");
+    if (!ctx) return;
+    ctx.drawImage(canvas, 0, 0);
+    ctx.fillStyle = "rgba(110, 231, 183, 0.85)";
+    ctx.font = `${Math.max(12, Math.round(w / 110))}px "Inter", system-ui, sans-serif`;
+    ctx.textAlign = "right";
+    ctx.textBaseline = "bottom";
+    ctx.shadowColor = "rgba(0,0,0,0.6)";
+    ctx.shadowBlur = 6;
+    ctx.fillText("Rodent Radar · cloakd-removals.cloud", w - 16, h - 16);
+    out.toBlob((blob) => {
+      if (!blob) return;
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      const stamp = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+      const label = search.preset ?? search.place ?? "atlas";
+      a.href = url;
+      a.download = `rodent-radar-${label}-${stamp}.png`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }, "image/png");
+  }, [search.preset, search.place]);
+
+
   return (
     <div
       className="h-screen overflow-hidden bg-[#05080d] text-slate-100"
@@ -381,9 +421,19 @@ function RodentRadarAtlasPage() {
         selected={selected}
         selectedGap={selectedGap}
         activeLayers={activeSet as Set<AtlasLayerId>}
+        mode={mode}
         onSelectVerified={selectVerified}
         onSelectGap={selectGap}
+        mapRef={mapRef}
       />
+
+      {mode === "field" ? (
+        <FieldBottomSheet
+          selected={selected}
+          selectedGap={selectedGap}
+          onClose={() => updateSearch({ mode: "standard" })}
+        />
+      ) : null}
 
       <aside className="atlas-rail absolute left-4 top-4 z-20 hidden max-h-[calc(100vh-2rem)] w-[300px] overflow-hidden rounded-2xl border border-white/8 bg-slate-950/82 shadow-2xl shadow-cyan-950/30 backdrop-blur-xl lg:block">
         <div className="flex max-h-[calc(100vh-2rem)] flex-col">
@@ -485,11 +535,25 @@ function RodentRadarAtlasPage() {
       <TopTools
         query={query}
         setQuery={setQuery}
-        onShare={copyShare}
+        onShare={() => setShareOpen((s) => !s)}
         onSources={() => setUtilityPanel(utilityPanel === "sources" ? null : "sources")}
         onMethodology={() => setUtilityPanel(utilityPanel === "methodology" ? null : "methodology")}
         onSettings={() => setUtilityPanel(utilityPanel === "settings" ? null : "settings")}
       />
+
+      {shareOpen ? (
+        <SharePopover
+          onCopy={async () => {
+            await copyShare();
+            setShareOpen(false);
+          }}
+          onDownload={async () => {
+            await downloadMapPng();
+            setShareOpen(false);
+          }}
+          onClose={() => setShareOpen(false)}
+        />
+      ) : null}
 
       <MapUtilityButtons
         onLayers={() => setUtilityPanel(utilityPanel === "settings" ? null : "settings")}
@@ -527,19 +591,24 @@ function AtlasMap({
   selected,
   selectedGap,
   activeLayers,
+  mode,
   onSelectVerified,
   onSelectGap,
+  mapRef: externalMapRef,
 }: {
   verified: RatPressureResult[];
   unavailable: UnavailableRatPressureGeo[];
   selected: RatPressureResult;
   selectedGap: UnavailableRatPressureGeo | null;
   activeLayers: Set<AtlasLayerId>;
+  mode: DisplayMode;
   onSelectVerified: (city: RatPressureResult) => void;
   onSelectGap: (city: UnavailableRatPressureGeo) => void;
+  mapRef?: React.MutableRefObject<MapLibreMap | null>;
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const mapRef = useRef<MapLibreMap | null>(null);
+  const internalMapRef = useRef<MapLibreMap | null>(null);
+  const mapRef = externalMapRef ?? internalMapRef;
   const maplibreRef = useRef<MapLibreModule | null>(null);
   const [ready, setReady] = useState(false);
 
@@ -709,6 +778,10 @@ function AtlasMap({
         }
 
         setReady(true);
+        // Mark canvas ready for thumbnail capture once the basemap settles
+        map.once("idle", () => {
+          containerRef.current?.setAttribute("data-map-ready", "true");
+        });
         // Ease into the working view once the globe is up
         window.setTimeout(() => {
           map.easeTo({ center: [-88, 39], zoom: 3.2, duration: 1800 });
@@ -733,8 +806,10 @@ function AtlasMap({
     if (!activitySrc || !gapsSrc) return;
 
     const showActivity = activeLayers.has("rodent-activity");
-    const showRing = activeLayers.has("colony-growth");
-    const showGaps = activeLayers.has("data-gaps");
+    // In field mode, suppress ancillary overlays for a calmer single-layer read
+    const fieldMode = mode === "field";
+    const showRing = !fieldMode && activeLayers.has("colony-growth");
+    const showGaps = !fieldMode && activeLayers.has("data-gaps");
 
     activitySrc.setData({
       type: "FeatureCollection",
@@ -747,7 +822,7 @@ function AtlasMap({
               name: city.name,
               activityIndex: city.activityIndex,
               confidence: Math.min(1, Math.max(0.45, city.last12MonthsCount > 0 ? 0.95 : 0.6)),
-              color: markerTone(city.activityBand),
+              color: markerTone(city.activityBand, mode),
               showRing,
             },
           }))
@@ -764,7 +839,29 @@ function AtlasMap({
           }))
         : [],
     });
-  }, [activeLayers, ready, unavailable, verified]);
+  }, [activeLayers, mode, ready, unavailable, verified]);
+
+  // Per-mode basemap paint: desaturate in HC, hide labels in lines-off/field
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !ready) return;
+    try {
+      if (mode === "high-contrast") {
+        map.setPaintProperty("cartoDark", "raster-saturation", -1);
+        map.setPaintProperty("cartoDark", "raster-contrast", 0.18);
+        map.setPaintProperty("cartoDark", "raster-opacity", 0.95);
+      } else {
+        map.setPaintProperty("cartoDark", "raster-saturation", 0);
+        map.setPaintProperty("cartoDark", "raster-contrast", 0);
+        map.setPaintProperty("cartoDark", "raster-opacity", 0.85);
+      }
+      // Field mode also bumps hitbox sizes via a runtime stroke widening
+      const widen = mode === "field" ? 1.4 : 1;
+      map.setPaintProperty("rodent-activity-dot", "circle-stroke-width", 1 * widen);
+    } catch {
+      /* layer not yet mounted */
+    }
+  }, [mode, ready]);
 
   useEffect(() => {
     if (!ready) return;
@@ -1275,12 +1372,14 @@ function PresetBar({
   zipNotice: string | null;
 }) {
   const [zip, setZip] = useState("");
+  const [thumbErrors, setThumbErrors] = useState<Record<string, boolean>>({});
   return (
     <div className="absolute left-1/2 top-4 z-20 hidden -translate-x-1/2 lg:flex lg:flex-col lg:items-center lg:gap-2">
       <div className="flex items-center gap-1.5 rounded-full border border-white/10 bg-slate-950/85 px-2 py-1.5 shadow-2xl backdrop-blur-xl">
         {PRESETS.map((p) => {
           const Icon = p.icon;
           const isActive = active === p.id;
+          const showImg = !thumbErrors[p.id];
           return (
             <button
               key={p.id}
@@ -1290,13 +1389,27 @@ function PresetBar({
                 else onApply(p.id);
               }}
               title={p.hint}
-              className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition ${
+              className={`flex items-center gap-1.5 rounded-full py-1 pl-1 pr-3 text-xs font-semibold transition ${
                 isActive
                   ? "bg-cyan-300/15 text-cyan-100"
                   : "text-slate-300 hover:bg-white/[0.06]"
               }`}
             >
-              <Icon className="h-3.5 w-3.5" />
+              {showImg ? (
+                <img
+                  src={`/rodent-radar/presets/${p.id}.jpg`}
+                  alt=""
+                  width={40}
+                  height={24}
+                  loading="lazy"
+                  onError={() => setThumbErrors((prev) => ({ ...prev, [p.id]: true }))}
+                  className="h-6 w-10 rounded-sm border border-white/10 object-cover"
+                />
+              ) : (
+                <span className="grid h-6 w-6 place-items-center rounded-full bg-white/[0.06]">
+                  <Icon className="h-3.5 w-3.5" />
+                </span>
+              )}
               {p.label}
             </button>
           );
@@ -1321,6 +1434,92 @@ function PresetBar({
           <button type="submit" className="rounded-full bg-cyan-300/20 px-2 py-0.5 text-cyan-100">Go</button>
           {zipNotice ? <span className="text-slate-400">{zipNotice}</span> : null}
         </form>
+      ) : null}
+    </div>
+  );
+}
+
+function SharePopover({
+  onCopy,
+  onDownload,
+  onClose,
+}: {
+  onCopy: () => void;
+  onDownload: () => void;
+  onClose: () => void;
+}) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <div className="absolute right-4 top-16 z-30 w-56 rounded-xl border border-white/10 bg-slate-950/95 p-2 shadow-2xl backdrop-blur-xl">
+      <div className="flex items-center justify-between px-2 pb-2 text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-slate-500">
+        <span>Share view</span>
+        <button type="button" onClick={onClose} aria-label="Close" className="text-slate-500 hover:text-white">
+          <X className="h-3 w-3" />
+        </button>
+      </div>
+      <button
+        type="button"
+        onClick={async () => {
+          await onCopy();
+          setCopied(true);
+          window.setTimeout(() => setCopied(false), 1200);
+        }}
+        className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left text-xs text-slate-200 hover:bg-white/[0.06]"
+      >
+        {copied ? <Check className="h-3.5 w-3.5 text-emerald-300" /> : <Copy className="h-3.5 w-3.5" />}
+        {copied ? "Copied link" : "Copy link"}
+      </button>
+      <button
+        type="button"
+        onClick={onDownload}
+        className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left text-xs text-slate-200 hover:bg-white/[0.06]"
+      >
+        <ImageDown className="h-3.5 w-3.5" />
+        Download PNG of map
+      </button>
+    </div>
+  );
+}
+
+function FieldBottomSheet({
+  selected,
+  selectedGap,
+  onClose,
+}: {
+  selected: RatPressureResult;
+  selectedGap: UnavailableRatPressureGeo | null;
+  onClose: () => void;
+}) {
+  const place = selectedGap ?? selected;
+  const isGap = !!selectedGap;
+  return (
+    <div className="atlas-field-sheet pointer-events-auto absolute inset-x-0 bottom-0 z-30 border-t border-white/10 bg-slate-950/95 px-5 pb-[max(env(safe-area-inset-bottom),1rem)] pt-4 shadow-[0_-12px_40px_rgba(0,0,0,0.6)] backdrop-blur-xl md:hidden">
+      <div className="mx-auto mb-2 h-1 w-10 rounded-full bg-white/15" />
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <div className="text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-slate-500">
+            {isGap ? "Data gap" : "Selected area"}
+          </div>
+          <div className="mt-0.5 truncate text-lg font-semibold tracking-tight">{place.name}</div>
+          <div className="text-[0.7rem] text-slate-400">{place.region}</div>
+        </div>
+        {!isGap ? (
+          <span className={`rounded-full border px-2 py-0.5 text-[0.6rem] font-semibold uppercase tracking-wider ${bandTone(selected.activityBand)}`}>
+            {activityBandLabels[selected.activityBand]}
+          </span>
+        ) : null}
+        <button type="button" onClick={onClose} className="rounded p-1 text-slate-500 hover:text-white" aria-label="Exit field view">
+          <X className="h-4 w-4" />
+        </button>
+      </div>
+      {!isGap ? (
+        <Link
+          to="/rodent-radar/place/$slug"
+          params={{ slug: selected.id }}
+          className="mt-3 grid h-11 w-full place-items-center rounded-xl border border-cyan-300/30 bg-cyan-300/10 text-sm font-semibold text-cyan-100"
+        >
+          Open {selected.shortName} details
+        </Link>
       ) : null}
     </div>
   );

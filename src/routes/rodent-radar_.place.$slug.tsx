@@ -1,4 +1,5 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, retainSearchParams } from "@tanstack/react-router";
+import { zodValidator } from "@tanstack/zod-adapter";
 import { ArrowLeft, Download, ExternalLink, Link as LinkIcon } from "lucide-react";
 import { useMemo } from "react";
 import {
@@ -11,6 +12,7 @@ import {
   pressureMetricSnapshots,
   type PressureMetricSnapshot,
 } from "@/lib/rodentRadarAtlas";
+import { placeSearchSchema } from "@/lib/rodentRadarSearch";
 
 const SITE_ORIGIN = "https://opengridworks.example"; // canonical origin placeholder; replaced by hosting domain in head meta
 function buildCanonical(slug: string) {
@@ -18,6 +20,8 @@ function buildCanonical(slug: string) {
 }
 
 export const Route = createFileRoute("/rodent-radar_/place/$slug")({
+  validateSearch: zodValidator(placeSearchSchema),
+  search: { middlewares: [retainSearchParams(["mode"])] },
   loader: ({ params }) => {
     const results = getRatPressureResults();
     const place = results.find((r) => r.id === params.slug);
@@ -87,6 +91,7 @@ export const Route = createFileRoute("/rodent-radar_/place/$slug")({
 
 function PlacePage() {
   const { place, snapshots } = Route.useLoaderData();
+  const { mode } = Route.useSearch();
   const dataset = atlasDatasets.find((d) => d.id === place.sourceDatasetId);
   const source = atlasSources.find((s) => s.id === dataset?.sourceId);
   const colony = useMemo(() => getColonyGrowthProjection(place), [place]);
@@ -114,7 +119,7 @@ function PlacePage() {
   const trendSign = place.trendPercent > 0 ? "+" : "";
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
+    <div className="min-h-screen bg-slate-950 text-slate-100" data-display-mode={mode}>
       <div className="mx-auto max-w-3xl px-6 py-10 sm:py-14">
         <Link
           to="/rodent-radar/rat-pressure-map"
