@@ -766,8 +766,10 @@ function RodentRadarAtlasPage() {
         open={drawerOpen}
         selected={selected}
         selectedGap={selectedGap}
+        selectedAhs={selectedAhs}
         activeLayers={activeSet}
         onCloseGap={() => updateSearch({ gap: undefined })}
+        onCloseAhs={() => setSelectedAhs(null)}
         onClose={() => setDrawerOpen(false)}
         onOpen={() => setDrawerOpen(true)}
       />
