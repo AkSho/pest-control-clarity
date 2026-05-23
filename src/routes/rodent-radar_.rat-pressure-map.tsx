@@ -9,7 +9,6 @@ import {
   Copy,
   Crosshair,
   Database,
-  Download,
   ExternalLink,
   Globe2,
   ImageDown,
