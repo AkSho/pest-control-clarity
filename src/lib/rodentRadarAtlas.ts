@@ -1,6 +1,15 @@
 import type { ActivityBand, Confidence } from "@/lib/rodentRadar";
 
-export type AtlasRegion = "NYC" | "Bay Area" | "NY/NJ metro" | "United States";
+export type AtlasRegion =
+  | "NYC"
+  | "Bay Area"
+  | "NY/NJ metro"
+  | "United States"
+  | "Midwest"
+  | "Northeast"
+  | "Mid-Atlantic"
+  | "Pacific Northwest"
+  | "Canada";
 
 export type AtlasPlace = {
   id: string;
