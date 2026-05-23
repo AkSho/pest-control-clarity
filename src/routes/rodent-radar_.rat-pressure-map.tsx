@@ -540,19 +540,24 @@ function AtlasMap({
   selected,
   selectedGap,
   activeLayers,
+  mode,
   onSelectVerified,
   onSelectGap,
+  mapRef: externalMapRef,
 }: {
   verified: RatPressureResult[];
   unavailable: UnavailableRatPressureGeo[];
   selected: RatPressureResult;
   selectedGap: UnavailableRatPressureGeo | null;
   activeLayers: Set<AtlasLayerId>;
+  mode: DisplayMode;
   onSelectVerified: (city: RatPressureResult) => void;
   onSelectGap: (city: UnavailableRatPressureGeo) => void;
+  mapRef?: React.MutableRefObject<MapLibreMap | null>;
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const mapRef = useRef<MapLibreMap | null>(null);
+  const internalMapRef = useRef<MapLibreMap | null>(null);
+  const mapRef = externalMapRef ?? internalMapRef;
   const maplibreRef = useRef<MapLibreModule | null>(null);
   const [ready, setReady] = useState(false);
 
