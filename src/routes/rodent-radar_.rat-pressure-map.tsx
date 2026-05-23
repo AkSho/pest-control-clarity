@@ -1233,3 +1233,95 @@ function compactNumber(value: number) {
     maximumFractionDigits: 1,
   }).format(value);
 }
+
+function DisplayModePicker({
+  mode,
+  onChange,
+}: {
+  mode: DisplayMode;
+  onChange: (mode: DisplayMode) => void;
+}) {
+  return (
+    <div className="mt-2 grid grid-cols-2 gap-1.5">
+      {DISPLAY_MODES.map((m) => (
+        <button
+          key={m}
+          type="button"
+          onClick={() => onChange(m)}
+          className={`rounded px-2 py-1.5 text-[0.65rem] font-semibold uppercase tracking-wider transition ${
+            mode === m
+              ? "bg-cyan-300/15 text-cyan-100"
+              : "bg-white/[0.03] text-slate-400 hover:bg-white/[0.06]"
+          }`}
+        >
+          {m}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function PresetBar({
+  active,
+  onApply,
+  onYourBlockGeo,
+  onZipSubmit,
+  zipNotice,
+}: {
+  active: PresetId | undefined;
+  onApply: (preset: PresetId) => void;
+  onYourBlockGeo: () => void;
+  onZipSubmit: (zip: string) => void;
+  zipNotice: string | null;
+}) {
+  const [zip, setZip] = useState("");
+  return (
+    <div className="absolute left-1/2 top-4 z-20 hidden -translate-x-1/2 lg:flex lg:flex-col lg:items-center lg:gap-2">
+      <div className="flex items-center gap-1.5 rounded-full border border-white/10 bg-slate-950/85 px-2 py-1.5 shadow-2xl backdrop-blur-xl">
+        {PRESETS.map((p) => {
+          const Icon = p.icon;
+          const isActive = active === p.id;
+          return (
+            <button
+              key={p.id}
+              type="button"
+              onClick={() => {
+                if (p.id === "your-block") onYourBlockGeo();
+                else onApply(p.id);
+              }}
+              title={p.hint}
+              className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition ${
+                isActive
+                  ? "bg-cyan-300/15 text-cyan-100"
+                  : "text-slate-300 hover:bg-white/[0.06]"
+              }`}
+            >
+              <Icon className="h-3.5 w-3.5" />
+              {p.label}
+            </button>
+          );
+        })}
+      </div>
+      {active === "your-block" ? (
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            onZipSubmit(zip);
+          }}
+          className="flex items-center gap-2 rounded-full border border-white/10 bg-slate-950/85 px-3 py-1.5 text-xs"
+        >
+          <input
+            value={zip}
+            onChange={(e) => setZip(e.target.value)}
+            placeholder="US ZIP"
+            inputMode="numeric"
+            maxLength={5}
+            className="w-20 bg-transparent text-slate-100 placeholder-slate-500 focus:outline-none"
+          />
+          <button type="submit" className="rounded-full bg-cyan-300/20 px-2 py-0.5 text-cyan-100">Go</button>
+          {zipNotice ? <span className="text-slate-400">{zipNotice}</span> : null}
+        </form>
+      ) : null}
+    </div>
+  );
+}
