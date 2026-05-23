@@ -199,6 +199,47 @@ function markerTone(band: ActivityBand, mode: DisplayMode = "standard") {
   return (mode === "high-contrast" ? MARKER_TONES_HC : MARKER_TONES_STANDARD)[band];
 }
 
+// Normalize a chosen metric to a 0..100 scale so the map's circle-radius
+// interpolation reads one consistent property regardless of which metric the
+// user picked. activityIndex is already 0..100; the rest get rescaled against
+// the dataset's own max so the loudest place reads "loud" on every metric.
+function rawMetric(city: RatPressureResult, metric: MetricKey): number {
+  switch (metric) {
+    case "recent90":
+      return city.recent90DayCount;
+    case "absolute12mo":
+      return city.last12MonthsCount;
+    case "trend12mo": {
+      // Year-over-year % change, clamped to a reasonable range so a single
+      // outlier doesn't flatten everyone else.
+      const prev = Math.max(1, city.previous12MonthsCount);
+      const pct = ((city.last12MonthsCount - prev) / prev) * 100;
+      return Math.max(-100, Math.min(200, pct));
+    }
+    case "index":
+    default:
+      return city.activityIndex;
+  }
+}
+
+function computeMetricValues(cities: RatPressureResult[], metric: MetricKey) {
+  const raws = cities.map((c) => rawMetric(c, metric));
+  const out: Record<string, number> = {};
+  if (metric === "index") {
+    cities.forEach((c, i) => { out[c.id] = raws[i]; });
+    return out;
+  }
+  if (metric === "trend12mo") {
+    cities.forEach((c, i) => {
+      out[c.id] = Math.max(0, Math.min(100, ((raws[i] + 100) / 300) * 100));
+    });
+    return out;
+  }
+  const max = Math.max(1, ...raws);
+  cities.forEach((c, i) => { out[c.id] = (raws[i] / max) * 100; });
+  return out;
+}
+
 type PresetMeta = {
   id: PresetId;
   label: string;
@@ -384,11 +425,6 @@ function RodentRadarAtlasPage() {
   const mapGaps = showCoverage.gaps ? unavailableRatPressureGeos : [];
   const mapAhs = showCoverage.estimates ? ahsEstimatePins : [];
 
-  // Reference `metric` so the dependency stays tracked — wiring metric into
-  // the marker scaling happens in a follow-up loop, but storing the choice in
-  // URL is already shareable via the toolbar.
-  void metric;
-
   return (
     <div className="h-screen overflow-hidden bg-[#05080d] text-slate-100">
       <AtlasMap
@@ -400,11 +436,13 @@ function RodentRadarAtlasPage() {
         selectedAhs={selectedAhs}
         activeLayers={activeSet as Set<AtlasLayerId>}
         mode={mode}
+        metric={metric}
         onSelectVerified={selectVerified}
         onSelectGap={selectGap}
         onSelectAhs={handleSelectAhs}
         mapRef={mapRef}
       />
+
 
       <AtlasSidebar
         metric={metric}
@@ -491,6 +529,7 @@ function AtlasMap({
   selectedAhs,
   activeLayers,
   mode,
+  metric,
   onSelectVerified,
   onSelectGap,
   onSelectAhs,
@@ -504,6 +543,7 @@ function AtlasMap({
   selectedAhs: AhsEstimatePin | null;
   activeLayers: Set<AtlasLayerId>;
   mode: DisplayMode;
+  metric: MetricKey;
   onSelectVerified: (city: RatPressureResult) => void;
   onSelectGap: (city: UnavailableRatPressureGeo) => void;
   onSelectAhs: (city: AhsEstimatePin) => void;
@@ -595,9 +635,9 @@ function AtlasMap({
           paint: {
             "circle-radius": [
               "interpolate", ["linear"], ["zoom"],
-              2, ["+", 14, ["*", ["get", "activityIndex"], 0.06]],
-              6, ["+", 22, ["*", ["get", "activityIndex"], 0.18]],
-              10, ["+", 38, ["*", ["get", "activityIndex"], 0.3]],
+              2, ["+", 14, ["*", ["get", "metricValue"], 0.06]],
+              6, ["+", 22, ["*", ["get", "metricValue"], 0.18]],
+              10, ["+", 38, ["*", ["get", "metricValue"], 0.3]],
             ],
             "circle-color": "transparent",
             "circle-stroke-color": ["get", "color"],
@@ -614,9 +654,9 @@ function AtlasMap({
           paint: {
             "circle-radius": [
               "interpolate", ["linear"], ["zoom"],
-              2, ["+", 8, ["*", ["get", "activityIndex"], 0.05]],
-              6, ["+", 14, ["*", ["get", "activityIndex"], 0.12]],
-              10, ["+", 24, ["*", ["get", "activityIndex"], 0.22]],
+              2, ["+", 8, ["*", ["get", "metricValue"], 0.05]],
+              6, ["+", 14, ["*", ["get", "metricValue"], 0.12]],
+              10, ["+", 24, ["*", ["get", "metricValue"], 0.22]],
             ],
             "circle-color": ["get", "color"],
             "circle-opacity": ["*", ["case", ["==", ["get", "provenance"], "seeded"], 0.12, 0.22], ["get", "confidence"]],
@@ -632,9 +672,9 @@ function AtlasMap({
           paint: {
             "circle-radius": [
               "interpolate", ["linear"], ["zoom"],
-              2, ["+", 3.2, ["*", ["get", "activityIndex"], 0.02]],
-              6, ["+", 5.5, ["*", ["get", "activityIndex"], 0.045]],
-              10, ["+", 9, ["*", ["get", "activityIndex"], 0.08]],
+              2, ["+", 3.2, ["*", ["get", "metricValue"], 0.02]],
+              6, ["+", 5.5, ["*", ["get", "metricValue"], 0.045]],
+              10, ["+", 9, ["*", ["get", "metricValue"], 0.08]],
             ],
             "circle-color": ["case", ["==", ["get", "provenance"], "seeded"], "#0b0f1a", ["get", "color"]],
             "circle-opacity": ["max", 0.7, ["get", "confidence"]],
@@ -642,6 +682,7 @@ function AtlasMap({
             "circle-stroke-width": ["case", ["==", ["get", "provenance"], "seeded"], 1.8, 1],
           },
         });
+
 
         // AHS estimate pin — hollow ring (different shape so it doesn't read as live).
         map.addLayer({
@@ -758,6 +799,8 @@ function AtlasMap({
     const showGaps = !fieldMode && activeLayers.has("data-gaps");
     const showAhs = !fieldMode && showActivity;
 
+    const metricValues = computeMetricValues(verified, metric);
+
     activitySrc.setData({
       type: "FeatureCollection",
       features: showActivity
@@ -768,6 +811,7 @@ function AtlasMap({
               id: city.id,
               name: city.name,
               activityIndex: city.activityIndex,
+              metricValue: metricValues[city.id] ?? city.activityIndex,
               confidence: Math.min(1, Math.max(0.45, city.last12MonthsCount > 0 ? 0.95 : 0.6)),
               color: markerTone(city.activityBand, mode),
               showRing,
@@ -798,7 +842,7 @@ function AtlasMap({
           }))
         : [],
     });
-  }, [activeLayers, ahsPins, mode, ready, unavailable, verified]);
+  }, [activeLayers, ahsPins, metric, mode, ready, unavailable, verified]);
 
   // Per-mode basemap paint: desaturate in HC, hide labels in lines-off/field
   useEffect(() => {
