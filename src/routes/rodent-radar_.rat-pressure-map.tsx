@@ -46,6 +46,7 @@ import {
   type AtlasLayerId,
   type DisplayMode,
   type PresetId,
+  type RodentRadarSearch,
 } from "@/lib/rodentRadarSearch";
 import zipToPlaceData from "../../public/rodent-radar/data/zip-to-place.json";
 
