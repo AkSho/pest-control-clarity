@@ -1249,7 +1249,6 @@ function TopTools({
   const tools = [
     { label: "Share", icon: Share2, action: onShare },
     { label: "Reset", icon: RefreshCcw, action: () => window.location.assign("/rodent-radar/rat-pressure-map") },
-    { label: "Map style", icon: Map, action: onSettings },
     { label: "Sources", icon: Database, action: onSources },
     { label: "How to read this", icon: Info, action: onMethodology },
   ];
