@@ -727,6 +727,10 @@ function AtlasMap({
         }
 
         setReady(true);
+        // Mark canvas ready for thumbnail capture once the basemap settles
+        map.once("idle", () => {
+          containerRef.current?.setAttribute("data-map-ready", "true");
+        });
         // Ease into the working view once the globe is up
         window.setTimeout(() => {
           map.easeTo({ center: [-88, 39], zoom: 3.2, duration: 1800 });
