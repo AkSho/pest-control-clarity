@@ -486,7 +486,7 @@ function RodentRadarAtlasPage() {
               </span>
             </div>
             <p className="mt-1.5 text-xs leading-relaxed text-slate-300">
-              {LEDE_BY_PRESET[activePreset ?? "default"]}
+              {LEDE_BY_PRESET[(activePreset ?? "default") as PresetId | "default"]}
             </p>
             <p className="mt-1 text-[0.65rem] uppercase tracking-[0.16em] text-slate-500">
               {verified.length} verified areas · updated monthly
