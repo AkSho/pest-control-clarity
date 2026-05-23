@@ -382,9 +382,19 @@ function RodentRadarAtlasPage() {
         selected={selected}
         selectedGap={selectedGap}
         activeLayers={activeSet as Set<AtlasLayerId>}
+        mode={mode}
         onSelectVerified={selectVerified}
         onSelectGap={selectGap}
+        mapRef={mapRef}
       />
+
+      {mode === "field" ? (
+        <FieldBottomSheet
+          selected={selected}
+          selectedGap={selectedGap}
+          onClose={() => updateSearch({ mode: "standard" })}
+        />
+      ) : null}
 
       <aside className="atlas-rail absolute left-4 top-4 z-20 hidden max-h-[calc(100vh-2rem)] w-[300px] overflow-hidden rounded-2xl border border-white/8 bg-slate-950/82 shadow-2xl shadow-cyan-950/30 backdrop-blur-xl lg:block">
         <div className="flex max-h-[calc(100vh-2rem)] flex-col">
