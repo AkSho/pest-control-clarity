@@ -789,22 +789,28 @@ function RodentRadarAtlasPage() {
 function AtlasMap({
   verified,
   unavailable,
+  ahsPins,
   selected,
   selectedGap,
+  selectedAhs,
   activeLayers,
   mode,
   onSelectVerified,
   onSelectGap,
+  onSelectAhs,
   mapRef: externalMapRef,
 }: {
   verified: RatPressureResult[];
   unavailable: UnavailableRatPressureGeo[];
+  ahsPins: AhsEstimatePin[];
   selected: RatPressureResult;
   selectedGap: UnavailableRatPressureGeo | null;
+  selectedAhs: AhsEstimatePin | null;
   activeLayers: Set<AtlasLayerId>;
   mode: DisplayMode;
   onSelectVerified: (city: RatPressureResult) => void;
   onSelectGap: (city: UnavailableRatPressureGeo) => void;
+  onSelectAhs: (city: AhsEstimatePin) => void;
   mapRef?: React.MutableRefObject<MapLibreMap | null>;
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
