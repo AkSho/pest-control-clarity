@@ -649,7 +649,7 @@ export const pressureMetricSnapshots: PressureMetricSnapshot[] = [
     confidence: "high",
     confidenceNote: "Direct official Boston 311 rodent-taxonomy service requests.",
     methodologyNote: "Counts are public service requests, not unique rats or confirmed infestations.",
-    provenance: "seeded",
+    provenance: "live",
   },
   {
     id: "washington-dc-2026-05-23",
