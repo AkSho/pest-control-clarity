@@ -1373,12 +1373,14 @@ function PresetBar({
   zipNotice: string | null;
 }) {
   const [zip, setZip] = useState("");
+  const [thumbErrors, setThumbErrors] = useState<Record<string, boolean>>({});
   return (
     <div className="absolute left-1/2 top-4 z-20 hidden -translate-x-1/2 lg:flex lg:flex-col lg:items-center lg:gap-2">
       <div className="flex items-center gap-1.5 rounded-full border border-white/10 bg-slate-950/85 px-2 py-1.5 shadow-2xl backdrop-blur-xl">
         {PRESETS.map((p) => {
           const Icon = p.icon;
           const isActive = active === p.id;
+          const showImg = !thumbErrors[p.id];
           return (
             <button
               key={p.id}
@@ -1388,13 +1390,27 @@ function PresetBar({
                 else onApply(p.id);
               }}
               title={p.hint}
-              className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition ${
+              className={`flex items-center gap-1.5 rounded-full py-1 pl-1 pr-3 text-xs font-semibold transition ${
                 isActive
                   ? "bg-cyan-300/15 text-cyan-100"
                   : "text-slate-300 hover:bg-white/[0.06]"
               }`}
             >
-              <Icon className="h-3.5 w-3.5" />
+              {showImg ? (
+                <img
+                  src={`/rodent-radar/presets/${p.id}.png`}
+                  alt=""
+                  width={40}
+                  height={24}
+                  loading="lazy"
+                  onError={() => setThumbErrors((prev) => ({ ...prev, [p.id]: true }))}
+                  className="h-6 w-10 rounded-sm border border-white/10 object-cover"
+                />
+              ) : (
+                <span className="grid h-6 w-6 place-items-center rounded-full bg-white/[0.06]">
+                  <Icon className="h-3.5 w-3.5" />
+                </span>
+              )}
               {p.label}
             </button>
           );
@@ -1419,6 +1435,92 @@ function PresetBar({
           <button type="submit" className="rounded-full bg-cyan-300/20 px-2 py-0.5 text-cyan-100">Go</button>
           {zipNotice ? <span className="text-slate-400">{zipNotice}</span> : null}
         </form>
+      ) : null}
+    </div>
+  );
+}
+
+function SharePopover({
+  onCopy,
+  onDownload,
+  onClose,
+}: {
+  onCopy: () => void;
+  onDownload: () => void;
+  onClose: () => void;
+}) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <div className="absolute right-4 top-16 z-30 w-56 rounded-xl border border-white/10 bg-slate-950/95 p-2 shadow-2xl backdrop-blur-xl">
+      <div className="flex items-center justify-between px-2 pb-2 text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-slate-500">
+        <span>Share view</span>
+        <button type="button" onClick={onClose} aria-label="Close" className="text-slate-500 hover:text-white">
+          <X className="h-3 w-3" />
+        </button>
+      </div>
+      <button
+        type="button"
+        onClick={async () => {
+          await onCopy();
+          setCopied(true);
+          window.setTimeout(() => setCopied(false), 1200);
+        }}
+        className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left text-xs text-slate-200 hover:bg-white/[0.06]"
+      >
+        {copied ? <Check className="h-3.5 w-3.5 text-emerald-300" /> : <Copy className="h-3.5 w-3.5" />}
+        {copied ? "Copied link" : "Copy link"}
+      </button>
+      <button
+        type="button"
+        onClick={onDownload}
+        className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left text-xs text-slate-200 hover:bg-white/[0.06]"
+      >
+        <ImageDown className="h-3.5 w-3.5" />
+        Download PNG of map
+      </button>
+    </div>
+  );
+}
+
+function FieldBottomSheet({
+  selected,
+  selectedGap,
+  onClose,
+}: {
+  selected: RatPressureResult;
+  selectedGap: UnavailableRatPressureGeo | null;
+  onClose: () => void;
+}) {
+  const place = selectedGap ?? selected;
+  const isGap = !!selectedGap;
+  return (
+    <div className="atlas-field-sheet pointer-events-auto absolute inset-x-0 bottom-0 z-30 border-t border-white/10 bg-slate-950/95 px-5 pb-[max(env(safe-area-inset-bottom),1rem)] pt-4 shadow-[0_-12px_40px_rgba(0,0,0,0.6)] backdrop-blur-xl md:hidden">
+      <div className="mx-auto mb-2 h-1 w-10 rounded-full bg-white/15" />
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <div className="text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-slate-500">
+            {isGap ? "Data gap" : "Selected area"}
+          </div>
+          <div className="mt-0.5 truncate text-lg font-semibold tracking-tight">{place.name}</div>
+          <div className="text-[0.7rem] text-slate-400">{place.region}</div>
+        </div>
+        {!isGap ? (
+          <span className={`rounded-full border px-2 py-0.5 text-[0.6rem] font-semibold uppercase tracking-wider ${bandTone(selected.activityBand)}`}>
+            {activityBandLabels[selected.activityBand]}
+          </span>
+        ) : null}
+        <button type="button" onClick={onClose} className="rounded p-1 text-slate-500 hover:text-white" aria-label="Exit field view">
+          <X className="h-4 w-4" />
+        </button>
+      </div>
+      {!isGap ? (
+        <Link
+          to="/rodent-radar/place/$slug"
+          params={{ slug: selected.id }}
+          className="mt-3 grid h-11 w-full place-items-center rounded-xl border border-cyan-300/30 bg-cyan-300/10 text-sm font-semibold text-cyan-100"
+        >
+          Open {selected.shortName} details
+        </Link>
       ) : null}
     </div>
   );
