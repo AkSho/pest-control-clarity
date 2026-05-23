@@ -626,6 +626,10 @@ function AtlasMap({
   onSelectGap,
   onSelectAhs,
   mapRef: externalMapRef,
+  reportsGeoJSON,
+  addressGroups,
+  recurringOnly,
+  onSelectGroup,
 }: {
   verified: RatPressureResult[];
   unavailable: UnavailableRatPressureGeo[];
@@ -640,7 +644,12 @@ function AtlasMap({
   onSelectGap: (city: UnavailableRatPressureGeo) => void;
   onSelectAhs: (city: AhsEstimatePin) => void;
   mapRef?: React.MutableRefObject<MapLibreMap | null>;
+  reportsGeoJSON: ReturnType<typeof getReportsAsGeoJSON>;
+  addressGroups: AddressGroup[];
+  recurringOnly: boolean;
+  onSelectGroup: (g: AddressGroup | null) => void;
 }) {
+
   const containerRef = useRef<HTMLDivElement | null>(null);
   const internalMapRef = useRef<MapLibreMap | null>(null);
   const mapRef = externalMapRef ?? internalMapRef;
