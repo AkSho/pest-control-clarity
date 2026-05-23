@@ -15,7 +15,7 @@ import {
 import { AtlasSection } from "./AtlasSection";
 import { ConfidenceKey } from "./ConfidenceKey";
 
-export type MetricKey = "index" | "per10kResidents" | "per1kHousing" | "perSqMile" | "recent90";
+export type MetricKey = "index" | "recent90" | "trend12mo" | "absolute12mo";
 
 interface MetricDef {
   id: MetricKey;
@@ -25,10 +25,9 @@ interface MetricDef {
 
 const METRICS: MetricDef[] = [
   { id: "index", label: "Activity index", hint: "Combined signal — default" },
-  { id: "per10kResidents", label: "Per 10k residents", hint: "Normalized for population" },
-  { id: "per1kHousing", label: "Per 1k housing units", hint: "Normalized for housing stock" },
-  { id: "perSqMile", label: "Per sq mile", hint: "Density of reports" },
   { id: "recent90", label: "Recent 90 days", hint: "Heat in the last quarter" },
+  { id: "trend12mo", label: "12-month trend", hint: "Year-over-year change" },
+  { id: "absolute12mo", label: "Total reports (12mo)", hint: "Raw volume of activity" },
 ];
 
 interface AtlasSidebarProps {
