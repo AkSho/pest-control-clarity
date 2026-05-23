@@ -379,10 +379,7 @@ function RodentRadarAtlasPage() {
         unavailable={unavailableRatPressureGeos}
         selected={selected}
         selectedGap={selectedGap}
-        activeLayers={activeSet}
-        mode={mode}
-        initialCenter={search.center}
-        initialZoom={search.zoom}
+        activeLayers={activeSet as Set<AtlasLayerId>}
         onSelectVerified={selectVerified}
         onSelectGap={selectGap}
       />
