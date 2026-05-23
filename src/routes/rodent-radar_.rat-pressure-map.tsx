@@ -635,9 +635,9 @@ function AtlasMap({
           paint: {
             "circle-radius": [
               "interpolate", ["linear"], ["zoom"],
-              2, ["+", 14, ["*", ["get", "activityIndex"], 0.06]],
-              6, ["+", 22, ["*", ["get", "activityIndex"], 0.18]],
-              10, ["+", 38, ["*", ["get", "activityIndex"], 0.3]],
+              2, ["+", 14, ["*", ["get", "metricValue"], 0.06]],
+              6, ["+", 22, ["*", ["get", "metricValue"], 0.18]],
+              10, ["+", 38, ["*", ["get", "metricValue"], 0.3]],
             ],
             "circle-color": "transparent",
             "circle-stroke-color": ["get", "color"],
@@ -654,9 +654,9 @@ function AtlasMap({
           paint: {
             "circle-radius": [
               "interpolate", ["linear"], ["zoom"],
-              2, ["+", 8, ["*", ["get", "activityIndex"], 0.05]],
-              6, ["+", 14, ["*", ["get", "activityIndex"], 0.12]],
-              10, ["+", 24, ["*", ["get", "activityIndex"], 0.22]],
+              2, ["+", 8, ["*", ["get", "metricValue"], 0.05]],
+              6, ["+", 14, ["*", ["get", "metricValue"], 0.12]],
+              10, ["+", 24, ["*", ["get", "metricValue"], 0.22]],
             ],
             "circle-color": ["get", "color"],
             "circle-opacity": ["*", ["case", ["==", ["get", "provenance"], "seeded"], 0.12, 0.22], ["get", "confidence"]],
@@ -672,9 +672,9 @@ function AtlasMap({
           paint: {
             "circle-radius": [
               "interpolate", ["linear"], ["zoom"],
-              2, ["+", 3.2, ["*", ["get", "activityIndex"], 0.02]],
-              6, ["+", 5.5, ["*", ["get", "activityIndex"], 0.045]],
-              10, ["+", 9, ["*", ["get", "activityIndex"], 0.08]],
+              2, ["+", 3.2, ["*", ["get", "metricValue"], 0.02]],
+              6, ["+", 5.5, ["*", ["get", "metricValue"], 0.045]],
+              10, ["+", 9, ["*", ["get", "metricValue"], 0.08]],
             ],
             "circle-color": ["case", ["==", ["get", "provenance"], "seeded"], "#0b0f1a", ["get", "color"]],
             "circle-opacity": ["max", 0.7, ["get", "confidence"]],
@@ -682,6 +682,7 @@ function AtlasMap({
             "circle-stroke-width": ["case", ["==", ["get", "provenance"], "seeded"], 1.8, 1],
           },
         });
+
 
         // AHS estimate pin — hollow ring (different shape so it doesn't read as live).
         map.addLayer({
