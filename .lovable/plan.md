@@ -1,226 +1,155 @@
-## Goal
 
-Rebuild `/rodent-radar/rat-pressure-map` so a first-time consumer thinks, within 5 seconds:
+# Rodent Radar v2 — "The Public-Data Trail"
 
-> "Rodent activity is not random. There's a public-data trail. My area has a pattern."
-
-And, by the time they leave the drawer:
-
-> "Traditional control reacts to sightings. Cloakd reveals the replacement cycle behind them."
-
-Map = facts only. Drawer = interpretation. No CTAs inside the drawer.
+Rebuild the map around the OGW pattern, but for rodent reports. Stop showing city-level scores. Start showing every report as a dot, with recency and persistence as the primary visual story, and the replacement cycle as the payoff.
 
 ---
 
-## Strategic guardrails (locked)
+## North Star
 
-- **Brand**: Cloakd. Purge any "PestPro" / "Rodent Radar by PestPro" copy.
-- **Map = Official Rodent Activity only**: inspections + complaints + clean 311. No mock data, no AHS-derived activity, no estimated rat population, no "rats per person."
-- **Reviewed Data Gaps are first-class**: ~50 metros visible at all times. If we don't have a clean source, the metro renders as an outlined "data-gap" marker (OGW's padlock equivalent) with a reviewed-source explainer in the drawer.
-- **Colony Growth is gated**: toggleable layer, but visually distinct (diagonal-stripe rendering, not dots) + one-click confirm with disclaimer before enabling; primary expression lives in the drawer per-city.
-- **No CTA in the drawer.** Atlas stays neutral. Cloakd narrative lives in page chrome (sidebar footer, methodology page).
-- **Cinematic / guided-tour mode is deferred.** Build the atlas foundation first.
+**What the consumer feels in 5 seconds:**
+"Rodent activity isn't random. It leaves a public-data trail. My area has a pattern."
 
----
-
-## Information architecture (full OGW-style clone, US-only)
-
-```text
-┌──────────────────────────────────────────────────────────────┐
-│  [⌘K search] [share] [bookmark] [history]                    │  ← slim top toolbar
-├────────────┬─────────────────────────────────────────────────┤
-│ Sidebar    │                                                 │
-│            │                                                 │
-│ Cloakd     │                                                 │
-│ Rodent     │              MAP FILLS VIEWPORT                 │
-│ Radar      │         (city dots + gap markers)               │
-│            │                                                 │
-│ Metric     │                                                 │
-│ Legend     │                                                 │
-│ Size scale │                                                 │
-│ Confidence │                                                 │
-│ key        │                                                 │
-│            │                                                 │
-│ Filters    │  ┌────────┐ ┌──────────┐ ┌──────────┐           │
-│            │  │ Layers │ │ Climate  │ │ Map Type │  ← docked│
-│ "About the │  └────────┘ └──────────┘ └──────────┘    cards │
-│  data"     │                                       (bottom-L)│
-│ footer     │                                                 │
-└────────────┴─────────────────────────────────────────────────┘
-```
-
-- **Single left sidebar** (replaces current rail + tools + drawer split): brand → primary metric selector → legend → bubble-size scale → confidence key → filters → "About the data" footer link.
-- **Three bottom-left docked cards**: Layers (grouped POINTS / AREAS), Climate (NOAA overlays), Map Type (terrain / satellite / dark). Layers panel expands upward when clicked.
-- **Slim top toolbar**: ⌘K search, share (state-encoded URL with `?layers=…&metric=…&city=…`), bookmark (deferred, just a tooltip "coming soon" lock icon), history (deferred).
-- **City click → drawer** (keep existing slide-over surface). This is the ONLY modal surface.
-- **Fixes the existing drawer-close bug**: map disappears after closing a city drawer until refresh. Root cause is almost certainly state cleanup in the current `rat-pressure-map.tsx` — patch as part of the rebuild.
+**What Cloakd gets to say:**
+"Traditional control reacts to sightings. Rodent Radar reveals the replacement cycle behind them."
 
 ---
 
-## Data layer
+## 1. Switch the unit: one dot = one report
 
-### 1. One connector interface, four adapters
+The bubble stops being a city score. It becomes one record from a public dataset: a 311 complaint, a DOHMH inspection, a Chicago rodent-baiting service request, etc.
 
-`src/lib/rodent-sources/` (new):
+**Data model change**
+- New canonical type `RodentReport`: `{ id, source, sourceUrl, lat, lon, reportedAt, status, addressLabel, raw }`.
+- New `src/data/rodent-reports/` directory, one file per source (`nyc-311.json`, `chicago-311.json`, `philly-311.json`, `boston-311.json`, `dc-311.json` to start).
+- Keep existing city/state aggregate JSON as a fallback layer ("shallow" mode), not the primary layer.
 
-```text
-src/lib/rodent-sources/
-├── types.ts              # RodentActivitySource interface
-├── adapters/
-│   ├── socrata.ts
-│   ├── arcgis.ts
-│   ├── open311.ts
-│   └── ckan.ts
-├── normalize.ts          # ACS join + 4 normalizations
-└── fetch-all.ts          # script entry
-```
+**Rendering change**
+- Replace MapLibre circle layer driven by aggregate `metricValue` with a point source from the report collection.
+- Use MapLibre's native `cluster: true` on the GeoJSON source: clusters at low zoom, individual reports at zoom ≥ 13.
+- Cluster bubble radius = `Math.log2(point_count) * k`. Real quantity, not normalized.
+- Single-report dot = small fixed-radius circle, colored by recency (see §2).
 
-Every adapter outputs a single normalized record shape:
-
-```ts
-type RodentActivityRecord = {
-  recordedAt: string;         // ISO
-  zip: string;                // primary geocode
-  tract?: string;             // drill-down
-  category: 'inspection' | 'complaint' | 'service_request';
-  rawType: string;            // e.g. "Rodent", "Vermin", "RAT SIGHTING"
-  resolved?: boolean;
-  sourceId: string;           // FK to RodentActivitySource
-};
-
-type RodentActivitySource = {
-  id: string;
-  city: string;
-  state: string;
-  name: string;                // human-readable
-  url: string;                 // citizen-facing portal page
-  endpoint: string;            // API URL we pull from
-  type: 'socrata' | 'arcgis' | 'open311' | 'ckan' | 'static' | 'gap';
-  filterRule: string;          // plain-English filter we apply
-  snapshotDate: string;
-  confidence: 'high' | 'medium' | 'low';
-  comparabilityNote: string;
-  reviewedExplanation?: string; // required when type='gap'
-};
-```
-
-### 2. Phase A cities (launch set, ~18-22)
-
-Cities we already know have clean rodent-coded datasets:
-
-NYC, Chicago, LA, SF, Seattle, Boston, DC, Austin, Dallas, Pittsburgh, Baltimore, New Orleans, Minneapolis, Denver, Nashville, Philadelphia, Portland-OR, Atlanta, Houston, San Diego, Phoenix, Detroit.
-
-Each gets a JSON snapshot at `public/rodent-radar/data/cities/{slug}.json` with:
-- 12-month total + per-1k-residents + per-1k-housing-units + per-sq-mile
-- Prior 12-month for YoY delta
-- 90-day recent + per-10k recent
-- Top 5 ZIPs by volume
-- Top 3 ZIPs by 90-day spike (persistence signal)
-- Source metadata (RodentActivitySource above)
-
-### 3. Reviewed Data Gaps (fills out the ~50)
-
-For ~30 more major metros where we've reviewed sources and found none clean enough:
-- Render as an outlined hollow marker on the map (visually distinct from live dots).
-- Drawer shows: "We reviewed [N] potential sources. Here's why none qualified." with links to the portals we evaluated.
-- A `gap-explanations.json` file holds these.
-
-### 4. Context layers (toggleable, separate)
-
-| Layer | Source | Visual | Notes |
-|---|---|---|---|
-| Climate: winter temp anomaly | NOAA NCEI | Choropleth overlay (climate divisions) | Already partially built |
-| Climate: precipitation anomaly | NOAA | Choropleth | New |
-| Restaurant rodent/vermin violations | City inspection datasets coded for rodent | Small triangle markers | Only where coding is explicit; otherwise omitted |
-| Housing age + vacancy + density | Census ACS | Choropleth at ZCTA | Context only |
-| Transit corridors | OSM | Line overlay | Context only |
-| Colony Growth (modeled) | Derived | Diagonal-stripe overlay | Gated: confirm dialog first |
-
-All context layers live in the Layers docked card grouped under AREAS / LINES / POINTS like OGW. Toggling them does NOT alter the Official Activity dot encoding.
+**Files**
+- `src/lib/rodent-radar/reports.ts` — loader + GeoJSON adapter
+- `src/components/rodent-radar/MapReportsLayer.tsx` — new layer component
+- Retire `metricValue` normalization from the verified-pins path
 
 ---
 
-## Visual encoding (map dots)
+## 2. Recency vs persistence is the primary visual encoding
 
-- **Color** = primary metric band (default: 90-day per-10k-residents). 5 bands using existing pressure palette.
-- **Size** = absolute 12-month complaint volume (sqrt scale).
-- **Stroke** = trend vs prior 12-month: solid (flat), thick (rising), dashed (falling).
-- **Opacity + ring** = confidence:
-  - High: 100% opacity, no extra ring
-  - Medium: 70% opacity, thin ring
-  - Low: 40% opacity, dashed ring
-- **Data gap**: hollow outlined marker, no fill, lock-icon glyph inside.
+Three orthogonal channels, each doing one job:
 
-Sidebar legend mirrors this exactly — every encoding has a visible swatch.
+| Channel | Encodes | Visual |
+|---|---|---|
+| Color | Recency | bright primary = last 30d, mid = 30–180d, muted = 180d–24mo, ghost = >24mo |
+| Size (clusters only) | Count of reports | log scale from raw count |
+| Pulse ring | "Right now" (last 7d) | subtle CSS pulse on single dots only |
 
----
+Persistence is encoded by the *new* "Recurring sites" layer (§3), not by stacking another ring on every dot. Kill the current confidence ring + glow combo.
 
-## City drawer (the Cloakd narrative arc)
-
-Four beats, no CTA:
-
-1. **Activity** — "Here's what's officially reported."
-   - Big number: 12-month total + per-10k-residents
-   - Source line with link + snapshot date + confidence chip
-2. **Persistence** — "Reports keep coming, in the same places."
-   - 90-day vs prior-period delta
-   - Top 3 ZIPs by spike, mini bar chart
-3. **Trajectory (Colony Growth interpretation)** — "This is what replacement looks like in this area."
-   - Plain-English paragraph: "Repeated activity at the same ZIPs over [N] months suggests an established colony cycle, where removing visible rodents creates capacity for the next generation rather than ending the pattern."
-   - Explicitly framed as interpretation, not city data. No number.
-4. **What public data can't tell you** — methodology limits, link to attribution page.
-
-No CTA, no "buy Cloakd" button, no per-city sales line. The Cloakd story is *implicit in beat 3* — readers reach the conclusion themselves.
+**Files**
+- `src/lib/rodent-radar/encoding.ts` — pure functions: `recencyBucket(reportedAt)`, `clusterRadius(count)`
+- Update legend in `AtlasSidebar.tsx` to a 4-step recency ramp + cluster-size key
 
 ---
 
-## Files to change / create
+## 3. The replacement-cycle moment (both surfaces)
 
-**Create**
-- `src/lib/rodent-sources/types.ts`
-- `src/lib/rodent-sources/adapters/{socrata,arcgis,open311,ckan}.ts`
-- `src/lib/rodent-sources/normalize.ts`
-- `src/lib/rodent-sources/fetch-all.ts` (script)
-- `src/components/rodent-radar/AtlasSidebar.tsx`
-- `src/components/rodent-radar/LayerCard.tsx` (reusable for Layers/Climate/MapType)
-- `src/components/rodent-radar/ConfidenceKey.tsx`
-- `src/components/rodent-radar/CityDrawer.tsx` (refactor of existing drawer with 4-beat structure)
-- `public/rodent-radar/data/cities/{slug}.json` × ~20
-- `public/rodent-radar/data/gap-explanations.json`
-- `public/rodent-radar/data/noaa-precip-anomaly.json`
+**A. In every cluster/dot popup — a sparkline timeline**
 
-**Edit**
-- `src/routes/rodent-radar_.rat-pressure-map.tsx` (rewrite layout, fix drawer-close bug)
-- `src/lib/rodentRadarAtlas.ts` (collapse provenance to `live | gap`)
-- `src/lib/rodentRadarProvenance.ts` (kill `seeded`, `ahs-estimate`)
-- `src/routes/rodent-radar.tsx` (purge "PestPro", swap to Cloakd brand wording)
-- Any page referencing the rat map's hero copy
+Click a dot or cluster → popup shows a 24-month monthly bar chart of reports at this address (single dot) or this cluster's footprint. Sawtooth pattern = replacement cycle. One-line caption beneath:
 
-**Delete**
-- `public/rodent-radar/data/rat-pressure-snapshots.csv`
-- `public/rodent-radar/data/rat-pressure-snapshots.json`
-- `public/rodent-radar/data/ahs-rodent-estimates.json` (or demote to a clearly-labeled context layer; default = delete)
+> "5 reports across 14 months. The pattern of a recurring colony — not a one-time sighting."
+
+Implementation: tiny SVG sparkline component, no chart library. Buckets reports into months client-side from the same source data.
+
+**B. "Recurring sites" map layer toggle**
+
+A new toggle in the layer stack. When ON: dim every dot that doesn't qualify, highlight (saturated + slight glow) any address with ≥3 reports across ≥6 months. This is the city-wide pattern view. Off by default.
+
+**Files**
+- `src/components/rodent-radar/ReportPopup.tsx` (new, replaces existing popup logic)
+- `src/components/rodent-radar/Sparkline.tsx` (new)
+- `src/lib/rodent-radar/recurrence.ts` — `isRecurringSite(reportsAtAddress)`
 
 ---
 
-## Acceptance criteria
+## 4. Coverage: 5 deep + 25 shallow
 
-1. Brand reads "Cloakd" everywhere; no "PestPro" string remains.
-2. ~50 US metros visible at all times — every one is either a live Official Activity pin or a hollow reviewed-gap marker.
-3. Zero mock / seeded / AHS-as-activity records on the map.
-4. Sidebar + three docked layer cards + top toolbar; no rail + tools + drawer split.
-5. Map fills viewport at all sizes ≥ 1024px wide.
-6. Closing a city drawer leaves the map fully populated (no refresh required).
-7. Every live dot exposes source URL + filter rule + snapshot date + confidence.
-8. Colony Growth requires a confirm dialog before its layer enables; appears as a stripe overlay, not as dots.
-9. City drawer follows the 4-beat structure and contains zero CTA buttons or product mentions.
-10. Share URL round-trips state: `?layers=…&metric=…&city=…` opens the same view.
+**5 hero cities** — full per-report ingest, full history (24+ months), drives §1–§3:
+NYC, Chicago, Philadelphia, Boston, DC.
 
-## Out of scope (explicit)
+**~25 shallow cities** — keep the current aggregate pin (one dot, count badge, no timeline) so the map isn't sparse outside the 5 hero metros. Popup says: "Aggregate only. Per-report data not yet ingested for this city."
 
-- Cinematic / guided-tour mode (next chunk)
-- Bookmark history (lock icon for now)
-- Phase B cities beyond the ~50 launch set
-- Tract-level choropleth (ZCTA only for v1)
-- Canada / global / world toggle
-- Per-user accounts, saved views
+**AHS estimate layer** (from previous round) stays as the always-on background fill at low opacity — the "estimated pressure everywhere" canvas.
+
+**Visual story**: zoomed out, the country is washed in AHS estimates with bright pin clusters; zoomed in on a hero city, the screen fills with hundreds of individual dots. The contrast itself communicates "this is the depth we COULD have everywhere."
+
+**Out of scope this pass**: ingesting beyond the 5 hero cities. Treat the per-source ingest as ongoing.
+
+---
+
+## 5. Cinematic + curated views + voice
+
+**Cinematic mode**
+- New top-right toolbar button (play/triangle icon).
+- Hides sidebar, layer cards, toolbar chrome. Leaves map + a thin exit-cinematic affordance.
+- ESC exits. Keyboard shortcut `C`.
+
+**Curated views** (3 to start, in a new collapsed menu top-right)
+1. **"NYC right now"** — fly to NYC, recurring-sites layer ON, last-90d filter.
+2. **"The replacement belt"** — fit-bounds across the 5 hero cities with recurring-sites ON.
+3. **"Where the data ends"** — fit US, AHS estimate layer ON + verified pins, dotted gap markers prominent. The honest view.
+
+Each view = a saved camera state + layer config. Pure URL search params so they're shareable.
+
+**Voice / personality**
+- Replace the current sterile copy in the sidebar header. New header: **"The public-data trail."** Subhead: **"Every dot is a real report someone filed about a rat."**
+- Basemap label modes: keep one neutral, add one cheeky: "Mute the map" (no labels).
+- Honest empty state for the 25 shallow cities and for everywhere with no data — copy that names the gap instead of hiding it.
+
+**Files**
+- `src/components/rodent-radar/CinematicToggle.tsx`
+- `src/components/rodent-radar/CuratedViews.tsx`
+- URL state in route's `validateSearch`
+
+---
+
+## 6. Fixes for the bugs you flagged
+
+- **Map empties after closing a place modal** — audit every `setFilter`/`removeLayer` call. Centralize "active filter" state in route search params; modal close calls `navigate({ search: prev => ({ ...prev, focus: undefined }) })` and the layer effect rehydrates from search.
+- **"Click a marker" pill overlaps CARTO attribution** — move pill above the layer cards, `pointer-events: none`, auto-hides on first interaction.
+- **Question-mark gap markers** — replace with small dashed-outline ring, no fill, muted slate, hover tooltip from `gap-explanations.json`. (Carries over from previous round.)
+- **Overlapping confidence rings** — gone. Single dot = single visual. Cluster = single bubble + count badge.
+
+---
+
+## Build order
+
+1. Data: `RodentReport` type + NYC 311 ingest as the proof file. Get one hero city loading as per-report dots.
+2. Encoding: recency color ramp + cluster sizing. Kill old normalized score path.
+3. Popup: sparkline + replacement-cycle caption.
+4. Recurring-sites layer toggle.
+5. Modal-close bug fix + pill repositioning + gap-marker redesign.
+6. Remaining 4 hero cities ingest.
+7. Cinematic + 3 curated views.
+8. Copy/voice pass on sidebar header, empty states, basemap modes.
+9. AHS background + 25 shallow aggregate pins.
+
+---
+
+## Out of scope
+
+- Geolocation / ZIP prompt
+- World map
+- Drawer CTA / lead capture
+- Beyond 5 hero cities for per-report ingest
+- Server-side recurrence detection (do it client-side from loaded reports for now)
+
+---
+
+## Open assumption to flag
+
+NYC 311 is the only source where I'm confident the lat/lon + date fields are clean enough to drive the sparkline out of the box. The other 4 hero cities may need per-source adapters — I'll build NYC first, prove the pattern end-to-end (data → encoding → popup → recurring layer), then template the rest.

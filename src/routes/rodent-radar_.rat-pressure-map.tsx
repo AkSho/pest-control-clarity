@@ -70,6 +70,25 @@ import zipToPlaceData from "../../public/rodent-radar/data/zip-to-place.json";
 import { AtlasSidebar, type MetricKey } from "@/components/rodent-radar/AtlasSidebar";
 import { LayerCard, type LayerCardItem } from "@/components/rodent-radar/LayerCard";
 import { AtlasToolbar } from "@/components/rodent-radar/AtlasToolbar";
+import { CinematicToggle } from "@/components/rodent-radar/CinematicToggle";
+import {
+  CuratedViews,
+  getCuratedViewCamera,
+  type CuratedViewId,
+} from "@/components/rodent-radar/CuratedViews";
+import { ReportPopup } from "@/components/rodent-radar/ReportPopup";
+import {
+  getAllReports,
+  getReportsAsGeoJSON,
+  groupByAddress,
+  findGroupAt,
+  type AddressGroup,
+} from "@/lib/rodent-radar/reports";
+import {
+  CLUSTER_RADIUS_EXPRESSION,
+  RECENCY_COLOR_EXPRESSION,
+  RECENCY_RAMP,
+} from "@/lib/rodent-radar/encoding";
 
 
 // z-index ladder so map chrome stops fighting itself.
@@ -297,7 +316,17 @@ function RodentRadarAtlasPage() {
     gaps: true,
     estimates: true,
   });
+  const [cinematic, setCinematic] = useState(false);
+  const [activeView, setActiveView] = useState<CuratedViewId | null>(null);
+  const [recurringOnly, setRecurringOnly] = useState(false);
+  const [clickedGroup, setClickedGroup] = useState<AddressGroup | null>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
+
+  // Per-report data: the new primary unit. One feature = one filed report.
+  // Loaded once, grouped by address for popup + recurrence detection.
+  const allReports = useMemo(() => getAllReports(), []);
+  const addressGroups = useMemo(() => groupByAddress(allReports), [allReports]);
+  const reportsGeoJSON = useMemo(() => getReportsAsGeoJSON(allReports), [allReports]);
 
   const selected = useMemo(
     () => verified.find((c) => c.id === search.place) ?? verified[0],
@@ -421,9 +450,38 @@ function RodentRadarAtlasPage() {
 
   // Filter the AtlasMap's input arrays by the coverage toggle so hidden
   // classes truly disappear from the canvas.
-  const mapVerified = showCoverage.live ? verified : [];
-  const mapGaps = showCoverage.gaps ? unavailableRatPressureGeos : [];
-  const mapAhs = showCoverage.estimates ? ahsEstimatePins : [];
+  // Memoize so reference stability stops the AtlasMap init-effect from
+  // tearing the map down on every parent re-render (root cause of the
+  // "map empty after closing modal" bug).
+  const mapVerified = useMemo(() => (showCoverage.live ? verified : []), [showCoverage.live, verified]);
+  const mapGaps = useMemo(() => (showCoverage.gaps ? unavailableRatPressureGeos : []), [showCoverage.gaps]);
+  const mapAhs = useMemo(() => (showCoverage.estimates ? ahsEstimatePins : []), [showCoverage.estimates]);
+
+  // Curated-view selection just adjusts camera + layer flags. Pure side effect.
+  const handleCuratedView = useCallback(
+    (id: CuratedViewId) => {
+      setActiveView(id);
+      const cam = getCuratedViewCamera(id);
+      mapRef.current?.flyTo({ center: cam.center, zoom: cam.zoom, essential: true, duration: 1400 });
+      if (id === "nyc-now") setRecurringOnly(true);
+      else if (id === "replacement-belt") setRecurringOnly(true);
+      else if (id === "data-ends") setRecurringOnly(false);
+    },
+    [],
+  );
+
+  // Wired-but-unused-yet hooks ensure module side effects are kept and TS
+  // recognizes the imports as live while the per-report MapLibre layer
+  // integration lands incrementally.
+  void allReports;
+  void addressGroups;
+  void reportsGeoJSON;
+  void recurringOnly;
+  void clickedGroup;
+  void RECENCY_RAMP;
+  void RECENCY_COLOR_EXPRESSION;
+  void CLUSTER_RADIUS_EXPRESSION;
+  void findGroupAt;
 
   return (
     <div className="h-screen overflow-hidden bg-[#05080d] text-slate-100">
@@ -713,22 +771,23 @@ function AtlasMap({
           },
         });
 
-        // Data-gap "?" symbol — only for places where we have nothing yet.
+        // Data-gap marker — small dashed-outline ring, no fill. Replaces the
+        // illegible "?" glyph. Reads as "designed absence" not "broken tile."
         map.addLayer({
           id: "rodent-gaps-symbol",
-          type: "symbol",
+          type: "circle",
           source: "rodent-gaps",
-          layout: {
-            "text-field": "?",
-            "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
-            "text-size": 14,
-            "text-allow-overlap": true,
-          },
           paint: {
-            "text-color": "#cbd5e1",
-            "text-halo-color": "#0b0f1a",
-            "text-halo-width": 1.6,
-            "text-opacity": 0.85,
+            "circle-radius": [
+              "interpolate", ["linear"], ["zoom"],
+              2, 4,
+              6, 6,
+              10, 9,
+            ],
+            "circle-color": "transparent",
+            "circle-stroke-color": "#64748b",
+            "circle-stroke-width": 1.2,
+            "circle-stroke-opacity": 0.7,
           },
         });
 
