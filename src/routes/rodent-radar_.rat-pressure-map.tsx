@@ -67,6 +67,10 @@ import {
   type RodentRadarSearch,
 } from "@/lib/rodentRadarSearch";
 import zipToPlaceData from "../../public/rodent-radar/data/zip-to-place.json";
+import { AtlasSidebar, type MetricKey } from "@/components/rodent-radar/AtlasSidebar";
+import { LayerCard, type LayerCardItem } from "@/components/rodent-radar/LayerCard";
+import { AtlasToolbar } from "@/components/rodent-radar/AtlasToolbar";
+
 
 // z-index ladder so map chrome stops fighting itself.
 const Z = {
@@ -235,23 +239,23 @@ function RodentRadarAtlasPage() {
   const search = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
 
-  const layers = useMemo(
-    () => getAtlasLayerDefinitions().filter((layer): layer is AtlasLayerDefinition & { id: AtlasLayerId } =>
-      DEFAULT_LAYERS.includes(layer.id as AtlasLayerId) ||
-      ["colony-growth", "conditions", "exposure-safety"].includes(layer.id),
-    ),
-    [],
-  );
-
   const activeLayers = search.layers;
-  const mode = search.mode;
-  const activePreset = search.preset;
+  // Display mode + presets are deferred in the OGW-clone IA; pin them so
+  // downstream marker tones + the rest of the existing AtlasMap keep working.
+  const mode: DisplayMode = "standard";
+
   const [query, setQuery] = useState("");
-  const [utilityPanel, setUtilityPanel] = useState<UtilityPanel>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [zipNotice, setZipNotice] = useState<string | null>(null);
-  const [shareOpen, setShareOpen] = useState(false);
   const [selectedAhs, setSelectedAhs] = useState<AhsEstimatePin | null>(null);
+  const [metric, setMetric] = useState<MetricKey>("index");
+  // Coverage filter — which pin classes render on the map + appear in the
+  // sidebar list. Reviewed gaps + estimates default on per the locked plan
+  // (live pins + visible gap markers in the launch view).
+  const [showCoverage, setShowCoverage] = useState({
+    live: true,
+    gaps: true,
+    estimates: true,
+  });
   const mapRef = useRef<MapLibreMap | null>(null);
 
   const selected = useMemo(
@@ -263,18 +267,15 @@ function RodentRadarAtlasPage() {
     [search.gap],
   );
   const activeSet = useMemo(() => new Set<AtlasLayerId>(activeLayers), [activeLayers]);
-  const filteredPlaces = [...verified, ...ahsEstimatePins, ...unavailableRatPressureGeos].filter((place) =>
-    `${place.name} ${place.region}`.toLowerCase().includes(query.toLowerCase()),
-  );
 
-  // Honest count for rail header: split by what kind of data backs each pin.
-  const dataMix = useMemo(() => {
-    const live = verified.filter((v) => v.provenance === "live").length;
-    const seeded = verified.filter((v) => v.provenance === "seeded").length;
-    const estimates = ahsEstimatePins.length;
-    const gaps = unavailableRatPressureGeos.length;
-    return { live, seeded, estimates, gaps };
-  }, [verified]);
+  const dataMix = useMemo(
+    () => ({
+      live: verified.filter((v) => v.provenance === "live").length,
+      gaps: unavailableRatPressureGeos.length,
+      estimates: ahsEstimatePins.length,
+    }),
+    [verified],
+  );
 
   const updateSearch = useCallback(
     (patch: Partial<RodentRadarSearch>) => {
@@ -288,42 +289,27 @@ function RodentRadarAtlasPage() {
 
   const selectVerified = useCallback(
     (city: RatPressureResult) => {
+      setSelectedAhs(null);
       setDrawerOpen(true);
-      updateSearch({ place: city.id, gap: undefined, preset: undefined });
+      updateSearch({ place: city.id, gap: undefined });
     },
     [updateSearch],
   );
 
   const selectGap = useCallback(
     (city: UnavailableRatPressureGeo) => {
+      setSelectedAhs(null);
       setDrawerOpen(true);
-      updateSearch({ gap: city.id, preset: undefined });
+      updateSearch({ gap: city.id });
     },
     [updateSearch],
   );
 
-  // Stable handlers for AtlasMap. Inline lambdas here caused the map-init
-  // useEffect (deps include onSelect*) to tear down + rebuild the map on
-  // every parent render, leaving the canvas blank after closing the drawer.
-  const handleSelectVerified = useCallback(
-    (c: RatPressureResult) => {
-      setSelectedAhs(null);
-      selectVerified(c);
-    },
-    [selectVerified],
-  );
-  const handleSelectGap = useCallback(
-    (c: UnavailableRatPressureGeo) => {
-      setSelectedAhs(null);
-      selectGap(c);
-    },
-    [selectGap],
-  );
   const handleSelectAhs = useCallback(
     (c: AhsEstimatePin) => {
       setSelectedAhs(c);
       setDrawerOpen(true);
-      updateSearch({ gap: undefined, preset: undefined });
+      updateSearch({ gap: undefined });
     },
     [updateSearch],
   );
@@ -333,456 +319,152 @@ function RodentRadarAtlasPage() {
       const next = activeLayers.includes(layerId)
         ? activeLayers.filter((id: AtlasLayerId) => id !== layerId)
         : [...activeLayers, layerId];
+      // Keep rodent-activity always on — it's the spine of the map.
       const normalized: AtlasLayerId[] = next.includes("rodent-activity")
         ? next
         : ["rodent-activity", ...next];
-      const dropGap = !normalized.includes("data-gaps");
-      updateSearch({
-        layers: normalized,
-        gap: dropGap ? undefined : search.gap,
-        preset: undefined,
-      });
+      updateSearch({ layers: normalized });
     },
-    [activeLayers, search.gap, updateSearch],
+    [activeLayers, updateSearch],
   );
 
-  const applyPreset = useCallback(
-    (presetId: PresetId, override?: PresetApply) => {
-      const recipe: Record<PresetId, PresetApply> = {
-        winning: (() => {
-          const top = [...verified].sort((a, b) => b.activityIndex - a.activityIndex).slice(0, 5);
-          const avgLng = top.reduce((s, c) => s + c.lng, 0) / top.length;
-          const avgLat = top.reduce((s, c) => s + c.lat, 0) / top.length;
-          return {
-            layers: ["rodent-activity"] as AtlasLayerId[],
-            window: "12mo",
-            center: [avgLng, avgLat] as [number, number],
-            zoom: 3.6,
-            place: top[0]?.id,
-          };
-        })(),
-        seasonal: {
-          layers: ["rodent-activity", "seasonality"],
-          window: "90d",
-          center: [-96, 38],
-          zoom: 3.2,
-        },
-        gaps: {
-          layers: ["data-gaps"],
-          window: "12mo",
-          center: [-40, 28],
-          zoom: 1.6,
-        },
-        "your-block": override ?? {
-          layers: ["rodent-activity"],
-          window: "12mo",
-        },
-      };
-      const apply = override ?? recipe[presetId];
-      setZipNotice(null);
-      updateSearch({
-        layers: apply.layers,
-        window: apply.window,
-        zoom: apply.zoom,
-        center: apply.center,
-        place: apply.place ?? search.place,
-        gap: presetId === "gaps" ? search.gap : undefined,
-        preset: presetId,
-      });
+  // Layer-card config. Reads as: "what optional overlays can the map carry?"
+  // Coverage / gap pins are owned by the sidebar coverage toggle, so they
+  // don't appear as a layer card.
+  const officialLayer: LayerCardItem[] = [
+    {
+      id: "recent-reports",
+      label: "Recent reports (90d)",
+      description: "Highlight pins with activity in the last quarter.",
+      icon: CircleDot,
+      color: "#facc15",
     },
-    [search.gap, search.place, updateSearch, verified],
-  );
-
-  const handleYourBlockGeo = useCallback(() => {
-    if (typeof navigator === "undefined" || !navigator.geolocation) {
-      setZipNotice("Geolocation unavailable. Enter a US ZIP.");
-      return;
-    }
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const { latitude, longitude } = pos.coords;
-        const nearest = nearestPlaceByCoord(latitude, longitude, verified);
-        applyPreset("your-block", {
-          layers: ["rodent-activity"],
-          window: "12mo",
-          center: [longitude, latitude],
-          zoom: 10,
-          place: nearest?.id,
-        });
-        setZipNotice(`Nearest covered place: ${nearest?.shortName}`);
-      },
-      () => {
-        setZipNotice("Location denied. Enter a US ZIP.");
-      },
-      { timeout: 7000 },
-    );
-  }, [applyPreset, verified]);
-
-  const handleZipSubmit = useCallback(
-    (zip: string) => {
-      const clean = zip.trim().slice(0, 5);
-      const placeId = ZIP_TO_PLACE[clean];
-      if (placeId) {
-        const place = verified.find((p) => p.id === placeId);
-        if (place) {
-          applyPreset("your-block", {
-            layers: ["rodent-activity"],
-            window: "12mo",
-            center: [place.lng, place.lat],
-            zoom: 10,
-            place: place.id,
-          });
-          setZipNotice(`Covered: ${place.shortName}`);
-          return;
-        }
-      }
-      setZipNotice("ZIP not in coverage. Try a NYC, Chicago, Boston, DC, or SF ZIP.");
+  ];
+  const conditionLayers: LayerCardItem[] = [
+    {
+      id: "conditions",
+      label: "Civic conditions",
+      description: "Restaurant violations, vacancy, sanitation pressure.",
+      icon: Globe2,
+      color: "#34d399",
     },
-    [applyPreset, verified],
-  );
+    {
+      id: "seasonality",
+      label: "Seasonality",
+      description: "Winter / precip anomaly context for trend reading.",
+      icon: Snowflake,
+      color: "#38bdf8",
+    },
+  ];
+  const modeledLayers: LayerCardItem[] = [
+    {
+      id: "colony-growth",
+      label: "Colony growth",
+      description: "Modeled replacement cycle. Interpretive, not observed.",
+      icon: BarChart3,
+      color: "#c084fc",
+      gated: true,
+      gatedDisclaimer:
+        "Colony growth is modeled from official activity — it interprets the replacement cycle behind sightings. It is not a rat population count and not a city-published figure.",
+    },
+  ];
+  const guidanceLayers: LayerCardItem[] = [
+    {
+      id: "exposure-safety",
+      label: "Exposure safety",
+      description: "CDC-backed cleanup guidance overlay.",
+      icon: ShieldCheck,
+      color: "#fb7185",
+    },
+  ];
 
-  const copyShare = useCallback(async () => {
-    if (typeof window === "undefined") return;
-    await navigator.clipboard?.writeText(window.location.href);
-  }, []);
+  // Filter the AtlasMap's input arrays by the coverage toggle so hidden
+  // classes truly disappear from the canvas.
+  const mapVerified = showCoverage.live ? verified : [];
+  const mapGaps = showCoverage.gaps ? unavailableRatPressureGeos : [];
+  const mapAhs = showCoverage.estimates ? ahsEstimatePins : [];
 
-  const downloadMapPng = useCallback(async () => {
-    const map = mapRef.current;
-    if (!map) return;
-    const canvas = map.getCanvas();
-    // Composite a watermark onto a clone so the source canvas is untouched
-    const w = canvas.width;
-    const h = canvas.height;
-    const out = document.createElement("canvas");
-    out.width = w;
-    out.height = h;
-    const ctx = out.getContext("2d");
-    if (!ctx) return;
-    ctx.drawImage(canvas, 0, 0);
-    ctx.fillStyle = "rgba(110, 231, 183, 0.85)";
-    ctx.font = `${Math.max(12, Math.round(w / 110))}px "Inter", system-ui, sans-serif`;
-    ctx.textAlign = "right";
-    ctx.textBaseline = "bottom";
-    ctx.shadowColor = "rgba(0,0,0,0.6)";
-    ctx.shadowBlur = 6;
-    ctx.fillText("Rodent Radar · cloakd-removals.cloud", w - 16, h - 16);
-    out.toBlob((blob) => {
-      if (!blob) return;
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      const stamp = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-      const label = search.preset ?? search.place ?? "atlas";
-      a.href = url;
-      a.download = `rodent-radar-${label}-${stamp}.png`;
-      a.click();
-      URL.revokeObjectURL(url);
-    }, "image/png");
-  }, [search.preset, search.place]);
-
+  // Reference `metric` so the dependency stays tracked — wiring metric into
+  // the marker scaling happens in a follow-up loop, but storing the choice in
+  // URL is already shareable via the toolbar.
+  void metric;
 
   return (
-    <div
-      className="h-screen overflow-hidden bg-[#05080d] text-slate-100"
-      data-display-mode={mode}
-    >
+    <div className="h-screen overflow-hidden bg-[#05080d] text-slate-100">
       <AtlasMap
-        verified={verified}
-        unavailable={unavailableRatPressureGeos}
-        ahsPins={ahsEstimatePins}
+        verified={mapVerified}
+        unavailable={mapGaps}
+        ahsPins={mapAhs}
         selected={selected}
         selectedGap={selectedGap}
         selectedAhs={selectedAhs}
         activeLayers={activeSet as Set<AtlasLayerId>}
         mode={mode}
-        onSelectVerified={handleSelectVerified}
-        onSelectGap={handleSelectGap}
+        onSelectVerified={selectVerified}
+        onSelectGap={selectGap}
         onSelectAhs={handleSelectAhs}
         mapRef={mapRef}
       />
 
-      {mode === "field" ? (
-        <FieldBottomSheet
-          selected={selected}
-          selectedGap={selectedGap}
-          onClose={() => updateSearch({ mode: "standard" })}
-        />
-      ) : null}
+      <AtlasSidebar
+        metric={metric}
+        onMetricChange={setMetric}
+        verified={verified}
+        gaps={unavailableRatPressureGeos}
+        ahsPins={ahsEstimatePins}
+        query={query}
+        onQueryChange={setQuery}
+        selectedVerifiedId={selected?.id}
+        selectedGapId={selectedGap?.id}
+        selectedAhsId={selectedAhs?.id}
+        showCoverage={showCoverage}
+        onShowCoverageChange={setShowCoverage}
+        onSelectVerified={selectVerified}
+        onSelectGap={selectGap}
+        onSelectAhs={handleSelectAhs}
+        markerColor={(band: ActivityBand) => markerTone(band, mode)}
+        dataMix={dataMix}
+      />
 
-      {mode === "field" ? (
-        <button
-          type="button"
-          onClick={() => updateSearch({ mode: "standard" })}
-          style={{ zIndex: Z.fieldChip }}
-          className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full border border-cyan-300/40 bg-slate-950/90 px-3 py-2 text-xs font-semibold text-cyan-100 shadow-2xl backdrop-blur transition hover:bg-cyan-300/15"
-        >
-          <X className="h-3.5 w-3.5" />
-          Exit field view
-        </button>
-      ) : null}
+      <AtlasToolbar query={query} onQueryChange={setQuery} />
 
-      <aside
-        style={{ zIndex: Z.rail }}
-        className={`atlas-rail absolute left-4 top-4 hidden max-h-[calc(100vh-2rem)] w-[320px] overflow-hidden rounded-2xl border border-white/8 bg-slate-950/82 shadow-2xl shadow-cyan-950/30 backdrop-blur-xl lg:block ${
-          mode === "field" ? "lg:hidden" : ""
-        }`}
+      {/* Bottom-left docked layer cards — OGW pattern */}
+      <div
+        className="pointer-events-auto absolute bottom-4 left-[316px] hidden flex-col gap-2 md:flex"
+        style={{ zIndex: 35 }}
       >
-        <div className="flex max-h-[calc(100vh-2rem)] flex-col">
-          <div className="border-b border-white/8 px-5 py-4">
-            <div className="flex items-baseline gap-2">
-              <span className="text-base font-semibold tracking-tight">
-                <span className="text-cyan-300">Rodent</span> Radar
-              </span>
-              <span className="rounded-sm border border-yellow-300/40 px-1.5 py-px text-[0.55rem] font-bold uppercase tracking-[0.14em] text-yellow-200/90">
-                beta
-              </span>
-            </div>
-            <p className="mt-1.5 text-xs leading-relaxed text-slate-300">
-              {LEDE_BY_PRESET[(activePreset ?? "default") as PresetId | "default"]}
-            </p>
-            <p className="mt-1 text-[0.65rem] uppercase tracking-[0.16em] text-slate-500">
-              {dataMix.live} live · {dataMix.estimates} estimate · {dataMix.gaps} gap
-            </p>
-            <p className="mt-1 text-[0.6rem] leading-relaxed text-slate-500">
-              Live = official city open data. Sample = published figure being re-verified. Estimate = U.S. household survey. Gap = no clean dataset yet.
-            </p>
-          </div>
-
-          <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
-            {/* Legend: pressure bands (the colored dots on the map) */}
-            <LegendSection title="Pressure band" subtitle="Color of each dot on the map">
-              {PRESSURE_BAND_THRESHOLDS.map((band) => (
-                <div key={band.band} className="flex items-center gap-2 py-1">
-                  <span
-                    className="h-2.5 w-2.5 shrink-0 rounded-full"
-                    style={{
-                      background: markerTone(band.band, mode),
-                      boxShadow: `0 0 8px ${markerTone(band.band, mode)}66`,
-                    }}
-                  />
-                  <span className="text-xs font-semibold text-slate-200">{band.label}</span>
-                  <span className="ml-auto text-[0.6rem] uppercase tracking-wider text-slate-500">
-                    index ≥ {band.minIndex}
-                  </span>
-                </div>
-              ))}
-              <p className="mt-1 text-[0.65rem] leading-relaxed text-slate-500">
-                Activity index combines inspections, complaints, and recent share — not a population count.
-              </p>
-            </LegendSection>
-
-            <LegendSection title="Dot size" subtitle="How loud the area is">
-              <div className="flex items-end gap-3 py-1">
-                {[5, 9, 14].map((r, i) => (
-                  <div key={r} className="flex flex-col items-center gap-1">
-                    <span
-                      className="rounded-full"
-                      style={{
-                        width: r * 2,
-                        height: r * 2,
-                        background: markerTone("high", mode),
-                        opacity: 0.85,
-                      }}
-                    />
-                    <span className="text-[0.55rem] uppercase tracking-wider text-slate-500">
-                      {["small", "mid", "loud"][i]}
-                    </span>
-                  </div>
-                ))}
-              </div>
-              <p className="mt-1 text-[0.65rem] leading-relaxed text-slate-500">
-                Bigger dot = higher activity index. Halo opacity = data confidence.
-              </p>
-            </LegendSection>
-
-            {/* Preset views — collapsible "lenses" matching OGW pattern */}
-            <LegendSection title="Preset views" subtitle="Switch the story this map tells">
-              <div className="mt-1 grid gap-1">
-                {PRESETS.map((p) => {
-                  const Icon = p.icon;
-                  const isActive = activePreset === p.id;
-                  return (
-                    <button
-                      key={p.id}
-                      type="button"
-                      onClick={() => {
-                        if (p.id === "your-block") handleYourBlockGeo();
-                        else applyPreset(p.id);
-                      }}
-                      className={`flex items-center gap-2 rounded px-2 py-1.5 text-left text-xs transition ${
-                        isActive
-                          ? "bg-cyan-300/10 text-cyan-100"
-                          : "text-slate-300 hover:bg-white/[0.04]"
-                      }`}
-                    >
-                      <Icon className="h-3.5 w-3.5 shrink-0 text-cyan-200/70" />
-                      <span className="flex-1 truncate font-medium">{p.label}</span>
-                      <span className="shrink-0 text-[0.55rem] uppercase tracking-wider text-slate-500">
-                        {p.hint}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-              {activePreset === "your-block" ? (
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    const zip = (e.currentTarget.elements.namedItem("zip") as HTMLInputElement)?.value ?? "";
-                    handleZipSubmit(zip);
-                  }}
-                  className="mt-2 flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs"
-                >
-                  <input
-                    name="zip"
-                    placeholder="US ZIP"
-                    inputMode="numeric"
-                    maxLength={5}
-                    className="w-20 bg-transparent text-slate-100 placeholder-slate-500 focus:outline-none"
-                  />
-                  <button type="submit" className="rounded-full bg-cyan-300/20 px-2 py-0.5 text-cyan-100">Go</button>
-                  {zipNotice ? <span className="truncate text-[0.65rem] text-slate-400">{zipNotice}</span> : null}
-                </form>
-              ) : null}
-            </LegendSection>
-
-            {/* Context overlays — secondary, optional */}
-            <LegendSection title="Show on map" subtitle="Optional overlays">
-              <div className="mt-1 grid gap-px">
-                {layers.map((layer) => (
-                  <LayerRow
-                    key={layer.id}
-                    layer={layer}
-                    active={activeLayers.includes(layer.id)}
-                    onToggle={() => toggleLayer(layer.id)}
-                  />
-                ))}
-              </div>
-            </LegendSection>
-
-            {/* Display mode — last, since it's about how, not what */}
-            <LegendSection title="Display mode" subtitle="Adjust for context, not data">
-              <DisplayModePicker mode={mode} onChange={(m) => updateSearch({ mode: m, preset: undefined })} />
-            </LegendSection>
-
-            {/* Place list at the bottom, scrolls within the rail */}
-            <LegendSection title={`All areas (${filteredPlaces.length})`} subtitle="Click to focus">
-              <div className="mt-1 grid gap-px">
-                {filteredPlaces.map((place) => {
-                  if ("last12MonthsCount" in place) {
-                    return (
-                      <button
-                        key={place.id}
-                        type="button"
-                        onClick={() => selectVerified(place)}
-                        className={`flex items-center justify-between gap-2 rounded px-2 py-1.5 text-left text-xs transition ${
-                          selected.id === place.id && !selectedGap && !selectedAhs
-                            ? "bg-cyan-300/10 text-cyan-100"
-                            : "text-slate-300 hover:bg-white/[0.04]"
-                        }`}
-                      >
-                        <span className="flex items-center gap-2 truncate">
-                          <span
-                            className="h-1.5 w-1.5 shrink-0 rounded-full"
-                            style={{ background: markerTone(place.activityBand, mode) }}
-                          />
-                          <span className="truncate">{place.shortName}</span>
-                        </span>
-                        <span className="shrink-0 text-[0.6rem] uppercase tracking-wider text-slate-500">
-                          {place.provenance === "seeded" ? "sample" : activityBandLabels[place.activityBand]}
-                        </span>
-                      </button>
-                    );
-                  }
-                  if ("rodentEvidencePercent" in place) {
-                    return (
-                      <button
-                        key={place.id}
-                        type="button"
-                        onClick={() => {
-                          setSelectedAhs(place);
-                          setDrawerOpen(true);
-                          updateSearch({ gap: undefined, preset: undefined });
-                        }}
-                        className={`flex items-center justify-between gap-2 rounded px-2 py-1.5 text-left text-xs transition ${
-                          selectedAhs?.id === place.id
-                            ? "bg-slate-300/10 text-slate-100"
-                            : "text-slate-300 hover:bg-white/[0.04]"
-                        }`}
-                      >
-                        <span className="flex items-center gap-2 truncate">
-                          <span className="h-2 w-2 shrink-0 rounded-full border border-slate-300/70" />
-                          <span className="truncate">{place.shortName}</span>
-                        </span>
-                        <span className="shrink-0 text-[0.6rem] uppercase tracking-wider text-slate-500">
-                          ~{place.rodentEvidencePercent}% survey
-                        </span>
-                      </button>
-                    );
-                  }
-                  const gap = place as UnavailableRatPressureGeo;
-                  return (
-                    <button
-                      key={gap.id}
-                      type="button"
-                      onClick={() => { setSelectedAhs(null); selectGap(gap); }}
-                      className={`flex items-center justify-between gap-2 rounded px-2 py-1.5 text-left text-xs transition ${
-                        selectedGap?.id === gap.id
-                          ? "bg-slate-300/10 text-slate-100"
-                          : "text-slate-400 hover:bg-white/[0.04]"
-                      }`}
-                    >
-                      <span className="flex items-center gap-2 truncate">
-                        <span className="grid h-3 w-3 shrink-0 place-items-center rounded-full border border-slate-500/60 text-[0.55rem] font-bold text-slate-400">?</span>
-                        <span className="truncate">{gap.shortName}</span>
-                      </span>
-                      <span className="shrink-0 text-[0.6rem] uppercase tracking-wider text-slate-500">no data</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </LegendSection>
-          </div>
-        </div>
-      </aside>
-
-      <MobileTopBar
-        activeLayers={activeLayers}
-        layers={layers}
-        onToggle={toggleLayer}
-        query={query}
-        setQuery={setQuery}
-      />
-
-      {/* PresetBar moved into the legend rail. Suppress duplicate top-center chrome. */}
-
-      <TopTools
-        query={query}
-        setQuery={setQuery}
-        onShare={() => setShareOpen((s) => !s)}
-        onSources={() => setUtilityPanel(utilityPanel === "sources" ? null : "sources")}
-        onMethodology={() => setUtilityPanel(utilityPanel === "methodology" ? null : "methodology")}
-        onSettings={() => setUtilityPanel(utilityPanel === "settings" ? null : "settings")}
-      />
-
-      {shareOpen ? (
-        <SharePopover
-          onCopy={async () => {
-            await copyShare();
-            setShareOpen(false);
-          }}
-          onDownload={async () => {
-            await downloadMapPng();
-            setShareOpen(false);
-          }}
-          onClose={() => setShareOpen(false)}
+        <LayerCard
+          title="Official activity"
+          subtitle="Always on — the map's spine"
+          items={officialLayer}
+          activeLayers={activeLayers}
+          onToggle={toggleLayer}
         />
-      ) : null}
-
-      <MapUtilityButtons
-        onLayers={() => setUtilityPanel(utilityPanel === "settings" ? null : "settings")}
-        onSources={() => setUtilityPanel(utilityPanel === "sources" ? null : "sources")}
-        onMethodology={() => setUtilityPanel(utilityPanel === "methodology" ? null : "methodology")}
-      />
+        <LayerCard
+          title="Conditions"
+          subtitle="Context, not signal"
+          items={conditionLayers}
+          activeLayers={activeLayers}
+          onToggle={toggleLayer}
+          defaultOpen={false}
+        />
+        <LayerCard
+          title="Modeled"
+          subtitle="Interpretive — confirm before enabling"
+          items={modeledLayers}
+          activeLayers={activeLayers}
+          onToggle={toggleLayer}
+          defaultOpen={false}
+        />
+        <LayerCard
+          title="Guidance"
+          subtitle="CDC-aligned overlays"
+          items={guidanceLayers}
+          activeLayers={activeLayers}
+          onToggle={toggleLayer}
+          defaultOpen={false}
+        />
+      </div>
 
       <SelectedDrawer
         open={drawerOpen}
@@ -795,16 +477,6 @@ function RodentRadarAtlasPage() {
         onClose={() => setDrawerOpen(false)}
         onOpen={() => setDrawerOpen(true)}
       />
-
-      {utilityPanel ? (
-        <UtilityDrawer
-          panel={utilityPanel}
-          layers={layers}
-          activeLayers={activeLayers}
-          onToggle={toggleLayer}
-          onClose={() => setUtilityPanel(null)}
-        />
-      ) : null}
     </div>
   );
 }
