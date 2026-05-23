@@ -30,14 +30,17 @@ import {
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { activityBandLabels, type ActivityBand } from "@/lib/rodentRadar";
 import {
+  comparePlaceToCohort,
   exposureGuidance,
   formatCount,
   getAtlasLayerDefinitions,
   getAtlasSourceCards,
   getColonyGrowthProjection,
   getRatPressureResults,
+  PRESSURE_BAND_THRESHOLDS,
   unavailableRatPressureGeos,
   type AtlasLayerDefinition,
+  type PlaceCohortComparison,
   type RatPressureResult,
   type UnavailableRatPressureGeo,
 } from "@/lib/ratPressureMap";
@@ -52,6 +55,25 @@ import {
   type RodentRadarSearch,
 } from "@/lib/rodentRadarSearch";
 import zipToPlaceData from "../../public/rodent-radar/data/zip-to-place.json";
+
+// z-index ladder so map chrome stops fighting itself.
+const Z = {
+  rail: 20,
+  presets: 22,
+  topTools: 30,
+  drawer: 30,
+  fieldChip: 40,
+  popover: 50,
+} as const;
+
+// One-line answer to "what am I looking at?" — changes with active preset.
+const LEDE_BY_PRESET: Record<PresetId | "default", string> = {
+  default: "Where rodent pressure is worst right now, by verified city data.",
+  winning: "Areas where rats are winning over the last 12 months.",
+  seasonal: "How rodent activity shifts across the last 90 days.",
+  gaps: "Cities where we don't have verified data yet.",
+  "your-block": "Rodent pressure near a ZIP or your current location.",
+};
 
 type MapLibreModule = typeof import("maplibre-gl");
 type MapLibreMap = import("maplibre-gl").Map;
