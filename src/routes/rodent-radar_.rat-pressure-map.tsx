@@ -1397,7 +1397,7 @@ function PresetBar({
             >
               {showImg ? (
                 <img
-                  src={`/rodent-radar/presets/${p.id}.png`}
+                  src={`/rodent-radar/presets/${p.id}.jpg`}
                   alt=""
                   width={40}
                   height={24}
