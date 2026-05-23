@@ -302,6 +302,32 @@ function RodentRadarAtlasPage() {
     [updateSearch],
   );
 
+  // Stable handlers for AtlasMap. Inline lambdas here caused the map-init
+  // useEffect (deps include onSelect*) to tear down + rebuild the map on
+  // every parent render, leaving the canvas blank after closing the drawer.
+  const handleSelectVerified = useCallback(
+    (c: RatPressureResult) => {
+      setSelectedAhs(null);
+      selectVerified(c);
+    },
+    [selectVerified],
+  );
+  const handleSelectGap = useCallback(
+    (c: UnavailableRatPressureGeo) => {
+      setSelectedAhs(null);
+      selectGap(c);
+    },
+    [selectGap],
+  );
+  const handleSelectAhs = useCallback(
+    (c: AhsEstimatePin) => {
+      setSelectedAhs(c);
+      setDrawerOpen(true);
+      updateSearch({ gap: undefined, preset: undefined });
+    },
+    [updateSearch],
+  );
+
   const toggleLayer = useCallback(
     (layerId: AtlasLayerId) => {
       const next = activeLayers.includes(layerId)
@@ -468,13 +494,9 @@ function RodentRadarAtlasPage() {
         selectedAhs={selectedAhs}
         activeLayers={activeSet as Set<AtlasLayerId>}
         mode={mode}
-        onSelectVerified={(c) => { setSelectedAhs(null); selectVerified(c); }}
-        onSelectGap={(c) => { setSelectedAhs(null); selectGap(c); }}
-        onSelectAhs={(c) => {
-          setSelectedAhs(c);
-          setDrawerOpen(true);
-          updateSearch({ gap: undefined, preset: undefined });
-        }}
+        onSelectVerified={handleSelectVerified}
+        onSelectGap={handleSelectGap}
+        onSelectAhs={handleSelectAhs}
         mapRef={mapRef}
       />
 
@@ -518,7 +540,7 @@ function RodentRadarAtlasPage() {
               {LEDE_BY_PRESET[(activePreset ?? "default") as PresetId | "default"]}
             </p>
             <p className="mt-1 text-[0.65rem] uppercase tracking-[0.16em] text-slate-500">
-              {dataMix.live} live · {dataMix.seeded} sample · {dataMix.estimates} estimate · {dataMix.gaps} gap
+              {dataMix.live} live · {dataMix.estimates} estimate · {dataMix.gaps} gap
             </p>
             <p className="mt-1 text-[0.6rem] leading-relaxed text-slate-500">
               Live = official city open data. Sample = published figure being re-verified. Estimate = U.S. household survey. Gap = no clean dataset yet.

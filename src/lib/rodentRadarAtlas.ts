@@ -634,7 +634,7 @@ export const pressureMetricSnapshots: PressureMetricSnapshot[] = [
     confidence: "high",
     confidenceNote: "Direct official rodent baiting / rat complaint service requests from the City of Chicago.",
     methodologyNote: "Counts are public service requests, not unique rats or confirmed infestations.",
-    provenance: "seeded",
+    provenance: "live",
   },
   {
     id: "boston-2026-05-23",
@@ -649,7 +649,7 @@ export const pressureMetricSnapshots: PressureMetricSnapshot[] = [
     confidence: "high",
     confidenceNote: "Direct official Boston 311 rodent-taxonomy service requests.",
     methodologyNote: "Counts are public service requests, not unique rats or confirmed infestations.",
-    provenance: "seeded",
+    provenance: "live",
   },
   {
     id: "washington-dc-2026-05-23",
@@ -664,7 +664,7 @@ export const pressureMetricSnapshots: PressureMetricSnapshot[] = [
     confidence: "high",
     confidenceNote: "Direct official DC 311 rodent inspection and treatment service requests.",
     methodologyNote: "Counts are public service requests, not unique rats or confirmed infestations.",
-    provenance: "seeded",
+    provenance: "live",
   },
 ];
 
