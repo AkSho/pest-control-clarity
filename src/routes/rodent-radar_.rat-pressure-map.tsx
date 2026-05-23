@@ -35,7 +35,8 @@ import {
 
 type MapLibreModule = typeof import("maplibre-gl");
 type MapLibreMap = import("maplibre-gl").Map;
-type MapLibreMarker = import("maplibre-gl").Marker;
+type MapLibreNamespace = typeof import("maplibre-gl");
+type MapLibreGeoJSONSource = ReturnType<MapLibreMap["getSource"]>;
 
 type AtlasLayerId =
   | "rodent-activity"
