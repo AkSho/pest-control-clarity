@@ -457,7 +457,24 @@ function RodentRadarAtlasPage() {
         />
       ) : null}
 
-      <aside className="atlas-rail absolute left-4 top-4 z-20 hidden max-h-[calc(100vh-2rem)] w-[300px] overflow-hidden rounded-2xl border border-white/8 bg-slate-950/82 shadow-2xl shadow-cyan-950/30 backdrop-blur-xl lg:block">
+      {mode === "field" ? (
+        <button
+          type="button"
+          onClick={() => updateSearch({ mode: "standard" })}
+          style={{ zIndex: Z.fieldChip }}
+          className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full border border-cyan-300/40 bg-slate-950/90 px-3 py-2 text-xs font-semibold text-cyan-100 shadow-2xl backdrop-blur transition hover:bg-cyan-300/15"
+        >
+          <X className="h-3.5 w-3.5" />
+          Exit field view
+        </button>
+      ) : null}
+
+      <aside
+        style={{ zIndex: Z.rail }}
+        className={`atlas-rail absolute left-4 top-4 hidden max-h-[calc(100vh-2rem)] w-[320px] overflow-hidden rounded-2xl border border-white/8 bg-slate-950/82 shadow-2xl shadow-cyan-950/30 backdrop-blur-xl lg:block ${
+          mode === "field" ? "lg:hidden" : ""
+        }`}
+      >
         <div className="flex max-h-[calc(100vh-2rem)] flex-col">
           <div className="border-b border-white/8 px-5 py-4">
             <div className="flex items-baseline gap-2">
@@ -468,72 +485,178 @@ function RodentRadarAtlasPage() {
                 beta
               </span>
             </div>
-            <p className="mt-1.5 text-xs leading-relaxed text-slate-400">
-              Public rodent data, for people who live with the consequences.
+            <p className="mt-1.5 text-xs leading-relaxed text-slate-300">
+              {LEDE_BY_PRESET[activePreset ?? "default"]}
+            </p>
+            <p className="mt-1 text-[0.65rem] uppercase tracking-[0.16em] text-slate-500">
+              {verified.length} verified areas · updated monthly
             </p>
           </div>
 
           <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
-            <div className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-slate-500">Layers</div>
-            <div className="mt-2 grid gap-px">
-              {layers.map((layer) => (
-                <LayerRow
-                  key={layer.id}
-                  layer={layer}
-                  active={activeLayers.includes(layer.id)}
-                  onToggle={() => toggleLayer(layer.id)}
-                />
+            {/* Legend: pressure bands (the colored dots on the map) */}
+            <LegendSection title="Pressure band" subtitle="Color of each dot on the map">
+              {PRESSURE_BAND_THRESHOLDS.map((band) => (
+                <div key={band.band} className="flex items-center gap-2 py-1">
+                  <span
+                    className="h-2.5 w-2.5 shrink-0 rounded-full"
+                    style={{
+                      background: markerTone(band.band, mode),
+                      boxShadow: `0 0 8px ${markerTone(band.band, mode)}66`,
+                    }}
+                  />
+                  <span className="text-xs font-semibold text-slate-200">{band.label}</span>
+                  <span className="ml-auto text-[0.6rem] uppercase tracking-wider text-slate-500">
+                    index ≥ {band.minIndex}
+                  </span>
+                </div>
               ))}
-            </div>
+              <p className="mt-1 text-[0.65rem] leading-relaxed text-slate-500">
+                Activity index combines inspections, complaints, and recent share — not a population count.
+              </p>
+            </LegendSection>
 
-            <div className="mt-6 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-slate-500">Display</div>
-            <DisplayModePicker mode={mode} onChange={(m) => updateSearch({ mode: m, preset: undefined })} />
+            <LegendSection title="Dot size" subtitle="How loud the area is">
+              <div className="flex items-end gap-3 py-1">
+                {[5, 9, 14].map((r, i) => (
+                  <div key={r} className="flex flex-col items-center gap-1">
+                    <span
+                      className="rounded-full"
+                      style={{
+                        width: r * 2,
+                        height: r * 2,
+                        background: markerTone("high", mode),
+                        opacity: 0.85,
+                      }}
+                    />
+                    <span className="text-[0.55rem] uppercase tracking-wider text-slate-500">
+                      {["small", "mid", "loud"][i]}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <p className="mt-1 text-[0.65rem] leading-relaxed text-slate-500">
+                Bigger dot = higher activity index. Halo opacity = data confidence.
+              </p>
+            </LegendSection>
 
-            <div className="mt-6 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-slate-500">Places</div>
-            <div className="mt-2 grid gap-px">
-              {filteredPlaces.map((place) =>
-                "last12MonthsCount" in place ? (
-                  <button
-                    key={place.id}
-                    type="button"
-                    onClick={() => selectVerified(place)}
-                    className={`flex items-center justify-between gap-2 rounded px-2 py-1.5 text-left text-xs transition ${
-                      selected.id === place.id && !selectedGap
-                        ? "bg-cyan-300/10 text-cyan-100"
-                        : "text-slate-300 hover:bg-white/[0.04]"
-                    }`}
-                  >
-                    <span className="flex items-center gap-2 truncate">
-                      <span
-                        className="h-1.5 w-1.5 shrink-0 rounded-full"
-                        style={{ background: markerTone(place.activityBand, mode) }}
-                      />
-                      <span className="truncate">{place.shortName}</span>
-                    </span>
-                    <span className="shrink-0 text-[0.6rem] uppercase tracking-wider text-slate-500">
-                      {activityBandLabels[place.activityBand]}
-                    </span>
-                  </button>
-                ) : (
-                  <button
-                    key={place.id}
-                    type="button"
-                    onClick={() => selectGap(place)}
-                    className={`flex items-center justify-between gap-2 rounded px-2 py-1.5 text-left text-xs transition ${
-                      selectedGap?.id === place.id
-                        ? "bg-slate-300/10 text-slate-100"
-                        : "text-slate-400 hover:bg-white/[0.04]"
-                    }`}
-                  >
-                    <span className="flex items-center gap-2 truncate">
-                      <span className="grid h-3 w-3 shrink-0 place-items-center rounded-full border border-slate-500/60 text-[0.55rem] font-bold text-slate-400">?</span>
-                      <span className="truncate">{place.shortName}</span>
-                    </span>
-                    <span className="shrink-0 text-[0.6rem] uppercase tracking-wider text-slate-500">gap</span>
-                  </button>
-                ),
-              )}
-            </div>
+            {/* Preset views — collapsible "lenses" matching OGW pattern */}
+            <LegendSection title="Preset views" subtitle="Switch the story this map tells">
+              <div className="mt-1 grid gap-1">
+                {PRESETS.map((p) => {
+                  const Icon = p.icon;
+                  const isActive = activePreset === p.id;
+                  return (
+                    <button
+                      key={p.id}
+                      type="button"
+                      onClick={() => {
+                        if (p.id === "your-block") handleYourBlockGeo();
+                        else applyPreset(p.id);
+                      }}
+                      className={`flex items-center gap-2 rounded px-2 py-1.5 text-left text-xs transition ${
+                        isActive
+                          ? "bg-cyan-300/10 text-cyan-100"
+                          : "text-slate-300 hover:bg-white/[0.04]"
+                      }`}
+                    >
+                      <Icon className="h-3.5 w-3.5 shrink-0 text-cyan-200/70" />
+                      <span className="flex-1 truncate font-medium">{p.label}</span>
+                      <span className="shrink-0 text-[0.55rem] uppercase tracking-wider text-slate-500">
+                        {p.hint}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+              {activePreset === "your-block" ? (
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    const zip = (e.currentTarget.elements.namedItem("zip") as HTMLInputElement)?.value ?? "";
+                    handleZipSubmit(zip);
+                  }}
+                  className="mt-2 flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs"
+                >
+                  <input
+                    name="zip"
+                    placeholder="US ZIP"
+                    inputMode="numeric"
+                    maxLength={5}
+                    className="w-20 bg-transparent text-slate-100 placeholder-slate-500 focus:outline-none"
+                  />
+                  <button type="submit" className="rounded-full bg-cyan-300/20 px-2 py-0.5 text-cyan-100">Go</button>
+                  {zipNotice ? <span className="truncate text-[0.65rem] text-slate-400">{zipNotice}</span> : null}
+                </form>
+              ) : null}
+            </LegendSection>
+
+            {/* Context overlays — secondary, optional */}
+            <LegendSection title="Show on map" subtitle="Optional overlays">
+              <div className="mt-1 grid gap-px">
+                {layers.map((layer) => (
+                  <LayerRow
+                    key={layer.id}
+                    layer={layer}
+                    active={activeLayers.includes(layer.id)}
+                    onToggle={() => toggleLayer(layer.id)}
+                  />
+                ))}
+              </div>
+            </LegendSection>
+
+            {/* Display mode — last, since it's about how, not what */}
+            <LegendSection title="Display mode" subtitle="Adjust for context, not data">
+              <DisplayModePicker mode={mode} onChange={(m) => updateSearch({ mode: m, preset: undefined })} />
+            </LegendSection>
+
+            {/* Place list at the bottom, scrolls within the rail */}
+            <LegendSection title={`All areas (${filteredPlaces.length})`} subtitle="Click to focus">
+              <div className="mt-1 grid gap-px">
+                {filteredPlaces.map((place) =>
+                  "last12MonthsCount" in place ? (
+                    <button
+                      key={place.id}
+                      type="button"
+                      onClick={() => selectVerified(place)}
+                      className={`flex items-center justify-between gap-2 rounded px-2 py-1.5 text-left text-xs transition ${
+                        selected.id === place.id && !selectedGap
+                          ? "bg-cyan-300/10 text-cyan-100"
+                          : "text-slate-300 hover:bg-white/[0.04]"
+                      }`}
+                    >
+                      <span className="flex items-center gap-2 truncate">
+                        <span
+                          className="h-1.5 w-1.5 shrink-0 rounded-full"
+                          style={{ background: markerTone(place.activityBand, mode) }}
+                        />
+                        <span className="truncate">{place.shortName}</span>
+                      </span>
+                      <span className="shrink-0 text-[0.6rem] uppercase tracking-wider text-slate-500">
+                        {activityBandLabels[place.activityBand]}
+                      </span>
+                    </button>
+                  ) : (
+                    <button
+                      key={place.id}
+                      type="button"
+                      onClick={() => selectGap(place)}
+                      className={`flex items-center justify-between gap-2 rounded px-2 py-1.5 text-left text-xs transition ${
+                        selectedGap?.id === place.id
+                          ? "bg-slate-300/10 text-slate-100"
+                          : "text-slate-400 hover:bg-white/[0.04]"
+                      }`}
+                    >
+                      <span className="flex items-center gap-2 truncate">
+                        <span className="grid h-3 w-3 shrink-0 place-items-center rounded-full border border-slate-500/60 text-[0.55rem] font-bold text-slate-400">?</span>
+                        <span className="truncate">{place.shortName}</span>
+                      </span>
+                      <span className="shrink-0 text-[0.6rem] uppercase tracking-wider text-slate-500">no data</span>
+                    </button>
+                  ),
+                )}
+              </div>
+            </LegendSection>
           </div>
         </div>
       </aside>
