@@ -514,11 +514,8 @@ function AtlasMap({
       {activeLayers.has("conditions") ? <ConditionsOverlay /> : null}
       {activeLayers.has("seasonality") ? <SeasonalityOverlay /> : null}
       {!ready ? (
-        <div className="absolute inset-0 grid place-items-center bg-[#05080d]">
-          <div className="text-center">
-            <div className="mx-auto h-16 w-16 rounded-full border border-cyan-300/30 bg-cyan-300/10 shadow-[0_0_40px_rgba(103,232,249,0.25)]" />
-            <p className="mt-4 text-sm font-bold uppercase tracking-[0.18em] text-cyan-200">Loading atlas</p>
-          </div>
+        <div className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 text-[0.65rem] font-medium uppercase tracking-[0.22em] text-slate-500/80">
+          <span className="inline-block h-1 w-1 animate-pulse rounded-full bg-cyan-300/70 align-middle" /> streaming basemap
         </div>
       ) : null}
     </div>
@@ -534,30 +531,28 @@ function LayerRow({
   active: boolean;
   onToggle: () => void;
 }) {
-  const Icon = layerIcons[layer.id];
-  const status = layer.status === "available" ? "on" : layer.status;
-
   return (
     <button
       type="button"
       onClick={onToggle}
-      className={`group rounded-xl border p-3 text-left transition ${
-        active ? "border-cyan-300/40 bg-cyan-300/10" : "border-white/10 bg-white/[0.035] hover:border-cyan-300/25"
+      className={`group flex items-center gap-2 rounded px-2 py-1.5 text-left transition ${
+        active ? "text-slate-100" : "text-slate-500 hover:text-slate-300"
       }`}
       aria-pressed={active}
+      title={layer.description}
     >
-      <div className="flex items-center gap-3">
-        <span className="grid h-7 w-7 place-items-center rounded-lg border border-white/10 bg-slate-950/80">
-          <Icon className="h-4 w-4" style={{ color: layerColors[layer.id] }} />
-        </span>
-        <span className="min-w-0 flex-1">
-          <span className="block text-sm font-black text-slate-100">{layer.name}</span>
-          <span className="block truncate text-xs font-semibold text-slate-500">{layer.description}</span>
-        </span>
-        <span className={`text-xs font-black uppercase tracking-[0.12em] ${active ? "text-cyan-200" : "text-slate-500"}`}>
-          {active ? status : "off"}
-        </span>
-      </div>
+      <span
+        className="h-1.5 w-1.5 shrink-0 rounded-full transition"
+        style={{
+          background: active ? layerColors[layer.id] : "transparent",
+          boxShadow: active ? `0 0 8px ${layerColors[layer.id]}aa` : "none",
+          border: active ? "none" : `1px solid ${layerColors[layer.id]}55`,
+        }}
+      />
+      <span className="flex-1 text-xs font-medium">{layer.name}</span>
+      {layer.status !== "available" ? (
+        <span className="text-[0.55rem] uppercase tracking-wider text-slate-600">{layer.status}</span>
+      ) : null}
     </button>
   );
 }
