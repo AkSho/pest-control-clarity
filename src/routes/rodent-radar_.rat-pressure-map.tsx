@@ -422,7 +422,7 @@ function RodentRadarAtlasPage() {
         onSelectVerified={selectVerified}
         onSelectGap={selectGap}
         onSelectAhs={handleSelectAhs}
-        markerColor={(band) => markerTone(band, mode)}
+        markerColor={(band: ActivityBand) => markerTone(band, mode)}
         dataMix={dataMix}
       />
 
