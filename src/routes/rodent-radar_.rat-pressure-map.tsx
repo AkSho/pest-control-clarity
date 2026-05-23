@@ -893,7 +893,7 @@ function AtlasMap({
               13, 4,
               16, 6,
             ],
-            "circle-color": RECENCY_COLOR_EXPRESSION as unknown as maplibregl.ExpressionSpecification,
+            "circle-color": RECENCY_COLOR_EXPRESSION as never,
             "circle-opacity": 0.9,
             "circle-stroke-color": "#06121a",
             "circle-stroke-width": 0.5,
