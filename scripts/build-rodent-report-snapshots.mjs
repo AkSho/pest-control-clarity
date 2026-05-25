@@ -307,6 +307,43 @@ async function fetchBaltimore() {
     .filter(Boolean);
 }
 
+async function fetchNewark() {
+  const url = new URL("https://seeclickfix.com/api/v2/issues");
+  url.searchParams.set("lat", "40.7357");
+  url.searchParams.set("lng", "-74.1724");
+  url.searchParams.set("request_types", "26890");
+  url.searchParams.set("sort", "created_at");
+  url.searchParams.set("per_page", "100");
+  url.searchParams.set("after", `${START_DATE}T00:00:00-04:00`);
+  url.searchParams.set("before", `${END_DATE}T23:59:59-04:00`);
+  const data = await getJson(url);
+  return data.issues
+    .map((r, i) => {
+      const id = `newark-${r.id || i}`;
+      const recordedAt = iso(r.created_at);
+      const lat = Number(r.lat);
+      const lng = Number(r.lng);
+      if (!recordedAt || !validPoint(lat, lng)) return null;
+      const point = jitterCoord(id, lat, lng);
+      return {
+        id,
+        source: "Newark SeeClickFix Rodent Infestation",
+        sourceUrl: "https://seeclickfix.com/api/v2/request_types/26890",
+        sourceDatasetId: "newark-seeclickfix-26890",
+        snapshotDate: SNAPSHOT_DATE,
+        confidence: "high",
+        category: r.request_type?.title || r.summary || "Rodent Infestation (Exterior Only)",
+        lat: point.lat,
+        lng: point.lng,
+        reportedAt: recordedAt,
+        status: r.status || "Filed",
+        addressLabel: blockLabel(r.address, "Newark"),
+        neighborhood: "Newark",
+      };
+    })
+    .filter(Boolean);
+}
+
 const jobs = {
   nyc: fetchNyc,
   chicago: fetchChicago,
@@ -314,6 +351,7 @@ const jobs = {
   boston: fetchBoston,
   dc: fetchDc,
   baltimore: fetchBaltimore,
+  newark: fetchNewark,
   philly: async () => [],
 };
 

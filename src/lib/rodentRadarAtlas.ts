@@ -144,6 +144,7 @@ const OAKLAND_311_SOURCE_URL =
 const SAN_JOSE_311_SOURCE_URL = "https://data.sanjoseca.gov/dataset/311-service-request-data";
 const JERSEY_CITY_OPEN_DATA_URL = "https://data.jerseycitynj.gov/explore/";
 const NEWARK_OPEN_DATA_URL = "https://data.ci.newark.nj.us";
+const NEWARK_SEECLICKFIX_URL = "https://seeclickfix.com/api/v2/request_types/26890";
 const CDC_HANTA_URL = "https://www.cdc.gov/hantavirus/";
 const CDC_HANTA_PREVENTION_URL = "https://www.cdc.gov/hantavirus/prevention/index.html";
 const CDC_CLEANUP_URL = "https://www.cdc.gov/healthy-pets/rodent-control/clean-up.html";
@@ -208,6 +209,13 @@ export const atlasSources: AtlasSource[] = [
     id: "newark-open-data",
     name: "Newark Open Data",
     url: NEWARK_OPEN_DATA_URL,
+    owner: "City of Newark",
+    sourceType: "official-open-data",
+  },
+  {
+    id: "newark-seeclickfix",
+    name: "Newark SeeClickFix Rodent Infestation",
+    url: NEWARK_SEECLICKFIX_URL,
     owner: "City of Newark",
     sourceType: "official-open-data",
   },
@@ -373,6 +381,16 @@ export const atlasDatasets: AtlasDataset[] = [
     activityUse: "official-activity",
   },
   {
+    id: "newark-seeclickfix-26890",
+    sourceId: "newark-seeclickfix",
+    name: "SeeClickFix — Rodent Infestation (Exterior Only)",
+    url: NEWARK_SEECLICKFIX_URL,
+    geography: "City of Newark",
+    updateCadence: "Official SeeClickFix civic reporting portal",
+    filterNote: "request_type_id = 26890 (Rodent Infestation Exterior Only), filtered by created_at",
+    activityUse: "official-activity",
+  },
+  {
     id: "nyc-dohmh-violations-ds",
     sourceId: "nyc-dohmh-violations",
     name: "DOHMH violations: evidence of mice / rats / live roaches",
@@ -493,7 +511,7 @@ export const atlasPlaces: AtlasPlace[] = [
     geo: "City",
     lat: 40.7357,
     lng: -74.1724,
-    transparencyStatus: "not-found",
+    transparencyStatus: "verified",
   },
   {
     id: "oakland",
@@ -738,6 +756,21 @@ export const pressureMetricSnapshots: PressureMetricSnapshot[] = [
     methodologyNote: "Counts are public service requests, not unique rats, mice, properties, or confirmed infestations.",
     provenance: "live",
   },
+  {
+    id: "newark-2026-05-24",
+    placeId: "newark",
+    datasetId: "newark-seeclickfix-26890",
+    snapshotDate: "2026-05-24",
+    queryWindow: "2025-05-24 through 2026-05-24",
+    sourceFilter: "request_type_id = 26890 (Rodent Infestation Exterior Only), created_at in window",
+    last12MonthsCount: 36,
+    previous12MonthsCount: 0,
+    recent90DayCount: 30,
+    confidence: "high",
+    confidenceNote: "Direct official Newark SeeClickFix request type for exterior rodent infestation.",
+    methodologyNote: "Counts are public service requests, not unique rats, mice, properties, or confirmed infestations.",
+    provenance: "live",
+  },
 ];
 
 export const watchlistPlaces: WatchlistPlace[] = [
@@ -748,14 +781,6 @@ export const watchlistPlaces: WatchlistPlace[] = [
     reviewedSourceUrl: JERSEY_CITY_OPEN_DATA_URL,
     reviewedOn: "2026-05-25",
     reviewNote: "Keep as a visible NJ data gap until an official rodent, vermin, health-code, or housing-code taxonomy can be audited. Do not infer activity from nearby NYC records.",
-  },
-  {
-    placeId: "newark",
-    reason: "Newark is a priority NJ market, but the current review has not confirmed a direct, auditable rodent 311 or inspection feed.",
-    reviewedSourceName: "Newark Open Data",
-    reviewedSourceUrl: NEWARK_OPEN_DATA_URL,
-    reviewedOn: "2026-05-25",
-    reviewNote: "Treat as a data gap until an official source exposes rodent-specific complaints, inspections, or code violations with usable geography and dates.",
   },
   {
     placeId: "oakland",

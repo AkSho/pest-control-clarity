@@ -7,6 +7,7 @@ import phillyReports from "@/data/rodent-reports/philly.json";
 import bostonReports from "@/data/rodent-reports/boston.json";
 import dcReports from "@/data/rodent-reports/dc.json";
 import baltimoreReports from "@/data/rodent-reports/baltimore.json";
+import newarkReports from "@/data/rodent-reports/newark.json";
 
 export type RodentReport = {
   id: string;
@@ -25,7 +26,7 @@ export type RodentReport = {
 };
 
 export type HeroCity = {
-  id: "nyc" | "chicago" | "sf" | "philly" | "boston" | "dc" | "baltimore";
+  id: "nyc" | "chicago" | "sf" | "philly" | "boston" | "dc" | "baltimore" | "newark";
   name: string;
   label: string; // pretty label for UI
   center: [number, number]; // lng, lat
@@ -90,6 +91,14 @@ export const HERO_CITIES: HeroCity[] = [
     zoom: 11.6,
     reports: baltimoreReports as RodentReport[],
   },
+  {
+    id: "newark",
+    name: "Newark",
+    label: "Newark",
+    center: [-74.1724, 40.7357],
+    zoom: 12,
+    reports: newarkReports as RodentReport[],
+  },
 ];
 
 export function getAllReports(): RodentReport[] {
@@ -118,6 +127,7 @@ const REPORT_PLACE_BY_SOURCE: Array<{
     if (city.id === "boston") return source.includes("boston");
     if (city.id === "dc") return source.includes("dc 311") || dataset.includes("dcgis");
     if (city.id === "baltimore") return source.includes("baltimore") || dataset.includes("baltimore");
+    if (city.id === "newark") return source.includes("newark") || dataset.includes("newark");
     return false;
   },
   place: {
