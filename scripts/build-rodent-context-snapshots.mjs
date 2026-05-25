@@ -156,9 +156,55 @@ async function fetchChicagoFoodPest() {
     .filter(Boolean);
 }
 
+async function fetchNycSanitationContext() {
+  const url = new URL("https://data.cityofnewyork.us/resource/erm2-nwe9.json");
+  url.searchParams.set("$limit", "350");
+  url.searchParams.set("$order", "created_date DESC");
+  url.searchParams.set(
+    "$select",
+    "unique_key,created_date,agency,complaint_type,descriptor,incident_zip,incident_address,borough,latitude,longitude,status",
+  );
+  url.searchParams.set(
+    "$where",
+    `created_date between '${START_DATE}T00:00:00' and '${END_DATE}T23:59:59' ` +
+      "AND agency='DSNY' AND latitude IS NOT NULL AND longitude IS NOT NULL " +
+      "AND (complaint_type='Dirty Condition' OR complaint_type='Illegal Dumping' OR complaint_type='Missed Collection')",
+  );
+  const rows = await getJson(url);
+  return rows
+    .map((r, i) => {
+      const id = `nyc-sanitation-${r.unique_key || i}`;
+      const observedAt = iso(r.created_date);
+      const lat = Number(r.latitude);
+      const lng = Number(r.longitude);
+      if (!observedAt || !validPoint(lat, lng)) return null;
+      const point = jitterCoord(id, lat, lng);
+      return {
+        id,
+        source: "NYC 311 Service Requests - DSNY sanitation context",
+        sourceUrl: "https://data.cityofnewyork.us/Social-Services/311-Service-Requests/erm2-nwe9",
+        sourceDatasetId: "erm2-nwe9",
+        snapshotDate: SNAPSHOT_DATE,
+        confidence: "medium",
+        contextType: "sanitation-condition",
+        establishmentName: r.complaint_type || "Sanitation condition",
+        category: r.complaint_type || "Sanitation context",
+        description: r.descriptor || r.complaint_type || "Sanitation-related 311 service request",
+        lat: point.lat,
+        lng: point.lng,
+        observedAt,
+        status: r.status || "311 service request",
+        addressLabel: blockLabel(r.incident_address, r.incident_zip || r.borough),
+        neighborhood: r.borough || (r.incident_zip ? `ZIP ${r.incident_zip}` : "New York City"),
+      };
+    })
+    .filter(Boolean);
+}
+
 const jobs = {
   "nyc-food-pest": fetchNycFoodPest,
   "chicago-food-pest": fetchChicagoFoodPest,
+  "nyc-sanitation-context": fetchNycSanitationContext,
 };
 
 await fs.mkdir(OUT_DIR, { recursive: true });

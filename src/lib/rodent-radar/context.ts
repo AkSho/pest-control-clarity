@@ -1,5 +1,6 @@
 import nycFoodPestEvidence from "@/data/rodent-context/nyc-food-pest.json";
 import chicagoFoodPestEvidence from "@/data/rodent-context/chicago-food-pest.json";
+import nycSanitationContext from "@/data/rodent-context/nyc-sanitation-context.json";
 
 export type FoodPestEvidence = {
   id: string;
@@ -8,7 +9,7 @@ export type FoodPestEvidence = {
   sourceDatasetId?: string;
   snapshotDate?: string;
   confidence?: "high" | "medium" | "low";
-  contextType: "food-inspection-pest-evidence";
+  contextType: "food-inspection-pest-evidence" | "sanitation-condition";
   establishmentName: string;
   category?: string;
   description: string;
@@ -24,6 +25,7 @@ export function getFoodPestEvidence(): FoodPestEvidence[] {
   return [
     ...(nycFoodPestEvidence as FoodPestEvidence[]),
     ...(chicagoFoodPestEvidence as FoodPestEvidence[]),
+    ...(nycSanitationContext as FoodPestEvidence[]),
   ];
 }
 

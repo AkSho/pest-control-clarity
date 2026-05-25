@@ -2633,6 +2633,7 @@ function FoodPestContextPopup({
   record: FoodPestEvidence;
   onClose: () => void;
 }) {
+  const isSanitation = record.contextType === "sanitation-condition";
   return (
     <aside className="pointer-events-auto absolute right-4 top-20 z-[55] w-[min(340px,calc(100vw-2rem))] rounded-xl border border-amber-200/20 bg-slate-950/92 p-4 text-slate-100 shadow-2xl shadow-black/40 backdrop-blur-xl">
       <div className="flex items-start justify-between gap-3">
@@ -2647,7 +2648,7 @@ function FoodPestContextPopup({
       </div>
       <div className="mt-3 rounded-lg border border-white/8 bg-white/[0.03] p-3">
         <div className="text-[0.6rem] font-semibold uppercase tracking-[0.16em] text-slate-500">
-          Food inspection violation
+          {isSanitation ? "Sanitation condition" : "Food inspection violation"}
         </div>
         <p className="mt-1 text-xs leading-relaxed text-slate-300">{record.description}</p>
       </div>
@@ -2656,7 +2657,7 @@ function FoodPestContextPopup({
         <Metric label="Code" value={record.category ?? "Pest"} />
       </div>
       <p className="mt-3 text-[0.68rem] leading-relaxed text-slate-400">
-        This is not a public rodent report. It is an official food inspection context signal from {record.source}.
+        This is not a public rodent report. It is an official {isSanitation ? "sanitation context" : "food inspection context"} signal from {record.source}.
       </p>
       <a href={record.sourceUrl} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-amber-100 hover:underline">
         View source <ExternalLink className="h-3 w-3" />

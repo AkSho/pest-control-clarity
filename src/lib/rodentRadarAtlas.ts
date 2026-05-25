@@ -155,7 +155,7 @@ const PHILLY_311_URL = "https://www.opendataphilly.org/dataset/311-service-and-i
 const SEATTLE_FIF_URL = "https://data.seattle.gov/Community-and-Culture/Find-It-Fix-It-Service-Requests/p3i6-mdy7";
 const TORONTO_311_URL = "https://open.toronto.ca/dataset/311-service-requests-customer-initiated/";
 const DOHMH_VIOLATIONS_URL = "https://data.cityofnewyork.us/Health/DOHMH-New-York-City-Restaurant-Inspection-Results/43nn-pn8j";
-const DSNY_MISSED_URL = "https://data.cityofnewyork.us/City-Government/DSNY-Bulk-Item-Frequency/by5n-fxyh";
+const NYC_311_SERVICE_REQUESTS_URL = "https://data.cityofnewyork.us/Social-Services/311-Service-Requests/erm2-nwe9";
 const CHICAGO_FOOD_URL = "https://data.cityofchicago.org/Health-Human-Services/Food-Inspections/4ijn-s7e5";
 const HUD_VACANCY_URL = "https://www.huduser.gov/portal/datasets/usps.html";
 
@@ -280,10 +280,10 @@ export const atlasSources: AtlasSource[] = [
     sourceType: "context",
   },
   {
-    id: "nyc-dsny-bulk",
-    name: "NYC DSNY Bulk Item Frequency",
-    url: DSNY_MISSED_URL,
-    owner: "NYC Department of Sanitation",
+    id: "nyc-311-sanitation",
+    name: "NYC 311 DSNY sanitation service requests",
+    url: NYC_311_SERVICE_REQUESTS_URL,
+    owner: "New York City 311 / NYC Department of Sanitation",
     sourceType: "context",
   },
   {
@@ -364,13 +364,13 @@ export const atlasDatasets: AtlasDataset[] = [
     activityUse: "context",
   },
   {
-    id: "nyc-dsny-bulk-ds",
-    sourceId: "nyc-dsny-bulk",
-    name: "DSNY collection signals (bulk + missed collection context)",
-    url: DSNY_MISSED_URL,
+    id: "nyc-311-sanitation-ds",
+    sourceId: "nyc-311-sanitation",
+    name: "NYC 311 sanitation context: dirty condition, illegal dumping, missed collection",
+    url: NYC_311_SERVICE_REQUESTS_URL,
     geography: "NYC",
     updateCadence: "Updated regularly",
-    filterNote: "Bulk collection frequency, used as sanitation pressure context",
+    filterNote: "agency = DSNY and complaint_type IN (Dirty Condition, Illegal Dumping, Missed Collection)",
     activityUse: "context",
   },
   {
@@ -767,11 +767,11 @@ export const contextLayers: ContextLayer[] = [
   },
   {
     id: "dsny-collection-pressure",
-    name: "NYC sanitation collection pressure",
+    name: "NYC sanitation and dumping context",
     label: "Context only",
-    description: "DSNY bulk-collection frequency as a sanitation pressure proxy where rodent activity is most visible.",
-    sourceRequirement: "DSNY Bulk Item Frequency or missed-collection dataset, aggregated by community district.",
-    scoringNote: "Context only. Sanitation signals are correlated with rodent visibility but not identical to activity.",
+    description: "NYC 311 DSNY dirty condition, illegal dumping, and missed collection requests as sanitation context.",
+    sourceRequirement: "NYC 311 Service Requests dataset, filtered to DSNY sanitation complaint types with usable geography.",
+    scoringNote: "Context only. Sanitation signals help explain attractants and trash conditions but are not rodent activity.",
     status: "available-now",
   },
   {
