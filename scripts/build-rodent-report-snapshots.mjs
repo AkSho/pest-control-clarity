@@ -134,7 +134,12 @@ async function fetchBoston() {
   const sql = `
     SELECT "case_enquiry_id","open_dt","type","case_status","location_street_name","latitude","longitude"
     FROM "1a0b420d-99f1-4887-9851-990b2a5a6e17"
-    WHERE lower("type") LIKE '%rodent%'
+    WHERE (
+        lower("type") LIKE '%rodent%'
+        OR lower("type") LIKE '%mice%'
+        OR lower("type") LIKE '%mouse%'
+        OR lower("type") = 'rat bite'
+      )
       AND "open_dt" >= '${START_DATE}T00:00:00'
       AND "open_dt" <= '${END_DATE}T23:59:59'
       AND "latitude" IS NOT NULL

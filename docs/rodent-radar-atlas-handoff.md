@@ -8,6 +8,7 @@ The current reference is OpenGridWorks-level map depth, but for rodent activity,
 ## Product Rules
 - User-facing language is Rodent Activity, not scores.
 - Official Rodent Activity uses official public rodent inspections, complaints, or auditable rodent/vermin 311 records only.
+- `Rodent Activity` includes rats and mice. Source audits must check explicit `rodent`, `rat/rats`, `mouse/mice`, and clearly defined `vermin` categories, while rejecting loose substring matches such as `administration` or `grate`.
 - Internal normalization may size or sort markers, but must not be shown as a public metric.
 - Any modeled repeat-activity layer must stay separate from official city records and must never be presented as a rat population estimate.
 - Context layers are explanatory and must not change official Rodent Activity.
@@ -18,10 +19,10 @@ The current reference is OpenGridWorks-level map depth, but for rodent activity,
 ## Pinned Roadmap
 This is the canonical Rodent Radar sequence. Do not reorder these chunks unless the user explicitly approves the change or a data source fails audit.
 
-Immediate next implementation chunk: **Housing / Built Environment Context**.
+Immediate next implementation chunk: **More Verified Activity Cities**.
 
 Last known atlas state:
-- 1,339 official report records.
+- 1,337 official report records.
 - 5 verified places.
 - 7 reviewed data gaps.
 - 1,050 context records: 350 NYC food inspection, 350 Chicago food inspection, and 350 NYC sanitation / dumping records.
@@ -43,18 +44,18 @@ Priority sequence:
    - Add official sanitation, trash, missed collection, illegal dumping, or similar civic-condition feeds.
    - Start with cities already verified or priority gaps where data is clean.
    - Keep these as explanatory context layers, not activity.
-4. **Housing / Built Environment Context**
-   - Add Census/ACS-style layers for housing units, density, vacancy, older housing share, and building-age context.
-   - Use these for explanation and optional normalization views such as reports per 1,000 housing units.
-   - Do not imply rat population size.
-5. **More Verified Activity Cities**
-   - Add official per-report rodent activity only where filtering is clean and auditable.
+4. **More Verified Activity Cities**
+   - Add official per-report rodent, rat, mouse/mice, or clearly defined vermin activity only where filtering is clean and auditable.
    - Priority candidates: NJ, SF Bay Area, LA, Seattle, Baltimore, Houston, Austin, Denver, Pittsburgh, Atlanta, Portland, Nashville, Minneapolis.
    - Keep unverified cities in `Data Gaps` with reviewed-source notes.
-6. **Traffic-Spike Readiness**
+5. **Traffic-Spike Readiness**
    - Split heavy atlas data from the route bundle.
    - Lazy-load map, report, and context datasets.
    - Preserve the full-screen atlas UX while reducing initial payload.
+6. **Housing / Built Environment Context**
+   - Add Census/ACS-style layers for housing units, density, vacancy, older housing share, and building-age context.
+   - Use these for explanation and optional normalization views such as reports per 1,000 housing units.
+   - Do not imply rat population size.
 
 ## Important Files
 - `src/routes/rodent-radar_.rat-pressure-map.tsx`
@@ -86,8 +87,8 @@ Priority sequence:
 Current official record snapshots:
 - NYC: 350 records from NYC Open Data Rodent Inspection (`p937-wjvj`), filtered to `Failed for Rat Activity`; snapshot `2026-05-24`; visible report-date range `2026-05-18` through `2026-05-21`; confidence `high`.
 - Chicago: 339 records from Chicago 311 Service Requests (`v6vf-nfxy`), filtered to `Rodent Baiting/Rat Complaint`; snapshot `2026-05-24`; visible report-date range `2026-05-21` through `2026-05-24`; confidence `high`.
-- San Francisco: 250 records from DataSF 311 Cases (`vw6y-z8j6`), filtered to residential building infestation taxonomy containing `infestation_rodent_insect`; snapshot `2026-05-24`; visible report-date range `2026-01-27` through `2026-05-23`; confidence `medium` because the official category combines rodent and insect infestation language.
-- Boston: 200 records from Boston 311 Service Requests 2026 CKAN datastore (`1a0b420d-99f1-4887-9851-990b2a5a6e17`), filtered to rodent case types; snapshot `2026-05-24`; visible report-date range `2026-05-13` through `2026-05-24`; confidence `high`.
+- San Francisco: 250 records from DataSF 311 Cases (`vw6y-z8j6`), filtered to residential building infestation taxonomy containing `infestation_rodent_insect`; snapshot `2026-05-24`; visible report-date range `2026-01-28` through `2026-05-24`; confidence `medium` because the official category combines rodent and insect infestation language.
+- Boston: 198 records from Boston 311 Service Requests 2026 CKAN datastore (`1a0b420d-99f1-4887-9851-990b2a5a6e17`), filtered to official `Rodent Activity`, `Mice Infestation - Residential`, and exact `Rat Bite` case types; snapshot `2026-05-24`; visible report-date range `2026-05-14` through `2026-05-24`; confidence `high`.
 - Washington, DC: 200 records from DCGIS ServiceRequests layer 13, filtered to service code `S0301`; snapshot `2026-05-24`; visible report-date range `2026-05-11` through `2026-05-24`; confidence `high`.
 - Philadelphia: 0 per-report records in the current snapshot because the quick audit did not confirm recent clean rodent-specific records in the queried public table. Treat as a visible data gap until verified.
 
@@ -111,6 +112,7 @@ Privacy/data rules:
 - Report coordinates are deterministically jittered.
 - Address labels are block-level; house numbers and unit markers are stripped.
 - Future-dated records are excluded.
+- Source probes must not use broad `%rat%` substring matches by themselves; they catch false positives such as `Administration` and `Tree Grate`. Prefer official category equality, controlled service codes, or explicitly reviewed case-type values.
 - AHS/Census household sightings are deferred and should not be shown as a default atlas layer.
 
 ## Implemented In Latest Atlas Redesign
@@ -173,7 +175,18 @@ Privacy/data rules:
 - Added `src/data/rodent-reports/sf.json` with 250 official DataSF 311 residential-building infestation records.
 - Added San Francisco as a `HeroCity` / report-browser place in `src/lib/rodent-radar/reports.ts`.
 - SF records use confidence `medium` because DataSF's clean auditable taxonomy is `infestation_rodent_insect`, not a rodent-only field.
-- Regenerated current report snapshots: NYC 350, Chicago 339, SF 250, Boston 200, DC 200, Philadelphia 0.
+- Regenerated report snapshots at that time: NYC 350, Chicago 339, SF 250, Boston 200, DC 200, Philadelphia 0.
+
+## Latest Mouse / Mice Activity Audit Pass
+- Broadened the Boston importer to include official mouse/mice taxonomy (`Mice Infestation - Residential`) plus exact `Rat Bite`.
+- Added a handoff rule requiring future city audits to check explicit `rodent`, `rat/rats`, `mouse/mice`, and clearly defined `vermin` categories while rejecting loose substring matches.
+- Regenerated report snapshots: NYC 350, Chicago 339, SF 250, Boston 198, DC 200, Philadelphia 0.
+- `bun run build` passed after this pass. The known Wrangler log-file permission warning still appears but the build exits successfully.
+
+Latest failed source probes:
+- Austin 311 quick text probe matched `Alarm Administration` because of the `rat` substring. Do not use substring-only `rat` filters there; require an explicit rodent/mouse category.
+- Nashville hubNashville quick text probe matched `Tree Grate` because of the `rat` substring. Do not use substring-only `rat` filters there; require an explicit rodent/mouse category.
+- Los Angeles MyLA311 request types reviewed in the probed yearly table were sanitation/service categories such as bulky items, graffiti, illegal dumping, dead animal removal, streetlights, and water waste; no clean rodent/mouse request type was found in that probe.
 
 ## Latest Context Layer Pass
 - Added `scripts/build-rodent-context-snapshots.mjs` for context-only official data snapshots.
@@ -247,7 +260,7 @@ Non-negotiables:
 - Run `bun run build` after implementation work and record the result here.
 
 ## Immediate Next Task
-Follow `Pinned Roadmap` above. The immediate next implementation chunk is **Housing / Built Environment Context**.
+Follow `Pinned Roadmap` above. The immediate next implementation chunk is **More Verified Activity Cities**.
 
 ## Left Off Here
-The OGW-style record cockpit, polish pass, Data Browser Polish pass, San Francisco per-report import, food-inspection context layers, NYC sanitation/dumping context layer, and clickable verified-place navigation have been implemented. The atlas now has 1,339 official per-report records, 1,050 context records, five verified per-report places, seven reviewed gaps, visible clusters, a left legend rail, a filtered right report browser with active filter chips, bottom-left `Layers / Sources / Map Type` dock, monthly seasonality rhythm, and a real `Conditions` overlay. Data audit found zero future-dated records and no active atlas score/index language in the Rodent Radar cockpit files. Continue with **Housing / Built Environment Context** before city expansion or traffic readiness.
+The OGW-style record cockpit, polish pass, Data Browser Polish pass, San Francisco per-report import, food-inspection context layers, NYC sanitation/dumping context layer, clickable verified-place navigation, and Boston mouse/mice activity audit have been implemented. The atlas now has 1,337 official per-report records, 1,050 context records, five verified per-report places, seven reviewed gaps, visible clusters, a left legend rail, a filtered right report browser with active filter chips, bottom-left `Layers / Sources / Map Type` dock, monthly seasonality rhythm, and a real `Conditions` overlay. Data audit found zero future-dated records and no active atlas score/index language in the Rodent Radar cockpit files. Continue with **More Verified Activity Cities** before traffic readiness or housing context.

@@ -1,5 +1,35 @@
 [
   {
+    "id": "sf-101004118886",
+    "source": "DataSF 311 Residential Building Infestation",
+    "sourceUrl": "https://data.sfgov.org/City-Infrastructure/311-Cases/vw6y-z8j6",
+    "sourceDatasetId": "vw6y-z8j6",
+    "snapshotDate": "2026-05-24",
+    "confidence": "medium",
+    "category": "infestation_rodent_insect",
+    "lat": 37.787845,
+    "lng": -122.414919,
+    "reportedAt": "2026-05-24T16:06:18.000Z",
+    "status": "Open",
+    "addressLabel": "SUTTER ST, SAN FRANCISCO, CA 94109 block",
+    "neighborhood": "Nob Hill"
+  },
+  {
+    "id": "sf-101004117890",
+    "source": "DataSF 311 Residential Building Infestation",
+    "sourceUrl": "https://data.sfgov.org/City-Infrastructure/311-Cases/vw6y-z8j6",
+    "sourceDatasetId": "vw6y-z8j6",
+    "snapshotDate": "2026-05-24",
+    "confidence": "medium",
+    "category": "infestation_rodent_insect",
+    "lat": 37.764157,
+    "lng": -122.504706,
+    "reportedAt": "2026-05-24T13:15:20.000Z",
+    "status": "Open",
+    "addressLabel": "44TH AVE, SAN FRANCISCO, CA 94122 block",
+    "neighborhood": "Sunset/Parkside"
+  },
+  {
     "id": "sf-101004113416",
     "source": "DataSF 311 Residential Building Infestation",
     "sourceUrl": "https://data.sfgov.org/City-Infrastructure/311-Cases/vw6y-z8j6",
@@ -3718,35 +3748,5 @@
     "status": "Closed",
     "addressLabel": "FILLMORE ST, SAN FRANCISCO, CA 94115 block",
     "neighborhood": "Western Addition"
-  },
-  {
-    "id": "sf-101003397032",
-    "source": "DataSF 311 Residential Building Infestation",
-    "sourceUrl": "https://data.sfgov.org/City-Infrastructure/311-Cases/vw6y-z8j6",
-    "sourceDatasetId": "vw6y-z8j6",
-    "snapshotDate": "2026-05-24",
-    "confidence": "medium",
-    "category": "infestation_rodent_insect",
-    "lat": 37.78599,
-    "lng": -122.420292,
-    "reportedAt": "2026-01-28T16:17:36.000Z",
-    "status": "Closed",
-    "addressLabel": "GEARY ST, SAN FRANCISCO, CA 94109 block",
-    "neighborhood": "Tenderloin"
-  },
-  {
-    "id": "sf-101003393112",
-    "source": "DataSF 311 Residential Building Infestation",
-    "sourceUrl": "https://data.sfgov.org/City-Infrastructure/311-Cases/vw6y-z8j6",
-    "sourceDatasetId": "vw6y-z8j6",
-    "snapshotDate": "2026-05-24",
-    "confidence": "medium",
-    "category": "infestation_rodent_insect",
-    "lat": 37.784412,
-    "lng": -122.410161,
-    "reportedAt": "2026-01-27T20:38:51.000Z",
-    "status": "Closed",
-    "addressLabel": "EDDY ST, SAN FRANCISCO, CA 94102 block",
-    "neighborhood": "Tenderloin"
   }
 ]
