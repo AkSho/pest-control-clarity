@@ -190,6 +190,7 @@ Latest failed source probes:
 - Austin 311 quick text probe matched `Alarm Administration` because of the `rat` substring. Do not use substring-only `rat` filters there; require an explicit rodent/mouse category.
 - Nashville hubNashville quick text probe matched `Tree Grate` because of the `rat` substring. Do not use substring-only `rat` filters there; require an explicit rodent/mouse category.
 - Los Angeles MyLA311 request types reviewed in the probed yearly table were sanitation/service categories such as bulky items, graffiti, illegal dumping, dead animal removal, streetlights, and water waste; no clean rodent/mouse request type was found in that probe.
+- Jersey City SeeClickFix probe found rodent language in free text under broad categories such as `Litter/Debris/Garbage`, but no exact rodent/mouse request type was confirmed. Keep Jersey City as a data gap for Rodent Activity; it may support sanitation/context later.
 
 ## Latest Baltimore Activity Pass
 - Added Baltimore as a high-confidence verified Rodent Activity city.
