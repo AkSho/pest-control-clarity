@@ -19,6 +19,8 @@ interface AtlasSidebarProps {
   showCoverage: { live: boolean; gaps: boolean; estimates: boolean };
   onShowCoverageChange: (next: { live: boolean; gaps: boolean; estimates: boolean }) => void;
   onSelectGap: (gap: UnavailableRatPressureGeo) => void;
+  onSelectVerifiedPlace: (placeId: string) => void;
+  selectedPlaceId?: string;
   dataMix: { live: number; gaps: number; estimates: number };
   recurringGroups?: AddressGroup[];
 }
@@ -31,6 +33,8 @@ export function AtlasSidebar({
   showCoverage,
   onShowCoverageChange,
   onSelectGap,
+  onSelectVerifiedPlace,
+  selectedPlaceId,
   dataMix,
   recurringGroups = [],
 }: AtlasSidebarProps) {
@@ -118,12 +122,22 @@ export function AtlasSidebar({
         <AtlasSection title="Verified places" subtitle="Current deep snapshots">
           <div className="grid gap-px">
             {visibleCities.map((city) => (
-              <PlaceInfoRow
+              <button
                 key={city.id}
-                label={city.name}
-                meta={`${city.reports.length.toLocaleString()} reports`}
-                swatch={<span className="h-1.5 w-1.5 rounded-full bg-cyan-300" />}
-              />
+                type="button"
+                onClick={() => onSelectVerifiedPlace(city.id)}
+                className={`flex items-center justify-between gap-2 rounded px-2 py-1.5 text-left text-[0.7rem] transition ${
+                  selectedPlaceId === city.id ? "bg-cyan-300/10 text-cyan-100" : "text-slate-300 hover:bg-white/[0.03] hover:text-slate-100"
+                }`}
+              >
+                <span className="flex items-center gap-2 truncate">
+                  <span className="h-1.5 w-1.5 rounded-full bg-cyan-300" />
+                  <span className="truncate">{city.name}</span>
+                </span>
+                <span className="shrink-0 text-[0.58rem] uppercase tracking-wider text-slate-500">
+                  {city.reports.length.toLocaleString()} reports
+                </span>
+              </button>
             ))}
           </div>
         </AtlasSection>
@@ -212,17 +226,5 @@ function LayerToggle({
       <span className="flex-1 truncate text-[0.7rem] font-medium">{label}</span>
       <span className="text-[0.58rem] uppercase tracking-wider text-slate-500">{meta}</span>
     </button>
-  );
-}
-
-function PlaceInfoRow({ swatch, label, meta }: { swatch: ReactNode; label: string; meta: string }) {
-  return (
-    <div className="flex items-center justify-between gap-2 rounded px-2 py-1.5 text-left text-[0.7rem] text-slate-300">
-      <span className="flex items-center gap-2 truncate">
-        {swatch}
-        <span className="truncate">{label}</span>
-      </span>
-      <span className="shrink-0 text-[0.58rem] uppercase tracking-wider text-slate-500">{meta}</span>
-    </div>
   );
 }

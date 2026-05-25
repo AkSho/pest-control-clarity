@@ -336,6 +336,7 @@ function RodentRadarAtlasPage() {
   const [recurringOnly, setRecurringOnly] = useState(false);
   const [clickedGroup, setClickedGroup] = useState<AddressGroup | null>(null);
   const [selectedContext, setSelectedContext] = useState<FoodPestEvidence | null>(null);
+  const [selectedReportPlaceId, setSelectedReportPlaceId] = useState("all");
   const mapRef = useRef<MapLibreMap | null>(null);
 
   // Per-report data: the new primary unit. One feature = one filed report.
@@ -384,6 +385,7 @@ function RodentRadarAtlasPage() {
   const selectVerified = useCallback(
     (city: RatPressureResult) => {
       setSelectedAhs(null);
+      setSelectedReportPlaceId(city.id);
       setDrawerOpen(true);
       updateSearch({ place: city.id, gap: undefined });
     },
@@ -393,6 +395,7 @@ function RodentRadarAtlasPage() {
   const selectGap = useCallback(
     (city: UnavailableRatPressureGeo) => {
       setSelectedAhs(null);
+      setSelectedReportPlaceId("all");
       setDrawerOpen(true);
       updateSearch({ gap: city.id });
     },
@@ -500,6 +503,16 @@ function RodentRadarAtlasPage() {
     setClickedGroup(g);
   }, []);
 
+  const handleSelectVerifiedPlace = useCallback((placeId: string) => {
+    const place = HERO_CITY_SUMMARIES(allReports).find((item) => item.id === placeId);
+    if (!place) return;
+    setSelectedReportPlaceId(placeId);
+    setDrawerOpen(true);
+    setSelectedAhs(null);
+    updateSearch({ place: placeId, gap: undefined });
+    mapRef.current?.flyTo({ center: [place.lng, place.lat], zoom: place.zoom, duration: 800, essential: true });
+  }, [allReports, updateSearch]);
+
 
   return (
     <div className={`h-screen overflow-hidden bg-[#05080d] text-slate-100 ${cinematic ? "cinematic-mode" : ""}`}>
@@ -575,6 +588,8 @@ function RodentRadarAtlasPage() {
             showCoverage={showCoverage}
             onShowCoverageChange={setShowCoverage}
             onSelectGap={selectGap}
+            onSelectVerifiedPlace={handleSelectVerifiedPlace}
+            selectedPlaceId={selectedReportPlaceId}
             dataMix={dataMix}
             recurringGroups={addressGroups.filter((group) => group.isRecurring)}
           />
@@ -615,6 +630,8 @@ function RodentRadarAtlasPage() {
             onOpen={() => setDrawerOpen(true)}
             onSelectGroup={setClickedGroup}
             mapRef={mapRef}
+            selectedPlaceId={selectedReportPlaceId}
+            onSelectedPlaceChange={setSelectedReportPlaceId}
           />
         </>
       ) : null}
@@ -1323,6 +1340,8 @@ function RecordDrawer({
   onOpen,
   onSelectGroup,
   mapRef,
+  selectedPlaceId,
+  onSelectedPlaceChange,
 }: {
   open: boolean;
   reports: RodentReport[];
@@ -1336,9 +1355,10 @@ function RecordDrawer({
   onOpen: () => void;
   onSelectGroup: (group: AddressGroup | null) => void;
   mapRef: React.MutableRefObject<MapLibreMap | null>;
+  selectedPlaceId: string;
+  onSelectedPlaceChange: (placeId: string) => void;
 }) {
   const [tab, setTab] = useState<RecordDrawerTab>("reports");
-  const [placeFilter, setPlaceFilter] = useState("all");
   const [sourceFilter, setSourceFilter] = useState("all");
   const [confidenceFilter, setConfidenceFilter] = useState("all");
   const [recencyFilter, setRecencyFilter] = useState<ReportRecencyFilter>("all");
@@ -1371,7 +1391,7 @@ function RecordDrawer({
   const filteredBaseReports = reportsSorted.filter((report) => {
     const place = getReportPlace(report);
     const sourceId = report.sourceDatasetId ?? report.source;
-    if (placeFilter !== "all" && place.id !== placeFilter) return false;
+    if (selectedPlaceId !== "all" && place.id !== selectedPlaceId) return false;
     if (sourceFilter !== "all" && sourceId !== sourceFilter) return false;
     if (confidenceFilter !== "all" && report.confidence !== confidenceFilter) return false;
     if (recencyFilter === "30d" && reportAgeDays(report.reportedAt) > 30) return false;
@@ -1495,8 +1515,8 @@ function RecordDrawer({
         </div>
         <div className="mt-3 grid grid-cols-2 gap-1.5">
           <select
-            value={placeFilter}
-            onChange={(event) => setPlaceFilter(event.target.value)}
+            value={selectedPlaceId}
+            onChange={(event) => onSelectedPlaceChange(event.target.value)}
             className="rounded-md border border-white/[0.06] bg-slate-950/70 px-2 py-1.5 text-[0.68rem] text-slate-200 outline-none focus:border-cyan-300/35"
             aria-label="Filter by verified place"
           >
@@ -1597,7 +1617,10 @@ function RecordDrawer({
             <button
               key={place.name}
               type="button"
-              onClick={() => flyTo(place.lng, place.lat, place.zoom)}
+              onClick={() => {
+                onSelectedPlaceChange(place.id);
+                flyTo(place.lng, place.lat, place.zoom);
+              }}
               className="mb-1 flex w-full items-center justify-between rounded-lg border border-white/[0.04] bg-white/[0.025] p-2 text-left hover:border-cyan-300/25"
             >
               <span className="text-xs font-semibold text-slate-100">{place.name}</span>
@@ -1621,13 +1644,13 @@ function RecordDrawer({
 }
 
 function HERO_CITY_SUMMARIES(reports: RodentReport[]) {
-  const out = new globalThis.Map<string, { name: string; count: number; lat: number; lng: number; zoom: number }>();
+  const out = new globalThis.Map<string, { id: string; name: string; count: number; lat: number; lng: number; zoom: number }>();
   for (const report of reports) {
     const place = getReportPlace(report);
     const key = place.name;
     const existing = out.get(key);
     if (existing) existing.count += 1;
-    else out.set(key, { name: key, count: 1, lat: place.center[1], lng: place.center[0], zoom: place.zoom });
+    else out.set(key, { id: place.id, name: key, count: 1, lat: place.center[1], lng: place.center[0], zoom: place.zoom });
   }
   return [...out.values()].sort((a, b) => b.count - a.count);
 }
