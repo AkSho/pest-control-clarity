@@ -1,4 +1,5 @@
 import nycFoodPestEvidence from "@/data/rodent-context/nyc-food-pest.json";
+import chicagoFoodPestEvidence from "@/data/rodent-context/chicago-food-pest.json";
 
 export type FoodPestEvidence = {
   id: string;
@@ -20,7 +21,10 @@ export type FoodPestEvidence = {
 };
 
 export function getFoodPestEvidence(): FoodPestEvidence[] {
-  return nycFoodPestEvidence as FoodPestEvidence[];
+  return [
+    ...(nycFoodPestEvidence as FoodPestEvidence[]),
+    ...(chicagoFoodPestEvidence as FoodPestEvidence[]),
+  ];
 }
 
 export function getFoodPestEvidenceAsGeoJSON(records: FoodPestEvidence[]) {

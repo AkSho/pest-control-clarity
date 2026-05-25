@@ -33,6 +33,19 @@ function blockLabel(address, fallback) {
   return `${withoutNumber || fallback || "Area"} block`;
 }
 
+function cleanViolationText(value) {
+  return String(value || "")
+    .replace(/\s+/g, " ")
+    .replace(/\s+\|\s+/g, " | ")
+    .trim();
+}
+
+function chicagoViolation38(value) {
+  const text = cleanViolationText(value);
+  const match = text.match(/38\.\s*INSECTS,\s*RODENTS,\s*&\s*ANIMALS\s*NOT\s*PRESENT\s*-\s*Comments:\s*([^|]+)/i);
+  return match ? `38. INSECTS, RODENTS, & ANIMALS NOT PRESENT - Comments: ${match[1].trim()}` : text;
+}
+
 function iso(value) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return null;
@@ -98,8 +111,54 @@ async function fetchNycFoodPest() {
     .filter(Boolean);
 }
 
+async function fetchChicagoFoodPest() {
+  const url = new URL("https://data.cityofchicago.org/resource/4ijn-s7e5.json");
+  url.searchParams.set("$limit", "350");
+  url.searchParams.set("$order", "inspection_date DESC");
+  url.searchParams.set(
+    "$select",
+    "inspection_id,dba_name,aka_name,facility_type,address,zip,inspection_date,inspection_type,results,violations,latitude,longitude",
+  );
+  url.searchParams.set(
+    "$where",
+    `inspection_date between '${START_DATE}T00:00:00' and '${END_DATE}T23:59:59' ` +
+      "AND latitude IS NOT NULL AND longitude IS NOT NULL " +
+      "AND lower(violations) like '%38.%insects%rodents%animals%not%present%'",
+  );
+  const rows = await getJson(url);
+  return rows
+    .map((r, i) => {
+      const id = `chicago-food-pest-${r.inspection_id || i}`;
+      const observedAt = iso(r.inspection_date);
+      const lat = Number(r.latitude);
+      const lng = Number(r.longitude);
+      if (!observedAt || !validPoint(lat, lng)) return null;
+      const point = jitterCoord(id, lat, lng);
+      return {
+        id,
+        source: "Chicago Food Inspections",
+        sourceUrl: "https://data.cityofchicago.org/Health-Human-Services/Food-Inspections/4ijn-s7e5",
+        sourceDatasetId: "4ijn-s7e5",
+        snapshotDate: SNAPSHOT_DATE,
+        confidence: "medium",
+        contextType: "food-inspection-pest-evidence",
+        establishmentName: r.dba_name || r.aka_name || "Food establishment",
+        category: "38. Insects, rodents, & animals not present",
+        description: chicagoViolation38(r.violations),
+        lat: point.lat,
+        lng: point.lng,
+        observedAt,
+        status: r.results || r.inspection_type || "Inspection record",
+        addressLabel: blockLabel(r.address, "Chicago"),
+        neighborhood: r.zip ? `ZIP ${r.zip}` : "Chicago",
+      };
+    })
+    .filter(Boolean);
+}
+
 const jobs = {
   "nyc-food-pest": fetchNycFoodPest,
+  "chicago-food-pest": fetchChicagoFoodPest,
 };
 
 await fs.mkdir(OUT_DIR, { recursive: true });

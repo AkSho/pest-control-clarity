@@ -2656,7 +2656,7 @@ function FoodPestContextPopup({
         <Metric label="Code" value={record.category ?? "Pest"} />
       </div>
       <p className="mt-3 text-[0.68rem] leading-relaxed text-slate-400">
-        This is not a public rodent report. It is an official food inspection context signal from NYC DOHMH.
+        This is not a public rodent report. It is an official food inspection context signal from {record.source}.
       </p>
       <a href={record.sourceUrl} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-amber-100 hover:underline">
         View source <ExternalLink className="h-3 w-3" />
