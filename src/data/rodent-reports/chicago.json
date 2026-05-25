@@ -1590,21 +1590,6 @@
     "neighborhood": "ZIP 60630"
   },
   {
-    "id": "chicago-SR26-00967274",
-    "source": "Chicago 311 Rodent Baiting/Rat Complaint",
-    "sourceUrl": "https://data.cityofchicago.org/Service-Requests/311-Service-Requests/v6vf-nfxy",
-    "sourceDatasetId": "v6vf-nfxy",
-    "snapshotDate": "2026-05-24",
-    "confidence": "high",
-    "category": "Rodent complaint",
-    "lat": 41.969621,
-    "lng": -87.735301,
-    "reportedAt": "2026-05-23T13:22:44.000Z",
-    "status": "Open",
-    "addressLabel": "N KILDARE AVE block",
-    "neighborhood": "ZIP 60630"
-  },
-  {
     "id": "chicago-SR26-00967275",
     "source": "Chicago 311 Rodent Baiting/Rat Complaint",
     "sourceUrl": "https://data.cityofchicago.org/Service-Requests/311-Service-Requests/v6vf-nfxy",
@@ -1614,6 +1599,21 @@
     "category": "Rodent complaint",
     "lat": 41.969832,
     "lng": -87.735269,
+    "reportedAt": "2026-05-23T13:22:44.000Z",
+    "status": "Open",
+    "addressLabel": "N KILDARE AVE block",
+    "neighborhood": "ZIP 60630"
+  },
+  {
+    "id": "chicago-SR26-00967274",
+    "source": "Chicago 311 Rodent Baiting/Rat Complaint",
+    "sourceUrl": "https://data.cityofchicago.org/Service-Requests/311-Service-Requests/v6vf-nfxy",
+    "sourceDatasetId": "v6vf-nfxy",
+    "snapshotDate": "2026-05-24",
+    "confidence": "high",
+    "category": "Rodent complaint",
+    "lat": 41.969621,
+    "lng": -87.735301,
     "reportedAt": "2026-05-23T13:22:44.000Z",
     "status": "Open",
     "addressLabel": "N KILDARE AVE block",

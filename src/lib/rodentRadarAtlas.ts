@@ -151,6 +151,8 @@ const CHICAGO_RODENT_URL = "https://data.cityofchicago.org/Service-Requests/311-
 const BOSTON_311_URL = "https://data.boston.gov/dataset/311-service-requests";
 const DC_311_URL =
   "https://opendata.dc.gov/datasets/DCGIS::311-city-service-requests-in-2025";
+const BALTIMORE_311_URL =
+  "https://services1.arcgis.com/UWYHeuuJISiGmgXx/arcgis/rest/services/311_Customer_Service_Requests_current/FeatureServer";
 const PHILLY_311_URL = "https://www.opendataphilly.org/dataset/311-service-and-information-requests";
 const SEATTLE_FIF_URL = "https://data.seattle.gov/Community-and-Culture/Find-It-Fix-It-Service-Requests/p3i6-mdy7";
 const TORONTO_311_URL = "https://open.toronto.ca/dataset/311-service-requests-customer-initiated/";
@@ -249,6 +251,13 @@ export const atlasSources: AtlasSource[] = [
     name: "Washington DC 311 City Service Requests",
     url: DC_311_URL,
     owner: "District of Columbia",
+    sourceType: "official-open-data",
+  },
+  {
+    id: "baltimore-311",
+    name: "Baltimore 311 Customer Service Requests",
+    url: BALTIMORE_311_URL,
+    owner: "City of Baltimore",
     sourceType: "official-open-data",
   },
   {
@@ -351,6 +360,16 @@ export const atlasDatasets: AtlasDataset[] = [
     geography: "District of Columbia",
     updateCadence: "Daily, split by year layer",
     filterNote: "SERVICECODE = 'S0301', filtered by ADDDATE",
+    activityUse: "official-activity",
+  },
+  {
+    id: "baltimore-311-current",
+    sourceId: "baltimore-311",
+    name: "311 Customer Service Requests — HCD Rodents / SW Rat Rubout",
+    url: BALTIMORE_311_URL,
+    geography: "City of Baltimore",
+    updateCadence: "Official ArcGIS open data service, split by calendar-year layers",
+    filterNote: "SRType IN (HCD-Rodents, SW-Rat Rubout), filtered by CreatedDate",
     activityUse: "official-activity",
   },
   {
@@ -527,6 +546,16 @@ export const atlasPlaces: AtlasPlace[] = [
     transparencyStatus: "verified",
   },
   {
+    id: "baltimore",
+    name: "Baltimore",
+    shortName: "Baltimore",
+    region: "Mid-Atlantic",
+    geo: "City",
+    lat: 39.2904,
+    lng: -76.6122,
+    transparencyStatus: "verified",
+  },
+  {
     id: "philadelphia",
     name: "Philadelphia",
     shortName: "Philadelphia",
@@ -692,6 +721,21 @@ export const pressureMetricSnapshots: PressureMetricSnapshot[] = [
     confidence: "high",
     confidenceNote: "Direct official DC 311 rodent inspection and treatment service requests.",
     methodologyNote: "Counts are public service requests, not unique rats or confirmed infestations.",
+    provenance: "live",
+  },
+  {
+    id: "baltimore-2026-05-24",
+    placeId: "baltimore",
+    datasetId: "baltimore-311-current",
+    snapshotDate: "2026-05-24",
+    queryWindow: "2025-05-24 through 2026-05-24",
+    sourceFilter: "SRType IN (HCD-Rodents, SW-Rat Rubout), CreatedDate across 2025+2026 yearly layers",
+    last12MonthsCount: 7199,
+    previous12MonthsCount: 5664,
+    recent90DayCount: 1986,
+    confidence: "high",
+    confidenceNote: "Direct official Baltimore 311 rodent and rat-rubout service request taxonomy.",
+    methodologyNote: "Counts are public service requests, not unique rats, mice, properties, or confirmed infestations.",
     provenance: "live",
   },
 ];

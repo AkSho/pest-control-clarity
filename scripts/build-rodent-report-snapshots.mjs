@@ -260,12 +260,60 @@ async function fetchSf() {
     .filter(Boolean);
 }
 
+async function fetchBaltimore() {
+  const url = new URL(
+    "https://services1.arcgis.com/UWYHeuuJISiGmgXx/arcgis/rest/services/311_Customer_Service_Requests_current/FeatureServer/0/query",
+  );
+  url.searchParams.set(
+    "where",
+    `(SRType='HCD-Rodents' OR SRType='SW-Rat Rubout') AND CreatedDate >= DATE '${START_DATE}' AND CreatedDate <= DATE '${END_DATE}' AND Latitude IS NOT NULL AND Longitude IS NOT NULL`,
+  );
+  url.searchParams.set(
+    "outFields",
+    "RowID,ServiceRequestNum,SRType,CreatedDate,SRStatus,Address,ZipCode,Neighborhood,Latitude,Longitude",
+  );
+  url.searchParams.set("returnGeometry", "true");
+  url.searchParams.set("outSR", "4326");
+  url.searchParams.set("f", "json");
+  url.searchParams.set("resultRecordCount", "250");
+  url.searchParams.set("orderByFields", "CreatedDate DESC");
+  const data = await getJson(url);
+  return data.features
+    .map((f, i) => {
+      const a = f.attributes || {};
+      const id = `baltimore-${a.RowID || a.ServiceRequestNum || i}`;
+      const recordedAt = iso(a.CreatedDate);
+      const lat = Number(f.geometry?.y ?? a.Latitude);
+      const lng = Number(f.geometry?.x ?? a.Longitude);
+      if (!recordedAt || !validPoint(lat, lng)) return null;
+      const point = jitterCoord(id, lat, lng);
+      return {
+        id,
+        source: "Baltimore 311 Customer Service Requests",
+        sourceUrl:
+          "https://services1.arcgis.com/UWYHeuuJISiGmgXx/arcgis/rest/services/311_Customer_Service_Requests_current/FeatureServer/0",
+        sourceDatasetId: "baltimore-311-current",
+        snapshotDate: SNAPSHOT_DATE,
+        confidence: "high",
+        category: a.SRType || "Rodent service request",
+        lat: point.lat,
+        lng: point.lng,
+        reportedAt: recordedAt,
+        status: a.SRStatus || "Filed",
+        addressLabel: blockLabel(a.Address, a.ZipCode ? `ZIP ${a.ZipCode}` : "Baltimore"),
+        neighborhood: a.Neighborhood || "Baltimore",
+      };
+    })
+    .filter(Boolean);
+}
+
 const jobs = {
   nyc: fetchNyc,
   chicago: fetchChicago,
   sf: fetchSf,
   boston: fetchBoston,
   dc: fetchDc,
+  baltimore: fetchBaltimore,
   philly: async () => [],
 };
 

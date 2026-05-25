@@ -22,8 +22,8 @@ This is the canonical Rodent Radar sequence. Do not reorder these chunks unless 
 Immediate next implementation chunk: **More Verified Activity Cities**.
 
 Last known atlas state:
-- 1,337 official report records.
-- 5 verified places.
+- 1,587 official report records.
+- 6 verified places.
 - 7 reviewed data gaps.
 - 1,050 context records: 350 NYC food inspection, 350 Chicago food inspection, and 350 NYC sanitation / dumping records.
 - No score, pressure-score, or public numeric index language in the atlas UI.
@@ -90,9 +90,10 @@ Current official record snapshots:
 - San Francisco: 250 records from DataSF 311 Cases (`vw6y-z8j6`), filtered to residential building infestation taxonomy containing `infestation_rodent_insect`; snapshot `2026-05-24`; visible report-date range `2026-01-28` through `2026-05-24`; confidence `medium` because the official category combines rodent and insect infestation language.
 - Boston: 198 records from Boston 311 Service Requests 2026 CKAN datastore (`1a0b420d-99f1-4887-9851-990b2a5a6e17`), filtered to official `Rodent Activity`, `Mice Infestation - Residential`, and exact `Rat Bite` case types; snapshot `2026-05-24`; visible report-date range `2026-05-14` through `2026-05-24`; confidence `high`.
 - Washington, DC: 200 records from DCGIS ServiceRequests layer 13, filtered to service code `S0301`; snapshot `2026-05-24`; visible report-date range `2026-05-11` through `2026-05-24`; confidence `high`.
+- Baltimore: 250 records from Baltimore 311 Customer Service Requests (`baltimore-311-current`), filtered to exact official service types `HCD-Rodents` and `SW-Rat Rubout`; snapshot `2026-05-24`; visible report-date range `2026-05-13` through `2026-05-23`; confidence `high`.
 - Philadelphia: 0 per-report records in the current snapshot because the quick audit did not confirm recent clean rodent-specific records in the queried public table. Treat as a visible data gap until verified.
 
-Place-level summaries currently include NYC boroughs, Chicago, Boston, Washington DC, and San Francisco. SF is now included in the one-dot-per-report snapshots, but should be described as medium-confidence official infestation records rather than direct rodent-only reports.
+Place-level summaries currently include NYC boroughs, Chicago, Boston, Washington DC, San Francisco, and Baltimore. SF is medium-confidence official infestation data because its clean taxonomy combines rodent and insect language; Baltimore is high-confidence because its official SRType values are direct rodent / rat-rubout service categories.
 
 Current context snapshots:
 - NYC food inspection pest evidence: 350 records from NYC DOHMH Restaurant Inspection Results (`43nn-pn8j`), filtered to violation codes `04K`, `04L`, and `08A`; snapshot `2026-05-24`; confidence `high`; shown only under `Conditions` as context, not Rodent Activity.
@@ -105,6 +106,7 @@ Priority expansion/watchlist areas:
 - Oakland: priority Bay Area data gap. Reviewed Oakland 311 source; likely useful for trash/code context first, but not official Rodent Activity until a rodent/vermin filter is confirmed.
 - Jersey City: priority NJ data gap. Reviewed Jersey City Open Data; keep unscored until official rodent, vermin, health-code, or housing-code records are confirmed.
 - Newark: priority NJ data gap. Reviewed Newark Open Data; keep unscored until direct rodent complaint, inspection, or code-violation records are confirmed.
+- Baltimore: verified per-report layer added from official Baltimore 311 ArcGIS services. Use exact `HCD-Rodents` and `SW-Rat Rubout` only; do not include follow-up or proactive variants unless the user explicitly approves that broader interpretation.
 
 Privacy/data rules:
 - Snapshot builder is `scripts/build-rodent-report-snapshots.mjs`.
@@ -188,6 +190,14 @@ Latest failed source probes:
 - Nashville hubNashville quick text probe matched `Tree Grate` because of the `rat` substring. Do not use substring-only `rat` filters there; require an explicit rodent/mouse category.
 - Los Angeles MyLA311 request types reviewed in the probed yearly table were sanitation/service categories such as bulky items, graffiti, illegal dumping, dead animal removal, streetlights, and water waste; no clean rodent/mouse request type was found in that probe.
 
+## Latest Baltimore Activity Pass
+- Added Baltimore as a high-confidence verified Rodent Activity city.
+- Added `src/data/rodent-reports/baltimore.json` with 250 official 311 records from exact `HCD-Rodents` and `SW-Rat Rubout` service types.
+- Added Baltimore source, dataset, atlas place, and metric snapshot metadata.
+- Metric audit used exact-category counts from official Baltimore yearly ArcGIS services: last-12-month records `7,199`, previous-12-month records `5,664`, recent-90-day records `1,986`.
+- Regenerated report snapshots: NYC 350, Chicago 339, SF 250, Boston 198, DC 200, Baltimore 250, Philadelphia 0.
+- `bun run build` passed after this pass. The known Wrangler log-file permission warning still appears but the build exits successfully.
+
 ## Latest Context Layer Pass
 - Added `scripts/build-rodent-context-snapshots.mjs` for context-only official data snapshots.
 - Added `src/data/rodent-context/nyc-food-pest.json` with 350 NYC DOHMH restaurant-inspection pest evidence records.
@@ -263,4 +273,4 @@ Non-negotiables:
 Follow `Pinned Roadmap` above. The immediate next implementation chunk is **More Verified Activity Cities**.
 
 ## Left Off Here
-The OGW-style record cockpit, polish pass, Data Browser Polish pass, San Francisco per-report import, food-inspection context layers, NYC sanitation/dumping context layer, clickable verified-place navigation, and Boston mouse/mice activity audit have been implemented. The atlas now has 1,337 official per-report records, 1,050 context records, five verified per-report places, seven reviewed gaps, visible clusters, a left legend rail, a filtered right report browser with active filter chips, bottom-left `Layers / Sources / Map Type` dock, monthly seasonality rhythm, and a real `Conditions` overlay. Data audit found zero future-dated records and no active atlas score/index language in the Rodent Radar cockpit files. Continue with **More Verified Activity Cities** before traffic readiness or housing context.
+The OGW-style record cockpit, polish pass, Data Browser Polish pass, San Francisco per-report import, Baltimore per-report import, food-inspection context layers, NYC sanitation/dumping context layer, clickable verified-place navigation, and Boston mouse/mice activity audit have been implemented. The atlas now has 1,587 official per-report records, 1,050 context records, six verified per-report places, seven reviewed gaps, visible clusters, a left legend rail, a filtered right report browser with active filter chips, bottom-left `Layers / Sources / Map Type` dock, monthly seasonality rhythm, and a real `Conditions` overlay. Data audit found zero future-dated records and no active atlas score/index language in the Rodent Radar cockpit files. Continue with **More Verified Activity Cities** before traffic readiness or housing context.
