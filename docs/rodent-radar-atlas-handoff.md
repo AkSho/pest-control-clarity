@@ -15,6 +15,47 @@ The current reference is OpenGridWorks-level map depth, but for rodent activity,
 - Hantavirus belongs only as conservative CDC-backed Rodent Exposure Safety guidance, not local disease-risk prediction.
 - Copy should be consumer-friendly, down-to-earth, and non-alarmist.
 
+## Pinned Roadmap
+This is the canonical Rodent Radar sequence. Do not reorder these chunks unless the user explicitly approves the change or a data source fails audit.
+
+Immediate next implementation chunk: **Data Browser Polish**.
+
+Last known atlas state:
+- 1,339 official report records.
+- 5 verified places.
+- 7 reviewed data gaps.
+- 350 NYC food inspection pest-evidence context records.
+- No score, pressure-score, or public numeric index language in the atlas UI.
+
+Priority sequence:
+1. **Data Browser Polish**
+   - Improve the right-side drawer before adding more records.
+   - Add clearer city, source, confidence, and recency filters.
+   - Add stronger active-filter state, denser rows, and better `Reports / Recurring / Places / Gaps` tabs.
+   - Ensure every report, recurring site, verified place, and gap row can fly to the map.
+   - Keep language anchored to `Official records`, `Rodent Activity`, `Recurring activity`, and `Context only`.
+2. **Food Inspection Pest Evidence**
+   - Expand the existing NYC DOHMH context layer only with clean official sources.
+   - Next target: Chicago food inspection context if rodent/pest extraction is auditable.
+   - Keep this under `Conditions`, never `Rodent Activity`.
+   - Popup language must state that food inspection pest evidence is context only, not a public rodent report.
+3. **Sanitation / Illegal Dumping Context**
+   - Add official sanitation, trash, missed collection, illegal dumping, or similar civic-condition feeds.
+   - Start with cities already verified or priority gaps where data is clean.
+   - Keep these as explanatory context layers, not activity.
+4. **Housing / Built Environment Context**
+   - Add Census/ACS-style layers for housing units, density, vacancy, older housing share, and building-age context.
+   - Use these for explanation and optional normalization views such as reports per 1,000 housing units.
+   - Do not imply rat population size.
+5. **More Verified Activity Cities**
+   - Add official per-report rodent activity only where filtering is clean and auditable.
+   - Priority candidates: NJ, SF Bay Area, LA, Seattle, Baltimore, Houston, Austin, Denver, Pittsburgh, Atlanta, Portland, Nashville, Minneapolis.
+   - Keep unverified cities in `Data Gaps` with reviewed-source notes.
+6. **Traffic-Spike Readiness**
+   - Split heavy atlas data from the route bundle.
+   - Lazy-load map, report, and context datasets.
+   - Preserve the full-screen atlas UX while reducing initial payload.
+
 ## Important Files
 - `src/routes/rodent-radar_.rat-pressure-map.tsx`
 - `src/routes/rodent-radar_.attribution.tsx`
@@ -179,13 +220,7 @@ Non-negotiables:
 - Run `bun run build` after implementation work and record the result here.
 
 ## Immediate Next Task
-Choose the next product chunk:
-1. Add Chicago food inspection pest evidence if narrative extraction is clean enough.
-2. Add sanitation / illegal dumping context from official city 311 or sanitation feeds.
-3. Expand verified official activity coverage to cities with clean rodent complaint datasets.
-4. Continue Bay Area/NJ source audits for Oakland, San Jose, Jersey City, and Newark.
-5. Improve map density and visual richness toward the OpenGridWorks benchmark with vector layers, label controls, basemap switching, and source settings.
-6. Add canonical source/detail pages for each verified place and dataset.
+Follow `Pinned Roadmap` above. The immediate next implementation chunk is **Data Browser Polish**.
 
 ## Left Off Here
-The OGW-style record cockpit, polish pass, first data-browser filter pass, San Francisco per-report import, and first real context layer have been implemented. The atlas now has 1,339 official per-report records, 350 NYC food-inspection context records, five verified per-report places, seven reviewed gaps, visible clusters, a left legend rail, a filtered right report browser, bottom-left `Layers / Sources / Map Type` dock, monthly seasonality rhythm, and a real `Conditions` overlay. Data audit found zero future-dated records and no active atlas score/index language in the Rodent Radar cockpit files. Next best data task is Chicago food inspection context or sanitation/illegal dumping context.
+The OGW-style record cockpit, polish pass, first data-browser filter pass, San Francisco per-report import, first real context layer, and clickable verified-place navigation have been implemented. The atlas now has 1,339 official per-report records, 350 NYC food-inspection context records, five verified per-report places, seven reviewed gaps, visible clusters, a left legend rail, a filtered right report browser, bottom-left `Layers / Sources / Map Type` dock, monthly seasonality rhythm, and a real `Conditions` overlay. Data audit found zero future-dated records and no active atlas score/index language in the Rodent Radar cockpit files. Continue with **Data Browser Polish** before adding more data layers.
