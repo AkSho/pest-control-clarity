@@ -18,7 +18,7 @@ The current reference is OpenGridWorks-level map depth, but for rodent activity,
 ## Pinned Roadmap
 This is the canonical Rodent Radar sequence. Do not reorder these chunks unless the user explicitly approves the change or a data source fails audit.
 
-Immediate next implementation chunk: **Data Browser Polish**.
+Immediate next implementation chunk: **Food Inspection Pest Evidence**.
 
 Last known atlas state:
 - 1,339 official report records.
@@ -157,6 +157,15 @@ Privacy/data rules:
 - Added Oakland, San Jose, Jersey City, and Newark source cards so attribution/search infrastructure knows about reviewed sources.
 - No new activity dots were added in this pass; SF/San Jose/Oakland/NJ remain subject to the official-and-auditable rule.
 
+## Latest Data Browser Polish Pass
+- Added active filter chips and a reset control for search, place, recency, source, and confidence filters.
+- Report search now includes verified place names in addition to address, neighborhood, source, category, and status.
+- Added empty states for Reports, Recurring, Places, and Gaps so filtered-out views do not look broken.
+- Recurring rows now show first/last report dates and a clearer `recurring pattern` label.
+- Places rows now show latest report date, source count, high-confidence count, and selected-place styling.
+- Gaps rows are now clickable and fly to the reviewed place before opening the gap detail drawer.
+- `bun run build` passed after this pass. The known Wrangler log-file permission warning still appears but the build exits successfully.
+
 ## Latest San Francisco Data Pass
 - Added DataSF per-report snapshot generation to `scripts/build-rodent-report-snapshots.mjs`.
 - Added `src/data/rodent-reports/sf.json` with 250 official DataSF 311 residential-building infestation records.
@@ -220,7 +229,7 @@ Non-negotiables:
 - Run `bun run build` after implementation work and record the result here.
 
 ## Immediate Next Task
-Follow `Pinned Roadmap` above. The immediate next implementation chunk is **Data Browser Polish**.
+Follow `Pinned Roadmap` above. The immediate next implementation chunk is **Food Inspection Pest Evidence**.
 
 ## Left Off Here
-The OGW-style record cockpit, polish pass, first data-browser filter pass, San Francisco per-report import, first real context layer, and clickable verified-place navigation have been implemented. The atlas now has 1,339 official per-report records, 350 NYC food-inspection context records, five verified per-report places, seven reviewed gaps, visible clusters, a left legend rail, a filtered right report browser, bottom-left `Layers / Sources / Map Type` dock, monthly seasonality rhythm, and a real `Conditions` overlay. Data audit found zero future-dated records and no active atlas score/index language in the Rodent Radar cockpit files. Continue with **Data Browser Polish** before adding more data layers.
+The OGW-style record cockpit, polish pass, Data Browser Polish pass, San Francisco per-report import, first real context layer, and clickable verified-place navigation have been implemented. The atlas now has 1,339 official per-report records, 350 NYC food-inspection context records, five verified per-report places, seven reviewed gaps, visible clusters, a left legend rail, a filtered right report browser with active filter chips, bottom-left `Layers / Sources / Map Type` dock, monthly seasonality rhythm, and a real `Conditions` overlay. Data audit found zero future-dated records and no active atlas score/index language in the Rodent Radar cockpit files. Continue with **Food Inspection Pest Evidence** before sanitation, housing, city expansion, or traffic readiness.

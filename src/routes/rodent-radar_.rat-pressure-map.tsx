@@ -629,6 +629,7 @@ function RodentRadarAtlasPage() {
             onClose={() => setDrawerOpen(false)}
             onOpen={() => setDrawerOpen(true)}
             onSelectGroup={setClickedGroup}
+            onSelectGap={selectGap}
             mapRef={mapRef}
             selectedPlaceId={selectedReportPlaceId}
             onSelectedPlaceChange={setSelectedReportPlaceId}
@@ -1318,6 +1319,11 @@ function LayerRow({
 
 type RecordDrawerTab = "reports" | "recurring" | "places" | "gaps";
 type ReportRecencyFilter = "all" | "30d" | "90d";
+type ActiveFilterChip = {
+  id: string;
+  label: string;
+  onClear: () => void;
+};
 
 function reportDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
@@ -1339,6 +1345,7 @@ function RecordDrawer({
   onClose,
   onOpen,
   onSelectGroup,
+  onSelectGap,
   mapRef,
   selectedPlaceId,
   onSelectedPlaceChange,
@@ -1354,6 +1361,7 @@ function RecordDrawer({
   onClose: () => void;
   onOpen: () => void;
   onSelectGroup: (group: AddressGroup | null) => void;
+  onSelectGap: (gap: UnavailableRatPressureGeo) => void;
   mapRef: React.MutableRefObject<MapLibreMap | null>;
   selectedPlaceId: string;
   onSelectedPlaceChange: (placeId: string) => void;
@@ -1398,11 +1406,11 @@ function RecordDrawer({
     if (recencyFilter === "90d" && reportAgeDays(report.reportedAt) > 90) return false;
     return true;
   });
-  const filteredReports = reportsSorted
-    .filter((report) => filteredBaseReports.includes(report))
+  const filteredBaseReportIds = useMemo(() => new Set(filteredBaseReports.map((report) => report.id)), [filteredBaseReports]);
+  const filteredReports = filteredBaseReports
     .filter((report) =>
       !filter ||
-      `${report.addressLabel} ${report.neighborhood} ${report.source} ${report.category ?? ""} ${report.status}`
+      `${getReportPlace(report).name} ${report.addressLabel} ${report.neighborhood} ${report.source} ${report.category ?? ""} ${report.status}`
         .toLowerCase()
         .includes(filter),
     )
@@ -1410,7 +1418,7 @@ function RecordDrawer({
   const filteredGroups = recurringGroups
     .filter((group) => {
       const sample = group.reports[0];
-      if (sample && !filteredBaseReports.includes(sample)) return false;
+      if (sample && !filteredBaseReportIds.has(sample.id)) return false;
       return !filter || `${group.addressLabel} ${group.neighborhood}`.toLowerCase().includes(filter);
     })
     .slice(0, 60);
@@ -1418,6 +1426,22 @@ function RecordDrawer({
     .filter((gap) => !filter || `${gap.name} ${gap.region}`.toLowerCase().includes(filter))
     .slice(0, 80);
   const places = HERO_CITY_SUMMARIES(filteredBaseReports);
+  const selectedPlaceLabel = placeOptions.find((place) => place.id === selectedPlaceId)?.label;
+  const selectedSourceLabel = sourceOptions.find((source) => source.id === sourceFilter)?.label;
+  const activeFilterChips: ActiveFilterChip[] = [
+    ...(filter ? [{ id: "query", label: `Search: ${query.trim()}`, onClear: () => onQueryChange("") }] : []),
+    ...(selectedPlaceId !== "all" ? [{ id: "place", label: selectedPlaceLabel ?? "Selected place", onClear: () => onSelectedPlaceChange("all") }] : []),
+    ...(recencyFilter !== "all" ? [{ id: "recency", label: recencyFilter === "30d" ? "Last 30 days" : "Last 90 days", onClear: () => setRecencyFilter("all") }] : []),
+    ...(sourceFilter !== "all" ? [{ id: "source", label: selectedSourceLabel ?? "Selected source", onClear: () => setSourceFilter("all") }] : []),
+    ...(confidenceFilter !== "all" ? [{ id: "confidence", label: `${confidenceFilter} confidence`, onClear: () => setConfidenceFilter("all") }] : []),
+  ];
+  const resetFilters = () => {
+    onQueryChange("");
+    onSelectedPlaceChange("all");
+    setSourceFilter("all");
+    setConfidenceFilter("all");
+    setRecencyFilter("all");
+  };
 
   const flyTo = (lng: number, lat: number, zoom = 13.5) => {
     mapRef.current?.flyTo({ center: [lng, lat], zoom, duration: 700, essential: true });
@@ -1562,97 +1586,204 @@ function RecordDrawer({
             <option value="low">Low confidence</option>
           </select>
         </div>
+        {activeFilterChips.length ? (
+          <div className="mt-2 flex flex-wrap items-center gap-1.5">
+            {activeFilterChips.map((chip) => (
+              <button
+                key={chip.id}
+                type="button"
+                onClick={chip.onClear}
+                className="inline-flex max-w-full items-center gap-1 rounded-full border border-cyan-300/15 bg-cyan-300/[0.06] px-2 py-1 text-[0.58rem] font-semibold uppercase tracking-[0.12em] text-cyan-100 hover:border-cyan-200/40"
+                title={`Clear ${chip.label}`}
+              >
+                <span className="truncate">{chip.label}</span>
+                <X className="h-2.5 w-2.5 shrink-0" />
+              </button>
+            ))}
+            <button
+              type="button"
+              onClick={resetFilters}
+              className="rounded-full px-2 py-1 text-[0.58rem] font-semibold uppercase tracking-[0.12em] text-slate-500 hover:bg-white/[0.04] hover:text-slate-200"
+            >
+              Reset
+            </button>
+          </div>
+        ) : null}
       </div>
 
       <div className="min-h-0 flex-1 overflow-y-auto p-2">
         {tab === "reports" ? (
-          filteredReports.map((report) => (
-            <button
-              key={report.id}
-              type="button"
-              onClick={() => flyTo(report.lng, report.lat)}
-              className="mb-1 w-full rounded-lg border border-white/[0.04] bg-white/[0.025] p-2 text-left hover:border-cyan-300/25 hover:bg-cyan-300/[0.04]"
-            >
-              <div className="flex items-start justify-between gap-2">
-                <div className="min-w-0">
-                  <div className="truncate text-xs font-semibold text-slate-100">{report.addressLabel}</div>
-                  <div className="mt-0.5 truncate text-[0.65rem] text-slate-500">
-                    {getReportPlaceLabel(report)} · {report.neighborhood} · {report.category ?? "Rodent report"}
+          filteredReports.length ? (
+            filteredReports.map((report) => (
+              <button
+                key={report.id}
+                type="button"
+                onClick={() => flyTo(report.lng, report.lat)}
+                className="mb-1 w-full rounded-lg border border-white/[0.04] bg-white/[0.025] p-2 text-left hover:border-cyan-300/25 hover:bg-cyan-300/[0.04]"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <div className="truncate text-xs font-semibold text-slate-100">{report.addressLabel}</div>
+                    <div className="mt-0.5 truncate text-[0.65rem] text-slate-500">
+                      {getReportPlaceLabel(report)} · {report.neighborhood} · {report.category ?? "Rodent report"}
+                    </div>
                   </div>
+                  <div className="shrink-0 text-[0.62rem] text-cyan-200">{reportDate(report.reportedAt)}</div>
                 </div>
-                <div className="shrink-0 text-[0.62rem] text-cyan-200">{reportDate(report.reportedAt)}</div>
-              </div>
-              <div className="mt-1 flex items-center justify-between gap-2 text-[0.6rem] text-slate-500">
-                <span className="truncate">{report.source}</span>
-                <span className="shrink-0">{report.confidence ?? "source"} · {report.status}</span>
-              </div>
-            </button>
-          ))
+                <div className="mt-1 flex items-center justify-between gap-2 text-[0.6rem] text-slate-500">
+                  <span className="truncate">{report.source}</span>
+                  <span className="shrink-0">{report.confidence ?? "source"} · {report.status}</span>
+                </div>
+              </button>
+            ))
+          ) : (
+            <DrawerEmptyState label="No reports match those filters." onReset={resetFilters} />
+          )
         ) : null}
 
         {tab === "recurring" ? (
-          filteredGroups.map((group) => (
-            <button
-              key={group.key}
-              type="button"
-              onClick={() => {
-                onSelectGroup(group);
-                flyTo(group.lng, group.lat);
-              }}
-              className="mb-1 w-full rounded-lg border border-cyan-300/10 bg-cyan-300/[0.035] p-2 text-left hover:border-cyan-300/30"
-            >
-              <div className="flex items-start justify-between gap-2">
-                <div className="truncate text-xs font-semibold text-cyan-50">{group.addressLabel}</div>
-                <div className="text-[0.62rem] text-cyan-200">{group.reports.length} reports</div>
-              </div>
-              <div className="mt-1 text-[0.65rem] text-slate-400">
-                {group.neighborhood} · across {Math.round(group.spanMonths)} months
-              </div>
-            </button>
-          ))
+          filteredGroups.length ? (
+            filteredGroups.map((group) => (
+              <button
+                key={group.key}
+                type="button"
+                onClick={() => {
+                  onSelectGroup(group);
+                  flyTo(group.lng, group.lat);
+                }}
+                className="mb-1 w-full rounded-lg border border-cyan-300/10 bg-cyan-300/[0.035] p-2 text-left hover:border-cyan-300/30"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div className="truncate text-xs font-semibold text-cyan-50">{group.addressLabel}</div>
+                  <div className="text-[0.62rem] text-cyan-200">{group.reports.length} reports</div>
+                </div>
+                <div className="mt-1 flex items-center justify-between gap-2 text-[0.65rem] text-slate-400">
+                  <span className="truncate">{group.neighborhood}</span>
+                  <span className="shrink-0">{reportDate(group.firstReportedAt)} - {reportDate(group.lastReportedAt)}</span>
+                </div>
+                <div className="mt-1 text-[0.6rem] uppercase tracking-[0.12em] text-cyan-200/70">
+                  recurring pattern · {Math.round(group.spanMonths)} months
+                </div>
+              </button>
+            ))
+          ) : (
+            <DrawerEmptyState label="No recurring sites match those filters." onReset={resetFilters} />
+          )
         ) : null}
 
         {tab === "places" ? (
-          places.map((place) => (
-            <button
-              key={place.name}
-              type="button"
-              onClick={() => {
-                onSelectedPlaceChange(place.id);
-                flyTo(place.lng, place.lat, place.zoom);
-              }}
-              className="mb-1 flex w-full items-center justify-between rounded-lg border border-white/[0.04] bg-white/[0.025] p-2 text-left hover:border-cyan-300/25"
-            >
-              <span className="text-xs font-semibold text-slate-100">{place.name}</span>
-              <span className="text-[0.62rem] uppercase tracking-wider text-slate-500">{place.count.toLocaleString()} reports</span>
-            </button>
-          ))
+          places.length ? (
+            places.map((place) => (
+              <button
+                key={place.name}
+                type="button"
+                onClick={() => {
+                  onSelectedPlaceChange(place.id);
+                  flyTo(place.lng, place.lat, place.zoom);
+                }}
+                className={`mb-1 w-full rounded-lg border p-2 text-left hover:border-cyan-300/25 ${
+                  selectedPlaceId === place.id ? "border-cyan-300/25 bg-cyan-300/[0.06]" : "border-white/[0.04] bg-white/[0.025]"
+                }`}
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <span className="text-xs font-semibold text-slate-100">{place.name}</span>
+                  <span className="text-[0.62rem] uppercase tracking-wider text-cyan-200">{place.count.toLocaleString()} reports</span>
+                </div>
+                <div className="mt-1 grid grid-cols-3 gap-1 text-[0.6rem] uppercase tracking-[0.1em] text-slate-500">
+                  <span>{place.sourceCount} source{place.sourceCount === 1 ? "" : "s"}</span>
+                  <span>{place.highConfidenceCount}/{place.count} high</span>
+                  <span className="text-right">{reportDate(place.latestReportedAt)}</span>
+                </div>
+              </button>
+            ))
+          ) : (
+            <DrawerEmptyState label="No verified places match those filters." onReset={resetFilters} />
+          )
         ) : null}
 
         {tab === "gaps" ? (
-          filteredGaps.map((gap) => (
-            <div key={gap.id} className="mb-1 rounded-lg border border-white/[0.04] bg-white/[0.025] p-2">
-              <div className="text-xs font-semibold text-slate-100">{gap.name}</div>
-              <div className="mt-0.5 text-[0.65rem] text-slate-500">{gap.reviewedSourceName ?? "Source review needed"}</div>
-              <p className="mt-1 text-[0.65rem] leading-snug text-slate-400">{gap.reason}</p>
-            </div>
-          ))
+          filteredGaps.length ? (
+            filteredGaps.map((gap) => (
+              <button
+                key={gap.id}
+                type="button"
+                onClick={() => {
+                  flyTo(gap.lng, gap.lat, 11.5);
+                  onSelectGap(gap);
+                }}
+                className="mb-1 w-full rounded-lg border border-white/[0.04] bg-white/[0.025] p-2 text-left hover:border-slate-300/25 hover:bg-white/[0.04]"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div className="text-xs font-semibold text-slate-100">{gap.name}</div>
+                  <div className="shrink-0 text-[0.58rem] uppercase tracking-[0.14em] text-slate-500">gap</div>
+                </div>
+                <div className="mt-0.5 text-[0.65rem] text-slate-500">{gap.reviewedSourceName ?? "Source review needed"}</div>
+                <p className="mt-1 text-[0.65rem] leading-snug text-slate-400">{gap.reason}</p>
+              </button>
+            ))
+          ) : (
+            <DrawerEmptyState label="No reviewed gaps match that search." onReset={resetFilters} />
+          )
         ) : null}
       </div>
     </aside>
   );
 }
 
+function DrawerEmptyState({ label, onReset }: { label: string; onReset: () => void }) {
+  return (
+    <div className="rounded-lg border border-dashed border-white/[0.08] bg-white/[0.02] p-4 text-center">
+      <p className="text-xs font-medium text-slate-300">{label}</p>
+      <button
+        type="button"
+        onClick={onReset}
+        className="mt-2 rounded-full border border-white/[0.08] px-3 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-slate-500 hover:border-cyan-300/30 hover:text-cyan-100"
+      >
+        Reset filters
+      </button>
+    </div>
+  );
+}
+
 function HERO_CITY_SUMMARIES(reports: RodentReport[]) {
-  const out = new globalThis.Map<string, { id: string; name: string; count: number; lat: number; lng: number; zoom: number }>();
+  const out = new globalThis.Map<string, {
+    id: string;
+    name: string;
+    count: number;
+    lat: number;
+    lng: number;
+    zoom: number;
+    latestReportedAt: string;
+    highConfidenceCount: number;
+    sourceIds: Set<string>;
+  }>();
   for (const report of reports) {
     const place = getReportPlace(report);
     const key = place.name;
+    const sourceId = report.sourceDatasetId ?? report.source;
     const existing = out.get(key);
-    if (existing) existing.count += 1;
-    else out.set(key, { id: place.id, name: key, count: 1, lat: place.center[1], lng: place.center[0], zoom: place.zoom });
+    if (existing) {
+      existing.count += 1;
+      existing.latestReportedAt = report.reportedAt > existing.latestReportedAt ? report.reportedAt : existing.latestReportedAt;
+      existing.highConfidenceCount += report.confidence === "high" ? 1 : 0;
+      existing.sourceIds.add(sourceId);
+    } else {
+      out.set(key, {
+        id: place.id,
+        name: key,
+        count: 1,
+        lat: place.center[1],
+        lng: place.center[0],
+        zoom: place.zoom,
+        latestReportedAt: report.reportedAt,
+        highConfidenceCount: report.confidence === "high" ? 1 : 0,
+        sourceIds: new Set([sourceId]),
+      });
+    }
   }
-  return [...out.values()].sort((a, b) => b.count - a.count);
+  return [...out.values()]
+    .map((place) => ({ ...place, sourceCount: place.sourceIds.size }))
+    .sort((a, b) => b.count - a.count);
 }
 
 function SelectedDrawer({
