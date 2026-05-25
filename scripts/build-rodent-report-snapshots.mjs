@@ -210,9 +210,55 @@ async function fetchDc() {
     .filter(Boolean);
 }
 
+async function fetchSf() {
+  const url = new URL("https://data.sfgov.org/resource/vw6y-z8j6.json");
+  url.searchParams.set("$limit", "250");
+  url.searchParams.set("$order", "requested_datetime DESC");
+  url.searchParams.set(
+    "$select",
+    "service_request_id,requested_datetime,status_description,service_name,service_subtype,service_details,address,analysis_neighborhood,lat,long",
+  );
+  url.searchParams.set(
+    "$where",
+    `requested_datetime between '${START_DATE}T00:00:00' and '${END_DATE}T23:59:59' AND lat IS NOT NULL AND long IS NOT NULL AND (` +
+      "lower(service_subtype) like '%infestation_rodent_insect%' OR " +
+      "lower(service_details) like '%infestation_rodent_insect%' OR " +
+      "lower(service_subtype) like '%infestation%rodent%insect%' OR " +
+      "lower(service_details) like '%infestation%rodent%insect%'" +
+      ")",
+  );
+  const rows = await getJson(url);
+  return rows
+    .map((r, i) => {
+      const id = `sf-${r.service_request_id || i}`;
+      const recordedAt = iso(r.requested_datetime);
+      const lat = Number(r.lat);
+      const lng = Number(r.long);
+      if (!recordedAt || !validPoint(lat, lng)) return null;
+      const point = jitterCoord(id, lat, lng);
+      return {
+        id,
+        source: "DataSF 311 Residential Building Infestation",
+        sourceUrl: "https://data.sfgov.org/City-Infrastructure/311-Cases/vw6y-z8j6",
+        sourceDatasetId: "vw6y-z8j6",
+        snapshotDate: SNAPSHOT_DATE,
+        confidence: "medium",
+        category: r.service_subtype || r.service_details || "Infestation rodent/insect",
+        lat: point.lat,
+        lng: point.lng,
+        reportedAt: recordedAt,
+        status: r.status_description || "Filed",
+        addressLabel: blockLabel(r.address, "San Francisco"),
+        neighborhood: r.analysis_neighborhood || "San Francisco",
+      };
+    })
+    .filter(Boolean);
+}
+
 const jobs = {
   nyc: fetchNyc,
   chicago: fetchChicago,
+  sf: fetchSf,
   boston: fetchBoston,
   dc: fetchDc,
   philly: async () => [],

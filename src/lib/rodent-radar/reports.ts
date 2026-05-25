@@ -2,6 +2,7 @@
 // This is the "public-data trail" unit — the bubble on the new map.
 import nycReports from "@/data/rodent-reports/nyc.json";
 import chicagoReports from "@/data/rodent-reports/chicago.json";
+import sfReports from "@/data/rodent-reports/sf.json";
 import phillyReports from "@/data/rodent-reports/philly.json";
 import bostonReports from "@/data/rodent-reports/boston.json";
 import dcReports from "@/data/rodent-reports/dc.json";
@@ -23,7 +24,7 @@ export type RodentReport = {
 };
 
 export type HeroCity = {
-  id: "nyc" | "chicago" | "philly" | "boston" | "dc";
+  id: "nyc" | "chicago" | "sf" | "philly" | "boston" | "dc";
   name: string;
   label: string; // pretty label for UI
   center: [number, number]; // lng, lat
@@ -47,6 +48,14 @@ export const HERO_CITIES: HeroCity[] = [
     center: [-87.66, 41.88],
     zoom: 11.2,
     reports: chicagoReports as RodentReport[],
+  },
+  {
+    id: "sf",
+    name: "San Francisco",
+    label: "SF",
+    center: [-122.4194, 37.7749],
+    zoom: 11.4,
+    reports: sfReports as RodentReport[],
   },
   {
     id: "philly",
@@ -95,6 +104,7 @@ const REPORT_PLACE_BY_SOURCE: Array<{
     const dataset = (report.sourceDatasetId ?? "").toLowerCase();
     if (city.id === "nyc") return source.includes("nyc") || dataset === "p937-wjvj";
     if (city.id === "chicago") return source.includes("chicago") || dataset === "v6vf-nfxy";
+    if (city.id === "sf") return source.includes("datasf") || dataset === "vw6y-z8j6";
     if (city.id === "philly") return source.includes("philadelphia") || source.includes("philly");
     if (city.id === "boston") return source.includes("boston");
     if (city.id === "dc") return source.includes("dc 311") || dataset.includes("dcgis");
