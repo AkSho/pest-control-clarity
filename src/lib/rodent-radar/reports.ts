@@ -78,6 +78,53 @@ export function getAllReports(): RodentReport[] {
   return HERO_CITIES.flatMap((c) => c.reports);
 }
 
+export type ReportPlaceSummary = {
+  id: HeroCity["id"] | "unknown";
+  name: string;
+  label: string;
+  center: [number, number];
+  zoom: number;
+};
+
+const REPORT_PLACE_BY_SOURCE: Array<{
+  match: (report: RodentReport) => boolean;
+  place: ReportPlaceSummary;
+}> = HERO_CITIES.map((city) => ({
+  match: (report) => {
+    const source = report.source.toLowerCase();
+    const dataset = (report.sourceDatasetId ?? "").toLowerCase();
+    if (city.id === "nyc") return source.includes("nyc") || dataset === "p937-wjvj";
+    if (city.id === "chicago") return source.includes("chicago") || dataset === "v6vf-nfxy";
+    if (city.id === "philly") return source.includes("philadelphia") || source.includes("philly");
+    if (city.id === "boston") return source.includes("boston");
+    if (city.id === "dc") return source.includes("dc 311") || dataset.includes("dcgis");
+    return false;
+  },
+  place: {
+    id: city.id,
+    name: city.name,
+    label: city.label,
+    center: city.center,
+    zoom: city.zoom,
+  },
+}));
+
+export function getReportPlace(report: RodentReport): ReportPlaceSummary {
+  return (
+    REPORT_PLACE_BY_SOURCE.find((entry) => entry.match(report))?.place ?? {
+      id: "unknown",
+      name: "Verified place",
+      label: "Verified",
+      center: [report.lng, report.lat],
+      zoom: 10.5,
+    }
+  );
+}
+
+export function getReportPlaceLabel(report: RodentReport): string {
+  return getReportPlace(report).label;
+}
+
 export function getReportsAsGeoJSON(reports: RodentReport[]) {
   return {
     type: "FeatureCollection" as const,

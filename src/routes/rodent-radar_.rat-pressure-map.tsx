@@ -80,6 +80,8 @@ import { ReportPopup } from "@/components/rodent-radar/ReportPopup";
 import {
   getAllReports,
   getReportsAsGeoJSON,
+  getReportPlace,
+  getReportPlaceLabel,
   groupByAddress,
   findGroupAt,
   type AddressGroup,
@@ -1181,9 +1183,14 @@ function LayerRow({
 }
 
 type RecordDrawerTab = "reports" | "recurring" | "places" | "gaps";
+type ReportRecencyFilter = "all" | "30d" | "90d";
 
 function reportDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+}
+
+function reportAgeDays(iso: string) {
+  return Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
 }
 
 function RecordDrawer({
@@ -1214,10 +1221,48 @@ function RecordDrawer({
   mapRef: React.MutableRefObject<MapLibreMap | null>;
 }) {
   const [tab, setTab] = useState<RecordDrawerTab>("reports");
+  const [placeFilter, setPlaceFilter] = useState("all");
+  const [sourceFilter, setSourceFilter] = useState("all");
+  const [confidenceFilter, setConfidenceFilter] = useState("all");
+  const [recencyFilter, setRecencyFilter] = useState<ReportRecencyFilter>("all");
   const filter = query.trim().toLowerCase();
   const recurringGroups = groups.filter((group) => group.isRecurring);
-  const reportsSorted = [...reports].sort((a, b) => b.reportedAt.localeCompare(a.reportedAt));
+  const reportsSorted = useMemo(
+    () => [...reports].sort((a, b) => b.reportedAt.localeCompare(a.reportedAt)),
+    [reports],
+  );
+  const placeOptions = useMemo(() => {
+    const options = new globalThis.Map<string, { id: string; label: string; count: number }>();
+    for (const report of reports) {
+      const place = getReportPlace(report);
+      const existing = options.get(place.id);
+      if (existing) existing.count += 1;
+      else options.set(place.id, { id: place.id, label: place.label, count: 1 });
+    }
+    return [...options.values()].sort((a, b) => b.count - a.count);
+  }, [reports]);
+  const sourceOptions = useMemo(() => {
+    const options = new globalThis.Map<string, { id: string; label: string; count: number }>();
+    for (const report of reports) {
+      const id = report.sourceDatasetId ?? report.source;
+      const existing = options.get(id);
+      if (existing) existing.count += 1;
+      else options.set(id, { id, label: report.source, count: 1 });
+    }
+    return [...options.values()].sort((a, b) => b.count - a.count);
+  }, [reports]);
+  const filteredBaseReports = reportsSorted.filter((report) => {
+    const place = getReportPlace(report);
+    const sourceId = report.sourceDatasetId ?? report.source;
+    if (placeFilter !== "all" && place.id !== placeFilter) return false;
+    if (sourceFilter !== "all" && sourceId !== sourceFilter) return false;
+    if (confidenceFilter !== "all" && report.confidence !== confidenceFilter) return false;
+    if (recencyFilter === "30d" && reportAgeDays(report.reportedAt) > 30) return false;
+    if (recencyFilter === "90d" && reportAgeDays(report.reportedAt) > 90) return false;
+    return true;
+  });
   const filteredReports = reportsSorted
+    .filter((report) => filteredBaseReports.includes(report))
     .filter((report) =>
       !filter ||
       `${report.addressLabel} ${report.neighborhood} ${report.source} ${report.category ?? ""} ${report.status}`
@@ -1226,12 +1271,16 @@ function RecordDrawer({
     )
     .slice(0, 80);
   const filteredGroups = recurringGroups
-    .filter((group) => !filter || `${group.addressLabel} ${group.neighborhood}`.toLowerCase().includes(filter))
+    .filter((group) => {
+      const sample = group.reports[0];
+      if (sample && !filteredBaseReports.includes(sample)) return false;
+      return !filter || `${group.addressLabel} ${group.neighborhood}`.toLowerCase().includes(filter);
+    })
     .slice(0, 60);
   const filteredGaps = gaps
     .filter((gap) => !filter || `${gap.name} ${gap.region}`.toLowerCase().includes(filter))
     .slice(0, 80);
-  const places = HERO_CITY_SUMMARIES(reports);
+  const places = HERO_CITY_SUMMARIES(filteredBaseReports);
 
   const flyTo = (lng: number, lat: number, zoom = 13.5) => {
     mapRef.current?.flyTo({ center: [lng, lat], zoom, duration: 700, essential: true });
@@ -1327,6 +1376,55 @@ function RecordDrawer({
             </button>
           ))}
         </div>
+        <div className="mt-3 grid grid-cols-2 gap-1.5">
+          <select
+            value={placeFilter}
+            onChange={(event) => setPlaceFilter(event.target.value)}
+            className="rounded-md border border-white/[0.06] bg-slate-950/70 px-2 py-1.5 text-[0.68rem] text-slate-200 outline-none focus:border-cyan-300/35"
+            aria-label="Filter by verified place"
+          >
+            <option value="all">All verified places</option>
+            {placeOptions.map((place) => (
+              <option key={place.id} value={place.id}>
+                {place.label} ({place.count})
+              </option>
+            ))}
+          </select>
+          <select
+            value={recencyFilter}
+            onChange={(event) => setRecencyFilter(event.target.value as ReportRecencyFilter)}
+            className="rounded-md border border-white/[0.06] bg-slate-950/70 px-2 py-1.5 text-[0.68rem] text-slate-200 outline-none focus:border-cyan-300/35"
+            aria-label="Filter by recency"
+          >
+            <option value="all">All dates</option>
+            <option value="30d">Last 30 days</option>
+            <option value="90d">Last 90 days</option>
+          </select>
+          <select
+            value={sourceFilter}
+            onChange={(event) => setSourceFilter(event.target.value)}
+            className="rounded-md border border-white/[0.06] bg-slate-950/70 px-2 py-1.5 text-[0.68rem] text-slate-200 outline-none focus:border-cyan-300/35"
+            aria-label="Filter by source"
+          >
+            <option value="all">All sources</option>
+            {sourceOptions.map((source) => (
+              <option key={source.id} value={source.id}>
+                {source.label.length > 24 ? `${source.label.slice(0, 24)}...` : source.label}
+              </option>
+            ))}
+          </select>
+          <select
+            value={confidenceFilter}
+            onChange={(event) => setConfidenceFilter(event.target.value)}
+            className="rounded-md border border-white/[0.06] bg-slate-950/70 px-2 py-1.5 text-[0.68rem] text-slate-200 outline-none focus:border-cyan-300/35"
+            aria-label="Filter by confidence"
+          >
+            <option value="all">All confidence</option>
+            <option value="high">High confidence</option>
+            <option value="medium">Medium confidence</option>
+            <option value="low">Low confidence</option>
+          </select>
+        </div>
       </div>
 
       <div className="min-h-0 flex-1 overflow-y-auto p-2">
@@ -1341,13 +1439,15 @@ function RecordDrawer({
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
                   <div className="truncate text-xs font-semibold text-slate-100">{report.addressLabel}</div>
-                  <div className="mt-0.5 truncate text-[0.65rem] text-slate-500">{report.neighborhood} · {report.category ?? "Rodent report"}</div>
+                  <div className="mt-0.5 truncate text-[0.65rem] text-slate-500">
+                    {getReportPlaceLabel(report)} · {report.neighborhood} · {report.category ?? "Rodent report"}
+                  </div>
                 </div>
                 <div className="shrink-0 text-[0.62rem] text-cyan-200">{reportDate(report.reportedAt)}</div>
               </div>
               <div className="mt-1 flex items-center justify-between gap-2 text-[0.6rem] text-slate-500">
                 <span className="truncate">{report.source}</span>
-                <span>{report.status}</span>
+                <span className="shrink-0">{report.confidence ?? "source"} · {report.status}</span>
               </div>
             </button>
           ))
@@ -1406,18 +1506,11 @@ function RecordDrawer({
 function HERO_CITY_SUMMARIES(reports: RodentReport[]) {
   const out = new globalThis.Map<string, { name: string; count: number; lat: number; lng: number; zoom: number }>();
   for (const report of reports) {
-    const key = report.source.includes("NYC")
-      ? "New York City"
-      : report.source.includes("Chicago")
-        ? "Chicago"
-        : report.source.includes("Boston")
-          ? "Boston"
-          : report.source.includes("DC")
-            ? "Washington, D.C."
-            : "Verified place";
+    const place = getReportPlace(report);
+    const key = place.name;
     const existing = out.get(key);
     if (existing) existing.count += 1;
-    else out.set(key, { name: key, count: 1, lat: report.lat, lng: report.lng, zoom: 10.5 });
+    else out.set(key, { name: key, count: 1, lat: place.center[1], lng: place.center[0], zoom: place.zoom });
   }
   return [...out.values()].sort((a, b) => b.count - a.count);
 }

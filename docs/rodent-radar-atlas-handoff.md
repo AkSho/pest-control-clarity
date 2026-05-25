@@ -43,11 +43,20 @@ The current reference is OpenGridWorks-level map depth, but for rodent activity,
 
 ## Data State
 Current official record snapshots:
-- NYC: 350 records from NYC Open Data Rodent Inspection (`p937-wjvj`), filtered to `Failed for Rat Activity`.
-- Chicago: 350 records from Chicago 311 Service Requests (`v6vf-nfxy`), filtered to `Rodent Baiting/Rat Complaint`.
-- Boston: 200 records from Boston 311 Service Requests 2026 CKAN datastore (`1a0b420d-99f1-4887-9851-990b2a5a6e17`), filtered to rodent case types.
-- Washington, DC: 200 records from DCGIS ServiceRequests layer 13, filtered to service code `S0301`.
-- Philadelphia: 0 records in the current snapshot because the quick audit did not confirm recent clean rodent-specific records in the queried public table. Treat as a visible data gap until verified.
+- NYC: 350 records from NYC Open Data Rodent Inspection (`p937-wjvj`), filtered to `Failed for Rat Activity`; snapshot `2026-05-24`; visible report-date range `2026-05-18` through `2026-05-21`; confidence `high`.
+- Chicago: 350 records from Chicago 311 Service Requests (`v6vf-nfxy`), filtered to `Rodent Baiting/Rat Complaint`; snapshot `2026-05-24`; visible report-date range `2026-05-21` through `2026-05-24`; confidence `high`.
+- Boston: 200 records from Boston 311 Service Requests 2026 CKAN datastore (`1a0b420d-99f1-4887-9851-990b2a5a6e17`), filtered to rodent case types; snapshot `2026-05-24`; visible report-date range `2026-05-13` through `2026-05-24`; confidence `high`.
+- Washington, DC: 200 records from DCGIS ServiceRequests layer 13, filtered to service code `S0301`; snapshot `2026-05-24`; visible report-date range `2026-05-11` through `2026-05-24`; confidence `high`.
+- Philadelphia: 0 per-report records in the current snapshot because the quick audit did not confirm recent clean rodent-specific records in the queried public table. Treat as a visible data gap until verified.
+
+Place-level summaries currently include NYC boroughs, Chicago, Boston, Washington DC, and San Francisco. SF has a place-level DataSF 311 summary, but it is not yet included in the one-dot-per-report snapshots. Do not imply SF report dots exist until the snapshot builder imports audited DataSF records.
+
+Priority expansion/watchlist areas:
+- San Francisco: likely next verified Bay Area activity candidate. Need to add per-report DataSF records only if rodent/vermin filtering is auditable.
+- San Jose: priority Bay Area data gap. Reviewed San Jose 311 source; keep unscored until a clean rodent/vermin taxonomy or official health/code feed is confirmed.
+- Oakland: priority Bay Area data gap. Reviewed Oakland 311 source; likely useful for trash/code context first, but not official Rodent Activity until a rodent/vermin filter is confirmed.
+- Jersey City: priority NJ data gap. Reviewed Jersey City Open Data; keep unscored until official rodent, vermin, health-code, or housing-code records are confirmed.
+- Newark: priority NJ data gap. Reviewed Newark Open Data; keep unscored until direct rodent complaint, inspection, or code-violation records are confirmed.
 
 Privacy/data rules:
 - Snapshot builder is `scripts/build-rodent-report-snapshots.mjs`.
@@ -94,6 +103,14 @@ Privacy/data rules:
 - `Exposure Safety` opens a CDC-backed guidance drawer and remains explicitly not a local disease-risk map.
 - `Conditions` is clarified as context coming next; it does not draw fake data.
 - `bun run build` passed after this pass. The known Wrangler log-file permission warning still appears but the build exits successfully.
+
+## Latest Data Browser Pass
+- Added compact report-browser filters for verified place, recency (`all`, `last 30 days`, `last 90 days`), source dataset, and confidence.
+- Report rows now show city/place labels, neighborhood, source, confidence, and status.
+- Place summaries are now derived from the loaded report snapshots instead of source-name string guesses.
+- Added Bay Area and NJ priority reviewed gaps for San Jose, Oakland, Jersey City, and Newark.
+- Added Oakland, San Jose, Jersey City, and Newark source cards so attribution/search infrastructure knows about reviewed sources.
+- No new activity dots were added in this pass; SF/San Jose/Oakland/NJ remain subject to the official-and-auditable rule.
 
 ## Exposure Safety Rules
 Use label: `Rodent Exposure Safety`.
@@ -144,10 +161,11 @@ Non-negotiables:
 
 ## Immediate Next Task
 Choose the next product chunk:
-1. Add richer real context layers from official sources, starting with sanitation / illegal dumping / food inspection signals.
-2. Expand verified official activity coverage to cities with clean rodent complaint datasets.
-3. Improve map density and visual richness toward the OpenGridWorks benchmark with vector layers, label controls, basemap switching, and source settings.
-4. Add canonical source/detail pages for each verified place and dataset.
+1. Add DataSF per-report snapshots for San Francisco if the rodent/vermin filter is clean and auditable.
+2. Add richer real context layers from official sources, starting with sanitation / illegal dumping / food inspection signals.
+3. Expand verified official activity coverage to cities with clean rodent complaint datasets.
+4. Improve map density and visual richness toward the OpenGridWorks benchmark with vector layers, label controls, basemap switching, and source settings.
+5. Add canonical source/detail pages for each verified place and dataset.
 
 ## Left Off Here
-The OGW-style record cockpit and polish pass have been implemented. `bun run build` passed. The atlas now has 1,100 official records, four verified places, three reviewed gaps, visible clusters, a left legend rail, right report browser, bottom-left `Layers / Sources / Map Type` dock, monthly seasonality rhythm, and clarified placeholder overlays. Data audit found zero future-dated records and no active atlas score/index language in the Rodent Radar cockpit files.
+The OGW-style record cockpit, polish pass, and first data-browser filter pass have been implemented. The atlas now has 1,100 official per-report records, four verified per-report places, seven reviewed gaps, visible clusters, a left legend rail, a filtered right report browser, bottom-left `Layers / Sources / Map Type` dock, monthly seasonality rhythm, and clarified placeholder overlays. Data audit found zero future-dated records and no active atlas score/index language in the Rodent Radar cockpit files. Next best data task is adding audited DataSF per-report records for San Francisco.
