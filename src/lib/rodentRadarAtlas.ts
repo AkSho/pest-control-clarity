@@ -758,10 +758,10 @@ export const watchlistPlaces: WatchlistPlace[] = [
 export const contextLayers: ContextLayer[] = [
   {
     id: "dohmh-restaurant-rodent",
-    name: "NYC restaurant rodent evidence",
+    name: "NYC food inspection pest evidence",
     label: "Context only",
-    description: "DOHMH inspection violations citing 'evidence of mice / rats / live roaches' in NYC food establishments.",
-    sourceRequirement: "NYC DOHMH Restaurant Inspection Results dataset, filtered by rodent-related violation codes.",
+    description: "DOHMH inspection violations citing evidence of mice, rats, or conditions conducive to rodents, insects, or other pests.",
+    sourceRequirement: "NYC DOHMH Restaurant Inspection Results dataset, filtered by violation codes 04K, 04L, and 08A.",
     scoringNote: "Context only. Helps explain commercial-corridor pressure; not included in official Rodent Activity.",
     status: "available-now",
   },
@@ -836,10 +836,10 @@ export const atlasLayerDefinitions: AtlasLayerDefinition[] = [
     id: "conditions",
     name: "Conditions",
     group: "Conditions",
-    description: "Trash, food inspection, housing, weather, density, vacancy, and building context.",
+    description: "Food inspection pest evidence now; sanitation, housing, weather, density, vacancy, and building context later.",
     role: "context",
     defaultVisible: false,
-    status: "planned",
+    status: "partial",
   },
   {
     id: "data-gaps",

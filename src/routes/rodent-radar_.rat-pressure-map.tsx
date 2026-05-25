@@ -88,6 +88,11 @@ import {
   type RodentReport,
 } from "@/lib/rodent-radar/reports";
 import {
+  getFoodPestEvidence,
+  getFoodPestEvidenceAsGeoJSON,
+  type FoodPestEvidence,
+} from "@/lib/rodent-radar/context";
+import {
   CLUSTER_RADIUS_EXPRESSION,
   RECENCY_COLOR_EXPRESSION,
   RECENCY_RAMP,
@@ -330,15 +335,21 @@ function RodentRadarAtlasPage() {
   const [activeView, setActiveView] = useState<CuratedViewId | null>(null);
   const [recurringOnly, setRecurringOnly] = useState(false);
   const [clickedGroup, setClickedGroup] = useState<AddressGroup | null>(null);
+  const [selectedContext, setSelectedContext] = useState<FoodPestEvidence | null>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
 
   // Per-report data: the new primary unit. One feature = one filed report.
   // Loaded once, grouped by address for popup + recurrence detection.
   const allReports = useMemo(() => getAllReports(), []);
+  const foodPestEvidence = useMemo(() => getFoodPestEvidence(), []);
   const addressGroups = useMemo(() => groupByAddress(allReports), [allReports]);
   const reportsGeoJSON = useMemo(
     () => getReportsAsGeoJSON(showCoverage.live ? allReports : []),
     [allReports, showCoverage.live],
+  );
+  const foodPestGeoJSON = useMemo(
+    () => getFoodPestEvidenceAsGeoJSON(foodPestEvidence),
+    [foodPestEvidence],
   );
 
   const selected = useMemo(
@@ -426,10 +437,10 @@ function RodentRadarAtlasPage() {
   const conditionLayers: LayerCardItem[] = [
     {
       id: "conditions",
-      label: "Civic conditions",
-      description: "Coming soon: sanitation, inspection, housing, and weather context.",
+      label: "Food inspection pest evidence",
+      description: "NYC DOHMH pest-related food inspection violations. Context only.",
       icon: Globe2,
-      color: "#34d399",
+      color: "#f59e0b",
     },
     {
       id: "seasonality",
@@ -508,9 +519,12 @@ function RodentRadarAtlasPage() {
         onSelectAhs={handleSelectAhs}
         mapRef={mapRef}
         reportsGeoJSON={reportsGeoJSON}
+        foodPestGeoJSON={foodPestGeoJSON}
+        foodPestEvidence={foodPestEvidence}
         addressGroups={addressGroups}
         recurringOnly={recurringOnly}
         onSelectGroup={onSelectGroup}
+        onSelectContext={setSelectedContext}
       />
 
       {/* Cinematic toggle + curated views — always mounted, hidden by CSS in cinematic */}
@@ -543,6 +557,10 @@ function RodentRadarAtlasPage() {
         <div className="pointer-events-none absolute right-4 top-20 z-[55] flex">
           <ReportPopup group={clickedGroup} onClose={() => setClickedGroup(null)} />
         </div>
+      ) : null}
+
+      {selectedContext ? (
+        <FoodPestContextPopup record={selectedContext} onClose={() => setSelectedContext(null)} />
       ) : null}
 
       {!cinematic ? (
@@ -622,9 +640,12 @@ function AtlasMap({
   onSelectAhs,
   mapRef: externalMapRef,
   reportsGeoJSON,
+  foodPestGeoJSON,
+  foodPestEvidence,
   addressGroups,
   recurringOnly,
   onSelectGroup,
+  onSelectContext,
 }: {
   verified: RatPressureResult[];
   unavailable: UnavailableRatPressureGeo[];
@@ -641,9 +662,12 @@ function AtlasMap({
   onSelectAhs: (city: AhsEstimatePin) => void;
   mapRef?: React.MutableRefObject<MapLibreMap | null>;
   reportsGeoJSON: ReturnType<typeof getReportsAsGeoJSON>;
+  foodPestGeoJSON: ReturnType<typeof getFoodPestEvidenceAsGeoJSON>;
+  foodPestEvidence: FoodPestEvidence[];
   addressGroups: AddressGroup[];
   recurringOnly: boolean;
   onSelectGroup: (g: AddressGroup | null) => void;
+  onSelectContext: (record: FoodPestEvidence | null) => void;
 }) {
 
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -863,6 +887,13 @@ function AtlasMap({
           clusterRadius: 40,
           clusterMaxZoom: 12,
         });
+        map.addSource("food-pest-context", {
+          type: "geojson",
+          data: { type: "FeatureCollection", features: [] },
+          cluster: true,
+          clusterRadius: 34,
+          clusterMaxZoom: 12,
+        });
 
         // Cluster bubbles — size = log(point_count), cyan with translucent halo
         map.addLayer({
@@ -918,6 +949,62 @@ function AtlasMap({
           },
         });
 
+        // Food inspection pest-evidence context. Separate from Rodent Activity.
+        map.addLayer({
+          id: "food-pest-clusters",
+          type: "circle",
+          source: "food-pest-context",
+          filter: ["has", "point_count"],
+          paint: {
+            "circle-radius": [
+              "interpolate", ["linear"], ["get", "point_count"],
+              2, 7,
+              10, 12,
+              50, 18,
+              200, 26,
+            ],
+            "circle-color": "#f59e0b",
+            "circle-opacity": 0.16,
+            "circle-stroke-color": "#fbbf24",
+            "circle-stroke-width": 1,
+            "circle-stroke-opacity": 0.75,
+          },
+        });
+        map.addLayer({
+          id: "food-pest-cluster-count",
+          type: "symbol",
+          source: "food-pest-context",
+          filter: ["has", "point_count"],
+          layout: {
+            "text-field": ["get", "point_count_abbreviated"],
+            "text-size": 10,
+            "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+          },
+          paint: {
+            "text-color": "#fff7ed",
+            "text-halo-color": "#1c1206",
+            "text-halo-width": 1,
+          },
+        });
+        map.addLayer({
+          id: "food-pest-points",
+          type: "circle",
+          source: "food-pest-context",
+          filter: ["!", ["has", "point_count"]],
+          paint: {
+            "circle-radius": [
+              "interpolate", ["linear"], ["zoom"],
+              10, 2.2,
+              13, 3.8,
+              16, 5.5,
+            ],
+            "circle-color": "#f59e0b",
+            "circle-opacity": 0.82,
+            "circle-stroke-color": "#111827",
+            "circle-stroke-width": 0.65,
+          },
+        });
+
 
         const handleVerifiedClick = (e: MapLibreLayerMouseEvent) => {
           const f = e.features?.[0];
@@ -968,6 +1055,25 @@ function AtlasMap({
           if (group) onSelectGroup(group);
         });
 
+        map.on("click", "food-pest-clusters", (e) => {
+          const f = e.features?.[0];
+          if (!f) return;
+          const clusterId = f.properties?.cluster_id as number | undefined;
+          const src = map.getSource("food-pest-context") as MapLibreGeoJSONSource | undefined;
+          if (clusterId == null || !src) return;
+          src.getClusterExpansionZoom(clusterId).then((zoom) => {
+            const coords = (f.geometry as GeoJSON.Point).coordinates as [number, number];
+            map.easeTo({ center: coords, zoom: Math.min(zoom + 0.2, 16), duration: 600 });
+          }).catch(() => {});
+        });
+
+        map.on("click", "food-pest-points", (e) => {
+          const f = e.features?.[0];
+          const id = f?.properties?.id as string | undefined;
+          const record = foodPestEvidence.find((item) => item.id === id);
+          if (record) onSelectContext(record);
+        });
+
         for (const lid of [
           "rodent-activity-dot",
           "rodent-activity-glow",
@@ -976,6 +1082,8 @@ function AtlasMap({
           "rodent-ahs-dot",
           "rodent-reports-clusters",
           "rodent-reports-points",
+          "food-pest-clusters",
+          "food-pest-points",
         ]) {
           map.on("mouseenter", lid, () => { map.getCanvas().style.cursor = "pointer"; });
           map.on("mouseleave", lid, () => { map.getCanvas().style.cursor = ""; });
@@ -1000,7 +1108,7 @@ function AtlasMap({
       mapRef.current?.remove();
       mapRef.current = null;
     };
-  }, [ahsPins, onSelectAhs, onSelectGap, onSelectVerified, unavailable, verified]);
+  }, [ahsPins, foodPestEvidence, onSelectAhs, onSelectContext, onSelectGap, onSelectVerified, unavailable, verified]);
 
   // Push data into the vector sources whenever inputs change
   useEffect(() => {
@@ -1086,6 +1194,15 @@ function AtlasMap({
       ),
     });
   }, [ready, reportsGeoJSON, recurringOnly, addressGroups]);
+
+  // Push context data separately so Conditions never blends into official activity.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !ready) return;
+    const src = map.getSource("food-pest-context") as MapLibreGeoJSONSource | undefined;
+    if (!src) return;
+    src.setData(activeLayers.has("conditions") ? foodPestGeoJSON : { type: "FeatureCollection", features: [] });
+  }, [activeLayers, foodPestGeoJSON, ready]);
 
 
   // Per-mode basemap paint: desaturate in HC, hide labels in lines-off/field
@@ -2347,11 +2464,50 @@ function ConditionsOverlay() {
   return (
     <div className="pointer-events-none absolute left-4 top-1/2 hidden w-[280px] -translate-y-1/2 rounded-xl border border-emerald-200/15 bg-slate-950/72 p-3 text-xs text-slate-400 shadow-xl backdrop-blur md:block xl:left-[316px]">
       <div className="text-[0.58rem] font-semibold uppercase tracking-[0.18em] text-emerald-200/70">Conditions</div>
-      <div className="mt-1 text-sm font-semibold text-slate-100">Context layers coming next</div>
+      <div className="mt-1 text-sm font-semibold text-slate-100">Food inspection pest evidence</div>
       <p className="mt-1.5 leading-relaxed">
-        Sanitation, food inspection, housing, and weather layers are context only. They will not change official Rodent Activity dots.
+        Amber points are NYC food inspection violations mentioning rats, mice, rodents, insects, or pest-conducive conditions. Context only; they do not change official Rodent Activity dots.
       </p>
     </div>
+  );
+}
+
+function FoodPestContextPopup({
+  record,
+  onClose,
+}: {
+  record: FoodPestEvidence;
+  onClose: () => void;
+}) {
+  return (
+    <aside className="pointer-events-auto absolute right-4 top-20 z-[55] w-[min(340px,calc(100vw-2rem))] rounded-xl border border-amber-200/20 bg-slate-950/92 p-4 text-slate-100 shadow-2xl shadow-black/40 backdrop-blur-xl">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <div className="text-[0.58rem] font-semibold uppercase tracking-[0.18em] text-amber-200/80">Context only</div>
+          <h3 className="mt-1 text-base font-semibold leading-tight">{record.establishmentName}</h3>
+          <p className="mt-0.5 text-xs text-slate-500">{record.addressLabel} · {record.neighborhood}</p>
+        </div>
+        <button type="button" onClick={onClose} className="rounded p-1 text-slate-500 hover:bg-white/[0.05] hover:text-white" aria-label="Close context detail">
+          <X className="h-3.5 w-3.5" />
+        </button>
+      </div>
+      <div className="mt-3 rounded-lg border border-white/8 bg-white/[0.03] p-3">
+        <div className="text-[0.6rem] font-semibold uppercase tracking-[0.16em] text-slate-500">
+          Food inspection violation
+        </div>
+        <p className="mt-1 text-xs leading-relaxed text-slate-300">{record.description}</p>
+      </div>
+      <div className="mt-3 grid grid-cols-2 gap-2">
+        <Metric label="Observed" value={reportDate(record.observedAt)} />
+        <Metric label="Code" value={record.category ?? "Pest"} />
+      </div>
+      <p className="mt-3 text-[0.68rem] leading-relaxed text-slate-400">
+        This is not a public rodent report. It is an official food inspection context signal from NYC DOHMH.
+      </p>
+      <a href={record.sourceUrl} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-amber-100 hover:underline">
+        View source <ExternalLink className="h-3 w-3" />
+      </a>
+    </aside>
   );
 }
 

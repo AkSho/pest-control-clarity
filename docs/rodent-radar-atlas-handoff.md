@@ -52,6 +52,9 @@ Current official record snapshots:
 
 Place-level summaries currently include NYC boroughs, Chicago, Boston, Washington DC, and San Francisco. SF is now included in the one-dot-per-report snapshots, but should be described as medium-confidence official infestation records rather than direct rodent-only reports.
 
+Current context snapshots:
+- NYC food inspection pest evidence: 350 records from NYC DOHMH Restaurant Inspection Results (`43nn-pn8j`), filtered to violation codes `04K`, `04L`, and `08A`; snapshot `2026-05-24`; confidence `high`; shown only under `Conditions` as context, not Rodent Activity.
+
 Priority expansion/watchlist areas:
 - San Francisco: verified per-report layer added from DataSF. Keep confidence at `medium` unless a stricter rodent-only field is found.
 - San Jose: priority Bay Area data gap. Reviewed San Jose 311 source; keep unscored until a clean rodent/vermin taxonomy or official health/code feed is confirmed.
@@ -120,6 +123,14 @@ Privacy/data rules:
 - SF records use confidence `medium` because DataSF's clean auditable taxonomy is `infestation_rodent_insect`, not a rodent-only field.
 - Regenerated current report snapshots: NYC 350, Chicago 339, SF 250, Boston 200, DC 200, Philadelphia 0.
 
+## Latest Context Layer Pass
+- Added `scripts/build-rodent-context-snapshots.mjs` for context-only official data snapshots.
+- Added `src/data/rodent-context/nyc-food-pest.json` with 350 NYC DOHMH restaurant-inspection pest evidence records.
+- Added typed context helpers in `src/lib/rodent-radar/context.ts`.
+- Turned the `Conditions` layer from placeholder text into a real food-inspection pest-evidence overlay with amber clusters/points.
+- Added a context popup that labels these records as `Context only` and states they are not public rodent reports.
+- Kept Chicago food inspection context deferred because the useful signal is narrative-based and needs a cleaner extraction strategy.
+
 ## Exposure Safety Rules
 Use label: `Rodent Exposure Safety`.
 
@@ -169,11 +180,12 @@ Non-negotiables:
 
 ## Immediate Next Task
 Choose the next product chunk:
-1. Add richer real context layers from official sources, starting with sanitation / illegal dumping / food inspection signals.
-2. Expand verified official activity coverage to cities with clean rodent complaint datasets.
-3. Continue Bay Area/NJ source audits for Oakland, San Jose, Jersey City, and Newark.
-4. Improve map density and visual richness toward the OpenGridWorks benchmark with vector layers, label controls, basemap switching, and source settings.
-5. Add canonical source/detail pages for each verified place and dataset.
+1. Add Chicago food inspection pest evidence if narrative extraction is clean enough.
+2. Add sanitation / illegal dumping context from official city 311 or sanitation feeds.
+3. Expand verified official activity coverage to cities with clean rodent complaint datasets.
+4. Continue Bay Area/NJ source audits for Oakland, San Jose, Jersey City, and Newark.
+5. Improve map density and visual richness toward the OpenGridWorks benchmark with vector layers, label controls, basemap switching, and source settings.
+6. Add canonical source/detail pages for each verified place and dataset.
 
 ## Left Off Here
-The OGW-style record cockpit, polish pass, first data-browser filter pass, and San Francisco per-report import have been implemented. The atlas now has 1,339 official per-report records, five verified per-report places, seven reviewed gaps, visible clusters, a left legend rail, a filtered right report browser, bottom-left `Layers / Sources / Map Type` dock, monthly seasonality rhythm, and clarified placeholder overlays. Data audit found zero future-dated records and no active atlas score/index language in the Rodent Radar cockpit files. Next best data task is adding the first real context layer.
+The OGW-style record cockpit, polish pass, first data-browser filter pass, San Francisco per-report import, and first real context layer have been implemented. The atlas now has 1,339 official per-report records, 350 NYC food-inspection context records, five verified per-report places, seven reviewed gaps, visible clusters, a left legend rail, a filtered right report browser, bottom-left `Layers / Sources / Map Type` dock, monthly seasonality rhythm, and a real `Conditions` overlay. Data audit found zero future-dated records and no active atlas score/index language in the Rodent Radar cockpit files. Next best data task is Chicago food inspection context or sanitation/illegal dumping context.
