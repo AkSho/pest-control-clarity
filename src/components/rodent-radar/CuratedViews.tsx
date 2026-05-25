@@ -22,13 +22,13 @@ export const CURATED_VIEWS: CuratedView[] = [
   },
   {
     id: "replacement-belt",
-    label: "The replacement belt",
-    hint: "Recurring colonies across 5 hero cities",
+    label: "Recurring activity",
+    hint: "Repeated official reports across verified cities",
   },
   {
     id: "data-ends",
     label: "Where the data ends",
-    hint: "The honest view — gaps and estimates",
+    hint: "The honest view — verified dots and reviewed gaps",
   },
 ];
 

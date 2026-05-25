@@ -4,7 +4,7 @@
 //   - PULSE encodes "right now" (last 7d, single dots only — applied as a
 //     thin animated stroke layer above the base dot)
 //
-// Persistence ("recurring colony") is encoded by the recurring-sites layer,
+// Persistence ("recurring activity") is encoded by the recurring-sites layer,
 // not by stacking another ring on every dot.
 
 export const RECENCY_RAMP = {

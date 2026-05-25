@@ -68,7 +68,7 @@ import {
 } from "@/lib/rodentRadarSearch";
 import zipToPlaceData from "../../public/rodent-radar/data/zip-to-place.json";
 import { AtlasSidebar, type MetricKey } from "@/components/rodent-radar/AtlasSidebar";
-import { LayerCard, type LayerCardItem } from "@/components/rodent-radar/LayerCard";
+import { type LayerCardItem } from "@/components/rodent-radar/LayerCard";
 import { AtlasToolbar } from "@/components/rodent-radar/AtlasToolbar";
 import { CinematicToggle } from "@/components/rodent-radar/CinematicToggle";
 import {
@@ -83,6 +83,7 @@ import {
   groupByAddress,
   findGroupAt,
   type AddressGroup,
+  type RodentReport,
 } from "@/lib/rodent-radar/reports";
 import {
   CLUSTER_RADIUS_EXPRESSION,
@@ -103,11 +104,11 @@ const Z = {
 
 // One-line answer to "what am I looking at?" — changes with active preset.
 const LEDE_BY_PRESET: Record<PresetId | "default", string> = {
-  default: "Where rodent pressure is worst right now, by verified city data.",
-  winning: "Areas where rats are winning over the last 12 months.",
-  seasonal: "How rodent activity shifts across the last 90 days.",
+  default: "Every dot is a real public report. Repeated activity nearby may show a pattern.",
+  winning: "Official rodent reports across verified city datasets.",
+  seasonal: "How recent rodent reports shift across the last 90 days.",
   gaps: "Cities where we don't have verified data yet.",
-  "your-block": "Rodent pressure near a ZIP or your current location.",
+  "your-block": "Official rodent activity near a ZIP or current location.",
 };
 
 type MapLibreModule = typeof import("maplibre-gl");
@@ -115,11 +116,12 @@ type MapLibreMap = import("maplibre-gl").Map;
 type MapLibreLayerMouseEvent = import("maplibre-gl").MapLayerMouseEvent;
 type MapLibreGeoJSONSource = import("maplibre-gl").GeoJSONSource;
 
-type UtilityPanel = "sources" | "methodology" | "settings" | null;
+type UtilityPanel = "layers" | "sources" | "map-type" | null;
+type MapType = "dark" | "voyager" | "light";
 
 const TITLE = "Rodent Radar: Rodent Activity Atlas";
 const DESCRIPTION =
-  "Explore official rodent activity, colony growth modeling, civic conditions, data gaps, and exposure-safety guidance in a dark interactive atlas.";
+  "Explore official rodent activity, recurring report patterns, civic conditions, data gaps, and exposure-safety guidance in a dark interactive atlas.";
 const CANONICAL_URL = "https://cloakd-removals.cloud/rodent-radar/rat-pressure-map";
 const SOURCES = getAtlasSourceCards();
 const ZIP_TO_PLACE = (zipToPlaceData as { zips: Record<string, string> }).zips;
@@ -224,6 +226,10 @@ function markerTone(band: ActivityBand, mode: DisplayMode = "standard") {
 // the dataset's own max so the loudest place reads "loud" on every metric.
 function rawMetric(city: RatPressureResult, metric: MetricKey): number {
   switch (metric) {
+    case "reports":
+    case "housing":
+    case "recurring":
+      return city.last12MonthsCount;
     case "recent90":
       return city.recent90DayCount;
     case "absolute12mo":
@@ -267,7 +273,7 @@ type PresetMeta = {
 };
 
 const PRESETS: PresetMeta[] = [
-  { id: "winning", label: "Where rats are winning", hint: "Top activity, 12 mo", icon: Sparkles },
+  { id: "winning", label: "Where reports cluster", hint: "Top activity, 12 mo", icon: Sparkles },
   { id: "seasonal", label: "The seasonal swing", hint: "Recent 90 d", icon: Snowflake },
   { id: "gaps", label: "Data gaps in America", hint: "Cities without clean data", icon: AlertCircle },
   { id: "your-block", label: "Your block", hint: "Geolocate or ZIP", icon: MapPin },
@@ -306,15 +312,17 @@ function RodentRadarAtlasPage() {
 
   const [query, setQuery] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [utilityPanel, setUtilityPanel] = useState<UtilityPanel>(null);
+  const [mapType, setMapType] = useState<MapType>("dark");
   const [selectedAhs, setSelectedAhs] = useState<AhsEstimatePin | null>(null);
-  const [metric, setMetric] = useState<MetricKey>("index");
+  const [metric, setMetric] = useState<MetricKey>("reports");
   // Coverage filter — which pin classes render on the map + appear in the
   // sidebar list. Reviewed gaps + estimates default on per the locked plan
   // (live pins + visible gap markers in the launch view).
   const [showCoverage, setShowCoverage] = useState({
     live: true,
     gaps: true,
-    estimates: true,
+    estimates: false,
   });
   const [cinematic, setCinematic] = useState(false);
   const [activeView, setActiveView] = useState<CuratedViewId | null>(null);
@@ -326,7 +334,10 @@ function RodentRadarAtlasPage() {
   // Loaded once, grouped by address for popup + recurrence detection.
   const allReports = useMemo(() => getAllReports(), []);
   const addressGroups = useMemo(() => groupByAddress(allReports), [allReports]);
-  const reportsGeoJSON = useMemo(() => getReportsAsGeoJSON(allReports), [allReports]);
+  const reportsGeoJSON = useMemo(
+    () => getReportsAsGeoJSON(showCoverage.live ? allReports : []),
+    [allReports, showCoverage.live],
+  );
 
   const selected = useMemo(
     () => verified.find((c) => c.id === search.place) ?? verified[0],
@@ -340,11 +351,11 @@ function RodentRadarAtlasPage() {
 
   const dataMix = useMemo(
     () => ({
-      live: verified.filter((v) => v.provenance === "live").length,
+      live: allReports.length,
       gaps: unavailableRatPressureGeos.length,
-      estimates: ahsEstimatePins.length,
+      estimates: 0,
     }),
-    [verified],
+    [allReports.length],
   );
 
   const updateSearch = useCallback(
@@ -414,14 +425,14 @@ function RodentRadarAtlasPage() {
     {
       id: "conditions",
       label: "Civic conditions",
-      description: "Restaurant violations, vacancy, sanitation pressure.",
+      description: "Coming soon: sanitation, inspection, housing, and weather context.",
       icon: Globe2,
       color: "#34d399",
     },
     {
       id: "seasonality",
       label: "Seasonality",
-      description: "Winter / precip anomaly context for trend reading.",
+      description: "Monthly rhythm from official report dates.",
       icon: Snowflake,
       color: "#38bdf8",
     },
@@ -429,20 +440,20 @@ function RodentRadarAtlasPage() {
   const modeledLayers: LayerCardItem[] = [
     {
       id: "colony-growth",
-      label: "Colony growth",
-      description: "Modeled replacement cycle. Interpretive, not observed.",
+      label: "Recurring pattern model",
+      description: "Modeled repeat-activity context. Interpretive, not observed.",
       icon: BarChart3,
       color: "#c084fc",
       gated: true,
       gatedDisclaimer:
-        "Colony growth is modeled from official activity — it interprets the replacement cycle behind sightings. It is not a rat population count and not a city-published figure.",
+        "This model interprets repeat activity from official records. It is not a rat population count, a city-published figure, or proof of a confirmed colony.",
     },
   ];
   const guidanceLayers: LayerCardItem[] = [
     {
       id: "exposure-safety",
       label: "Exposure safety",
-      description: "CDC-backed cleanup guidance overlay.",
+      description: "CDC-backed cleanup guidance drawer, not a disease-risk map.",
       icon: ShieldCheck,
       color: "#fb7185",
     },
@@ -453,9 +464,9 @@ function RodentRadarAtlasPage() {
   // Memoize so reference stability stops the AtlasMap init-effect from
   // tearing the map down on every parent re-render (root cause of the
   // "map empty after closing modal" bug).
-  const mapVerified = useMemo(() => (showCoverage.live ? verified : []), [showCoverage.live, verified]);
+  const mapVerified = useMemo(() => [], []);
   const mapGaps = useMemo(() => (showCoverage.gaps ? unavailableRatPressureGeos : []), [showCoverage.gaps]);
-  const mapAhs = useMemo(() => (showCoverage.estimates ? ahsEstimatePins : []), [showCoverage.estimates]);
+  const mapAhs = useMemo(() => [], []);
 
   // Curated-view selection just adjusts camera + layer flags. Pure side effect.
   const handleCuratedView = useCallback(
@@ -483,6 +494,7 @@ function RodentRadarAtlasPage() {
         verified={mapVerified}
         unavailable={mapGaps}
         ahsPins={mapAhs}
+        mapType={mapType}
         selected={selected}
         selectedGap={selectedGap}
         selectedAhs={selectedAhs}
@@ -505,7 +517,7 @@ function RodentRadarAtlasPage() {
         <CuratedViews activeId={activeView} onSelect={handleCuratedView} />
       ) : null}
 
-      {/* Recurring sites toggle — small pill above layer cards */}
+      {/* Recurring activity toggle — small pill above layer cards */}
       {!cinematic ? (
         <div className="pointer-events-auto absolute left-1/2 top-[4.5rem] z-[35] -translate-x-1/2">
           <button
@@ -516,10 +528,10 @@ function RodentRadarAtlasPage() {
                 ? "border-cyan-300/40 bg-cyan-400/10 text-cyan-100"
                 : "border-white/10 bg-slate-950/70 text-slate-400 hover:text-slate-100"
             }`}
-            title="Highlight addresses with ≥3 reports across ≥6 months"
+            title="Highlight areas with at least 3 reports across at least 6 months"
           >
             <Activity className="h-3 w-3" />
-            {recurringOnly ? "Showing recurring sites" : "Recurring sites only"}
+            {recurringOnly ? "Showing recurring activity" : "Recurring activity only"}
           </button>
         </div>
       ) : null}
@@ -536,73 +548,53 @@ function RodentRadarAtlasPage() {
           <AtlasSidebar
             metric={metric}
             onMetricChange={setMetric}
-            verified={verified}
             gaps={unavailableRatPressureGeos}
-            ahsPins={ahsEstimatePins}
             query={query}
             onQueryChange={setQuery}
-            selectedVerifiedId={selected?.id}
             selectedGapId={selectedGap?.id}
-            selectedAhsId={selectedAhs?.id}
             showCoverage={showCoverage}
             onShowCoverageChange={setShowCoverage}
-            onSelectVerified={selectVerified}
             onSelectGap={selectGap}
-            onSelectAhs={handleSelectAhs}
-            markerColor={(band: ActivityBand) => markerTone(band, mode)}
             dataMix={dataMix}
+            recurringGroups={addressGroups.filter((group) => group.isRecurring)}
           />
 
-          <AtlasToolbar query={query} onQueryChange={setQuery} />
+          <AtlasToolbar query={query} onQueryChange={setQuery} onOpenReports={() => setDrawerOpen(true)} />
 
-          {/* Bottom-left docked layer cards — OGW pattern */}
-          <div
-            className="pointer-events-auto absolute bottom-4 left-[316px] hidden flex-col gap-2 md:flex"
-            style={{ zIndex: 35 }}
-          >
-            <LayerCard
-              title="Official activity"
-              subtitle="Always on — the map's spine"
-              items={officialLayer}
-              activeLayers={activeLayers}
-              onToggle={toggleLayer}
-            />
-            <LayerCard
-              title="Conditions"
-              subtitle="Context, not signal"
-              items={conditionLayers}
-              activeLayers={activeLayers}
-              onToggle={toggleLayer}
-              defaultOpen={false}
-            />
-            <LayerCard
-              title="Modeled"
-              subtitle="Interpretive — confirm before enabling"
-              items={modeledLayers}
-              activeLayers={activeLayers}
-              onToggle={toggleLayer}
-              defaultOpen={false}
-            />
-            <LayerCard
-              title="Guidance"
-              subtitle="CDC-aligned overlays"
-              items={guidanceLayers}
-              activeLayers={activeLayers}
-              onToggle={toggleLayer}
-              defaultOpen={false}
-            />
-          </div>
+          <BottomMapDock
+            activePanel={utilityPanel}
+            onPanelChange={setUtilityPanel}
+            activeLayers={activeLayers}
+            onToggleLayer={toggleLayer}
+            officialLayers={officialLayer}
+            conditionLayers={conditionLayers}
+            modeledLayers={modeledLayers}
+            guidanceLayers={guidanceLayers}
+            mapType={mapType}
+            onMapTypeChange={setMapType}
+          />
 
-          <SelectedDrawer
+          {activeLayers.includes("seasonality") ? (
+            <SeasonalityRhythmPanel reports={allReports} onClose={() => toggleLayer("seasonality")} />
+          ) : null}
+
+          {activeLayers.includes("exposure-safety") ? (
+            <ExposureSafetyDrawer onClose={() => toggleLayer("exposure-safety")} />
+          ) : null}
+
+          <RecordDrawer
             open={drawerOpen}
-            selected={selected}
+            reports={allReports}
+            groups={addressGroups}
+            gaps={unavailableRatPressureGeos}
             selectedGap={selectedGap}
-            selectedAhs={selectedAhs}
-            activeLayers={activeSet}
+            query={query}
+            onQueryChange={setQuery}
             onCloseGap={() => updateSearch({ gap: undefined })}
-            onCloseAhs={() => setSelectedAhs(null)}
             onClose={() => setDrawerOpen(false)}
             onOpen={() => setDrawerOpen(true)}
+            onSelectGroup={setClickedGroup}
+            mapRef={mapRef}
           />
         </>
       ) : null}
@@ -616,6 +608,7 @@ function AtlasMap({
   verified,
   unavailable,
   ahsPins,
+  mapType,
   selected,
   selectedGap,
   selectedAhs,
@@ -634,6 +627,7 @@ function AtlasMap({
   verified: RatPressureResult[];
   unavailable: UnavailableRatPressureGeo[];
   ahsPins: AhsEstimatePin[];
+  mapType: MapType;
   selected: RatPressureResult;
   selectedGap: UnavailableRatPressureGeo | null;
   selectedAhs: AhsEstimatePin | null;
@@ -682,10 +676,32 @@ function AtlasMap({
               tileSize: 256,
               attribution: "© CARTO © OpenStreetMap contributors",
             },
+            cartoVoyager: {
+              type: "raster",
+              tiles: [
+                "https://a.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}.png",
+                "https://b.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}.png",
+                "https://c.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}.png",
+              ],
+              tileSize: 256,
+              attribution: "© CARTO © OpenStreetMap contributors",
+            },
+            cartoLight: {
+              type: "raster",
+              tiles: [
+                "https://a.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png",
+                "https://b.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png",
+                "https://c.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png",
+              ],
+              tileSize: 256,
+              attribution: "© CARTO © OpenStreetMap contributors",
+            },
           },
           layers: [
             { id: "bg", type: "background", paint: { "background-color": "#05070d" } },
             { id: "cartoDark", type: "raster", source: "cartoDark", paint: { "raster-opacity": 0.85 } },
+            { id: "cartoVoyager", type: "raster", source: "cartoVoyager", layout: { visibility: "none" }, paint: { "raster-opacity": 0.85 } },
+            { id: "cartoLight", type: "raster", source: "cartoLight", layout: { visibility: "none" }, paint: { "raster-opacity": 0.9 } },
           ],
         },
         center: [-40, 28],
@@ -1092,6 +1108,19 @@ function AtlasMap({
   }, [mode, ready]);
 
   useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !ready) return;
+    const visibleLayer = mapType === "dark" ? "cartoDark" : mapType === "voyager" ? "cartoVoyager" : "cartoLight";
+    for (const layer of ["cartoDark", "cartoVoyager", "cartoLight"]) {
+      try {
+        map.setLayoutProperty(layer, "visibility", layer === visibleLayer ? "visible" : "none");
+      } catch {
+        /* basemap layer not mounted */
+      }
+    }
+  }, [mapType, ready]);
+
+  useEffect(() => {
     if (!ready) return;
     const target = selectedAhs ?? selectedGap ?? selected;
     mapRef.current?.flyTo({
@@ -1107,7 +1136,6 @@ function AtlasMap({
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(34,211,238,0.10),transparent_35%),radial-gradient(circle_at_25%_80%,rgba(168,85,247,0.10),transparent_32%)]" />
       <SatelliteChrome />
       {activeLayers.has("conditions") ? <ConditionsOverlay /> : null}
-      {activeLayers.has("seasonality") ? <SeasonalityOverlay /> : null}
       {!ready ? (
         <div className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 text-[0.65rem] font-medium uppercase tracking-[0.22em] text-slate-500/80">
           <span className="inline-block h-1 w-1 animate-pulse rounded-full bg-cyan-300/70 align-middle" /> streaming basemap
@@ -1152,6 +1180,248 @@ function LayerRow({
   );
 }
 
+type RecordDrawerTab = "reports" | "recurring" | "places" | "gaps";
+
+function reportDate(iso: string) {
+  return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+}
+
+function RecordDrawer({
+  open,
+  reports,
+  groups,
+  gaps,
+  selectedGap,
+  query,
+  onQueryChange,
+  onCloseGap,
+  onClose,
+  onOpen,
+  onSelectGroup,
+  mapRef,
+}: {
+  open: boolean;
+  reports: RodentReport[];
+  groups: AddressGroup[];
+  gaps: UnavailableRatPressureGeo[];
+  selectedGap: UnavailableRatPressureGeo | null;
+  query: string;
+  onQueryChange: (q: string) => void;
+  onCloseGap: () => void;
+  onClose: () => void;
+  onOpen: () => void;
+  onSelectGroup: (group: AddressGroup | null) => void;
+  mapRef: React.MutableRefObject<MapLibreMap | null>;
+}) {
+  const [tab, setTab] = useState<RecordDrawerTab>("reports");
+  const filter = query.trim().toLowerCase();
+  const recurringGroups = groups.filter((group) => group.isRecurring);
+  const reportsSorted = [...reports].sort((a, b) => b.reportedAt.localeCompare(a.reportedAt));
+  const filteredReports = reportsSorted
+    .filter((report) =>
+      !filter ||
+      `${report.addressLabel} ${report.neighborhood} ${report.source} ${report.category ?? ""} ${report.status}`
+        .toLowerCase()
+        .includes(filter),
+    )
+    .slice(0, 80);
+  const filteredGroups = recurringGroups
+    .filter((group) => !filter || `${group.addressLabel} ${group.neighborhood}`.toLowerCase().includes(filter))
+    .slice(0, 60);
+  const filteredGaps = gaps
+    .filter((gap) => !filter || `${gap.name} ${gap.region}`.toLowerCase().includes(filter))
+    .slice(0, 80);
+  const places = HERO_CITY_SUMMARIES(reports);
+
+  const flyTo = (lng: number, lat: number, zoom = 13.5) => {
+    mapRef.current?.flyTo({ center: [lng, lat], zoom, duration: 700, essential: true });
+  };
+
+  if (!open) {
+    return (
+      <button
+        type="button"
+        onClick={onOpen}
+        style={{ zIndex: Z.drawer }}
+        className="absolute right-4 top-1/2 inline-flex -translate-y-1/2 items-center gap-2 rounded-full border border-white/10 bg-slate-950/80 px-3 py-2 text-[0.7rem] font-medium text-slate-400 shadow-lg backdrop-blur transition hover:border-cyan-300/40 hover:text-cyan-100"
+      >
+        <CircleDot className="h-3.5 w-3.5" /> reports
+      </button>
+    );
+  }
+
+  if (selectedGap) {
+    return (
+      <aside style={{ zIndex: Z.drawer }} className="absolute right-4 top-20 max-h-[calc(100vh-6rem)] w-[min(360px,calc(100vw-2rem))] overflow-y-auto rounded-xl border border-white/10 bg-slate-950/88 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <div className="text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-slate-500">Reviewed data gap</div>
+            <h2 className="mt-0.5 text-xl font-semibold tracking-tight">{selectedGap.name}</h2>
+            <p className="mt-0.5 text-xs text-slate-400">{selectedGap.region}</p>
+          </div>
+          <button type="button" onClick={() => { onCloseGap(); onClose(); }} className="rounded p-1 text-slate-500 hover:text-white">
+            <X className="h-3.5 w-3.5" />
+          </button>
+        </div>
+        <p className="mt-3 text-xs leading-relaxed text-slate-300">
+          No verified official rodent activity layer is shown here yet. The gap stays visible so the atlas does not pretend coverage exists.
+        </p>
+        <p className="mt-2 text-[0.65rem] leading-relaxed text-slate-500">{selectedGap.reason}</p>
+        <div className="mt-3 rounded-lg border border-white/8 bg-white/[0.03] p-3">
+          <div className="text-[0.6rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Source reviewed</div>
+          <div className="mt-1 text-sm font-medium">{selectedGap.reviewedSourceName ?? "Source review needed"}</div>
+          <p className="mt-1.5 text-xs leading-relaxed text-slate-400">{selectedGap.reviewNote}</p>
+          {selectedGap.reviewedSourceUrl ? (
+            <a href={selectedGap.reviewedSourceUrl} target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-cyan-200 hover:underline">
+              View source <ExternalLink className="h-3 w-3" />
+            </a>
+          ) : null}
+        </div>
+      </aside>
+    );
+  }
+
+  return (
+    <aside
+      style={{ zIndex: Z.drawer }}
+      className="absolute right-4 top-20 flex max-h-[calc(100vh-6rem)] w-[min(360px,calc(100vw-2rem))] flex-col overflow-hidden rounded-xl border border-white/10 bg-slate-950/90 shadow-2xl shadow-black/40 backdrop-blur-xl"
+    >
+      <div className="border-b border-white/8 p-3">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <div className="text-sm font-semibold text-slate-50">Official records</div>
+            <div className="text-[0.62rem] uppercase tracking-[0.16em] text-slate-500">
+              {reports.length.toLocaleString()} reports · {recurringGroups.length} recurring sites
+            </div>
+          </div>
+          <button type="button" onClick={onClose} className="rounded p-1 text-slate-500 hover:text-white" aria-label="Close">
+            <X className="h-3.5 w-3.5" />
+          </button>
+        </div>
+        <label className="mt-3 flex items-center gap-2 rounded-md border border-white/[0.06] bg-white/[0.03] px-2.5 py-1.5">
+          <Search className="h-3.5 w-3.5 text-slate-500" />
+          <input
+            value={query}
+            onChange={(event) => onQueryChange(event.target.value)}
+            placeholder="Search reports, places, sources"
+            className="w-full bg-transparent text-xs text-slate-100 placeholder-slate-500 focus:outline-none"
+          />
+        </label>
+        <div className="mt-3 grid grid-cols-4 gap-1">
+          {([
+            ["reports", "Reports", filteredReports.length],
+            ["recurring", "Recurring", filteredGroups.length],
+            ["places", "Places", places.length],
+            ["gaps", "Gaps", filteredGaps.length],
+          ] as const).map(([id, label, count]) => (
+            <button
+              key={id}
+              type="button"
+              onClick={() => setTab(id)}
+              className={`rounded-md px-2 py-1.5 text-[0.62rem] font-semibold ${
+                tab === id ? "bg-cyan-300/15 text-cyan-100" : "bg-white/[0.03] text-slate-500 hover:text-slate-200"
+              }`}
+            >
+              {label}
+              <span className="ml-1 text-slate-500">{count}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="min-h-0 flex-1 overflow-y-auto p-2">
+        {tab === "reports" ? (
+          filteredReports.map((report) => (
+            <button
+              key={report.id}
+              type="button"
+              onClick={() => flyTo(report.lng, report.lat)}
+              className="mb-1 w-full rounded-lg border border-white/[0.04] bg-white/[0.025] p-2 text-left hover:border-cyan-300/25 hover:bg-cyan-300/[0.04]"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <div className="truncate text-xs font-semibold text-slate-100">{report.addressLabel}</div>
+                  <div className="mt-0.5 truncate text-[0.65rem] text-slate-500">{report.neighborhood} · {report.category ?? "Rodent report"}</div>
+                </div>
+                <div className="shrink-0 text-[0.62rem] text-cyan-200">{reportDate(report.reportedAt)}</div>
+              </div>
+              <div className="mt-1 flex items-center justify-between gap-2 text-[0.6rem] text-slate-500">
+                <span className="truncate">{report.source}</span>
+                <span>{report.status}</span>
+              </div>
+            </button>
+          ))
+        ) : null}
+
+        {tab === "recurring" ? (
+          filteredGroups.map((group) => (
+            <button
+              key={group.key}
+              type="button"
+              onClick={() => {
+                onSelectGroup(group);
+                flyTo(group.lng, group.lat);
+              }}
+              className="mb-1 w-full rounded-lg border border-cyan-300/10 bg-cyan-300/[0.035] p-2 text-left hover:border-cyan-300/30"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="truncate text-xs font-semibold text-cyan-50">{group.addressLabel}</div>
+                <div className="text-[0.62rem] text-cyan-200">{group.reports.length} reports</div>
+              </div>
+              <div className="mt-1 text-[0.65rem] text-slate-400">
+                {group.neighborhood} · across {Math.round(group.spanMonths)} months
+              </div>
+            </button>
+          ))
+        ) : null}
+
+        {tab === "places" ? (
+          places.map((place) => (
+            <button
+              key={place.name}
+              type="button"
+              onClick={() => flyTo(place.lng, place.lat, place.zoom)}
+              className="mb-1 flex w-full items-center justify-between rounded-lg border border-white/[0.04] bg-white/[0.025] p-2 text-left hover:border-cyan-300/25"
+            >
+              <span className="text-xs font-semibold text-slate-100">{place.name}</span>
+              <span className="text-[0.62rem] uppercase tracking-wider text-slate-500">{place.count.toLocaleString()} reports</span>
+            </button>
+          ))
+        ) : null}
+
+        {tab === "gaps" ? (
+          filteredGaps.map((gap) => (
+            <div key={gap.id} className="mb-1 rounded-lg border border-white/[0.04] bg-white/[0.025] p-2">
+              <div className="text-xs font-semibold text-slate-100">{gap.name}</div>
+              <div className="mt-0.5 text-[0.65rem] text-slate-500">{gap.reviewedSourceName ?? "Source review needed"}</div>
+              <p className="mt-1 text-[0.65rem] leading-snug text-slate-400">{gap.reason}</p>
+            </div>
+          ))
+        ) : null}
+      </div>
+    </aside>
+  );
+}
+
+function HERO_CITY_SUMMARIES(reports: RodentReport[]) {
+  const out = new globalThis.Map<string, { name: string; count: number; lat: number; lng: number; zoom: number }>();
+  for (const report of reports) {
+    const key = report.source.includes("NYC")
+      ? "New York City"
+      : report.source.includes("Chicago")
+        ? "Chicago"
+        : report.source.includes("Boston")
+          ? "Boston"
+          : report.source.includes("DC")
+            ? "Washington, D.C."
+            : "Verified place";
+    const existing = out.get(key);
+    if (existing) existing.count += 1;
+    else out.set(key, { name: key, count: 1, lat: report.lat, lng: report.lng, zoom: 10.5 });
+  }
+  return [...out.values()].sort((a, b) => b.count - a.count);
+}
+
 function SelectedDrawer({
   open,
   selected,
@@ -1179,7 +1449,7 @@ function SelectedDrawer({
         type="button"
         onClick={onOpen}
         style={{ zIndex: Z.drawer }}
-        className="absolute bottom-4 right-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-slate-950/80 px-3 py-2 text-[0.7rem] font-medium text-slate-400 shadow-lg backdrop-blur transition hover:border-cyan-300/40 hover:text-cyan-100"
+        className="absolute right-4 top-1/2 inline-flex -translate-y-1/2 items-center gap-2 rounded-full border border-white/10 bg-slate-950/80 px-3 py-2 text-[0.7rem] font-medium text-slate-400 shadow-lg backdrop-blur transition hover:border-cyan-300/40 hover:text-cyan-100"
       >
         <CircleDot className="h-3.5 w-3.5" /> click a marker for details
       </button>
@@ -1293,10 +1563,10 @@ function SelectedDrawer({
           style={{ background: dot, boxShadow: `0 0 8px ${dot}88` }}
         />
         <div className="text-xs font-semibold text-slate-100">
-          {activityBandLabels[selected.activityBand]} pressure
+          {activityBandLabels[selected.activityBand]} activity
         </div>
         <div className="ml-auto text-[0.6rem] uppercase tracking-wider text-slate-500">
-          activity index {selected.activityIndex}
+          official records
         </div>
       </div>
 
@@ -1448,36 +1718,270 @@ function TopTools({
   );
 }
 
-function MapUtilityButtons({
-  onLayers,
-  onSources,
-  onMethodology,
+function BottomMapDock({
+  activePanel,
+  onPanelChange,
+  activeLayers,
+  onToggleLayer,
+  officialLayers,
+  conditionLayers,
+  modeledLayers,
+  guidanceLayers,
+  mapType,
+  onMapTypeChange,
 }: {
-  onLayers: () => void;
-  onSources: () => void;
-  onMethodology: () => void;
+  activePanel: UtilityPanel;
+  onPanelChange: (panel: UtilityPanel) => void;
+  activeLayers: AtlasLayerId[];
+  onToggleLayer: (layer: AtlasLayerId) => void;
+  officialLayers: LayerCardItem[];
+  conditionLayers: LayerCardItem[];
+  modeledLayers: LayerCardItem[];
+  guidanceLayers: LayerCardItem[];
+  mapType: MapType;
+  onMapTypeChange: (type: MapType) => void;
 }) {
-  const tiles: Array<{ label: string; sub: string; icon: LucideIcon; onClick: () => void }> = [
-    { label: "Layers", sub: "what's on", icon: Layers3, onClick: onLayers },
-    { label: "Sources", sub: "data origins", icon: Database, onClick: onSources },
-    { label: "Guide", sub: "how to read", icon: Info, onClick: onMethodology },
+  const tiles: Array<{ id: Exclude<UtilityPanel, null>; label: string; sub: string; icon: LucideIcon }> = [
+    { id: "layers", label: "Layers", sub: "what's on", icon: Layers3 },
+    { id: "sources", label: "Sources", sub: "data origins", icon: Database },
+    { id: "map-type", label: "Map Type", sub: mapType === "dark" ? "dark" : mapType, icon: Map },
+  ];
+
+  return (
+    <div className="pointer-events-auto absolute bottom-4 left-4 z-[36] hidden lg:block xl:left-[316px]">
+      {activePanel ? (
+        <div className="mb-2 w-[min(640px,calc(100vw-360px))] overflow-hidden rounded-xl border border-white/10 bg-slate-950/90 shadow-2xl shadow-black/50 backdrop-blur-xl">
+          <div className="flex items-center justify-between gap-3 border-b border-white/8 px-3 py-2">
+            <div>
+              <div className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-slate-400">
+                {activePanel === "layers" ? "Layer switcher" : activePanel === "sources" ? "Sources" : "Map type"}
+              </div>
+              <div className="text-xs text-slate-500">
+                {activePanel === "layers"
+                  ? "Fast toggles grouped like a map cockpit"
+                  : activePanel === "sources"
+                    ? "Official datasets and guidance sources"
+                    : "Change the basemap under the report layer"}
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => onPanelChange(null)}
+              className="rounded-md p-1 text-slate-500 hover:bg-white/[0.05] hover:text-slate-100"
+              aria-label="Close panel"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </div>
+
+          {activePanel === "layers" ? (
+            <LayerMatrix
+              activeLayers={activeLayers}
+              onToggleLayer={onToggleLayer}
+              officialLayers={officialLayers}
+              conditionLayers={conditionLayers}
+              modeledLayers={modeledLayers}
+              guidanceLayers={guidanceLayers}
+            />
+          ) : null}
+
+          {activePanel === "sources" ? <SourcesSummaryPanel /> : null}
+
+          {activePanel === "map-type" ? (
+            <MapTypePanel mapType={mapType} onMapTypeChange={onMapTypeChange} />
+          ) : null}
+        </div>
+      ) : null}
+
+      <div className="flex gap-1.5">
+        {tiles.map((tile) => {
+          const Icon = tile.icon;
+          const active = activePanel === tile.id;
+          return (
+            <button
+              key={tile.id}
+              type="button"
+              onClick={() => onPanelChange(active ? null : tile.id)}
+              className={`group flex h-16 w-24 flex-col items-start justify-between rounded-lg border p-2 text-left shadow-lg backdrop-blur transition ${
+                active
+                  ? "border-cyan-300/35 bg-cyan-300/10"
+                  : "border-white/8 bg-slate-950/78 hover:border-cyan-300/35"
+              }`}
+            >
+              <Icon className={`h-4 w-4 ${active ? "text-cyan-100" : "text-cyan-200/80"}`} />
+              <div>
+                <div className="text-[0.76rem] font-semibold text-slate-100">{tile.label}</div>
+                <div className="text-[0.55rem] uppercase tracking-wider text-slate-500">{tile.sub}</div>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function LayerMatrix({
+  activeLayers,
+  onToggleLayer,
+  officialLayers,
+  conditionLayers,
+  modeledLayers,
+  guidanceLayers,
+}: {
+  activeLayers: AtlasLayerId[];
+  onToggleLayer: (layer: AtlasLayerId) => void;
+  officialLayers: LayerCardItem[];
+  conditionLayers: LayerCardItem[];
+  modeledLayers: LayerCardItem[];
+  guidanceLayers: LayerCardItem[];
+}) {
+  const groups: Array<{ label: string; items: LayerCardItem[] }> = [
+    {
+      label: "Activity",
+      items: [
+        {
+          id: "rodent-activity",
+          label: "Rodent Activity",
+          description: "Always on: one dot is one official record.",
+          icon: Activity,
+          color: layerColors["rodent-activity"],
+        },
+        ...officialLayers,
+      ],
+    },
+    { label: "Context", items: conditionLayers },
+    { label: "Modeled", items: modeledLayers },
+    { label: "Guidance", items: guidanceLayers },
+    {
+      label: "Transparency",
+      items: [
+        {
+          id: "data-gaps",
+          label: "Data gaps",
+          description: "Reviewed places with no verified activity layer yet.",
+          icon: AlertCircle,
+          color: layerColors["data-gaps"],
+        },
+      ],
+    },
+  ];
+
+  return (
+    <div className="grid gap-3 p-3 md:grid-cols-3">
+      {groups.map((group) => (
+        <div key={group.label} className="rounded-lg border border-white/[0.06] bg-white/[0.025] p-2">
+          <div className="mb-2 text-[0.58rem] font-semibold uppercase tracking-[0.18em] text-slate-500">
+            {group.label}
+          </div>
+          <div className="grid gap-1">
+            {group.items.map((item) => {
+              const Icon = item.icon;
+              const active = activeLayers.includes(item.id);
+              const disabled = item.id === "rodent-activity";
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  disabled={disabled}
+                  onClick={() => onToggleLayer(item.id)}
+                  className={`min-h-[4.25rem] rounded-md border p-2 text-left transition ${
+                    active
+                      ? "border-cyan-300/30 bg-cyan-300/[0.06]"
+                      : "border-white/[0.05] bg-slate-950/45 hover:border-white/15"
+                  } ${disabled ? "cursor-default" : ""}`}
+                  title={item.description}
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-center gap-1.5">
+                      <span
+                        className="grid h-5 w-5 place-items-center rounded-md"
+                        style={{ backgroundColor: active ? `${item.color}22` : "rgba(148,163,184,0.08)" }}
+                      >
+                        <Icon className="h-3.5 w-3.5" style={{ color: active ? item.color : "rgba(148,163,184,0.75)" }} />
+                      </span>
+                      <span className="text-[0.7rem] font-semibold text-slate-100">{item.label}</span>
+                    </div>
+                    {active ? <Check className="h-3.5 w-3.5 shrink-0 text-cyan-200" /> : null}
+                  </div>
+                  <p className="mt-1 text-[0.6rem] leading-snug text-slate-500">{item.description}</p>
+                  {item.gated ? (
+                    <p className="mt-1 text-[0.55rem] font-semibold uppercase tracking-[0.14em] text-amber-200/70">
+                      Interpretive
+                    </p>
+                  ) : null}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function SourcesSummaryPanel() {
+  return (
+    <div className="grid max-h-[420px] gap-2 overflow-y-auto p-3 md:grid-cols-2">
+      {SOURCES.slice(0, 8).map((source) => (
+        <a
+          key={source.id}
+          href={source.url}
+          target="_blank"
+          rel="noreferrer"
+          className="rounded-lg border border-white/[0.06] bg-white/[0.03] p-3 hover:border-cyan-300/30"
+        >
+          <div className="text-[0.58rem] font-semibold uppercase tracking-[0.16em] text-cyan-200/80">{source.id}</div>
+          <div className="mt-1 flex items-center gap-1.5 text-xs font-semibold text-slate-100">
+            {source.name}
+            <ExternalLink className="h-3 w-3" />
+          </div>
+        </a>
+      ))}
+      <Link
+        to="/rodent-radar/attribution"
+        className="rounded-lg border border-cyan-200/25 bg-cyan-300/[0.04] p-3 text-xs font-semibold text-cyan-100 hover:bg-cyan-300/[0.08]"
+      >
+        Full attribution and data rights
+      </Link>
+    </div>
+  );
+}
+
+function MapTypePanel({
+  mapType,
+  onMapTypeChange,
+}: {
+  mapType: MapType;
+  onMapTypeChange: (type: MapType) => void;
+}) {
+  const options: Array<{ id: MapType; label: string; sub: string; icon: LucideIcon }> = [
+    { id: "dark", label: "Dark Atlas", sub: "OGW-style default", icon: Map },
+    { id: "voyager", label: "Street Context", sub: "lighter city geography", icon: Globe2 },
+    { id: "light", label: "Light Reference", sub: "print-friendly base", icon: Sun },
   ];
   return (
-    <div className="absolute bottom-4 left-4 z-20 hidden gap-1.5 lg:flex">
-      {tiles.map((tile) => {
-        const Icon = tile.icon;
+    <div className="grid gap-2 p-3 md:grid-cols-3">
+      {options.map((option) => {
+        const Icon = option.icon;
+        const active = mapType === option.id;
         return (
           <button
-            key={tile.label}
+            key={option.id}
             type="button"
-            onClick={tile.onClick}
-            className="group flex h-14 w-20 flex-col items-start justify-between rounded-lg border border-white/8 bg-slate-950/75 p-2 text-left shadow-lg backdrop-blur transition hover:border-cyan-300/35"
+            onClick={() => onMapTypeChange(option.id)}
+            className={`rounded-lg border p-3 text-left transition ${
+              active
+                ? "border-cyan-300/40 bg-cyan-300/[0.08]"
+                : "border-white/[0.06] bg-white/[0.025] hover:border-cyan-300/25"
+            }`}
           >
-            <Icon className="h-3.5 w-3.5 text-cyan-200/80" />
-            <div>
-              <div className="text-[0.7rem] font-semibold text-slate-100">{tile.label}</div>
-              <div className="text-[0.55rem] uppercase tracking-wider text-slate-500">{tile.sub}</div>
+            <div className="flex items-center justify-between gap-2">
+              <Icon className={active ? "h-4 w-4 text-cyan-100" : "h-4 w-4 text-slate-400"} />
+              {active ? <Check className="h-3.5 w-3.5 text-cyan-200" /> : null}
             </div>
+            <div className="mt-3 text-sm font-semibold text-slate-100">{option.label}</div>
+            <div className="mt-1 text-[0.65rem] text-slate-500">{option.sub}</div>
           </button>
         );
       })}
@@ -1502,7 +2006,7 @@ function UtilityDrawer({
     <aside className="absolute right-4 top-20 z-30 max-h-[calc(100vh-6rem)] w-[min(430px,calc(100vw-2rem))] overflow-y-auto rounded-2xl border border-white/10 bg-slate-950/90 p-5 shadow-2xl shadow-black/40 backdrop-blur-xl">
       <div className="flex items-center justify-between gap-3">
         <div className="text-lg font-black">
-          {panel === "sources" ? "Sources" : panel === "methodology" ? "How to read this" : "Atlas controls"}
+          {panel === "sources" ? "Sources" : panel === "layers" ? "Atlas controls" : "Map type"}
         </div>
         <button type="button" onClick={onClose} className="rounded-lg border border-white/10 p-2 text-slate-400 hover:text-white">
           <X className="h-4 w-4" />
@@ -1526,13 +2030,13 @@ function UtilityDrawer({
         </div>
       ) : null}
 
-      {panel === "methodology" ? (
+      {panel === "map-type" ? (
         <div className="mt-4 space-y-3 text-sm leading-relaxed text-slate-300">
           <p>
             <span className="font-semibold text-slate-100">Rodent Activity</span> uses official public inspections, complaints, and 311 records. It is not a rat population count.
           </p>
           <p>
-            <span className="font-semibold text-slate-100">Colony Growth</span> is a modeled trajectory, separate from official city data.
+            <span className="font-semibold text-slate-100">Recurring pattern models</span> are interpretive and separate from official city data.
           </p>
           <p className="text-slate-400">
             Context, exposure safety, and data gaps help explain the map. They do not change official Rodent Activity.
@@ -1544,7 +2048,7 @@ function UtilityDrawer({
         </div>
       ) : null}
 
-      {panel === "settings" ? (
+      {panel === "layers" ? (
         <div className="mt-4 grid gap-2">
           {layers.map((layer) => (
             <LayerRow
@@ -1611,6 +2115,123 @@ function MobileTopBar({
   );
 }
 
+type MonthlyRhythmPoint = {
+  key: string;
+  label: string;
+  count: number;
+};
+
+function buildMonthlyRhythm(reports: RodentReport[], months = 12): MonthlyRhythmPoint[] {
+  const dated = reports
+    .map((report) => new Date(report.reportedAt))
+    .filter((date) => Number.isFinite(date.getTime()))
+    .sort((a, b) => a.getTime() - b.getTime());
+  const end = dated[dated.length - 1] ?? new Date();
+  const start = new Date(end.getFullYear(), end.getMonth() - (months - 1), 1);
+  const buckets: MonthlyRhythmPoint[] = [];
+
+  for (let i = 0; i < months; i += 1) {
+    const date = new Date(start.getFullYear(), start.getMonth() + i, 1);
+    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+    buckets.push({
+      key,
+      label: date.toLocaleDateString("en-US", { month: "short" }),
+      count: 0,
+    });
+  }
+
+  const index = new globalThis.Map(buckets.map((bucket, i) => [bucket.key, i]));
+  for (const report of reports) {
+    const date = new Date(report.reportedAt);
+    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+    const i = index.get(key);
+    if (i != null) buckets[i].count += 1;
+  }
+  return buckets;
+}
+
+function SeasonalityRhythmPanel({
+  reports,
+  onClose,
+}: {
+  reports: RodentReport[];
+  onClose: () => void;
+}) {
+  const rhythm = useMemo(() => buildMonthlyRhythm(reports, 12), [reports]);
+  const max = Math.max(1, ...rhythm.map((point) => point.count));
+  const peak = rhythm.reduce((best, point) => (point.count > best.count ? point : best), rhythm[0]);
+  const recent = rhythm[rhythm.length - 1];
+
+  return (
+    <aside className="pointer-events-auto absolute left-4 top-24 z-[34] hidden w-[280px] rounded-xl border border-cyan-200/15 bg-slate-950/88 p-3 shadow-2xl shadow-black/40 backdrop-blur-xl md:block xl:left-[316px]">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <div className="text-[0.58rem] font-semibold uppercase tracking-[0.18em] text-cyan-200/70">
+            Seasonality
+          </div>
+          <h3 className="mt-0.5 text-sm font-semibold text-slate-100">Monthly report rhythm</h3>
+        </div>
+        <button type="button" onClick={onClose} className="rounded-md p-1 text-slate-500 hover:bg-white/[0.05] hover:text-slate-100" aria-label="Hide seasonality">
+          <X className="h-3.5 w-3.5" />
+        </button>
+      </div>
+      <div className="mt-3 flex h-24 items-end gap-1.5 border-b border-white/10 pb-2">
+        {rhythm.map((point) => (
+          <div key={point.key} className="flex h-full flex-1 flex-col justify-end gap-1">
+            <div
+              className="min-h-[3px] rounded-sm bg-cyan-300/75 shadow-[0_0_12px_rgba(103,232,249,0.25)]"
+              style={{ height: `${Math.max(4, (point.count / max) * 100)}%` }}
+              title={`${point.label}: ${point.count.toLocaleString()} reports`}
+            />
+          </div>
+        ))}
+      </div>
+      <div className="mt-1 grid grid-cols-6 gap-x-1 gap-y-0.5 text-center text-[0.52rem] uppercase text-slate-600">
+        {rhythm.map((point) => (
+          <span key={point.key}>{point.label}</span>
+        ))}
+      </div>
+      <div className="mt-3 grid grid-cols-2 gap-2">
+        <Metric label="Peak month" value={`${peak.label} · ${peak.count.toLocaleString()}`} />
+        <Metric label="Latest month" value={`${recent.label} · ${recent.count.toLocaleString()}`} />
+      </div>
+      <p className="mt-2 text-[0.65rem] leading-relaxed text-slate-400">
+        Uses official report dates only. This shows timing patterns, not a forecast or health-risk prediction.
+      </p>
+    </aside>
+  );
+}
+
+function ExposureSafetyDrawer({ onClose }: { onClose: () => void }) {
+  return (
+    <aside className="pointer-events-auto absolute right-4 top-20 z-[38] w-[min(340px,calc(100vw-2rem))] rounded-xl border border-rose-200/15 bg-slate-950/90 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <div className="text-[0.58rem] font-semibold uppercase tracking-[0.18em] text-rose-200/70">
+            Guidance
+          </div>
+          <h3 className="mt-0.5 text-base font-semibold text-slate-100">{exposureGuidance.name}</h3>
+        </div>
+        <button type="button" onClick={onClose} className="rounded-md p-1 text-slate-500 hover:bg-white/[0.05] hover:text-slate-100" aria-label="Hide exposure safety">
+          <X className="h-3.5 w-3.5" />
+        </button>
+      </div>
+      <p className="mt-2 text-xs leading-relaxed text-slate-400">{exposureGuidance.description}</p>
+      <ul className="mt-3 space-y-2">
+        {exposureGuidance.guidance.slice(0, 4).map((item) => (
+          <li key={item} className="flex gap-2 text-xs leading-relaxed text-slate-300">
+            <ShieldCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-rose-200/80" />
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+      <p className="mt-3 rounded-lg border border-white/[0.06] bg-white/[0.03] p-2 text-[0.65rem] leading-relaxed text-slate-500">
+        {exposureGuidance.disclaimer}
+      </p>
+    </aside>
+  );
+}
+
 function SatelliteChrome() {
   return (
     <div className="pointer-events-none absolute inset-0 select-none text-[0.55rem] font-medium uppercase tracking-[0.28em] text-slate-400/45">
@@ -1631,17 +2252,13 @@ function SatelliteChrome() {
 
 function ConditionsOverlay() {
   return (
-    <div className="pointer-events-none absolute inset-0">
-      <div className="absolute left-[18%] top-[27%] h-24 w-52 -rotate-6 border border-emerald-300/20 bg-[repeating-linear-gradient(135deg,rgba(52,211,153,0.18)_0_2px,transparent_2px_12px)]" />
-      <div className="absolute right-[28%] top-[42%] h-32 w-56 rotate-3 border border-yellow-300/20 bg-[repeating-linear-gradient(135deg,rgba(250,204,21,0.16)_0_2px,transparent_2px_12px)]" />
-      <div className="absolute bottom-[20%] left-[45%] h-28 w-64 -rotate-2 border border-cyan-300/20 bg-[repeating-linear-gradient(135deg,rgba(103,232,249,0.16)_0_2px,transparent_2px_12px)]" />
+    <div className="pointer-events-none absolute left-4 top-1/2 hidden w-[280px] -translate-y-1/2 rounded-xl border border-emerald-200/15 bg-slate-950/72 p-3 text-xs text-slate-400 shadow-xl backdrop-blur md:block xl:left-[316px]">
+      <div className="text-[0.58rem] font-semibold uppercase tracking-[0.18em] text-emerald-200/70">Conditions</div>
+      <div className="mt-1 text-sm font-semibold text-slate-100">Context layers coming next</div>
+      <p className="mt-1.5 leading-relaxed">
+        Sanitation, food inspection, housing, and weather layers are context only. They will not change official Rodent Activity dots.
+      </p>
     </div>
-  );
-}
-
-function SeasonalityOverlay() {
-  return (
-    <div className="pointer-events-none absolute inset-x-0 top-1/3 h-px bg-gradient-to-r from-transparent via-cyan-300/30 to-transparent shadow-[0_0_30px_rgba(103,232,249,0.35)]" />
   );
 }
 

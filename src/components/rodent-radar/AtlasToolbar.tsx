@@ -2,16 +2,17 @@
 // History / saved-views are deferred per the locked plan; the bookmark
 // button only surfaces an informational tooltip for now.
 
-import { Bookmark, Check, Copy, Search as SearchIcon, Share2 } from "lucide-react";
+import { Bookmark, Check, Copy, ListFilter, Search as SearchIcon, Share2 } from "lucide-react";
 import { useState } from "react";
 
 interface AtlasToolbarProps {
   query: string;
   onQueryChange: (q: string) => void;
   shareUrl?: string;
+  onOpenReports?: () => void;
 }
 
-export function AtlasToolbar({ query, onQueryChange, shareUrl }: AtlasToolbarProps) {
+export function AtlasToolbar({ query, onQueryChange, shareUrl, onOpenReports }: AtlasToolbarProps) {
   const [copied, setCopied] = useState(false);
   const [bookmarkHint, setBookmarkHint] = useState(false);
 
@@ -43,6 +44,15 @@ export function AtlasToolbar({ query, onQueryChange, shareUrl }: AtlasToolbarPro
       </label>
 
       <div className="h-5 w-px bg-white/[0.08]" />
+
+      <button
+        type="button"
+        onClick={onOpenReports}
+        className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.7rem] font-medium text-slate-300 hover:bg-white/[0.05]"
+      >
+        <ListFilter className="h-3 w-3" />
+        Reports
+      </button>
 
       <button
         type="button"

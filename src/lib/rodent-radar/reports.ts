@@ -10,6 +10,10 @@ export type RodentReport = {
   id: string;
   source: string;
   sourceUrl: string;
+  sourceDatasetId?: string;
+  snapshotDate?: string;
+  confidence?: "high" | "medium" | "low";
+  category?: string;
   lat: number;
   lng: number;
   reportedAt: string; // ISO
@@ -83,6 +87,11 @@ export function getReportsAsGeoJSON(reports: RodentReport[]) {
       properties: {
         id: r.id,
         source: r.source,
+        sourceUrl: r.sourceUrl,
+        sourceDatasetId: r.sourceDatasetId,
+        snapshotDate: r.snapshotDate,
+        confidence: r.confidence,
+        category: r.category,
         reportedAt: r.reportedAt,
         // ms-since-epoch for fast filter expressions in MapLibre
         reportedAtMs: new Date(r.reportedAt).getTime(),
@@ -96,8 +105,8 @@ export function getReportsAsGeoJSON(reports: RodentReport[]) {
 }
 
 // Group reports by approximate address (round lat/lng to ~10m) for the
-// "recurring sites" pattern. An address with ≥3 reports across ≥6 months
-// is the visual signature of a recurring colony.
+// "recurring activity" pattern. An address with >=3 reports across >=6 months
+// is a pattern signal, not proof of a confirmed colony.
 export type AddressGroup = {
   key: string;
   addressLabel: string;

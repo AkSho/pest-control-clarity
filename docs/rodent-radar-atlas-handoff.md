@@ -3,13 +3,13 @@
 ## Mission
 Build Rodent Radar into a de-facto public rodent intelligence atlas: source-backed, visually powerful, and useful enough that consumers, journalists, PMPs, PCOs, public officials, and civic-data people naturally cite it.
 
-The current reference is OpenGridWorks-level map depth, but for rodent activity, colony modeling, recent reports, seasonality, conditions, data gaps, and exposure safety.
+The current reference is OpenGridWorks-level map depth, but for rodent activity, recurring report patterns, recent reports, seasonality, conditions, data gaps, and exposure safety.
 
 ## Product Rules
 - User-facing language is Rodent Activity, not scores.
 - Official Rodent Activity uses official public rodent inspections, complaints, or auditable rodent/vermin 311 records only.
 - Internal normalization may size or sort markers, but must not be shown as a public metric.
-- Colony Growth is modeled and must stay separate from official city records.
+- Any modeled repeat-activity layer must stay separate from official city records and must never be presented as a rat population estimate.
 - Context layers are explanatory and must not change official Rodent Activity.
 - Watchlist and data-gap places cannot show fake activity bands or fake records.
 - Hantavirus belongs only as conservative CDC-backed Rodent Exposure Safety guidance, not local disease-risk prediction.
@@ -32,41 +32,37 @@ The current reference is OpenGridWorks-level map depth, but for rodent activity,
 ## Current State
 - `/rodent-radar/rat-pressure-map` is now a full-screen dark atlas route with site header/footer hidden.
 - The first viewport is map-first, not a content page.
-- Left rail: `Rodent Radar`, subtitle, verified places, official records, data gaps, search, layer controls, and place list.
-- Top-right utility icons: search, share, reset, labels, map style, sources, info.
-- Bottom-left buttons: Layers and Sources.
-- Selected verified places show activity band, official records, recent activity, year-over-year change, data confidence, snapshot date, and source.
-- Colony Growth toggle adds a modeled mini-projection and a purple ring layer.
-- Watchlist/data-gap places show reviewed source, review date context, why no activity layer is shown, and source link.
+- Left rail now follows the OGW-style cockpit pattern: title, concise lede, official report count, verified places, reviewed gaps, recency legend, cluster-size legend, recurring-activity explanation, and source/terms links.
+- Right drawer now functions as a searchable record browser with tabs for Reports, Recurring, Places, and Gaps.
+- Primary map unit is now official report records: one dot = one public rodent-related record, clustered at low zoom.
+- Recurring activity is labeled conservatively as a repeated-report pattern, not proof of a confirmed colony.
+- Watchlist/data-gap places show reviewed source context and no fake records.
 - `/rodent-radar/attribution` and `/rodent-radar/terms` exist and link from the atlas drawers.
-- Static JSON/CSV exports no longer expose a public numeric score.
-- `bun run build` passes after the atlas redesign. The build still prints the known Wrangler log-file permission warning under `~/Library/Preferences/.wrangler/logs`, but exits successfully.
-- Local dev server was tested at `http://127.0.0.1:5173/rodent-radar/rat-pressure-map`.
+- `bun run build` passes. The build still prints the known Wrangler log-file permission warning under `~/Library/Preferences/.wrangler/logs`, but exits successfully.
+- Local dev server was tested at `http://127.0.0.1:8080/rodent-radar/rat-pressure-map`.
 
 ## Data State
-Verified official activity areas:
-- Brooklyn
-- Manhattan
-- Bronx
-- Queens
-- Staten Island
-- San Francisco
+Current official record snapshots:
+- NYC: 350 records from NYC Open Data Rodent Inspection (`p937-wjvj`), filtered to `Failed for Rat Activity`.
+- Chicago: 350 records from Chicago 311 Service Requests (`v6vf-nfxy`), filtered to `Rodent Baiting/Rat Complaint`.
+- Boston: 200 records from Boston 311 Service Requests 2026 CKAN datastore (`1a0b420d-99f1-4887-9851-990b2a5a6e17`), filtered to rodent case types.
+- Washington, DC: 200 records from DCGIS ServiceRequests layer 13, filtered to service code `S0301`.
+- Philadelphia: 0 records in the current snapshot because the quick audit did not confirm recent clean rodent-specific records in the queried public table. Treat as a visible data gap until verified.
 
-Watchlist/data-gap areas:
-- Jersey City
-- Newark
-- Oakland
-- San Jose
-
-Known source rules:
-- NYC borough activity comes from the official NYC Open Data Rodent Inspection dataset.
-- San Francisco activity comes from official DataSF 311 Cases filtered by rodent/vermin-related fields.
-- Oakland and San Jose have official general 311 data, but no clean rodent/vermin taxonomy was confirmed.
-- Jersey City and Newark remain unverified for clean public rodent activity data.
+Privacy/data rules:
+- Snapshot builder is `scripts/build-rodent-report-snapshots.mjs`.
+- Snapshot date is `2026-05-24`.
+- Report coordinates are deterministically jittered.
+- Address labels are block-level; house numbers and unit markers are stripped.
+- Future-dated records are excluded.
+- AHS/Census household sightings are deferred and should not be shown as a default atlas layer.
 
 ## Implemented In Latest Atlas Redesign
 - Replaced the previous content-heavy map page with an OpenGridWorks-inspired atlas surface.
 - Removed visible score language from the atlas UI and public exports.
+- Removed AHS survey estimates from the default visible atlas surface.
+- Added the official-record snapshot builder and replaced synthetic/demo report JSON.
+- Added a right-side OGW-style record drawer for official reports, recurring activity, places, and data gaps.
 - Added atlas layer roles:
   - `official-activity`
   - `model`
@@ -75,7 +71,7 @@ Known source rules:
   - `data-gap`
 - Added atlas layer definitions:
   - Rodent Activity
-  - Colony Growth
+  - Recurring Pattern Model
   - Recent Reports
   - Seasonality
   - Conditions
@@ -84,10 +80,20 @@ Known source rules:
 - Renamed route-facing metrics to `activityIndex` for internal marker sizing and `activityBand` for public band display.
 - Added MapLibre atlas markers:
   - official activity bubbles
-  - modeled colony rings
+  - modeled repeat-activity rings
   - watchlist data-gap markers
 - Added utility drawers for sources, methodology, and atlas controls.
 - Added attribution and terms pages modeled after OGW-style utility pages.
+
+## Latest Polish Pass
+- Fixed the bottom-right control collision by moving the closed report-browser affordance away from MapLibre/CARTO/OSM attribution.
+- Replaced the floating layer-card stack with an OGW-style bottom-left dock: `Layers`, `Sources`, and `Map Type`.
+- `Layers` now opens a compact grouped matrix for Activity, Context, Modeled, Guidance, and Transparency layers.
+- `Map Type` now switches between dark, street-context, and light CARTO basemaps.
+- `Seasonality` now shows a monthly report-rhythm panel derived from official report dates instead of drawing a decorative line across the map.
+- `Exposure Safety` opens a CDC-backed guidance drawer and remains explicitly not a local disease-risk map.
+- `Conditions` is clarified as context coming next; it does not draw fake data.
+- `bun run build` passed after this pass. The known Wrangler log-file permission warning still appears but the build exits successfully.
 
 ## Exposure Safety Rules
 Use label: `Rodent Exposure Safety`.
@@ -130,7 +136,7 @@ Continue turning Rodent Radar into a de-facto public rodent intelligence atlas. 
 Non-negotiables:
 - User-facing language is Rodent Activity, not scores.
 - Official activity uses official public rodent/inspection/311 data only.
-- Colony Growth is modeled and separate from official activity.
+- Modeled repeat-activity context is separate from official activity and is not a rat population estimate.
 - Context layers are allowed, but must be labeled as context.
 - Watchlist/data-gap places must not show fake records or fake bands.
 - Hantavirus belongs only as `Rodent Exposure Safety`, using conservative CDC-backed cleanup guidance.
@@ -140,8 +146,8 @@ Non-negotiables:
 Choose the next product chunk:
 1. Add richer real context layers from official sources, starting with sanitation / illegal dumping / food inspection signals.
 2. Expand verified official activity coverage to cities with clean rodent complaint datasets.
-3. Improve map density and visual richness toward the OpenGridWorks benchmark with vector layers, legends, and source settings.
+3. Improve map density and visual richness toward the OpenGridWorks benchmark with vector layers, label controls, basemap switching, and source settings.
 4. Add canonical source/detail pages for each verified place and dataset.
 
 ## Left Off Here
-The atlas redesign has been implemented and verified. The live smoke check found 6 official activity markers, 4 data-gap markers, no visible score language, working attribution and terms pages, and a selected-place drawer with official records, recent activity, modeled Colony Growth, source, and confidence.
+The OGW-style record cockpit and polish pass have been implemented. `bun run build` passed. The atlas now has 1,100 official records, four verified places, three reviewed gaps, visible clusters, a left legend rail, right report browser, bottom-left `Layers / Sources / Map Type` dock, monthly seasonality rhythm, and clarified placeholder overlays. Data audit found zero future-dated records and no active atlas score/index language in the Rodent Radar cockpit files.

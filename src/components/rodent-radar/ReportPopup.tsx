@@ -1,6 +1,7 @@
 // Popup for a clicked report cluster / address group.
 // Anchored to a fixed position on the map canvas; not a modal.
-// The "replacement cycle" caption is the moment a consumer "gets it".
+// The recurring-activity caption is the moment a consumer "gets it" without
+// turning official reports into a population claim.
 
 import { ExternalLink, X } from "lucide-react";
 import { Sparkline } from "./Sparkline";
@@ -28,7 +29,7 @@ export function ReportPopup({ group, onClose }: Props) {
   const oldest = reports[0];
 
   const caption = isRecurring
-    ? `${pluralize(reports.length, "report")} across ${spanMonths.toFixed(0)} months. The pattern of a recurring colony — not a one-time sighting.`
+    ? `${pluralize(reports.length, "report")} across ${spanMonths.toFixed(0)} months. This is recurring activity, not proof of a confirmed colony.`
     : reports.length === 1
       ? "Single filed report. Not enough signal yet to read a pattern."
       : `${pluralize(reports.length, "report")} at this address. Watch for recurrence.`;

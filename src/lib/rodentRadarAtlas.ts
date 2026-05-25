@@ -747,9 +747,9 @@ export const atlasLayerDefinitions: AtlasLayerDefinition[] = [
   },
   {
     id: "colony-growth",
-    name: "Colony Growth",
+    name: "Recurring Pattern Model",
     group: "Model",
-    description: "Estimated growth trajectory based on activity band and calculator-style assumptions.",
+    description: "Interpretive repeat-activity context based on official report patterns.",
     role: "model",
     defaultVisible: false,
     status: "partial",
@@ -967,7 +967,7 @@ export function getColonyGrowthProjection(city: RatPressureResult): ColonyGrowth
     days30: copy.days30,
     days60: copy.days60,
     days90: copy.days90,
-    disclaimer: "Modeled colony trajectory, not official city data and not a rat population count.",
+    disclaimer: "Modeled repeat-activity context, not official city data and not a rat population count.",
   };
 }
 
@@ -982,9 +982,9 @@ export type PressureBandThreshold = {
   minIndex: number;
 };
 
-// Activity-index thresholds used in bandFromScore() above. Kept in sync there.
+// Internal thresholds used to map official-record signals into public activity bands.
 export const PRESSURE_BAND_THRESHOLDS: PressureBandThreshold[] = [
-  { band: "severe", label: "Severe", description: "Top tier of activity index (≥75)", minIndex: 75 },
+  { band: "severe", label: "Severe", description: "Highest activity band", minIndex: 75 },
   { band: "high", label: "High", description: "Above the national median (50–74)", minIndex: 50 },
   { band: "moderate", label: "Moderate", description: "Regular activity, manageable (25–49)", minIndex: 25 },
   { band: "low", label: "Low", description: "Sparse activity (<25)", minIndex: 0 },

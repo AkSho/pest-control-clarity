@@ -1,5 +1,5 @@
 // Docked bottom-left card — one card per layer group (Official Activity,
-// Conditions, Modeled). Modeled holds Colony Growth and ships visually gated:
+// Conditions, Modeled). Modeled layers ship visually gated:
 // toggling requires a one-click confirm with the interpretive disclaimer.
 
 import { type LucideIcon, ChevronDown, Lock } from "lucide-react";
@@ -122,7 +122,7 @@ export function LayerCard({
                   <div className="border-t border-white/[0.05] bg-amber-300/[0.04] px-3 py-2">
                     <p className="text-[0.6rem] leading-snug text-amber-100/80">
                       {item.gatedDisclaimer ??
-                        "This layer is modeled, not observed. It interprets colony dynamics from official activity — not a population count."}
+                        "This layer is modeled, not observed. It interprets repeat activity from official records — not a population count."}
                     </p>
                     <div className="mt-2 flex items-center gap-1.5">
                       <button
