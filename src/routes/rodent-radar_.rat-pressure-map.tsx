@@ -134,6 +134,68 @@ const CANONICAL_URL = "https://cloakd-removals.cloud/rodent-radar/rat-pressure-m
 const SOURCES = getAtlasSourceCards();
 const ZIP_TO_PLACE = (zipToPlaceData as { zips: Record<string, string> }).zips;
 
+type PlaceFocusBounds = {
+  id: string;
+  name: string;
+  bbox: [number, number, number, number]; // west, south, east, north
+  tone: "verified" | "gap";
+};
+
+const PLACE_FOCUS_BOUNDS: Record<string, PlaceFocusBounds> = {
+  nyc: { id: "nyc", name: "New York City", bbox: [-74.26, 40.47, -73.7, 40.92], tone: "verified" },
+  brooklyn: { id: "brooklyn", name: "Brooklyn", bbox: [-74.06, 40.55, -73.84, 40.74], tone: "verified" },
+  manhattan: { id: "manhattan", name: "Manhattan", bbox: [-74.03, 40.69, -73.91, 40.88], tone: "verified" },
+  bronx: { id: "bronx", name: "Bronx", bbox: [-73.93, 40.78, -73.76, 40.92], tone: "verified" },
+  queens: { id: "queens", name: "Queens", bbox: [-73.96, 40.53, -73.7, 40.81], tone: "verified" },
+  "staten-island": { id: "staten-island", name: "Staten Island", bbox: [-74.26, 40.47, -74.05, 40.65], tone: "verified" },
+  sf: { id: "sf", name: "San Francisco", bbox: [-122.52, 37.7, -122.35, 37.83], tone: "verified" },
+  "san-francisco": { id: "san-francisco", name: "San Francisco", bbox: [-122.52, 37.7, -122.35, 37.83], tone: "verified" },
+  chicago: { id: "chicago", name: "Chicago", bbox: [-87.94, 41.64, -87.52, 42.03], tone: "verified" },
+  boston: { id: "boston", name: "Boston", bbox: [-71.2, 42.23, -70.99, 42.4], tone: "verified" },
+  dc: { id: "dc", name: "Washington, D.C.", bbox: [-77.12, 38.79, -76.91, 38.99], tone: "verified" },
+  "washington-dc": { id: "washington-dc", name: "Washington, D.C.", bbox: [-77.12, 38.79, -76.91, 38.99], tone: "verified" },
+  baltimore: { id: "baltimore", name: "Baltimore", bbox: [-76.72, 39.19, -76.52, 39.38], tone: "verified" },
+  newark: { id: "newark", name: "Newark", bbox: [-74.25, 40.67, -74.12, 40.8], tone: "verified" },
+  "new-orleans": { id: "new-orleans", name: "New Orleans", bbox: [-90.14, 29.88, -89.9, 30.08], tone: "verified" },
+  "jersey-city": { id: "jersey-city", name: "Jersey City", bbox: [-74.1, 40.68, -74.03, 40.76], tone: "gap" },
+  oakland: { id: "oakland", name: "Oakland", bbox: [-122.36, 37.7, -122.11, 37.9], tone: "gap" },
+  "san-jose": { id: "san-jose", name: "San Jose", bbox: [-122.05, 37.12, -121.7, 37.47], tone: "gap" },
+  philadelphia: { id: "philadelphia", name: "Philadelphia", bbox: [-75.28, 39.86, -74.95, 40.14], tone: "gap" },
+  philly: { id: "philly", name: "Philadelphia", bbox: [-75.28, 39.86, -74.95, 40.14], tone: "gap" },
+  seattle: { id: "seattle", name: "Seattle", bbox: [-122.46, 47.49, -122.22, 47.74], tone: "gap" },
+  toronto: { id: "toronto", name: "Toronto", bbox: [-79.64, 43.58, -79.12, 43.86], tone: "gap" },
+};
+
+function getPlaceFocusFeature(placeId?: string) {
+  if (!placeId) return null;
+  const focus = PLACE_FOCUS_BOUNDS[placeId];
+  if (!focus) return null;
+  const [west, south, east, north] = focus.bbox;
+  return {
+    type: "Feature" as const,
+    geometry: {
+      type: "Polygon" as const,
+      coordinates: [[
+        [west, south],
+        [east, south],
+        [east, north],
+        [west, north],
+        [west, south],
+      ]],
+    },
+    properties: {
+      id: focus.id,
+      name: focus.name,
+      tone: focus.tone,
+      centerLng: (west + east) / 2,
+      centerLat: (south + north) / 2,
+    },
+  };
+}
+
+function getPlaceFocusBounds(placeId?: string) {
+  return placeId ? PLACE_FOCUS_BOUNDS[placeId] : undefined;
+}
 
 const layerIcons: Record<AtlasLayerId, LucideIcon> = {
   "rodent-activity": Activity,
@@ -368,6 +430,7 @@ function RodentRadarAtlasPage() {
     () => unavailableRatPressureGeos.find((c) => c.id === search.gap) ?? null,
     [search.gap],
   );
+  const selectedFocusPlaceId = selectedGap?.id ?? selectedAhs?.id ?? (selectedReportPlaceId !== "all" ? selectedReportPlaceId : search.place);
   const activeSet = useMemo(() => new Set<AtlasLayerId>(activeLayers), [activeLayers]);
 
   useEffect(() => {
@@ -584,6 +647,7 @@ function RodentRadarAtlasPage() {
         selected={selected}
         selectedGap={selectedGap}
         selectedAhs={selectedAhs}
+        selectedFocusPlaceId={selectedFocusPlaceId}
         activeLayers={activeSet as Set<AtlasLayerId>}
         mode={mode}
         metric={metric}
@@ -721,6 +785,7 @@ function AtlasMap({
   selected,
   selectedGap,
   selectedAhs,
+  selectedFocusPlaceId,
   activeLayers,
   mode,
   metric,
@@ -743,6 +808,7 @@ function AtlasMap({
   selected: RatPressureResult;
   selectedGap: UnavailableRatPressureGeo | null;
   selectedAhs: AhsEstimatePin | null;
+  selectedFocusPlaceId?: string;
   activeLayers: Set<AtlasLayerId>;
   mode: DisplayMode;
   metric: MetricKey;
@@ -765,6 +831,7 @@ function AtlasMap({
   const maplibreRef = useRef<MapLibreModule | null>(null);
   const addressGroupsRef = useRef(addressGroups);
   const foodPestEvidenceRef = useRef(foodPestEvidence);
+  const selectedFocusPlaceIdRef = useRef(selectedFocusPlaceId);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -774,6 +841,10 @@ function AtlasMap({
   useEffect(() => {
     foodPestEvidenceRef.current = foodPestEvidence;
   }, [foodPestEvidence]);
+
+  useEffect(() => {
+    selectedFocusPlaceIdRef.current = selectedFocusPlaceId;
+  }, [selectedFocusPlaceId]);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -821,12 +892,45 @@ function AtlasMap({
               tileSize: 256,
               attribution: "© CARTO © OpenStreetMap contributors",
             },
+            cartoDarkLabels: {
+              type: "raster",
+              tiles: [
+                "https://a.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png",
+                "https://b.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png",
+                "https://c.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png",
+              ],
+              tileSize: 256,
+              attribution: "© CARTO © OpenStreetMap contributors",
+            },
+            cartoVoyagerLabels: {
+              type: "raster",
+              tiles: [
+                "https://a.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}.png",
+                "https://b.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}.png",
+                "https://c.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}.png",
+              ],
+              tileSize: 256,
+              attribution: "© CARTO © OpenStreetMap contributors",
+            },
+            cartoLightLabels: {
+              type: "raster",
+              tiles: [
+                "https://a.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png",
+                "https://b.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png",
+                "https://c.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png",
+              ],
+              tileSize: 256,
+              attribution: "© CARTO © OpenStreetMap contributors",
+            },
           },
           layers: [
             { id: "bg", type: "background", paint: { "background-color": "#05070d" } },
-            { id: "cartoDark", type: "raster", source: "cartoDark", paint: { "raster-opacity": 0.85 } },
+            { id: "cartoDark", type: "raster", source: "cartoDark", paint: { "raster-opacity": 0.9, "raster-contrast": 0.08 } },
             { id: "cartoVoyager", type: "raster", source: "cartoVoyager", layout: { visibility: "none" }, paint: { "raster-opacity": 0.85 } },
             { id: "cartoLight", type: "raster", source: "cartoLight", layout: { visibility: "none" }, paint: { "raster-opacity": 0.9 } },
+            { id: "cartoDarkLabels", type: "raster", source: "cartoDarkLabels", paint: { "raster-opacity": 0.62, "raster-contrast": 0.18 } },
+            { id: "cartoVoyagerLabels", type: "raster", source: "cartoVoyagerLabels", layout: { visibility: "none" }, paint: { "raster-opacity": 0.58, "raster-contrast": 0.08 } },
+            { id: "cartoLightLabels", type: "raster", source: "cartoLightLabels", layout: { visibility: "none" }, paint: { "raster-opacity": 0.68 } },
           ],
         },
         center: [-40, 28],
@@ -866,6 +970,94 @@ function AtlasMap({
         map.addSource("rodent-ahs", {
           type: "geojson",
           data: { type: "FeatureCollection", features: [] },
+        });
+        map.addSource("selected-place-focus", {
+          type: "geojson",
+          data: { type: "FeatureCollection", features: [] },
+        });
+
+        // Selection focus frame. This is an orientation aid, not an official
+        // legal boundary; the exact reported points remain the source of truth.
+        map.addLayer({
+          id: "selected-place-fill",
+          type: "fill",
+          source: "selected-place-focus",
+          paint: {
+            "fill-color": ["case", ["==", ["get", "tone"], "gap"], "#94a3b8", "#22d3ee"],
+            "fill-opacity": ["case", ["==", ["get", "tone"], "gap"], 0.035, 0.055],
+          },
+        });
+        map.addLayer({
+          id: "selected-place-glow",
+          type: "line",
+          source: "selected-place-focus",
+          paint: {
+            "line-color": ["case", ["==", ["get", "tone"], "gap"], "#cbd5e1", "#67e8f9"],
+            "line-opacity": 0.22,
+            "line-width": [
+              "interpolate", ["linear"], ["zoom"],
+              4, 5,
+              10, 8,
+              14, 12,
+            ],
+            "line-blur": 5,
+          },
+        });
+        map.addLayer({
+          id: "selected-place-line",
+          type: "line",
+          source: "selected-place-focus",
+          filter: ["!=", ["get", "tone"], "gap"],
+          paint: {
+            "line-color": "#a5f3fc",
+            "line-opacity": 0.92,
+            "line-width": [
+              "interpolate", ["linear"], ["zoom"],
+              4, 1.2,
+              10, 1.8,
+              14, 2.4,
+            ],
+          },
+        });
+        map.addLayer({
+          id: "selected-place-gap-line",
+          type: "line",
+          source: "selected-place-focus",
+          filter: ["==", ["get", "tone"], "gap"],
+          paint: {
+            "line-color": "#e2e8f0",
+            "line-opacity": 0.82,
+            "line-width": [
+              "interpolate", ["linear"], ["zoom"],
+              4, 1,
+              10, 1.5,
+              14, 2,
+            ],
+            "line-dasharray": [1.8, 1.2],
+          },
+        });
+        map.addLayer({
+          id: "selected-place-label",
+          type: "symbol",
+          source: "selected-place-focus",
+          layout: {
+            "text-field": ["concat", ["get", "name"], "\n", "area focus"],
+            "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+            "text-size": [
+              "interpolate", ["linear"], ["zoom"],
+              4, 10,
+              10, 12,
+              14, 14,
+            ],
+            "text-offset": [0, -1.2],
+            "text-anchor": "center",
+          },
+          paint: {
+            "text-color": "#e0faff",
+            "text-halo-color": "#020617",
+            "text-halo-width": 1.5,
+            "text-opacity": 0.92,
+          },
         });
 
         // Outer colony-growth ring (rendered first, behind the dot)
@@ -1196,6 +1388,7 @@ function AtlasMap({
         });
         // Ease into the working view once the globe is up
         window.setTimeout(() => {
+          if (selectedFocusPlaceIdRef.current) return;
           map.easeTo({ center: [-88, 39], zoom: 3.2, duration: 1800 });
         }, 350);
       });
@@ -1270,6 +1463,18 @@ function AtlasMap({
     });
   }, [activeLayers, ahsPins, metric, mode, ready, unavailable, verified]);
 
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !ready) return;
+    const src = map.getSource("selected-place-focus") as MapLibreGeoJSONSource | undefined;
+    if (!src) return;
+    const feature = getPlaceFocusFeature(selectedFocusPlaceId);
+    src.setData({
+      type: "FeatureCollection",
+      features: feature ? [feature] : [],
+    });
+  }, [ready, selectedFocusPlaceId]);
+
   // Push per-report data into the clustered source. When recurringOnly is on,
   // filter to reports whose address group is recurring.
   useEffect(() => {
@@ -1315,8 +1520,10 @@ function AtlasMap({
         map.setPaintProperty("cartoDark", "raster-opacity", 0.95);
       } else {
         map.setPaintProperty("cartoDark", "raster-saturation", 0);
-        map.setPaintProperty("cartoDark", "raster-contrast", 0);
-        map.setPaintProperty("cartoDark", "raster-opacity", 0.85);
+        map.setPaintProperty("cartoDark", "raster-contrast", 0.08);
+        map.setPaintProperty("cartoDark", "raster-opacity", 0.9);
+        map.setPaintProperty("cartoDarkLabels", "raster-opacity", 0.62);
+        map.setPaintProperty("cartoDarkLabels", "raster-contrast", 0.18);
       }
       const widen = mode === "field" ? 1.4 : 1;
       map.setPaintProperty("rodent-activity-dot", "circle-stroke-width", 1 * widen);
@@ -1329,9 +1536,10 @@ function AtlasMap({
     const map = mapRef.current;
     if (!map || !ready) return;
     const visibleLayer = mapType === "dark" ? "cartoDark" : mapType === "voyager" ? "cartoVoyager" : "cartoLight";
-    for (const layer of ["cartoDark", "cartoVoyager", "cartoLight"]) {
+    const visibleLabelLayer = mapType === "dark" ? "cartoDarkLabels" : mapType === "voyager" ? "cartoVoyagerLabels" : "cartoLightLabels";
+    for (const layer of ["cartoDark", "cartoVoyager", "cartoLight", "cartoDarkLabels", "cartoVoyagerLabels", "cartoLightLabels"]) {
       try {
-        map.setLayoutProperty(layer, "visibility", layer === visibleLayer ? "visible" : "none");
+        map.setLayoutProperty(layer, "visibility", layer === visibleLayer || layer === visibleLabelLayer ? "visible" : "none");
       } catch {
         /* basemap layer not mounted */
       }
@@ -1340,13 +1548,32 @@ function AtlasMap({
 
   useEffect(() => {
     if (!ready) return;
+    const focus = getPlaceFocusBounds(selectedFocusPlaceId);
+    if (focus) {
+      const [west, south, east, north] = focus.bbox;
+      const isCompact = (containerRef.current?.clientWidth ?? 1200) < 760;
+      mapRef.current?.fitBounds(
+        [
+          [west, south],
+          [east, north],
+        ],
+        {
+          padding: isCompact
+            ? { top: 96, right: 28, bottom: 180, left: 28 }
+            : { top: 110, right: 420, bottom: 100, left: 340 },
+          duration: 850,
+          essential: true,
+        },
+      );
+      return;
+    }
     const target = selectedAhs ?? selectedGap ?? selected;
     mapRef.current?.flyTo({
       center: [target.lng, target.lat],
       zoom: target.region === "NYC" || target.region === "NY/NJ metro" ? 8.7 : 9.25,
       essential: true,
     });
-  }, [ready, selected, selectedGap, selectedAhs]);
+  }, [ready, selected, selectedGap, selectedAhs, selectedFocusPlaceId]);
 
   return (
     <div className="absolute inset-0">

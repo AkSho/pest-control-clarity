@@ -19,7 +19,7 @@ The current reference is OpenGridWorks-level map depth, but for rodent activity,
 ## Pinned Roadmap
 This is the canonical Rodent Radar sequence. Do not reorder these chunks unless the user explicitly approves the change or a data source fails audit.
 
-Immediate next implementation chunk: **Map Boundary Clarity**.
+Immediate next implementation chunk: **More Verified Activity Cities**.
 
 Last known atlas state:
 - 1,873 official report records.
@@ -262,6 +262,13 @@ Latest failed source probes:
 - Build result after this pass: `bun run build` passed. Atlas client route chunk dropped from roughly `1,657 kB` to `72.99 kB`; atlas SSR chunk dropped from roughly `1,705 kB` to `122.46 kB`.
 - Data validation after this pass: 1,873 official reports, 1,050 context records, zero future-dated reports, and zero missing report source/snapshot/coordinate fields.
 
+## Latest Map Boundary Clarity Pass
+- Added CARTO label/boundary raster overlays for dark, voyager, and light basemaps so state/city labels and boundary linework read more clearly against the dark atlas.
+- Added a selected-place focus frame that appears when a verified place or reviewed data gap is selected from the left rail or report browser.
+- The focus frame uses conservative approximate extents for V1 and is labeled `area focus`; it is an orientation aid, not official municipal boundary geometry.
+- Verified selections use a cyan solid focus frame; data gaps use a softer dashed focus frame.
+- Next boundary follow-up: replace approximate focus extents with Census TIGER/Line or official city/county polygon sources when the atlas is ready for true administrative boundaries.
+
 ## Exposure Safety Rules
 Use label: `Rodent Exposure Safety`.
 
@@ -310,7 +317,7 @@ Non-negotiables:
 - Run `bun run build` after implementation work and record the result here.
 
 ## Immediate Next Task
-Follow `Pinned Roadmap` above. The immediate next implementation chunk is **Map Boundary Clarity**.
+Follow `Pinned Roadmap` above. The immediate next implementation chunk is **More Verified Activity Cities**.
 
 ## Left Off Here
-The OGW-style record cockpit, polish pass, Data Browser Polish pass, San Francisco per-report import, Baltimore per-report import, Newark per-report import, New Orleans per-report import, food-inspection context layers, NYC sanitation/dumping context layer, clickable verified-place navigation, Boston mouse/mice activity audit, staging deployment, and performance readiness pass have been implemented. The atlas now has 1,873 official per-report records, 1,050 context records, eight verified per-report places, six reviewed gaps, visible clusters, a left legend rail, a filtered right report browser with active filter chips, bottom-left `Layers / Sources / Map Type` dock, monthly seasonality rhythm, and a lazy-loaded `Conditions` overlay. Data audit found zero future-dated records and no active atlas score/index language in the Rodent Radar cockpit files. Continue with **Map Boundary Clarity** before more city expansion unless the user explicitly reprioritizes.
+The OGW-style record cockpit, polish pass, Data Browser Polish pass, San Francisco per-report import, Baltimore per-report import, Newark per-report import, New Orleans per-report import, food-inspection context layers, NYC sanitation/dumping context layer, clickable verified-place navigation, Boston mouse/mice activity audit, staging deployment, performance readiness pass, and Map Boundary Clarity pass have been implemented. The atlas now has 1,873 official per-report records, 1,050 context records, eight verified per-report places, six reviewed gaps, visible clusters, a left legend rail, a filtered right report browser with active filter chips, bottom-left `Layers / Sources / Map Type` dock, monthly seasonality rhythm, lazy-loaded `Conditions` overlay, clearer CARTO label/boundary overlays, and selected-place focus frames. Data audit found zero future-dated records and no active atlas score/index language in the Rodent Radar cockpit files. Continue with **More Verified Activity Cities** unless the user explicitly reprioritizes.
