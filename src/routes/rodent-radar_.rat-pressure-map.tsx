@@ -1036,30 +1036,6 @@ function AtlasMap({
             "line-dasharray": [1.8, 1.2],
           },
         });
-        map.addLayer({
-          id: "selected-place-label",
-          type: "symbol",
-          source: "selected-place-focus",
-          layout: {
-            "text-field": ["concat", ["get", "name"], "\n", "area focus"],
-            "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
-            "text-size": [
-              "interpolate", ["linear"], ["zoom"],
-              4, 10,
-              10, 12,
-              14, 14,
-            ],
-            "text-offset": [0, -1.2],
-            "text-anchor": "center",
-          },
-          paint: {
-            "text-color": "#e0faff",
-            "text-halo-color": "#020617",
-            "text-halo-width": 1.5,
-            "text-opacity": 0.92,
-          },
-        });
-
         // Outer colony-growth ring (rendered first, behind the dot)
         map.addLayer({
           id: "rodent-activity-ring",

@@ -265,7 +265,7 @@ Latest failed source probes:
 ## Latest Map Boundary Clarity Pass
 - Added CARTO label/boundary raster overlays for dark, voyager, and light basemaps so state/city labels and boundary linework read more clearly against the dark atlas.
 - Added a selected-place focus frame that appears when a verified place or reviewed data gap is selected from the left rail or report browser.
-- The focus frame uses conservative approximate extents for V1 and is labeled `area focus`; it is an orientation aid, not official municipal boundary geometry.
+- The focus frame uses conservative approximate extents for V1; it is an orientation aid, not official municipal boundary geometry. Do not render an in-map `[place] focus` text label.
 - Verified selections use a cyan solid focus frame; data gaps use a softer dashed focus frame.
 - Next boundary follow-up: replace approximate focus extents with Census TIGER/Line or official city/county polygon sources when the atlas is ready for true administrative boundaries.
 
