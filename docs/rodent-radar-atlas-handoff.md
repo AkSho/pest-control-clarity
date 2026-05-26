@@ -22,8 +22,8 @@ This is the canonical Rodent Radar sequence. Do not reorder these chunks unless 
 Immediate next implementation chunk: **More Verified Activity Cities**.
 
 Last known atlas state:
-- 1,623 official report records.
-- 7 verified places.
+- 1,873 official report records.
+- 8 verified places.
 - 6 reviewed data gaps.
 - 1,050 context records: 350 NYC food inspection, 350 Chicago food inspection, and 350 NYC sanitation / dumping records.
 - No score, pressure-score, or public numeric index language in the atlas UI.
@@ -92,9 +92,10 @@ Current official record snapshots:
 - Washington, DC: 200 records from DCGIS ServiceRequests layer 13, filtered to service code `S0301`; snapshot `2026-05-24`; visible report-date range `2026-05-11` through `2026-05-24`; confidence `high`.
 - Baltimore: 250 records from Baltimore 311 Customer Service Requests (`baltimore-311-current`), filtered to exact official service types `HCD-Rodents` and `SW-Rat Rubout`; snapshot `2026-05-24`; visible report-date range `2026-05-13` through `2026-05-23`; confidence `high`.
 - Newark: 36 records from Newark SeeClickFix (`newark-seeclickfix-26890`), filtered to exact official request type `Rodent Infestation (Exterior Only)`; snapshot `2026-05-24`; visible report-date range `2025-11-24` through `2026-05-22`; confidence `high`.
+- New Orleans: 250 records from New Orleans 311 Requests for Service (`2jgv-pqrq`), filtered to official `Mosquito, Termite & Rodent Control` records where `request_reason` is exactly `Rodent Complaint (Rats)` or `Rodent Complaint (Mice & Rats)`; snapshot `2026-05-24`; visible report-date range `2025-09-16` through `2026-05-22`; confidence `high`.
 - Philadelphia: 0 per-report records in the current snapshot because the quick audit did not confirm recent clean rodent-specific records in the queried public table. Treat as a visible data gap until verified.
 
-Place-level summaries currently include NYC boroughs, Chicago, Boston, Washington DC, San Francisco, Baltimore, and Newark. SF is medium-confidence official infestation data because its clean taxonomy combines rodent and insect language; Baltimore and Newark are high-confidence because their official category values are direct rodent / rat-rubout service categories.
+Place-level summaries currently include NYC boroughs, Chicago, Boston, Washington DC, San Francisco, Baltimore, Newark, and New Orleans. SF is medium-confidence official infestation data because its clean taxonomy combines rodent and insect language; Baltimore, Newark, and New Orleans are high-confidence because their official category values are direct rodent / rat-rubout / rodent complaint service categories.
 
 Current context snapshots:
 - NYC food inspection pest evidence: 350 records from NYC DOHMH Restaurant Inspection Results (`43nn-pn8j`), filtered to violation codes `04K`, `04L`, and `08A`; snapshot `2026-05-24`; confidence `high`; shown only under `Conditions` as context, not Rodent Activity.
@@ -108,6 +109,7 @@ Priority expansion/watchlist areas:
 - Jersey City: priority NJ data gap. Reviewed Jersey City Open Data; keep unscored until official rodent, vermin, health-code, or housing-code records are confirmed.
 - Newark: verified priority NJ layer added from official City of Newark SeeClickFix request type `Rodent Infestation (Exterior Only)`.
 - Baltimore: verified per-report layer added from official Baltimore 311 ArcGIS services. Use exact `HCD-Rodents` and `SW-Rat Rubout` only; do not include follow-up or proactive variants unless the user explicitly approves that broader interpretation.
+- New Orleans: verified per-report layer added from official New Orleans 311 Socrata records. Use only exact rodent request reasons under the vector-control request type; exclude mosquito, termite, possum/snake, and any `Non-Rodent` buckets even when they mention mice.
 
 Privacy/data rules:
 - Snapshot builder is `scripts/build-rodent-report-snapshots.mjs`.
@@ -206,6 +208,16 @@ Latest failed source probes:
 - Added Newark source, dataset, atlas place, and metric snapshot metadata; removed Newark from `watchlistPlaces`.
 - Metric audit used exact request-type counts from SeeClickFix: last-12-month records `36`, previous-12-month records `0`, recent-90-day records `30`.
 - Regenerated report snapshots: NYC 350, Chicago 339, SF 250, Boston 198, DC 200, Baltimore 250, Newark 36, Philadelphia 0.
+
+## Latest New Orleans Activity Pass
+- Added New Orleans as a high-confidence verified Rodent Activity city.
+- Added `src/data/rodent-reports/new-orleans.json` with 250 official New Orleans 311 records from exact request reasons `Rodent Complaint (Rats)` and `Rodent Complaint (Mice & Rats)`.
+- Added New Orleans source, dataset, atlas place, report-browser city, and metric snapshot metadata.
+- Metric audit used exact request-reason counts from New Orleans 311: last-12-month records `407`, previous-12-month records `326`, recent-90-day records `90`.
+- Excluded blended or non-rodent vector-control categories: `Mosquito Complaint`, `Termite Complaint`, `Non-Rodent Complaint (Mice, Possums, Snakes)`, `Non-Rodent Complaint (Possums & Snakes)`, and blank/property-maintenance records.
+- Pittsburgh WPRDC 311 was audited and found an exact `Rodent control` request type, but the current public feed appears stale for this use case: last-12-month records `0`, previous-12-month records `319`, recent-90-day records `0`, with latest sampled rodent records in late January 2025. Keep Pittsburgh as a verified-but-deferred lead rather than adding stale live dots.
+- Regenerated report snapshots: NYC 350, Chicago 339, SF 250, Boston 198, DC 200, Baltimore 250, Newark 36, New Orleans 250, Philadelphia 0.
+- `bun run build` passed after this pass. The known Wrangler log-file permission warning still appears but the build exits successfully.
 
 ## Latest Context Layer Pass
 - Added `scripts/build-rodent-context-snapshots.mjs` for context-only official data snapshots.

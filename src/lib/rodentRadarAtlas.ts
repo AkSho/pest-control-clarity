@@ -8,6 +8,7 @@ export type AtlasRegion =
   | "Midwest"
   | "Northeast"
   | "Mid-Atlantic"
+  | "South"
   | "Pacific Northwest"
   | "Canada";
 
@@ -154,6 +155,7 @@ const DC_311_URL =
   "https://opendata.dc.gov/datasets/DCGIS::311-city-service-requests-in-2025";
 const BALTIMORE_311_URL =
   "https://services1.arcgis.com/UWYHeuuJISiGmgXx/arcgis/rest/services/311_Customer_Service_Requests_current/FeatureServer";
+const NEW_ORLEANS_311_URL = "https://data.nola.gov/City-Administration/311-Requests-for-Service-2012-Present/2jgv-pqrq";
 const PHILLY_311_URL = "https://www.opendataphilly.org/dataset/311-service-and-information-requests";
 const SEATTLE_FIF_URL = "https://data.seattle.gov/Community-and-Culture/Find-It-Fix-It-Service-Requests/p3i6-mdy7";
 const TORONTO_311_URL = "https://open.toronto.ca/dataset/311-service-requests-customer-initiated/";
@@ -266,6 +268,13 @@ export const atlasSources: AtlasSource[] = [
     name: "Baltimore 311 Customer Service Requests",
     url: BALTIMORE_311_URL,
     owner: "City of Baltimore",
+    sourceType: "official-open-data",
+  },
+  {
+    id: "new-orleans-311",
+    name: "New Orleans 311 Requests for Service",
+    url: NEW_ORLEANS_311_URL,
+    owner: "City of New Orleans",
     sourceType: "official-open-data",
   },
   {
@@ -388,6 +397,17 @@ export const atlasDatasets: AtlasDataset[] = [
     geography: "City of Newark",
     updateCadence: "Official SeeClickFix civic reporting portal",
     filterNote: "request_type_id = 26890 (Rodent Infestation Exterior Only), filtered by created_at",
+    activityUse: "official-activity",
+  },
+  {
+    id: "2jgv-pqrq",
+    sourceId: "new-orleans-311",
+    name: "311 Requests — Rodent Complaint request reasons",
+    url: NEW_ORLEANS_311_URL,
+    geography: "City of New Orleans",
+    updateCadence: "Official Socrata open data portal",
+    filterNote:
+      "request_type = 'Mosquito, Termite & Rodent Control' and request_reason IN (Rodent Complaint (Rats), Rodent Complaint (Mice & Rats)); mosquito, termite, possum/snake, and non-rodent buckets excluded",
     activityUse: "official-activity",
   },
   {
@@ -571,6 +591,16 @@ export const atlasPlaces: AtlasPlace[] = [
     geo: "City",
     lat: 39.2904,
     lng: -76.6122,
+    transparencyStatus: "verified",
+  },
+  {
+    id: "new-orleans",
+    name: "New Orleans",
+    shortName: "New Orleans",
+    region: "South",
+    geo: "City",
+    lat: 29.9511,
+    lng: -90.0715,
     transparencyStatus: "verified",
   },
   {
@@ -769,6 +799,23 @@ export const pressureMetricSnapshots: PressureMetricSnapshot[] = [
     confidence: "high",
     confidenceNote: "Direct official Newark SeeClickFix request type for exterior rodent infestation.",
     methodologyNote: "Counts are public service requests, not unique rats, mice, properties, or confirmed infestations.",
+    provenance: "live",
+  },
+  {
+    id: "new-orleans-2026-05-24",
+    placeId: "new-orleans",
+    datasetId: "2jgv-pqrq",
+    snapshotDate: "2026-05-24",
+    queryWindow: "2025-05-24 through 2026-05-24",
+    sourceFilter:
+      "request_type = 'Mosquito, Termite & Rodent Control' and request_reason IN (Rodent Complaint (Rats), Rodent Complaint (Mice & Rats)), date_created in window",
+    last12MonthsCount: 407,
+    previous12MonthsCount: 326,
+    recent90DayCount: 90,
+    confidence: "high",
+    confidenceNote: "Official New Orleans 311 records filtered to exact rodent request reasons inside the vector-control service category.",
+    methodologyNote:
+      "Counts are public service requests, not unique rats, mice, properties, or confirmed infestations. Mosquito, termite, possum/snake, and non-rodent request reasons are excluded.",
     provenance: "live",
   },
 ];

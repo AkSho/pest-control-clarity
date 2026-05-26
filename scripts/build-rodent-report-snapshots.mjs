@@ -344,6 +344,49 @@ async function fetchNewark() {
     .filter(Boolean);
 }
 
+async function fetchNewOrleans() {
+  const url = new URL("https://data.nola.gov/resource/2jgv-pqrq.json");
+  url.searchParams.set("$limit", "250");
+  url.searchParams.set("$order", "date_created DESC");
+  url.searchParams.set(
+    "$select",
+    "service_request,request_type,request_reason,date_created,request_status,status,longitude,latitude",
+  );
+  url.searchParams.set(
+    "$where",
+    `request_type='Mosquito, Termite & Rodent Control' AND ` +
+      `(request_reason='Rodent Complaint (Rats)' OR request_reason='Rodent Complaint (Mice & Rats)') AND ` +
+      `date_created between '${START_DATE}T00:00:00' and '${END_DATE}T23:59:59' AND ` +
+      `latitude IS NOT NULL AND longitude IS NOT NULL AND latitude!='0.0' AND longitude!='0.0'`,
+  );
+  const rows = await getJson(url);
+  return rows
+    .map((r, i) => {
+      const id = `new-orleans-${r.service_request || i}`;
+      const recordedAt = iso(r.date_created);
+      const lat = Number(r.latitude);
+      const lng = Number(r.longitude);
+      if (!recordedAt || !validPoint(lat, lng)) return null;
+      const point = jitterCoord(id, lat, lng);
+      return {
+        id,
+        source: "New Orleans 311 Mosquito, Termite & Rodent Control",
+        sourceUrl: "https://data.nola.gov/City-Administration/311-Requests-for-Service-2012-Present/2jgv-pqrq",
+        sourceDatasetId: "2jgv-pqrq",
+        snapshotDate: SNAPSHOT_DATE,
+        confidence: "high",
+        category: r.request_reason || "Rodent Complaint",
+        lat: point.lat,
+        lng: point.lng,
+        reportedAt: recordedAt,
+        status: r.request_status || r.status || "Filed",
+        addressLabel: "New Orleans block",
+        neighborhood: "New Orleans",
+      };
+    })
+    .filter(Boolean);
+}
+
 const jobs = {
   nyc: fetchNyc,
   chicago: fetchChicago,
@@ -352,6 +395,7 @@ const jobs = {
   dc: fetchDc,
   baltimore: fetchBaltimore,
   newark: fetchNewark,
+  "new-orleans": fetchNewOrleans,
   philly: async () => [],
 };
 
