@@ -52,7 +52,13 @@ Priority sequence:
    - Split heavy atlas data from the route bundle.
    - Lazy-load map, report, and context datasets.
    - Preserve the full-screen atlas UX while reducing initial payload.
-6. **Housing / Built Environment Context**
+6. **Map Boundary Clarity**
+   - Make state, county, city, and neighborhood boundary lines more legible on the dark atlas basemap.
+   - Use OpenGridWorks as the visual reference: brighter infrastructure-like outlines, but less neon and less busy than OGW.
+   - When a user selects a city/place from any panel, outline or halo the selected geography so it is clear what area they are viewing.
+   - Use a soft selected-area radius/extent as a temporary fallback where exact municipal boundary geometry is not yet loaded.
+   - Later, add real city/county polygons from Census TIGER/Line or official GIS boundary sources.
+7. **Housing / Built Environment Context**
    - Add Census/ACS-style layers for housing units, density, vacancy, older housing share, and building-age context.
    - Use these for explanation and optional normalization views such as reports per 1,000 housing units.
    - Do not imply rat population size.
@@ -73,6 +79,7 @@ Priority sequence:
 
 ## Current State
 - `/rodent-radar/rat-pressure-map` is now a full-screen dark atlas route with site header/footer hidden.
+- Staging is deployed at `https://radar-staging.cloakd-removals.cloud/rodent-radar/rat-pressure-map` on the separate Cloudflare Worker `pest-control-clarity-radar-staging`.
 - The first viewport is map-first, not a content page.
 - Left rail now follows the OGW-style cockpit pattern: title, concise lede, official report count, verified places, reviewed gaps, recency legend, cluster-size legend, recurring-activity explanation, and source/terms links.
 - Right drawer now functions as a searchable record browser with tabs for Reports, Recurring, Places, and Gaps.
