@@ -128,6 +128,7 @@ Immediate next chunk: **Homepage Repositioning Proposal**, followed by the botto
    - Do not rewrite PDP body copy without a proposed diff.
 
 3. **Homepage Repositioning**
+   - Status: proposal drafted in `docs/homepage-repositioning-proposal.md`. Do not implement until user approves direction.
    - Align homepage with ecommerce-first positioning.
    - Make it clear Cloakd sells Evolve kits and refills.
    - Keep service/program language only if it supports product understanding and purchase confidence.
@@ -194,9 +195,11 @@ For every route, record:
 - Added shared JSON-LD helpers for canonical URLs, BreadcrumbList, and FAQPage output.
 - Added BreadcrumbList schema to the PDPs and core commercial/education pages.
 - Added FAQPage schema only on pages where matching visible FAQ copy already exists: `/faq`, `/evolve-rodent-birth-control`, `/contrapest`, and `/rodent-fertility-control`.
+- Added `docs/homepage-repositioning-proposal.md` as the proposed ecommerce-first homepage direction. No homepage code changes were made in that proposal pass.
 - PDP body copy, layout, offer structure, reviews, and variant behavior were intentionally not changed.
 
 ## Current Known Technical SEO Issues
 - The first low-risk schema pass is complete. Remaining schema work should be page-specific and conservative: Article/WebPage only where useful, FAQPage only where visible FAQs exist, Product only on PDPs.
-- Homepage and many service/program pages still need an ecommerce-first repositioning proposal before any copy edits.
+- Homepage proposal is drafted and needs user review before implementation.
+- Many service/program pages still need ecommerce-first repositioning proposals before copy edits.
 - Several large route chunks remain from app/media/map dependencies; performance work is already pinned in the Rodent Radar handoff.
