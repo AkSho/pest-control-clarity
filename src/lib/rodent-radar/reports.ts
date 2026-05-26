@@ -1,14 +1,5 @@
 // Per-report rodent data. One record = one filed report from a public dataset.
-// This is the "public-data trail" unit — the bubble on the new map.
-import nycReports from "@/data/rodent-reports/nyc.json";
-import chicagoReports from "@/data/rodent-reports/chicago.json";
-import sfReports from "@/data/rodent-reports/sf.json";
-import phillyReports from "@/data/rodent-reports/philly.json";
-import bostonReports from "@/data/rodent-reports/boston.json";
-import dcReports from "@/data/rodent-reports/dc.json";
-import baltimoreReports from "@/data/rodent-reports/baltimore.json";
-import newarkReports from "@/data/rodent-reports/newark.json";
-import newOrleansReports from "@/data/rodent-reports/new-orleans.json";
+// The bulky snapshot is served as static JSON so it does not bloat the route JS.
 
 export type RodentReport = {
   id: string;
@@ -32,7 +23,7 @@ export type HeroCity = {
   label: string; // pretty label for UI
   center: [number, number]; // lng, lat
   zoom: number;
-  reports: RodentReport[];
+  hasOfficialReports: boolean;
 };
 
 export const HERO_CITIES: HeroCity[] = [
@@ -42,7 +33,7 @@ export const HERO_CITIES: HeroCity[] = [
     label: "NYC",
     center: [-73.96, 40.74],
     zoom: 11.2,
-    reports: nycReports as RodentReport[],
+    hasOfficialReports: true,
   },
   {
     id: "chicago",
@@ -50,7 +41,7 @@ export const HERO_CITIES: HeroCity[] = [
     label: "Chicago",
     center: [-87.66, 41.88],
     zoom: 11.2,
-    reports: chicagoReports as RodentReport[],
+    hasOfficialReports: true,
   },
   {
     id: "sf",
@@ -58,7 +49,7 @@ export const HERO_CITIES: HeroCity[] = [
     label: "SF",
     center: [-122.4194, 37.7749],
     zoom: 11.4,
-    reports: sfReports as RodentReport[],
+    hasOfficialReports: true,
   },
   {
     id: "philly",
@@ -66,7 +57,7 @@ export const HERO_CITIES: HeroCity[] = [
     label: "Philly",
     center: [-75.16, 39.96],
     zoom: 11.4,
-    reports: phillyReports as RodentReport[],
+    hasOfficialReports: false,
   },
   {
     id: "boston",
@@ -74,7 +65,7 @@ export const HERO_CITIES: HeroCity[] = [
     label: "Boston",
     center: [-71.07, 42.33],
     zoom: 11.6,
-    reports: bostonReports as RodentReport[],
+    hasOfficialReports: true,
   },
   {
     id: "dc",
@@ -82,7 +73,7 @@ export const HERO_CITIES: HeroCity[] = [
     label: "DC",
     center: [-77.02, 38.91],
     zoom: 11.8,
-    reports: dcReports as RodentReport[],
+    hasOfficialReports: true,
   },
   {
     id: "baltimore",
@@ -90,7 +81,7 @@ export const HERO_CITIES: HeroCity[] = [
     label: "Baltimore",
     center: [-76.6122, 39.2904],
     zoom: 11.6,
-    reports: baltimoreReports as RodentReport[],
+    hasOfficialReports: true,
   },
   {
     id: "newark",
@@ -98,7 +89,7 @@ export const HERO_CITIES: HeroCity[] = [
     label: "Newark",
     center: [-74.1724, 40.7357],
     zoom: 12,
-    reports: newarkReports as RodentReport[],
+    hasOfficialReports: true,
   },
   {
     id: "new-orleans",
@@ -106,12 +97,18 @@ export const HERO_CITIES: HeroCity[] = [
     label: "NOLA",
     center: [-90.0715, 29.9511],
     zoom: 11.4,
-    reports: newOrleansReports as RodentReport[],
+    hasOfficialReports: true,
   },
 ];
 
-export function getAllReports(): RodentReport[] {
-  return HERO_CITIES.flatMap((c) => c.reports);
+export const REPORT_SNAPSHOT_URL = "/rodent-radar/data/official-reports.json";
+
+export async function loadReportSnapshot(): Promise<RodentReport[]> {
+  const response = await fetch(REPORT_SNAPSHOT_URL, { headers: { Accept: "application/json" } });
+  if (!response.ok) throw new Error(`Unable to load official report snapshot (${response.status})`);
+  const records = (await response.json()) as unknown;
+  if (!Array.isArray(records)) throw new Error("Official report snapshot did not return an array");
+  return records as RodentReport[];
 }
 
 export type ReportPlaceSummary = {

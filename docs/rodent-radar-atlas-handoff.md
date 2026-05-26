@@ -19,7 +19,7 @@ The current reference is OpenGridWorks-level map depth, but for rodent activity,
 ## Pinned Roadmap
 This is the canonical Rodent Radar sequence. Do not reorder these chunks unless the user explicitly approves the change or a data source fails audit.
 
-Immediate next implementation chunk: **More Verified Activity Cities**.
+Immediate next implementation chunk: **Map Boundary Clarity**.
 
 Last known atlas state:
 - 1,873 official report records.
@@ -80,6 +80,8 @@ Priority sequence:
 ## Current State
 - `/rodent-radar/rat-pressure-map` is now a full-screen dark atlas route with site header/footer hidden.
 - Staging is deployed at `https://radar-staging.cloakd-removals.cloud/rodent-radar/rat-pressure-map` on the separate Cloudflare Worker `pest-control-clarity-radar-staging`.
+- Performance readiness pass moved bulky official report and context snapshots out of the route bundle and into static files under `public/rodent-radar/data/`.
+- Official report records now load after the atlas shell renders; context records load only when `Conditions` is enabled.
 - The first viewport is map-first, not a content page.
 - Left rail now follows the OGW-style cockpit pattern: title, concise lede, official report count, verified places, reviewed gaps, recency legend, cluster-size legend, recurring-activity explanation, and source/terms links.
 - Right drawer now functions as a searchable record browser with tabs for Reports, Recurring, Places, and Gaps.
@@ -250,6 +252,16 @@ Latest failed source probes:
 - Updated source metadata from the unavailable DSNY bulk dataset reference to NYC 311 Service Requests (`erm2-nwe9`).
 - Expanded the context popup to label sanitation records as `Sanitation condition`.
 
+## Latest Performance Readiness Pass
+- Added static public snapshots:
+  - `public/rodent-radar/data/official-reports.json` with 1,873 official report records.
+  - `public/rodent-radar/data/context-records.json` with 1,050 context records.
+- Removed direct JSON imports from `src/lib/rodent-radar/reports.ts` and `src/lib/rodent-radar/context.ts` so bulky report/context records no longer ship inside the atlas route JavaScript.
+- The atlas route now renders a shell first, then loads official records asynchronously with loading/error chips and report-browser loading/error states.
+- The `Conditions` layer now lazy-loads context records only when enabled; context failures show an error chip instead of crashing the atlas.
+- Build result after this pass: `bun run build` passed. Atlas client route chunk dropped from roughly `1,657 kB` to `72.99 kB`; atlas SSR chunk dropped from roughly `1,705 kB` to `122.46 kB`.
+- Data validation after this pass: 1,873 official reports, 1,050 context records, zero future-dated reports, and zero missing report source/snapshot/coordinate fields.
+
 ## Exposure Safety Rules
 Use label: `Rodent Exposure Safety`.
 
@@ -298,7 +310,7 @@ Non-negotiables:
 - Run `bun run build` after implementation work and record the result here.
 
 ## Immediate Next Task
-Follow `Pinned Roadmap` above. The immediate next implementation chunk is **More Verified Activity Cities**.
+Follow `Pinned Roadmap` above. The immediate next implementation chunk is **Map Boundary Clarity**.
 
 ## Left Off Here
-The OGW-style record cockpit, polish pass, Data Browser Polish pass, San Francisco per-report import, Baltimore per-report import, Newark per-report import, food-inspection context layers, NYC sanitation/dumping context layer, clickable verified-place navigation, and Boston mouse/mice activity audit have been implemented. The atlas now has 1,623 official per-report records, 1,050 context records, seven verified per-report places, six reviewed gaps, visible clusters, a left legend rail, a filtered right report browser with active filter chips, bottom-left `Layers / Sources / Map Type` dock, monthly seasonality rhythm, and a real `Conditions` overlay. Data audit found zero future-dated records and no active atlas score/index language in the Rodent Radar cockpit files. Continue with **More Verified Activity Cities** before traffic readiness or housing context.
+The OGW-style record cockpit, polish pass, Data Browser Polish pass, San Francisco per-report import, Baltimore per-report import, Newark per-report import, New Orleans per-report import, food-inspection context layers, NYC sanitation/dumping context layer, clickable verified-place navigation, Boston mouse/mice activity audit, staging deployment, and performance readiness pass have been implemented. The atlas now has 1,873 official per-report records, 1,050 context records, eight verified per-report places, six reviewed gaps, visible clusters, a left legend rail, a filtered right report browser with active filter chips, bottom-left `Layers / Sources / Map Type` dock, monthly seasonality rhythm, and a lazy-loaded `Conditions` overlay. Data audit found zero future-dated records and no active atlas score/index language in the Rodent Radar cockpit files. Continue with **Map Boundary Clarity** before more city expansion unless the user explicitly reprioritizes.

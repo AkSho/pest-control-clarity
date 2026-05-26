@@ -23,6 +23,7 @@ interface AtlasSidebarProps {
   selectedPlaceId?: string;
   dataMix: { live: number; gaps: number; estimates: number };
   recurringGroups?: AddressGroup[];
+  verifiedPlaceCounts?: Record<string, number>;
 }
 
 export function AtlasSidebar({
@@ -37,11 +38,12 @@ export function AtlasSidebar({
   selectedPlaceId,
   dataMix,
   recurringGroups = [],
+  verifiedPlaceCounts = {},
 }: AtlasSidebarProps) {
   const filterQ = query.trim().toLowerCase();
   const matchesQ = (text: string) => !filterQ || text.toLowerCase().includes(filterQ);
   const visibleGaps = showCoverage.gaps ? gaps.filter((c) => matchesQ(`${c.name} ${c.region}`)) : [];
-  const visibleCities = HERO_CITIES.filter((city) => city.reports.length > 0);
+  const visibleCities = HERO_CITIES.filter((city) => city.hasOfficialReports);
 
   return (
     <aside className="atlas-sidebar absolute left-0 top-0 z-40 flex h-full w-[300px] flex-col border-r border-white/[0.06] bg-slate-950/90 text-slate-200 shadow-2xl shadow-black/40 backdrop-blur-xl">
@@ -135,7 +137,7 @@ export function AtlasSidebar({
                   <span className="truncate">{city.name}</span>
                 </span>
                 <span className="shrink-0 text-[0.58rem] uppercase tracking-wider text-slate-500">
-                  {city.reports.length.toLocaleString()} reports
+                  {(verifiedPlaceCounts[city.id] ?? 0).toLocaleString()} reports
                 </span>
               </button>
             ))}

@@ -78,18 +78,18 @@ import {
 } from "@/components/rodent-radar/CuratedViews";
 import { ReportPopup } from "@/components/rodent-radar/ReportPopup";
 import {
-  getAllReports,
   getReportsAsGeoJSON,
   getReportPlace,
   getReportPlaceLabel,
   groupByAddress,
   findGroupAt,
+  loadReportSnapshot,
   type AddressGroup,
   type RodentReport,
 } from "@/lib/rodent-radar/reports";
 import {
-  getFoodPestEvidence,
   getFoodPestEvidenceAsGeoJSON,
+  loadFoodPestEvidenceSnapshot,
   type FoodPestEvidence,
 } from "@/lib/rodent-radar/context";
 import {
@@ -125,6 +125,7 @@ type MapLibreGeoJSONSource = import("maplibre-gl").GeoJSONSource;
 
 type UtilityPanel = "layers" | "sources" | "map-type" | null;
 type MapType = "dark" | "voyager" | "light";
+type AsyncSnapshotState = "idle" | "loading" | "ready" | "error";
 
 const TITLE = "Rodent Radar: Rodent Activity Atlas";
 const DESCRIPTION =
@@ -337,12 +338,18 @@ function RodentRadarAtlasPage() {
   const [clickedGroup, setClickedGroup] = useState<AddressGroup | null>(null);
   const [selectedContext, setSelectedContext] = useState<FoodPestEvidence | null>(null);
   const [selectedReportPlaceId, setSelectedReportPlaceId] = useState("all");
+  const [allReports, setAllReports] = useState<RodentReport[]>([]);
+  const [reportsState, setReportsState] = useState<AsyncSnapshotState>("idle");
+  const [reportsError, setReportsError] = useState<string | null>(null);
+  const [foodPestEvidence, setFoodPestEvidence] = useState<FoodPestEvidence[]>([]);
+  const [contextState, setContextState] = useState<AsyncSnapshotState>("idle");
+  const [contextError, setContextError] = useState<string | null>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
+  const contextLoadStartedRef = useRef(false);
+  const isMountedRef = useRef(true);
 
   // Per-report data: the new primary unit. One feature = one filed report.
   // Loaded once, grouped by address for popup + recurrence detection.
-  const allReports = useMemo(() => getAllReports(), []);
-  const foodPestEvidence = useMemo(() => getFoodPestEvidence(), []);
   const addressGroups = useMemo(() => groupByAddress(allReports), [allReports]);
   const reportsGeoJSON = useMemo(
     () => getReportsAsGeoJSON(showCoverage.live ? allReports : []),
@@ -363,6 +370,51 @@ function RodentRadarAtlasPage() {
   );
   const activeSet = useMemo(() => new Set<AtlasLayerId>(activeLayers), [activeLayers]);
 
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    setReportsState("loading");
+    setReportsError(null);
+    loadReportSnapshot()
+      .then((records) => {
+        if (cancelled) return;
+        setAllReports(records);
+        setReportsState("ready");
+      })
+      .catch((error: unknown) => {
+        if (cancelled) return;
+        setReportsError(error instanceof Error ? error.message : "Unable to load official records");
+        setReportsState("error");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!activeSet.has("conditions") || contextLoadStartedRef.current) return;
+    contextLoadStartedRef.current = true;
+    setContextState("loading");
+    setContextError(null);
+    loadFoodPestEvidenceSnapshot()
+      .then((records) => {
+        if (!isMountedRef.current) return;
+        setFoodPestEvidence(records);
+        setContextState("ready");
+      })
+      .catch((error: unknown) => {
+        if (!isMountedRef.current) return;
+        contextLoadStartedRef.current = false;
+        setContextError(error instanceof Error ? error.message : "Unable to load context records");
+        setContextState("error");
+      });
+  }, [activeSet]);
+
   const dataMix = useMemo(
     () => ({
       live: allReports.length,
@@ -371,6 +423,14 @@ function RodentRadarAtlasPage() {
     }),
     [allReports.length],
   );
+  const verifiedPlaceCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const report of allReports) {
+      const place = getReportPlace(report);
+      counts[place.id] = (counts[place.id] ?? 0) + 1;
+    }
+    return counts;
+  }, [allReports]);
 
   const updateSearch = useCallback(
     (patch: Partial<RodentRadarSearch>) => {
@@ -540,6 +600,14 @@ function RodentRadarAtlasPage() {
         onSelectContext={setSelectedContext}
       />
 
+      <SnapshotStatusChip
+        reportsState={reportsState}
+        reportsError={reportsError}
+        contextState={contextState}
+        contextError={contextError}
+        conditionsActive={activeSet.has("conditions")}
+      />
+
       {/* Cinematic toggle + curated views — always mounted, hidden by CSS in cinematic */}
       <CinematicToggle cinematic={cinematic} onToggle={() => setCinematic((v) => !v)} />
       {!cinematic ? (
@@ -592,6 +660,7 @@ function RodentRadarAtlasPage() {
             selectedPlaceId={selectedReportPlaceId}
             dataMix={dataMix}
             recurringGroups={addressGroups.filter((group) => group.isRecurring)}
+            verifiedPlaceCounts={verifiedPlaceCounts}
           />
 
           <AtlasToolbar query={query} onQueryChange={setQuery} onOpenReports={() => setDrawerOpen(true)} />
@@ -633,6 +702,8 @@ function RodentRadarAtlasPage() {
             mapRef={mapRef}
             selectedPlaceId={selectedReportPlaceId}
             onSelectedPlaceChange={setSelectedReportPlaceId}
+            reportsState={reportsState}
+            reportsError={reportsError}
           />
         </>
       ) : null}
@@ -692,7 +763,17 @@ function AtlasMap({
   const internalMapRef = useRef<MapLibreMap | null>(null);
   const mapRef = externalMapRef ?? internalMapRef;
   const maplibreRef = useRef<MapLibreModule | null>(null);
+  const addressGroupsRef = useRef(addressGroups);
+  const foodPestEvidenceRef = useRef(foodPestEvidence);
   const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    addressGroupsRef.current = addressGroups;
+  }, [addressGroups]);
+
+  useEffect(() => {
+    foodPestEvidenceRef.current = foodPestEvidence;
+  }, [foodPestEvidence]);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -1069,7 +1150,7 @@ function AtlasMap({
           const f = e.features?.[0];
           if (!f) return;
           const coords = (f.geometry as GeoJSON.Point).coordinates as [number, number];
-          const group = findGroupAt(addressGroups, coords[1], coords[0]);
+          const group = findGroupAt(addressGroupsRef.current, coords[1], coords[0]);
           if (group) onSelectGroup(group);
         });
 
@@ -1088,7 +1169,7 @@ function AtlasMap({
         map.on("click", "food-pest-points", (e) => {
           const f = e.features?.[0];
           const id = f?.properties?.id as string | undefined;
-          const record = foodPestEvidence.find((item) => item.id === id);
+          const record = foodPestEvidenceRef.current.find((item) => item.id === id);
           if (record) onSelectContext(record);
         });
 
@@ -1126,7 +1207,7 @@ function AtlasMap({
       mapRef.current?.remove();
       mapRef.current = null;
     };
-  }, [ahsPins, foodPestEvidence, onSelectAhs, onSelectContext, onSelectGap, onSelectVerified, unavailable, verified]);
+  }, [ahsPins, onSelectAhs, onSelectContext, onSelectGap, onSelectVerified, unavailable, verified]);
 
   // Push data into the vector sources whenever inputs change
   useEffect(() => {
@@ -1317,6 +1398,56 @@ function LayerRow({
   );
 }
 
+function SnapshotStatusChip({
+  reportsState,
+  reportsError,
+  contextState,
+  contextError,
+  conditionsActive,
+}: {
+  reportsState: AsyncSnapshotState;
+  reportsError: string | null;
+  contextState: AsyncSnapshotState;
+  contextError: string | null;
+  conditionsActive: boolean;
+}) {
+  const messages: Array<{ tone: "loading" | "error"; text: string }> = [];
+  if (reportsState === "loading" || reportsState === "idle") {
+    messages.push({ tone: "loading", text: "Loading official records" });
+  }
+  if (reportsState === "error") {
+    messages.push({ tone: "error", text: reportsError ?? "Official records could not load" });
+  }
+  if (conditionsActive && contextState === "loading") {
+    messages.push({ tone: "loading", text: "Loading context records" });
+  }
+  if (conditionsActive && contextState === "error") {
+    messages.push({ tone: "error", text: contextError ?? "Context records could not load" });
+  }
+  if (!messages.length) return null;
+  return (
+    <div style={{ zIndex: Z.fieldChip }} className="pointer-events-none absolute left-1/2 top-4 flex -translate-x-1/2 flex-wrap justify-center gap-2">
+      {messages.map((message) => (
+        <div
+          key={`${message.tone}-${message.text}`}
+          className={`rounded-full border px-3 py-1.5 text-[0.62rem] font-semibold uppercase tracking-[0.16em] shadow-lg backdrop-blur ${
+            message.tone === "error"
+              ? "border-rose-300/25 bg-rose-950/70 text-rose-100"
+              : "border-cyan-300/20 bg-slate-950/75 text-cyan-100"
+          }`}
+        >
+          {message.tone === "loading" ? (
+            <span className="mr-1.5 inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-cyan-300 align-middle" />
+          ) : (
+            <AlertCircle className="mr-1.5 inline h-3 w-3 align-[-2px]" />
+          )}
+          {message.text}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 type RecordDrawerTab = "reports" | "recurring" | "places" | "gaps";
 type ReportRecencyFilter = "all" | "30d" | "90d";
 type ActiveFilterChip = {
@@ -1349,6 +1480,8 @@ function RecordDrawer({
   mapRef,
   selectedPlaceId,
   onSelectedPlaceChange,
+  reportsState,
+  reportsError,
 }: {
   open: boolean;
   reports: RodentReport[];
@@ -1365,6 +1498,8 @@ function RecordDrawer({
   mapRef: React.MutableRefObject<MapLibreMap | null>;
   selectedPlaceId: string;
   onSelectedPlaceChange: (placeId: string) => void;
+  reportsState: AsyncSnapshotState;
+  reportsError: string | null;
 }) {
   const [tab, setTab] = useState<RecordDrawerTab>("reports");
   const [sourceFilter, setSourceFilter] = useState("all");
@@ -1501,7 +1636,11 @@ function RecordDrawer({
           <div>
             <div className="text-sm font-semibold text-slate-50">Official records</div>
             <div className="text-[0.62rem] uppercase tracking-[0.16em] text-slate-500">
-              {reports.length.toLocaleString()} reports · {recurringGroups.length} recurring sites
+              {reportsState === "ready"
+                ? `${reports.length.toLocaleString()} reports · ${recurringGroups.length} recurring sites`
+                : reportsState === "error"
+                  ? "Official records unavailable"
+                  : "Loading official records"}
             </div>
           </div>
           <button type="button" onClick={onClose} className="rounded p-1 text-slate-500 hover:text-white" aria-label="Close">
@@ -1612,8 +1751,14 @@ function RecordDrawer({
       </div>
 
       <div className="min-h-0 flex-1 overflow-y-auto p-2">
+        {reportsState === "loading" || reportsState === "idle" ? (
+          <DrawerLoadingState label="Loading official records from static snapshots." />
+        ) : null}
+        {reportsState === "error" ? (
+          <DrawerErrorState label={reportsError ?? "Official records could not load."} />
+        ) : null}
         {tab === "reports" ? (
-          filteredReports.length ? (
+          reportsState === "ready" && filteredReports.length ? (
             filteredReports.map((report) => (
               <button
                 key={report.id}
@@ -1636,13 +1781,13 @@ function RecordDrawer({
                 </div>
               </button>
             ))
-          ) : (
+          ) : reportsState === "ready" ? (
             <DrawerEmptyState label="No reports match those filters." onReset={resetFilters} />
-          )
+          ) : null
         ) : null}
 
         {tab === "recurring" ? (
-          filteredGroups.length ? (
+          reportsState === "ready" && filteredGroups.length ? (
             filteredGroups.map((group) => (
               <button
                 key={group.key}
@@ -1666,13 +1811,13 @@ function RecordDrawer({
                 </div>
               </button>
             ))
-          ) : (
+          ) : reportsState === "ready" ? (
             <DrawerEmptyState label="No recurring sites match those filters." onReset={resetFilters} />
-          )
+          ) : null
         ) : null}
 
         {tab === "places" ? (
-          places.length ? (
+          reportsState === "ready" && places.length ? (
             places.map((place) => (
               <button
                 key={place.name}
@@ -1696,9 +1841,9 @@ function RecordDrawer({
                 </div>
               </button>
             ))
-          ) : (
+          ) : reportsState === "ready" ? (
             <DrawerEmptyState label="No verified places match those filters." onReset={resetFilters} />
-          )
+          ) : null
         ) : null}
 
         {tab === "gaps" ? (
@@ -1741,6 +1886,24 @@ function DrawerEmptyState({ label, onReset }: { label: string; onReset: () => vo
       >
         Reset filters
       </button>
+    </div>
+  );
+}
+
+function DrawerLoadingState({ label }: { label: string }) {
+  return (
+    <div className="mb-2 rounded-lg border border-cyan-300/10 bg-cyan-300/[0.035] p-3 text-xs text-cyan-100">
+      <span className="mr-2 inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-cyan-300 align-middle" />
+      {label}
+    </div>
+  );
+}
+
+function DrawerErrorState({ label }: { label: string }) {
+  return (
+    <div className="mb-2 rounded-lg border border-rose-300/20 bg-rose-950/40 p-3 text-xs leading-relaxed text-rose-100">
+      <AlertCircle className="mr-1.5 inline h-3 w-3 align-[-2px]" />
+      {label}
     </div>
   );
 }

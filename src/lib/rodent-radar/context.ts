@@ -1,7 +1,3 @@
-import nycFoodPestEvidence from "@/data/rodent-context/nyc-food-pest.json";
-import chicagoFoodPestEvidence from "@/data/rodent-context/chicago-food-pest.json";
-import nycSanitationContext from "@/data/rodent-context/nyc-sanitation-context.json";
-
 export type FoodPestEvidence = {
   id: string;
   source: string;
@@ -21,12 +17,14 @@ export type FoodPestEvidence = {
   neighborhood: string;
 };
 
-export function getFoodPestEvidence(): FoodPestEvidence[] {
-  return [
-    ...(nycFoodPestEvidence as FoodPestEvidence[]),
-    ...(chicagoFoodPestEvidence as FoodPestEvidence[]),
-    ...(nycSanitationContext as FoodPestEvidence[]),
-  ];
+export const CONTEXT_SNAPSHOT_URL = "/rodent-radar/data/context-records.json";
+
+export async function loadFoodPestEvidenceSnapshot(): Promise<FoodPestEvidence[]> {
+  const response = await fetch(CONTEXT_SNAPSHOT_URL, { headers: { Accept: "application/json" } });
+  if (!response.ok) throw new Error(`Unable to load context snapshot (${response.status})`);
+  const records = (await response.json()) as unknown;
+  if (!Array.isArray(records)) throw new Error("Context snapshot did not return an array");
+  return records as FoodPestEvidence[];
 }
 
 export function getFoodPestEvidenceAsGeoJSON(records: FoodPestEvidence[]) {
