@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import heroImg from "@/assets/program-bryant-park.jpg";
+import { breadcrumbJsonLd, canonicalLink, jsonLdScript } from "@/lib/seo";
 // import { SplitFigure } from "@/components/site/SplitFigure";
 import basementAudit from "@/assets/inline/basement-pipe-audit.jpg";
 import monitoringReport from "@/assets/inline/monitoring-report.jpg";
@@ -23,6 +24,18 @@ export const Route = createFileRoute("/does-rat-birth-control-work")({
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
       { property: "og:image", content: heroImg },
+    ],
+    links: canonicalLink("/does-rat-birth-control-work"),
+    scripts: [
+      jsonLdScript(
+        breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          {
+            name: "Does Rat Birth Control Work?",
+            path: "/does-rat-birth-control-work",
+          },
+        ]),
+      ),
     ],
   }),
   component: BirthControlPage,

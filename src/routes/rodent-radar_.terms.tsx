@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { canonicalLink } from "@/lib/seo";
 
 const TITLE = "Rodent Radar Terms of Use";
 const DESCRIPTION = "Terms, disclaimers, and permitted-use notes for the Rodent Radar atlas.";
@@ -11,6 +12,7 @@ export const Route = createFileRoute("/rodent-radar_/terms")({
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
     ],
+    links: canonicalLink("/rodent-radar/terms"),
   }),
   component: TermsPage,
 });

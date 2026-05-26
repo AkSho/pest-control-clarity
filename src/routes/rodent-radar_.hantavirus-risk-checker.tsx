@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, ClipboardCheck, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { canonicalLink } from "@/lib/seo";
 
 export const Route = createFileRoute("/rodent-radar_/hantavirus-risk-checker")({
   head: () => ({
@@ -12,6 +13,7 @@ export const Route = createFileRoute("/rodent-radar_/hantavirus-risk-checker")({
           "A conservative, CDC-based Rodent Radar checker for droppings, cleanup, ventilation, and when to contact a healthcare professional.",
       },
     ],
+    links: canonicalLink("/rodent-radar/hantavirus-risk-checker"),
   }),
   component: HantavirusCheckerPage,
 });

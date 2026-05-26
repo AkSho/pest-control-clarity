@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import heroImg from "@/assets/solutions-restaurants.jpg";
+import { canonicalLink } from "@/lib/seo";
 import {
   ClosingCta,
   FieldDataTrio,
@@ -24,6 +25,7 @@ export const Route = createFileRoute("/solutions/restaurants")({
       { property: "og:description", content: DESCRIPTION },
       { property: "og:image", content: heroImg },
     ],
+    links: canonicalLink("/solutions/restaurants"),
   }),
   component: RestaurantsPage,
 });

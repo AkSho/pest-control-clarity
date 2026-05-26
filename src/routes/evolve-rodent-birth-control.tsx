@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import heroImg from "@/assets/program-how-it-works.jpg";
+import { breadcrumbJsonLd, canonicalLink, faqJsonLd, jsonLdScript } from "@/lib/seo";
 // import { SplitFigure } from "@/components/site/SplitFigure";
 import evolveSoftBait from "@/assets/inline/evolve-soft-bait.jpg";
 import contrapestVsEvolve from "@/assets/inline/contrapest-vs-evolve.jpg";
@@ -24,6 +25,19 @@ export const Route = createFileRoute("/evolve-rodent-birth-control")({
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
       { property: "og:image", content: heroImg },
+    ],
+    links: canonicalLink("/evolve-rodent-birth-control"),
+    scripts: [
+      jsonLdScript(
+        breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          {
+            name: "Evolve Rodent Birth Control",
+            path: "/evolve-rodent-birth-control",
+          },
+        ]),
+      ),
+      jsonLdScript(faqJsonLd(QA)),
     ],
   }),
   component: EvolvePage,

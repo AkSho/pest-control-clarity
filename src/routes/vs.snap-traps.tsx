@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import heroImg from "@/assets/hero-problem.jpg";
+import { canonicalLink } from "@/lib/seo";
 import {
   ClosingCta,
   FieldDataTrio,
@@ -24,6 +25,7 @@ export const Route = createFileRoute("/vs/snap-traps")({
       { property: "og:description", content: DESCRIPTION },
       { property: "og:image", content: heroImg },
     ],
+    links: canonicalLink("/vs/snap-traps"),
   }),
   component: SnapTrapsVsPage,
 });

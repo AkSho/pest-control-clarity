@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ExternalLink } from "lucide-react";
 import { atlasDatasets, atlasSources } from "@/lib/rodentRadarAtlas";
+import { canonicalLink } from "@/lib/seo";
 
 const TITLE = "Rodent Radar Attribution & Data Rights";
 const DESCRIPTION =
@@ -29,6 +30,7 @@ export const Route = createFileRoute("/rodent-radar_/attribution")({
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
     ],
+    links: canonicalLink("/rodent-radar/attribution"),
   }),
   component: AttributionPage,
 });

@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Check, Train, Wrench, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { breadcrumbJsonLd, canonicalLink, jsonLdScript } from "@/lib/seo";
 import {
   Accordion,
   AccordionContent,
@@ -23,6 +24,18 @@ export const Route = createFileRoute("/why-it-keeps-coming-back")({
       { name: "description", content: DESCRIPTION },
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
+    ],
+    links: canonicalLink("/why-it-keeps-coming-back"),
+    scripts: [
+      jsonLdScript(
+        breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          {
+            name: "Why It Keeps Coming Back",
+            path: "/why-it-keeps-coming-back",
+          },
+        ]),
+      ),
     ],
   }),
   component: ProblemPage,

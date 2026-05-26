@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import heroImg from "@/assets/hero-bait-station.jpg";
+import { canonicalLink } from "@/lib/seo";
 import {
   ClosingCta,
   FieldDataTrio,
@@ -23,6 +24,7 @@ export const Route = createFileRoute("/vs/rat-poison")({
       { property: "og:description", content: DESCRIPTION },
       { property: "og:image", content: heroImg },
     ],
+    links: canonicalLink("/vs/rat-poison"),
   }),
   component: RatPoisonVsPage,
 });

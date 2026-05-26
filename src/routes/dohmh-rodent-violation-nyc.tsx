@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Check, X } from "lucide-react";
 import heroImg from "@/assets/compliance-dohmh-nyc.jpg";
+import { canonicalLink } from "@/lib/seo";
 import {
   ClosingCta,
   FieldDataTrio,
@@ -23,6 +24,7 @@ export const Route = createFileRoute("/dohmh-rodent-violation-nyc")({
       { property: "og:description", content: DESCRIPTION },
       { property: "og:image", content: heroImg },
     ],
+    links: canonicalLink("/dohmh-rodent-violation-nyc"),
   }),
   component: DohmhPage,
 });

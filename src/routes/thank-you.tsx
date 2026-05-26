@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { canonicalLink } from "@/lib/seo";
 
 const TITLE = "Received — Cloakd Removals";
 const DESCRIPTION =
@@ -13,6 +14,7 @@ export const Route = createFileRoute("/thank-you")({
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
     ],
+    links: canonicalLink("/thank-you"),
   }),
   component: ThankYouPage,
 });

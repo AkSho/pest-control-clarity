@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { LeadForm } from "@/components/site/LeadForm";
 import { HeroTrustBadges } from "@/components/site/TrustBadges";
 import heroResults from "@/assets/hero-results.jpg";
+import { canonicalLink } from "@/lib/seo";
 
 const TITLE = "Field results — Cloakd Removals";
 const DESCRIPTION =
@@ -18,6 +19,7 @@ export const Route = createFileRoute("/results")({
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
     ],
+    links: canonicalLink("/results"),
   }),
   component: ResultsPage,
 });

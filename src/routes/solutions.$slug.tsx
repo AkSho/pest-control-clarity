@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { canonicalLink } from "@/lib/seo";
 import { LeadForm } from "@/components/site/LeadForm";
 import { HeroTrustBadges } from "@/components/site/TrustBadges";
 import { getSolution, SOLUTIONS, type Solution } from "@/data/solutions";
@@ -23,6 +24,7 @@ export const Route = createFileRoute("/solutions/$slug")({
         { property: "og:title", content: title },
         { property: "og:description", content: description },
       ],
+      links: canonicalLink(`/solutions/${s.slug}`),
     };
   },
   component: SolutionPage,

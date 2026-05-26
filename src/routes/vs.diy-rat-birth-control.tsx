@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import heroImg from "@/assets/program-bryant-park.jpg";
+import { canonicalLink } from "@/lib/seo";
 import {
   ClosingCta,
   SectionHeader,
@@ -22,6 +23,7 @@ export const Route = createFileRoute("/vs/diy-rat-birth-control")({
       { property: "og:description", content: DESCRIPTION },
       { property: "og:image", content: heroImg },
     ],
+    links: canonicalLink("/vs/diy-rat-birth-control"),
   }),
   component: DiyComparePage,
 });

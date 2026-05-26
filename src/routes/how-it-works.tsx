@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Check, X } from "lucide-react";
 import heroImg from "@/assets/program-how-it-works.jpg";
+import { canonicalLink } from "@/lib/seo";
 // import { SplitFigure } from "@/components/site/SplitFigure";
 import snapTrap from "@/assets/inline/snap-trap.jpg";
 import evolveSoftBait from "@/assets/inline/evolve-soft-bait.jpg";
@@ -27,6 +28,7 @@ export const Route = createFileRoute("/how-it-works")({
       { property: "og:description", content: DESCRIPTION },
       { property: "og:image", content: heroImg },
     ],
+    links: canonicalLink("/how-it-works"),
   }),
   component: HowItWorksPage,
 });

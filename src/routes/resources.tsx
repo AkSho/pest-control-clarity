@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import heroResources from "@/assets/hero-resources.jpg";
+import { canonicalLink } from "@/lib/seo";
 
 const TITLE = "Resources — Cloakd Removals";
 const DESCRIPTION =
@@ -16,6 +17,7 @@ export const Route = createFileRoute("/resources")({
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
     ],
+    links: canonicalLink("/resources"),
   }),
   component: ResourcesPage,
 });

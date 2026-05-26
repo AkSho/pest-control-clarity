@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import heroImg from "@/assets/program-what-to-expect.jpg";
+import { canonicalLink } from "@/lib/seo";
 import {
   ClosingCta,
   SectionHeader,
@@ -19,6 +20,7 @@ export const Route = createFileRoute("/what-to-expect")({
       { property: "og:description", content: DESCRIPTION },
       { property: "og:image", content: heroImg },
     ],
+    links: canonicalLink("/what-to-expect"),
   }),
   component: WhatToExpectPage,
 });

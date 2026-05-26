@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { canonicalLink } from "@/lib/seo";
 import {
   Check,
   ArrowRight,
@@ -46,6 +47,7 @@ export const Route = createFileRoute("/")({
       { property: "og:image", content: heroImg },
       { name: "twitter:image", content: heroImg },
     ],
+    links: canonicalLink("/"),
   }),
   component: HomePage,
 });

@@ -3,8 +3,10 @@ import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
 import { ProductPage } from "@/components/pdp/ProductPage";
 import { getProduct } from "@/data/products";
+import { breadcrumbJsonLd, jsonLdScript } from "@/lib/seo";
 
 const product = getProduct("starter-kit");
+const CANONICAL_URL = "https://cloakd-removals.cloud/products/starter-kit";
 
 const searchSchema = z.object({
   variant: fallback(z.string(), product.defaultVariantId).default(product.defaultVariantId),
@@ -28,19 +30,17 @@ export const Route = createFileRoute("/products/starter-kit")({
           "Stop replacing rodents you remove. The XL Starter Kit gives you the full first-deployment setup — stations, keys, and 6 lb of Evolve soft bait.",
       },
       { property: "og:type", content: "product" },
-      { property: "og:url", content: "https://pest-pro-rebrand.lovable.app/products/starter-kit" },
+      { property: "og:url", content: CANONICAL_URL },
       { property: "og:image", content: product.variants[0].image },
     ],
     links: [
       {
         rel: "canonical",
-        href: "https://pest-pro-rebrand.lovable.app/products/starter-kit",
+        href: CANONICAL_URL,
       },
     ],
     scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
+      jsonLdScript({
           "@context": "https://schema.org",
           "@type": "Product",
           name: product.title,
@@ -53,10 +53,15 @@ export const Route = createFileRoute("/products/starter-kit")({
             price: v.oneTimePrice,
             priceCurrency: "USD",
             availability: "https://schema.org/InStock",
-            url: `https://pest-pro-rebrand.lovable.app/products/starter-kit?variant=${v.id}`,
+            url: `${CANONICAL_URL}?variant=${v.id}`,
           })),
-        }),
-      },
+      }),
+      jsonLdScript(
+        breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          { name: "Starter Kit", path: "/products/starter-kit" },
+        ]),
+      ),
     ],
   }),
 });

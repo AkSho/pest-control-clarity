@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { canonicalLink } from "@/lib/seo";
 
 const TITLE = "Order Confirmed — Cloakd";
 const DESCRIPTION = "Your Evolve order is confirmed and ships within 24 hours.";
@@ -12,6 +13,7 @@ export const Route = createFileRoute("/payment-confirmed")({
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
     ],
+    links: canonicalLink("/payment-confirmed"),
   }),
   component: PaymentConfirmedPage,
 });

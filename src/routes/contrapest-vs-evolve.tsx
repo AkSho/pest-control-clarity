@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import heroImg from "@/assets/program-how-it-works.jpg";
+import { breadcrumbJsonLd, canonicalLink, jsonLdScript } from "@/lib/seo";
 // import { SplitFigure } from "@/components/site/SplitFigure";
 import contrapestVsEvolve from "@/assets/inline/contrapest-vs-evolve.jpg";
 import operatorStation from "@/assets/inline/operator-contrapest-station.jpg";
@@ -22,6 +23,18 @@ export const Route = createFileRoute("/contrapest-vs-evolve")({
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
       { property: "og:image", content: heroImg },
+    ],
+    links: canonicalLink("/contrapest-vs-evolve"),
+    scripts: [
+      jsonLdScript(
+        breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          {
+            name: "ContraPest vs Evolve",
+            path: "/contrapest-vs-evolve",
+          },
+        ]),
+      ),
     ],
   }),
   component: ComparePage,

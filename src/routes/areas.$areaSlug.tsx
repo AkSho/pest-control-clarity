@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowRight, Check, MapPin, Phone, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { canonicalLink } from "@/lib/seo";
 import {
   Accordion,
   AccordionContent,
@@ -29,6 +30,7 @@ export const Route = createFileRoute("/areas/$areaSlug")({
         { property: "og:title", content: title },
         { property: "og:description", content: description },
       ],
+      links: canonicalLink(`/areas/${a.slug}`),
     };
   },
   component: AreaPage,

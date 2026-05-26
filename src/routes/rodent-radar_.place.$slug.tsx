@@ -14,9 +14,9 @@ import {
 } from "@/lib/rodentRadarAtlas";
 import { placeSearchSchema } from "@/lib/rodentRadarSearch";
 
-const SITE_ORIGIN = "https://opengridworks.example"; // canonical origin placeholder; replaced by hosting domain in head meta
+const SITE_ORIGIN = "https://cloakd-removals.cloud";
 function buildCanonical(slug: string) {
-  return `/rodent-radar/place/${slug}`;
+  return `${SITE_ORIGIN}/rodent-radar/place/${slug}`;
 }
 
 export const Route = createFileRoute("/rodent-radar_/place/$slug")({

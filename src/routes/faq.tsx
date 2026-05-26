@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { breadcrumbJsonLd, canonicalLink, faqJsonLd, jsonLdScript } from "@/lib/seo";
 import {
   Accordion,
   AccordionContent,
@@ -21,6 +22,16 @@ export const Route = createFileRoute("/faq")({
       { name: "description", content: DESCRIPTION },
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
+    ],
+    links: canonicalLink("/faq"),
+    scripts: [
+      jsonLdScript(
+        breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          { name: "FAQ", path: "/faq" },
+        ]),
+      ),
+      jsonLdScript(faqJsonLd(FAQS)),
     ],
   }),
   component: FAQPage,

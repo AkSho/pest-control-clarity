@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Check } from "lucide-react";
 import { LeadForm } from "@/components/site/LeadForm";
 import { FieldDataTrio } from "@/components/site/solutions/SolutionPrimitives";
+import { canonicalLink } from "@/lib/seo";
 
 const TITLE = "Get Started — Cloakd Removals";
 const DESCRIPTION =
@@ -15,6 +16,7 @@ export const Route = createFileRoute("/get-started")({
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
     ],
+    links: canonicalLink("/get-started"),
   }),
   component: GetStartedPage,
 });

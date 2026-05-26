@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import heroImg from "@/assets/program-bryant-park.jpg";
+import { breadcrumbJsonLd, canonicalLink, faqJsonLd, jsonLdScript } from "@/lib/seo";
 // import { SplitFigure } from "@/components/site/SplitFigure";
 import nycMitigationMap from "@/assets/inline/nyc-mitigation-zone-map.jpg";
 import contrapestVsEvolve from "@/assets/inline/contrapest-vs-evolve.jpg";
@@ -23,6 +24,16 @@ export const Route = createFileRoute("/contrapest")({
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
       { property: "og:image", content: heroImg },
+    ],
+    links: canonicalLink("/contrapest"),
+    scripts: [
+      jsonLdScript(
+        breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          { name: "ContraPest", path: "/contrapest" },
+        ]),
+      ),
+      jsonLdScript(faqJsonLd(QA)),
     ],
   }),
   component: ContraPestPage,

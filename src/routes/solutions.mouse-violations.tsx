@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import heroImg from "@/assets/solutions-mouse-violations.jpg";
+import { canonicalLink } from "@/lib/seo";
 import {
   ClosingCta,
   FieldDataTrio,
@@ -21,6 +22,7 @@ export const Route = createFileRoute("/solutions/mouse-violations")({
       { property: "og:description", content: DESCRIPTION },
       { property: "og:image", content: heroImg },
     ],
+    links: canonicalLink("/solutions/mouse-violations"),
   }),
   component: MouseViolationsPage,
 });

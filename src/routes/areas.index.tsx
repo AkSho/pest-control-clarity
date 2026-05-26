@@ -4,6 +4,7 @@ import { LeadForm } from "@/components/site/LeadForm";
 import { HeroTrustBadges } from "@/components/site/TrustBadges";
 import { FieldDataTrio, ClosingCta } from "@/components/site/solutions/SolutionPrimitives";
 import { REGIONS, getAreasByRegion } from "@/data/serviceAreas";
+import { canonicalLink } from "@/lib/seo";
 
 const TITLE = "Service Areas — NYC, NJ & Bay Area | Cloakd Removals";
 const DESCRIPTION =
@@ -17,6 +18,7 @@ export const Route = createFileRoute("/areas/")({
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
     ],
+    links: canonicalLink("/areas"),
   }),
   component: AreasIndex,
 });
