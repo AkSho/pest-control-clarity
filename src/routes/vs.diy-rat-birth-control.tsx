@@ -10,9 +10,9 @@ import {
 import pcoOperator from "@/assets/inline/pco-operator-field.jpg";
 
 const TITLE =
-  "DIY Rat Birth Control vs. a Managed Evolve Program: What Changes | Cloakd";
+  "DIY Rat Birth Control: What You Need for It to Work | Cloakd";
 const DESCRIPTION =
-  "Retail Evolve kits are sold at Lowe's, Home Depot, and Amazon. Same active product as a managed deployment — but the structure around it is what determines whether you get results. Here's the difference.";
+  "Evolve is available without a commercial applicator license. The bait is the same wherever you buy it — but four structural factors determine whether a self-managed deployment produces a measurable population decline.";
 
 export const Route = createFileRoute("/vs/diy-rat-birth-control")({
   head: () => ({
@@ -51,11 +51,11 @@ function DiyComparePage() {
   return (
     <>
       <SolutionHero
-        eyebrow="DIY vs. managed program"
-        headline="DIY Rat Birth Control vs. a Managed Evolve Program: What Actually Changes"
-        lede="Retail Evolve kits exist. You can buy them. The active product is the same one used in managed deployments. The deployment structure around it is what determines whether the population actually shrinks."
+        eyebrow="DIY rat birth control"
+        headline="DIY Rat Birth Control: What You Need for It to Work"
+        lede="Evolve is available without a commercial applicator license. The bait is the same wherever you buy it. Four structural factors — knockdown sequence, station placement, replenishment, and formula selection — determine whether your deployment produces a measurable population decline."
         image={heroImg}
-        ctaLabel="Start the program"
+        ctaLabel="Shop the starter kit"
       />
 
       {/* WHAT YOU CAN BUY RETAIL */}
@@ -74,14 +74,14 @@ function DiyComparePage() {
                     Evolve
                   </Link>{" "}
                   is sold at Lowe's, Home Depot, Amazon, and through
-                  specialty pest-control retailers. Starter kits include
-                  bait stations and refill blocks. The retail product is
-                  not a different formulation — it's the same Evolve.
+                  Cloakd. Starter kits include bait stations and the
+                  soft bait itself. The retail product is not a different
+                  formulation — it's the same Evolve.
                 </p>
                 <p>
                   EPA 25(b) minimum risk classification means consumers can
                   buy and place it without a license, including in food
-                  environments.
+                  environments. No permit, no contractor required.
                 </p>
               </>
             }
@@ -93,8 +93,8 @@ function DiyComparePage() {
       <section className="bg-surface py-20">
         <div className="container-site">
           <SectionHeader
-            eyebrow="What changes between DIY and managed"
-            title="Same product. Different structure around it."
+            eyebrow="What to look for when buying"
+            title="Same bait. Different structure around it."
           />
           <div className="mt-10 overflow-x-auto rounded-2xl border border-border bg-card shadow-[var(--shadow-card)]">
             <table className="w-full min-w-[640px] border-collapse text-left text-sm md:text-base">
@@ -103,43 +103,38 @@ function DiyComparePage() {
                   <th className="px-5 py-4 font-semibold text-muted-foreground">
                     &nbsp;
                   </th>
-                  <th className="px-5 py-4 font-extrabold">DIY retail kit</th>
+                  <th className="px-5 py-4 font-extrabold">Retail without guidance</th>
                   <th className="px-5 py-4 font-extrabold text-brand">
-                    Managed program
+                    Cloakd starter kit
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {[
                   {
-                    label: "Phase 1 knockdown",
-                    a: "Not included",
-                    b: "Coordinated with your existing PCO",
+                    label: "Formula selection",
+                    a: "Rat and mouse formulas easy to confuse",
+                    b: "Rat and mouse formulas clearly separated — pick the right one",
                   },
                   {
-                    label: "Station placement",
-                    a: "Wherever you can reach",
-                    b: "Confirmed travel paths and entry points",
+                    label: "Stations",
+                    a: "Sold separately",
+                    b: "Locking tamper-resistant stations included",
+                  },
+                  {
+                    label: "Placement guidance",
+                    a: "None",
+                    b: "Deployment guide: travel paths, station spacing, replenishment schedule",
                   },
                   {
                     label: "Replenishment",
-                    a: "When you remember",
-                    b: "Monthly site visit",
+                    a: "Manual reorder when you remember",
+                    b: "Replenishment plan — ships automatically every 60 or 90 days",
                   },
                   {
-                    label: "Monitoring",
-                    a: "Visual only",
-                    b: "Track count plates against a Week 1 baseline",
-                  },
-                  {
-                    label: "Documentation",
-                    a: "None",
-                    b: "Monthly written record for inspectors",
-                  },
-                  {
-                    label: "Cost structure",
-                    a: "Bait + your time",
-                    b: "Managed monthly program",
+                    label: "Price (6 lb bait)",
+                    a: "$99.99–$129.99 (SenesTech retail)",
+                    b: "$179 starter kit / $149 refill",
                   },
                 ].map((r) => (
                   <tr
@@ -172,13 +167,13 @@ function DiyComparePage() {
       <section className="bg-background py-20">
         <div className="container-site">
           <SectionHeader
-            eyebrow="Where DIY tends to fail"
-            title="Four structural gaps that determine whether the bait can do its job."
+            eyebrow="What determines whether your deployment works"
+            title="Four structural factors. Each one matters."
             intro={
               <p>
                 The same gaps that broke the Bryant Park pilot — at city
                 scale, with a different product — show up in scaled-down
-                form in DIY building deployments.{" "}
+                form in building deployments.{" "}
                 <Link
                   to="/does-rat-birth-control-work"
                   className="text-brand underline-offset-2 hover:underline"
@@ -208,47 +203,44 @@ function DiyComparePage() {
       <section className="bg-surface py-20">
         <div className="container-site">
           <SectionHeader
-            eyebrow="When DIY is fine — and when it isn't"
-            title="Match the structure to the problem."
+            eyebrow="Who the Cloakd kit is for"
+            title="Match the kit to the pressure."
           />
           <div className="mt-10 grid gap-5 md:grid-cols-2">
             <div className="rounded-2xl border border-border bg-card p-7 shadow-[var(--shadow-card)]">
               <h3 className="text-lg font-extrabold leading-tight">
-                DIY is fine for
+                Start with the starter kit if
               </h3>
               <ul className="mt-4 space-y-3 text-sm leading-relaxed text-muted-foreground md:text-base">
                 <li>
-                  Single-family residential with low to moderate pressure.
+                  You don't have bait stations yet — the kit includes locking
+                  tamper-resistant stations plus the bait.
                 </li>
                 <li>
-                  Owner-occupied properties with no compliance documentation
-                  requirement.
+                  You want the deployment guide for station placement and
+                  replenishment schedule.
                 </li>
                 <li>
-                  Sites where you can realistically maintain monthly
-                  replenishment yourself.
+                  You're treating rat pressure — use Evolve Rat. Mouse pressure
+                  — use Evolve Mouse. The kit is formula-specific.
                 </li>
               </ul>
             </div>
             <div className="rounded-2xl border border-brand/40 bg-brand-soft p-7 shadow-[var(--shadow-card)]">
               <h3 className="text-lg font-extrabold leading-tight">
-                Managed makes sense for
+                Order a refill if
               </h3>
               <ul className="mt-4 space-y-3 text-sm leading-relaxed text-muted-foreground md:text-base">
                 <li>
-                  Restaurants, ghost kitchens, and other food-handling
-                  operators.
+                  You already have bait stations in place.
                 </li>
                 <li>
-                  Property managers and HOAs with multi-unit buildings.
+                  You want to keep stations stocked on a 60 or 90-day
+                  replenishment plan without manual reorders.
                 </li>
                 <li>
-                  Anyone with an open DOHMH or NJ rodent violation that
-                  requires documented active management.
-                </li>
-                <li>
-                  Sites where a recurring exterminator is already on
-                  contract — managed fertility control runs alongside that.
+                  You're running both rat and mouse pressure — refills are
+                  available for both formulas separately.
                 </li>
               </ul>
             </div>
@@ -257,9 +249,9 @@ function DiyComparePage() {
       </section>
 
       <ClosingCta
-        title="Get the structure that produces results."
-        body="If your building needs documented active management or you can't reliably maintain monthly station upkeep yourself, the managed program is the deployment context that fits."
-        primary={{ label: "Start the program", to: "/get-started" }}
+        title="The starter kit includes everything you need to deploy Evolve correctly."
+        body="Locking bait stations, the right formula, and a deployment guide covering station placement, travel path identification, and replenishment schedule."
+        primary={{ label: "Shop the starter kit", to: "/products/starter-kit" }}
         secondary={{
           label: "How Evolve works",
           to: "/evolve-rodent-birth-control",

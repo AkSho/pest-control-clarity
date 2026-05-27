@@ -13,7 +13,7 @@ import basementAudit from "@/assets/inline/basement-pipe-audit.jpg";
 const TITLE =
   "Traditional Pest Control vs. Fertility Management: What's Missing | Cloakd";
 const DESCRIPTION =
-  "Standard treatment removes the rats that are there. It has no way to reduce how fast new ones fill the space after each visit. The 90-day program adds that layer on top of whatever exterminator you already use.";
+  "Standard treatment removes the rats that are there. It has no way to reduce how fast new ones fill the space after each visit. Evolve adds that layer on top of whatever exterminator you already use.";
 
 export const Route = createFileRoute("/vs/traditional-pest-control")({
   head: () => ({
@@ -44,7 +44,7 @@ const STRENGTHS = [
   },
   {
     title: "Works with your existing vendor",
-    body: "Most properties already have an exterminator. The 90-day program is designed to run alongside them, not replace them.",
+    body: "Most properties already have an exterminator. Evolve is designed to run alongside them, not replace them.",
   },
 ];
 
@@ -62,9 +62,9 @@ function TradPestVsPage() {
       <SolutionHero
         eyebrow="vs. Traditional pest control"
         headline="Your exterminator is doing their job. The rats keep coming back anyway."
-        lede="Standard treatment removes the rats that are there. It has no way to reduce how fast new ones fill the space after each visit. That's not a vendor problem. It's a missing layer — and the 90-day program adds it on top of whatever you already have."
+        lede="Standard treatment removes the rats that are there. It has no way to reduce how fast new ones fill the space after each visit. That's not a vendor problem. It's a missing layer — and Evolve adds it on top of whatever you already have."
         image={heroImg}
-        ctaLabel="Start the program"
+        ctaLabel="Shop the starter kit"
       />
 
       <section className="bg-background py-20">
@@ -156,15 +156,14 @@ function TradPestVsPage() {
         <div className="container-site">
           <SectionHeader
             eyebrow="How they work together"
-            title="Your exterminator stays. We add what their treatment can't do."
+            title="Your exterminator stays. Evolve adds what their treatment can't do."
             intro={
               <p>
-                Cloakd doesn't replace your pest control vendor. Phase 1
-                of the program is your existing exterminator doing what
-                they already do. Phase 2 adds{" "}
+                Your existing pest control handles knockdown.{" "}
                 <Link to="/evolve-rodent-birth-control" className="text-brand underline-offset-2 hover:underline">Evolve fertility management</Link>{" "}
-                on top — reducing how fast the replacement colony forms
-                after each treatment.
+                reduces how fast the replacement colony forms after each
+                treatment. Neither replaces the other — they address
+                different parts of the same cycle.
               </p>
             }
           />
@@ -174,8 +173,8 @@ function TradPestVsPage() {
               <ul className="mt-4 space-y-3 text-sm leading-relaxed text-muted-foreground md:text-base">
                 <li>Reduced reproduction rate between treatment visits</li>
                 <li>Population that declines instead of cycling</li>
-                <li>90-day documented activity decline</li>
-                <li>Active management record for inspectors</li>
+                <li>Measurable population decline documented in field studies</li>
+                <li>Deployment guide with every Cloakd order — station placement and replenishment schedule</li>
                 <li>No change to your existing vendor or contract</li>
               </ul>
             </div>
@@ -234,9 +233,9 @@ function TradPestVsPage() {
 
       <ClosingCta
         title="Your exterminator keeps their contract."
-        body="Tell us about your property and who handles pest control now. We'll coordinate Phase 1 with your existing vendor and run the fertility management layer for 90 days."
-        primary={{ label: "Start the program", to: "/get-started" }}
-        secondary={{ label: "How it works", to: "/how-it-works" }}
+        body="Evolve works alongside whatever knockdown treatment you already have in place. Order the starter kit and deploy it after the colony clears."
+        primary={{ label: "Shop the starter kit", to: "/products/starter-kit" }}
+        secondary={{ label: "How Evolve works", to: "/evolve-rodent-birth-control" }}
       />
     </>
   );

@@ -15,9 +15,9 @@ import {
   TimelineStrip,
 } from "@/components/site/solutions/SolutionPrimitives";
 
-const TITLE = "How it works — 90-day rodent fertility management | Cloakd";
+const TITLE = "How Evolve Works — Rodent Fertility Management Explained | Cloakd";
 const DESCRIPTION =
-  "You keep paying for treatment. The rats keep coming back. Here's how the 90-day rodent fertility management program breaks that cycle.";
+  "You keep paying for treatment. The rats keep coming back. Here's what Evolve does, why it breaks the replacement cycle, and how to deploy it correctly.";
 
 export const Route = createFileRoute("/how-it-works")({
   head: () => ({
@@ -74,7 +74,7 @@ const MECHANISM = [
 const HANDLES = [
   "The replacement cycle — the rats that move in after treatment",
   "Population fertility across the 90-day period",
-  "Documented activity decline between scheduled PCO visits",
+  "Consistent reduction in population fertility over 60 to 120 days of deployment",
   "The gap between \"we treated it\" and \"it stays gone\"",
 ];
 
@@ -91,7 +91,7 @@ function HowItWorksPage() {
       <SolutionHero
         eyebrow="How it works"
         headline="You keep paying for treatment. The rats keep coming back."
-        highlight="Here's how the 90-day rodent fertility management program breaks that cycle."
+        highlight="Here's what Evolve does and why it breaks that cycle."
         lede="Your pest control vendor is doing their job correctly. Standard treatment removes the rats that are there. The problem is what happens to that territory in the weeks after it empties."
         image={heroImg}
       />
@@ -225,59 +225,54 @@ function HowItWorksPage() {
       <section className="bg-background py-20">
         <div className="container-site">
           <SectionHeader
-            eyebrow="The 90-day program"
-            title="Two phases. Your existing vendor stays."
+            eyebrow="How to deploy Evolve"
+            title="Two phases. Your existing treatment stays."
             intro={
               <p>
-                Phase 1 clears the current population through your existing
-                pest control operator. Phase 2 prevents the next one from
-                forming at full size. Both run together as a single integrated
-                pest management program for 90 days.
+                Phase 1 clears the current population using your existing
+                pest control. Phase 2 — Evolve bait stations — prevents the
+                replacement colony from forming at full size. Both run
+                together as a single approach to the cycle.
               </p>
             }
           />
           <PhaseCards
             phase1={{
-              tag: "Week 1–2 · handled by your current vendor",
+              tag: "Before you start · handled by your existing exterminator",
               title: "Clear the current colony",
               body: (
                 <p>
-                  Your existing pest control vendor handles treatment. We
-                  coordinate with them to get a clean, documented baseline
-                  before the fertility management starts. No contract changes.
-                  Your vendor keeps their relationship.
+                  Your existing pest control handles knockdown — trapping,
+                  poison, or whatever your exterminator uses. Evolve is
+                  designed to deploy after the colony clears. Putting it into
+                  an at-density active population produces slower results
+                  because fertility suppression works on the replacement cycle,
+                  not the existing one.
                 </p>
               ),
             }}
             phase2={{
-              tag: "Weeks 1–12 · handled by Cloakd",
-              title: "Deploy fertility management",
+              tag: "Ongoing · you manage this with the Cloakd kit",
+              title: "Deploy Evolve in bait stations",
               body: (
                 <>
                   <p>
-                    Evolve bait stations go in along travel paths, near entry
-                    points, and around the property perimeter. Stations are
-                    checked and refilled each month. The bait runs
-                    continuously through the full 90 days.
+                    Place Evolve bait stations along confirmed travel paths,
+                    near entry points, and around harborage areas. The starter
+                    kit includes locking tamper-resistant stations and a
+                    deployment guide covering station spacing, placement along
+                    travel paths, and replenishment schedule.
                   </p>
                   <p>
-                    Monitoring (baseline + monthly): small tracking plates sit
-                    at each station. Rats walking across them leave
-                    footprints. We count the tracks each month and compare
-                    against the Week 1 baseline. The count goes down over
-                    time. That's the documented record — the 90-day declining
-                    trend you can show an inspector.
+                    Restock stations on a 60 or 90-day cycle. Consistent
+                    consumption over multiple weeks is what produces a
+                    measurable population decline — empty stations stop the
+                    mechanism in place.
                   </p>
                 </>
               ),
             }}
           />
-          <p className="mt-8 max-w-3xl text-base leading-relaxed text-muted-foreground">
-            At 90 days, you get a full comparison: track counts per location,
-            how the numbers moved, the documented trend. That record goes with
-            you into any inspection or any conversation where proof of active
-            management matters.
-          </p>
         </div>
       </section>
 
@@ -331,8 +326,9 @@ function HowItWorksPage() {
 
       <ClosingCta
         title="Start before the next treatment visit."
-        body="Tell us about your property and who handles pest control now. We'll coordinate Phase 1 with your vendor and run the fertility management layer through the full 90 days."
-        secondary={{ label: "See the full walkthrough", to: "/what-to-expect" }}
+        body="Evolve works alongside whatever knockdown treatment you already have. Order the starter kit and deploy it after the colony clears."
+        primary={{ label: "Shop the starter kit", to: "/products/starter-kit" }}
+        secondary={{ label: "Where to buy Evolve", to: "/where-to-buy-evolve" }}
       />
     </>
   );
