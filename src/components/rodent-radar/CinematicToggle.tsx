@@ -46,7 +46,7 @@ export function CinematicToggle({ cinematic, onToggle }: Props) {
     <button
       type="button"
       onClick={onToggle}
-      className="pointer-events-auto absolute right-4 top-4 z-[35] inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-slate-950/80 text-slate-300 shadow-lg backdrop-blur transition hover:border-cyan-300/40 hover:text-cyan-100"
+      className="pointer-events-auto absolute right-4 top-4 z-[35] hidden h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-slate-950/80 text-slate-300 shadow-lg backdrop-blur transition hover:border-cyan-300/40 hover:text-cyan-100 md:inline-flex"
       title="Cinematic mode (C)"
       aria-label="Enter cinematic mode"
     >

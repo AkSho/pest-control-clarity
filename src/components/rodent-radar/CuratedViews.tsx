@@ -56,7 +56,7 @@ export function CuratedViews({ activeId, onSelect }: Props) {
   const active = CURATED_VIEWS.find((v) => v.id === activeId);
 
   return (
-    <div className="pointer-events-auto absolute right-16 top-4 z-[35]">
+    <div className="pointer-events-auto absolute right-16 top-4 z-[35] hidden md:block">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}

@@ -1,54 +1,13 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Menu, X, ArrowRight, ChevronDown } from "lucide-react";
+import { Menu, X, ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
-import { SOLUTIONS } from "@/data/solutions";
-import { REGIONS, getAreasByRegion } from "@/data/serviceAreas";
 
 const NAV: { label: string; to: string }[] = [
   { label: "The Problem", to: "/why-it-keeps-coming-back" },
+  { label: "Rodent Radar", to: "/rodent-radar" },
   { label: "Results", to: "/results" },
   { label: "FAQ", to: "/faq" },
-  { label: "Resources", to: "/resources" },
-];
-
-const PROGRAM_LINKS: { label: string; to: string; eyebrow: string }[] = [
-  {
-    label: "How it works",
-    to: "/how-it-works",
-    eyebrow: "The 90-day program in plain language",
-  },
-  {
-    label: "Does rat birth control work?",
-    to: "/does-rat-birth-control-work",
-    eyebrow: "Bryant Park failed. Here's what's different.",
-  },
-  {
-    label: "What to expect",
-    to: "/what-to-expect",
-    eyebrow: "Every step before you commit to anything",
-  },
-];
-
-const COMPLIANCE_LINKS: { label: string; to: string; eyebrow: string }[] = [
-  {
-    label: "DOHMH rodent violation (NYC)",
-    to: "/dohmh-rodent-violation-nyc",
-    eyebrow: "Codes 04K & 04L, fines, and what closes the citation",
-  },
-  {
-    label: "NJ rodent violation",
-    to: "/nj-rodent-violation",
-    eyebrow: "Local health enforcement and permit suspension exposure",
-  },
 ];
 
 const PDP_ANCHOR_LINKS = [
@@ -62,7 +21,6 @@ const PDP_ANCHOR_LINKS = [
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
-  const [mobileSolutionsOpen, setMobileSolutionsOpen] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isPdp = pathname.startsWith("/products/") || pathname.startsWith("/checkout/");
 
@@ -81,190 +39,41 @@ export function SiteHeader() {
           </div>
         </Link>
 
-        <div className="hidden md:block">
+        {/* Desktop nav */}
+        <nav className="hidden md:flex items-center gap-1">
           {isPdp ? (
-            <nav className="flex items-center gap-1">
-              {PDP_ANCHOR_LINKS.map((l) => (
-                <a
-                  key={l.id}
-                  href={`#${l.id}`}
-                  className="shrink-0 rounded-full px-3 py-1.5 text-sm font-medium text-ink-foreground/85 transition hover:bg-white/5 hover:text-ink-foreground"
-                >
-                  {l.label}
-                </a>
-              ))}
-            </nav>
+            PDP_ANCHOR_LINKS.map((l) => (
+              <a
+                key={l.id}
+                href={`#${l.id}`}
+                className="shrink-0 rounded-full px-3 py-1.5 text-sm font-medium text-ink-foreground/85 transition hover:bg-white/5 hover:text-ink-foreground"
+              >
+                {l.label}
+              </a>
+            ))
           ) : (
-          <NavigationMenu>
-            <NavigationMenuList>
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <Link
-                    to="/why-it-keeps-coming-back"
-                    className="inline-flex h-9 items-center px-3 text-sm font-medium text-ink-foreground/85 transition hover:text-ink-foreground"
-                  >
-                    The Problem
-                  </Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <Link
-                    to="/rodent-radar"
-                    className="inline-flex h-9 items-center px-3 text-sm font-medium text-ink-foreground/85 transition hover:text-ink-foreground"
-                  >
-                    Rodent Radar
-                  </Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-
-              <NavigationMenuItem>
-                <NavigationMenuTrigger className="!bg-transparent text-ink-foreground/85 hover:!bg-white/5 hover:!text-ink-foreground data-[state=open]:!bg-white/5 data-[state=open]:!text-ink-foreground">
-                  Program
-                </NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid w-[420px] gap-1 p-3">
-                    {PROGRAM_LINKS.map((p) => (
-                      <li key={p.to}>
-                        <NavigationMenuLink asChild>
-                          <Link
-                            to={p.to}
-                            className="block rounded-md p-3 text-sm leading-none text-foreground transition hover:bg-accent hover:text-accent-foreground"
-                          >
-                            <div className="font-semibold">{p.label}</div>
-                            <div className="mt-1 line-clamp-2 text-xs text-muted-foreground">
-                              {p.eyebrow}
-                            </div>
-                          </Link>
-                        </NavigationMenuLink>
-                      </li>
-                    ))}
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-
-              <NavigationMenuItem>
-                <NavigationMenuTrigger className="!bg-transparent text-ink-foreground/85 hover:!bg-white/5 hover:!text-ink-foreground data-[state=open]:!bg-white/5 data-[state=open]:!text-ink-foreground">
-                  Solutions
-                </NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid w-[440px] gap-1 p-3 sm:grid-cols-2">
-                    {SOLUTIONS.map((s) => (
-                      <li key={s.slug}>
-                        <NavigationMenuLink asChild>
-                          <Link
-                            to="/solutions/$slug"
-                            params={{ slug: s.slug }}
-                            className="block rounded-md p-3 text-sm leading-none text-foreground transition hover:bg-accent hover:text-accent-foreground"
-                          >
-                            <div className="flex items-center gap-2 font-semibold">
-                              <s.icon className="h-4 w-4 text-brand" />
-                              {s.navLabel}
-                            </div>
-                            <div className="mt-1 line-clamp-2 text-xs text-muted-foreground">
-                              {s.eyebrow}
-                            </div>
-                          </Link>
-                        </NavigationMenuLink>
-                      </li>
-                    ))}
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-
-              <NavigationMenuItem>
-                <NavigationMenuTrigger className="!bg-transparent text-ink-foreground/85 hover:!bg-white/5 hover:!text-ink-foreground data-[state=open]:!bg-white/5 data-[state=open]:!text-ink-foreground">
-                  Compliance
-                </NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid w-[420px] gap-1 p-3">
-                    {COMPLIANCE_LINKS.map((p) => (
-                      <li key={p.to}>
-                        <NavigationMenuLink asChild>
-                          <Link
-                            to={p.to}
-                            className="block rounded-md p-3 text-sm leading-none text-foreground transition hover:bg-accent hover:text-accent-foreground"
-                          >
-                            <div className="font-semibold">{p.label}</div>
-                            <div className="mt-1 line-clamp-2 text-xs text-muted-foreground">
-                              {p.eyebrow}
-                            </div>
-                          </Link>
-                        </NavigationMenuLink>
-                      </li>
-                    ))}
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-
-              <NavigationMenuItem>
-                <NavigationMenuTrigger className="!bg-transparent text-ink-foreground/85 hover:!bg-white/5 hover:!text-ink-foreground data-[state=open]:!bg-white/5 data-[state=open]:!text-ink-foreground">
-                  Areas
-                </NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <div className="grid w-[560px] gap-4 p-4 sm:grid-cols-3">
-                    {REGIONS.map((r) => (
-                      <div key={r.key}>
-                        <div className="px-2 text-xs font-semibold uppercase tracking-[0.18em] text-brand">
-                          {r.label}
-                        </div>
-                        <ul className="mt-2 space-y-1">
-                          {getAreasByRegion(r.key).map((a) => (
-                            <li key={a.slug}>
-                              <NavigationMenuLink asChild>
-                                <Link
-                                  to="/areas/$areaSlug"
-                                  params={{ areaSlug: a.slug }}
-                                  className="block rounded-md px-2 py-1.5 text-sm text-foreground transition hover:bg-accent hover:text-accent-foreground"
-                                >
-                                  {a.city}, {a.state}
-                                </Link>
-                              </NavigationMenuLink>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                    <div className="sm:col-span-3 border-t border-border pt-3">
-                      <NavigationMenuLink asChild>
-                        <Link
-                          to="/areas"
-                          className="block rounded-md px-2 py-1.5 text-sm font-semibold text-brand hover:bg-accent"
-                        >
-                          All service areas →
-                        </Link>
-                      </NavigationMenuLink>
-                    </div>
-                  </div>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-
-              {NAV.slice(1).map((item) => (
-                <NavigationMenuItem key={item.label}>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      to={item.to}
-                      className="inline-flex h-9 items-center px-3 text-sm font-medium text-ink-foreground/85 transition hover:text-ink-foreground"
-                    >
-                      {item.label}
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-              ))}
-            </NavigationMenuList>
-          </NavigationMenu>
+            NAV.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                className="shrink-0 rounded-full px-3 py-1.5 text-sm font-medium text-ink-foreground/85 transition hover:bg-white/5 hover:text-ink-foreground"
+              >
+                {item.label}
+              </Link>
+            ))
           )}
-        </div>
+        </nav>
 
+        {/* Desktop CTA */}
         <div className="hidden md:block">
           <Button asChild className="rounded-full h-10 px-5">
             <Link to="/products/starter-kit">
-              Get Started <ArrowRight className="h-4 w-4" />
+              Shop <ArrowRight className="h-4 w-4" />
             </Link>
           </Button>
         </div>
 
+        {/* Mobile hamburger */}
         <button
           className="md:hidden text-ink-foreground"
           onClick={() => setOpen(!open)}
@@ -274,6 +83,7 @@ export function SiteHeader() {
         </button>
       </div>
 
+      {/* Mobile menu */}
       {open && (
         <div className="border-t border-ink-border ink-section md:hidden">
           <div className="container-site flex flex-col gap-1 py-4">
@@ -289,103 +99,24 @@ export function SiteHeader() {
                     {l.label}
                   </a>
                 ))}
-                <Button asChild className="mt-3 rounded-full">
-                  <Link to="/products/starter-kit" onClick={() => setOpen(false)}>
-                    Get Started <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </Button>
               </>
             ) : (
-            <>
-            <Link
-              to="/why-it-keeps-coming-back"
-              onClick={() => setOpen(false)}
-              className="rounded-md px-3 py-2 text-sm font-medium text-ink-foreground hover:bg-white/5"
-            >
-              The Problem
-            </Link>
-
-            <Link
-              to="/rodent-radar"
-              onClick={() => setOpen(false)}
-              className="rounded-md px-3 py-2 text-sm font-medium text-ink-foreground hover:bg-white/5"
-            >
-              Rodent Radar
-            </Link>
-
-            {PROGRAM_LINKS.map((p) => (
-              <Link
-                key={p.to}
-                to={p.to}
-                onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-2 text-sm font-medium text-ink-foreground hover:bg-white/5"
-              >
-                {p.label}
-              </Link>
-            ))}
-
-            <button
-              onClick={() => setMobileSolutionsOpen((v) => !v)}
-              className="flex items-center justify-between rounded-md px-3 py-2 text-left text-sm font-medium text-ink-foreground hover:bg-white/5"
-            >
-              Solutions
-              <ChevronDown
-                className={`h-4 w-4 transition ${mobileSolutionsOpen ? "rotate-180" : ""}`}
-              />
-            </button>
-            {mobileSolutionsOpen && (
-              <div className="ml-2 flex flex-col gap-1 border-l border-ink-border pl-2">
-                {SOLUTIONS.map((s) => (
-                  <Link
-                    key={s.slug}
-                    to="/solutions/$slug"
-                    params={{ slug: s.slug }}
-                    onClick={() => setOpen(false)}
-                    className="rounded-md px-3 py-2 text-sm text-ink-foreground/85 hover:bg-white/5"
-                  >
-                    {s.navLabel}
-                  </Link>
-                ))}
-              </div>
+              NAV.map((item) => (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  onClick={() => setOpen(false)}
+                  className="rounded-md px-3 py-2 text-sm font-medium text-ink-foreground hover:bg-white/5"
+                >
+                  {item.label}
+                </Link>
+              ))
             )}
-
-            {COMPLIANCE_LINKS.map((p) => (
-              <Link
-                key={p.to}
-                to={p.to}
-                onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-2 text-sm font-medium text-ink-foreground hover:bg-white/5"
-              >
-                {p.label}
-              </Link>
-            ))}
-
-            <Link
-              to="/areas"
-              onClick={() => setOpen(false)}
-              className="rounded-md px-3 py-2 text-sm font-medium text-ink-foreground hover:bg-white/5"
-            >
-              Service areas
-            </Link>
-
-            {NAV.slice(1).map((item) => (
-              <Link
-                key={item.label}
-                to={item.to}
-                onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-2 text-sm font-medium text-ink-foreground hover:bg-white/5"
-              >
-                {item.label}
-              </Link>
-            ))}
-
             <Button asChild className="mt-3 rounded-full">
               <Link to="/products/starter-kit" onClick={() => setOpen(false)}>
-                Get Started <ArrowRight className="h-4 w-4" />
+                Shop <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
-            </>
-            )}
           </div>
         </div>
       )}

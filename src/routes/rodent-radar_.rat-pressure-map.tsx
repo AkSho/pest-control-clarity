@@ -638,7 +638,7 @@ function RodentRadarAtlasPage() {
 
 
   return (
-    <div className={`h-screen overflow-hidden bg-[#05080d] text-slate-100 ${cinematic ? "cinematic-mode" : ""}`}>
+    <div className={`h-[calc(100dvh-4rem)] overflow-hidden bg-[#05080d] text-slate-100 ${cinematic ? "cinematic-mode" : ""}`}>
       <AtlasMap
         verified={mapVerified}
         unavailable={mapGaps}
