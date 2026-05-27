@@ -200,6 +200,13 @@ function MouseContraceptivePage() {
             >
               Full comparison: ContraPest vs. Evolve →
             </Link>
+            {" · "}
+            <Link
+              to="/rat-contraceptive"
+              className="font-semibold text-brand underline-offset-2 hover:underline"
+            >
+              Rat contraceptive →
+            </Link>
           </p>
         </div>
       </section>

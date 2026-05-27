@@ -173,6 +173,22 @@ function ProgramPage() {
               </li>
             ))}
           </ul>
+          <p className="mt-6 text-sm leading-relaxed text-muted-foreground">
+            Species-specific detail:{" "}
+            <Link
+              to="/rat-contraceptive"
+              className="text-brand underline-offset-2 hover:underline"
+            >
+              rat contraceptive
+            </Link>
+            {" · "}
+            <Link
+              to="/mouse-contraceptive"
+              className="text-brand underline-offset-2 hover:underline"
+            >
+              mouse contraceptive
+            </Link>
+          </p>
         </div>
       </section>
 

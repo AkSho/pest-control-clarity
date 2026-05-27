@@ -229,6 +229,13 @@ function EvolveMousePage() {
                   >
                     Shop the mouse starter kit →
                   </Link>
+                  {" · "}
+                  <Link
+                    to="/mouse-contraceptive"
+                    className="text-brand underline-offset-2 hover:underline"
+                  >
+                    Mouse contraceptive overview →
+                  </Link>
                 </p>
               </>
             }

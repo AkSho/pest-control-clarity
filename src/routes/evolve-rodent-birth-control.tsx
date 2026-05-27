@@ -369,11 +369,27 @@ function EvolvePage() {
                   placement.
                 </p>
                 <p>
+                  Rat and mouse formulas are sold separately.{" "}
+                  <Link
+                    to="/evolve-mouse-birth-control"
+                    className="text-brand underline-offset-2 hover:underline"
+                  >
+                    Evolve Mouse birth control →
+                  </Link>
+                </p>
+                <p>
                   <Link
                     to="/products/starter-kit"
                     className="text-brand underline-offset-2 hover:underline"
                   >
                     Shop the starter kit →
+                  </Link>
+                  {" · "}
+                  <Link
+                    to="/where-to-buy-evolve"
+                    className="text-brand underline-offset-2 hover:underline"
+                  >
+                    Compare buying options →
                   </Link>
                 </p>
               </>
