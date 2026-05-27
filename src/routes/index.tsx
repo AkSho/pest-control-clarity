@@ -9,10 +9,10 @@ import {
   Home as HomeIcon,
   ChefHat,
   Users,
-  TrendingDown,
-  ClipboardCheck,
   Beaker,
-  FileBarChart,
+  Lock,
+  Layers,
+  RefreshCw,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,17 +32,17 @@ import heroImg from "@/assets/hero-bait-station.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Cloakd Removals — NYC & NJ Rodent Fertility Control" },
+      { title: "Evolve Rodent Birth Control for Returning Rats & Mice | Cloakd" },
       {
         name: "description",
         content:
-          "Standard pest control empties rodent territory. Surrounding colonies move back in within weeks. We layer EPA-designated minimum-risk fertility control on top of your existing program to break the replacement cycle. Serving NYC & NJ.",
+          "Rodents keep coming back when standard treatment clears the territory but not the replacement cycle. Cloakd sells Evolve starter kits and refills with placement guidance for rats and mice.",
       },
-      { property: "og:title", content: "Cloakd Removals — Rodent Fertility Control for NYC & NJ" },
+      { property: "og:title", content: "Evolve Rodent Birth Control for Returning Rats & Mice | Cloakd" },
       {
         property: "og:description",
         content:
-          "Break the rodent replacement cycle. EPA-designated minimum-risk fertility control, layered onto your existing pest program. Documented monthly reporting.",
+          "Rodents keep coming back when standard treatment clears the territory but not the replacement cycle. Cloakd sells Evolve starter kits and refills with placement guidance for rats and mice.",
       },
       { property: "og:image", content: heroImg },
       { name: "twitter:image", content: heroImg },
@@ -73,23 +73,23 @@ const STATS = [
 const SERVICES = [
   {
     icon: Beaker,
-    title: "Fertility Control Program",
-    body: "EPA-designated minimum-risk soft bait. Rats that consume it reproduce at a fraction of normal rate. The replacement population can't form at full size.",
+    title: "Evolve soft bait",
+    body: "EPA-designated minimum-risk soft bait. Rats and mice that feed regularly reproduce at a fraction of their normal rate. The replacement population can't form at full size.",
   },
   {
-    icon: ClipboardCheck,
-    title: "Site Inspection & Mapping",
-    body: "We walk the property, identify pressure points and harborage, and map every bait station against your existing pest control deployment.",
+    icon: Lock,
+    title: "Locking bait stations",
+    body: "Included in the starter kit. Stations lock so Evolve stays accessible to rodents and protected from children and pets. Placement along travel paths drives feeding consistency.",
   },
   {
-    icon: TrendingDown,
-    title: "Monthly Population Management",
-    body: "Stations serviced and rebaited monthly. Track plates and activity monitored every cycle. The cycle stays broken instead of resetting.",
+    icon: Layers,
+    title: "Rat and mouse formulas",
+    body: "Evolve has separate formulas for rats and mice. Both are available in the starter kit and as 6 lb refills. The 12 lb rat refill covers higher-pressure sites.",
   },
   {
-    icon: FileBarChart,
-    title: "Documented Reporting",
-    body: "Every visit is logged with track-density data and photos. The reports go to you. Show DOHMH, ownership, or franchise corporate any time.",
+    icon: RefreshCw,
+    title: "Replenishment supply",
+    body: "Evolve works through repeated feeding. Refills are available in 6 lb and 12 lb sizes. A replenishment plan ships automatically every 60 or 90 days so stations stay stocked without reordering.",
   },
 ];
 
@@ -135,23 +135,23 @@ const WHO = [
 const PROCESS = [
   {
     n: "1",
-    title: "Walkthrough",
-    body: "We assess pressure, map harborage, and align with whatever pest program you already run.",
+    title: "Identify pressure points",
+    body: "Walk the property and mark where rodents travel, feed, and shelter. Bait station placement along those paths drives how consistently rodents encounter Evolve.",
   },
   {
     n: "2",
     title: "Phase 1 — Knockdown",
-    body: "Your existing exterminator (or ours) clears the active population. Standard treatment does this correctly.",
+    body: "Your existing exterminator clears the active population. Standard treatment does this correctly.",
   },
   {
     n: "3",
-    title: "Phase 2 — Fertility Control",
-    body: "We layer in EPA-designated minimum-risk soft bait. Reproduction rate drops within one breeding cycle.",
+    title: "Phase 2 — Keep Evolve available",
+    body: "Evolve soft bait sits in locked stations along rodent travel paths. Repeated feeding matters, so placement and refills are part of the plan.",
   },
   {
     n: "4",
-    title: "Monthly Management",
-    body: "Stations serviced, data captured, reports delivered. The replacement cycle never reforms at full size.",
+    title: "Keep stations stocked",
+    body: "Check and refill stations on a regular schedule. Activity drops across breeding cycles as the replacement population can't form at full size.",
   },
 ];
 
@@ -162,7 +162,7 @@ const FAQS = [
   },
   {
     q: "Do you replace my current pest control vendor?",
-    a: "No. We layer fertility control on top of your existing program. Knockdown and fertility control do different jobs — neither one alone solves the cycle.",
+    a: "No. Evolve is designed to work alongside knockdown and exclusion. Both handle different parts of the problem and neither is redundant.",
   },
   {
     q: "Is the bait safe around food, staff, pets, and wildlife?",
@@ -173,17 +173,17 @@ const FAQS = [
     a: "Knockdown is immediate. Fertility-driven reductions compound across breeding cycles — measurable drops typically appear within 60 to 120 days. Field studies showed 79% activity reduction over 5 months.",
   },
   {
-    q: "Is this a long contract?",
-    a: "No. The program runs month-to-month with documented reporting every cycle.",
+    q: "Is there a long-term commitment on the replenishment plan?",
+    a: "No. The replenishment plan ships every 60 or 90 days with no minimum commitment. Pause or cancel any time.",
   },
   {
     q: "What does it cost?",
-    a: "Pricing depends on property type, square footage, and pressure level — most properties are within the same monthly range as their existing pest control spend. Request a walkthrough for an exact estimate.",
+    a: "The starter kit is $179 and includes Evolve soft bait and locking bait stations. Refills run $149 for 6 lb and $249 for the 12 lb rat size. The replenishment plan brings the 6 lb refill to $129 every 60 days.",
   },
 ];
 
 function HeroPills() {
-  const pills = ["Fertility Control", "Site Inspection", "Monthly Reporting"];
+  const pills = ["Evolve starter kits", "Rat and mouse refills", "Placement guidance"];
   return (
     <div className="mt-7 flex flex-wrap gap-2">
       {pills.map((p) => (
@@ -219,23 +219,33 @@ function HomePage() {
 
             <h1 className="mt-7 text-4xl font-extrabold leading-[1.05] text-white md:text-6xl">
               Every six weeks, the rodents are back.{" "}
-              <span className="text-accent-warm">We end that cycle.</span>
+              <span className="text-accent-warm">Evolve helps break that cycle.</span>
             </h1>
             <p className="mt-6 max-w-xl text-base leading-relaxed text-white/85 md:text-lg">
-              Standard treatment clears the colony, and within weeks the
-              territory fills again. Rodent fertility control suppresses the
-              birth rate — the front standard treatment never touches. Run both
-              and the replacement cycle breaks.
+              Standard treatment clears the rodents you can see. The territory
+              stays open, and nearby colonies move back in. Evolve rodent birth
+              control works on the part standard treatment leaves alone:
+              reproduction. Use it alongside traps, exclusion, or your current
+              pest control so the next group does not rebuild at the same speed.
             </p>
 
             <HeroPills />
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Button asChild size="lg" className="h-12 px-6 text-base">
-                <a href="#contact">
-                  Get started <ArrowRight className="h-4 w-4" />
-                </a>
+                <Link to="/products/starter-kit">
+                  Shop Starter Kit <ArrowRight className="h-4 w-4" />
+                </Link>
               </Button>
+              <Button asChild size="lg" variant="secondary" className="h-12 px-6 text-base">
+                <Link to="/products/refill">Shop Refills</Link>
+              </Button>
+              <a
+                href="#contact"
+                className="text-sm font-semibold text-white underline-offset-4 hover:underline"
+              >
+                Need help choosing?
+              </a>
             </div>
           </div>
 
@@ -289,11 +299,12 @@ function HomePage() {
                 Two things have to happen for this to end
               </h2>
               <p className="mt-5 text-muted-foreground">
-                Neither one works without the other. Knockdown handles what's
-                already there. Fertility control handles what comes next.
+                Knockdown handles what is already active. Evolve handles what
+                comes next. When stations stay stocked, the replacement cycle
+                has less room to rebuild.
               </p>
               <Button asChild className="mt-8 h-11 px-6">
-                <a href="#contact">Schedule a walkthrough</a>
+                <Link to="/products/starter-kit">Shop the starter kit</Link>
               </Button>
             </div>
 
@@ -327,10 +338,10 @@ function HomePage() {
         <div className="container-site">
           <div className="mx-auto max-w-2xl text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
-              The Program · what's included
+              The product · what's included
             </p>
             <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
-              A complete rodent fertility control program for urban operators
+              Everything you need to start and maintain a fertility-control program
             </h2>
           </div>
 
@@ -353,9 +364,9 @@ function HomePage() {
 
           <div className="mt-10 text-center">
             <Button asChild size="lg" className="h-12 px-7">
-              <a href="#contact">
-                Get my program estimate <ArrowRight className="h-4 w-4" />
-              </a>
+              <Link to="/products/starter-kit">
+                Shop the starter kit <ArrowRight className="h-4 w-4" />
+              </Link>
             </Button>
           </div>
         </div>
@@ -389,8 +400,7 @@ function HomePage() {
                 Serving food-service operators and managed properties across NYC, NJ, &amp; CA
               </h2>
               <p className="mt-5 text-muted-foreground">
-                Month-to-month coverage, documented every cycle. Pick your area
-                for local pressure data and program details.
+                Pick your area for local rodent pressure data and deployment notes.
               </p>
             </div>
 
@@ -478,32 +488,30 @@ function HomePage() {
         <div className="container-site grid gap-10 py-16 md:grid-cols-[1.2fr_0.8fr] md:items-center md:py-20">
           <div>
             <h2 className="text-3xl font-extrabold leading-tight md:text-5xl">
-              Start the program. Break the cycle.
+              Start stocked. Keep the cycle from restarting.
             </h2>
             <p className="mt-5 max-w-xl text-ink-muted md:text-lg">
-              The first visit covers setup, with monthly management and
-              documented reporting running from there. The numbers are yours to
-              show any regulator or property owner who asks.
-            </p>
-            <p className="mt-4 max-w-xl text-ink-muted md:text-lg">
-              Serving food service operators and property managers across NYC
-              and NJ, month-to-month, with results documented every cycle.
+              Begin with the starter kit if you need locked stations. Use
+              refills to keep Evolve available through the next feeding cycle.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Button asChild size="lg" className="h-12 px-6 text-base">
-                <a href="#contact">
-                  Get started <ArrowRight className="h-4 w-4" />
-                </a>
+                <Link to="/products/starter-kit">
+                  Shop Starter Kit <ArrowRight className="h-4 w-4" />
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="secondary" className="h-12 px-6 text-base">
+                <Link to="/products/refill">Shop Refills</Link>
               </Button>
             </div>
           </div>
           <div className="rounded-2xl border border-ink-border bg-white/5 p-6 backdrop-blur">
             <ul className="space-y-3 text-sm text-ink-foreground">
               {[
-                "Layered onto your existing pest program",
-                "EPA-designated minimum-risk bait",
-                "Documented monthly reporting",
-                "Month-to-month, no long contracts",
+                "EPA-designated minimum-risk bait, safe for food-handling environments",
+                "Separate rat and mouse formulas",
+                "Starter kits include bait and locking stations",
+                "Refills available on a 60 or 90-day replenishment plan",
               ].map((item) => (
                 <li key={item} className="flex items-start gap-3">
                   <Check className="mt-0.5 h-5 w-5 shrink-0 text-brand" />

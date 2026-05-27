@@ -1,11 +1,12 @@
 import { Check, ArrowRight } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import aboutImg from "@/assets/about-operator.jpg";
 
 const POINTS = [
-  "Layered onto your existing pest program — no vendor displacement",
+  "Works alongside knockdown, exclusion, and your current pest program",
   "EPA-designated minimum-risk soft bait, cleared for food-handling environments",
-  "Documented monthly reporting you can hand to DOHMH or ownership",
+  "Ships with a deployment guide for station placement and feeding consistency",
 ];
 
 export function AboutSection() {
@@ -34,7 +35,7 @@ export function AboutSection() {
             About Cloakd Removals
           </p>
           <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
-            Removal handles what's there. We handle what comes next.
+            Standard treatment handles what's there. Evolve handles what comes next.
           </h2>
           <p className="mt-5 text-muted-foreground leading-relaxed">
             Standard extermination clears the active population, and it does
@@ -44,11 +45,10 @@ export function AboutSection() {
             full breeding capacity.
           </p>
           <p className="mt-4 text-muted-foreground leading-relaxed">
-            Cloakd layers EPA-designated minimum-risk fertility control on top
-            of your existing program. Rats that consume the bait reproduce at a
-            fraction of their normal rate, and over a single breeding cycle the
-            replacement population can't form at full size. The cycle stays
-            broken instead of resetting every six weeks.
+            Evolve is EPA-designated minimum-risk soft bait. Rats and mice that
+            feed on it reproduce at a fraction of their normal rate. Over a
+            single breeding cycle, the replacement population can't form at full
+            size.
           </p>
 
           <ul className="mt-7 space-y-3">
@@ -63,9 +63,9 @@ export function AboutSection() {
           </ul>
 
           <Button asChild size="lg" className="mt-8 h-12 px-6">
-            <a href="#contact">
-              Schedule a walkthrough <ArrowRight className="h-4 w-4" />
-            </a>
+            <Link to="/products/starter-kit">
+              Shop the starter kit <ArrowRight className="h-4 w-4" />
+            </Link>
           </Button>
         </div>
       </div>

@@ -27,14 +27,14 @@ const CARDS: Card[] = [
   {
     slug: "property-managers",
     title: "Property Managers",
-    desc: "Tenant complaints don't stop until the population does. One program across every address you manage.",
+    desc: "Tenant complaints don't stop until the population stops replacing itself. Evolve covers rats and mice across any number of buildings.",
     badge: "Multi-building coverage",
     image: propertyManagers,
   },
   {
     slug: "ghost-kitchens",
     title: "Ghost Kitchens",
-    desc: "High-density buildings, constant food cycling, no locked-in pest contracts. We work directly with operators.",
+    desc: "High-density buildings, constant food cycling, and pressure that doesn't pause between service visits. Fertility control works between knockdowns.",
     badge: "No vendor displacement",
     image: ghostKitchens,
   },
@@ -48,15 +48,15 @@ const CARDS: Card[] = [
   {
     slug: "hoas",
     title: "HOAs & Co-ops",
-    desc: "Board-friendly reporting, predictable monthly billing, shared visibility across the property.",
-    badge: "Board-ready reports",
+    desc: "One product order covers multiple buildings. The field data makes it easy to document results for boards or management.",
+    badge: "Field-documented results",
     image: hoasCoops,
   },
   {
     slug: "residential",
     title: "Residential",
     desc: "Brownstones, townhouses, and managed residential blocks where standard exterminators keep coming back.",
-    badge: "Month-to-month",
+    badge: "Starter kit + refills",
     image: residential,
   },
 ];
