@@ -49,7 +49,7 @@ const FEATURE_BULLETS = [
   "Removes the rodent's ability to reproduce and the colony's ability to rebuild.",
   "Safe for dogs, cats, hawks, owls, and other animals.",
   "Works on populations that have built resistance to conventional poison.",
-  "Rodents choose it over other food sources even in food-rich environments.",
+  "Rats and mice eat it willingly. No bait aversion builds up over time.",
 ];
 
 export function BuyBox({

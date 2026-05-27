@@ -9,7 +9,7 @@ const STATS = [
     stat: "88%",
     label: "Drop in rodent sightings",
     context:
-      "Reported by pest management professionals running Evolve across active commercial and residential sites.",
+      "Drop in track density at Location A. Tracks per monitoring plate at stations with residual activity after 5 months.",
   },
 ];
 

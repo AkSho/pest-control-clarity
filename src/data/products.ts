@@ -506,21 +506,3 @@ export const MECHANISM = [
   },
 ];
 
-// ===== Field results =====
-export const FIELD_RESULTS = [
-  {
-    stat: "79%",
-    label: "Reduction in rat activity",
-    note: "Multi-site field study, 12 weeks of consistent baiting.",
-  },
-  {
-    stat: "88%",
-    label: "Drop in rodent sightings reported",
-    note: "Pest management professionals using Evolve across active sites.",
-  },
-  {
-    stat: "79%+",
-    label: "Trap-catch reduction",
-    note: "Compared to baseline trapping before Evolve deployment.",
-  },
-];

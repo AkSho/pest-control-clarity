@@ -14,7 +14,7 @@ export function PlanSelector({
 }) {
   const hasSub = variant.subPrice !== undefined && variant.subDays !== undefined;
   const savings = hasSub ? variant.oneTimePrice - variant.subPrice! : 0;
-  const cadenceLabel = variant.subDays === 60 ? "ships every 30–60 days" : `ships every ${variant.subDays} days`;
+  const cadenceLabel = variant.subDays === 60 ? "ships every 60 days" : "ships every 90 days";
 
   return (
     <div className="flex flex-col gap-3" role="radiogroup" aria-label="Choose purchase plan">

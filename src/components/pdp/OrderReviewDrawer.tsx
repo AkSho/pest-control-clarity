@@ -6,7 +6,6 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { createCheckoutSession } from "@/lib/stripe.functions";
 import type { Product, Variant } from "@/data/products";
@@ -170,13 +169,6 @@ export function OrderReviewDrawer({
           >
             Keep shopping
           </button>
-          <p className="mt-3 text-center text-[11px] text-muted-foreground">
-            By continuing you agree to our{" "}
-            <Link to="/" className="underline hover:text-foreground">
-              terms
-            </Link>
-            .
-          </p>
         </div>
       </SheetContent>
     </Sheet>

@@ -33,7 +33,7 @@ export function OperatorQuote() {
               href="#overview"
               className="inline-flex h-11 w-fit items-center justify-center rounded-full bg-brand px-7 text-sm font-bold text-brand-foreground transition hover:bg-brand/90"
             >
-              Shop the Starter Kit →
+              Order now →
             </a>
             <p className="text-xs text-muted-foreground">
               Larry B. is an independent pest control operator and verified Evolve customer.
