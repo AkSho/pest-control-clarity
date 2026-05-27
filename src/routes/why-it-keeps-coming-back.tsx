@@ -8,7 +8,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { LeadForm } from "@/components/site/LeadForm";
 import { HeroTrustBadges } from "@/components/site/TrustBadges";
 import heroProblem from "@/assets/hero-problem.jpg";
 
@@ -108,7 +107,7 @@ const FAQS = [
   },
   {
     q: "Do I need to change my current exterminator?",
-    a: "No. The program is designed to run alongside your existing vendor. We coordinate with them on Phase 1 and add the fertility management layer on top. Your vendor keeps their contract.",
+    a: "No. Evolve deploys after your existing exterminator clears the colony. Your vendor handles knockdown — Evolve adds the fertility layer on top. No contract changes required.",
   },
   {
     q: "Is the bait safe around food?",
@@ -133,41 +132,36 @@ function ProblemPage() {
           width={1536}
           height={1024}
         />
-        <div className="relative container-site grid gap-10 py-16 md:grid-cols-[1.1fr_0.9fr] md:py-24">
-          <div>
-            <HeroTrustBadges />
-            <p className="mt-7 text-xs font-semibold uppercase tracking-[0.25em] text-accent-warm">
-              Why it keeps coming back
-            </p>
-            <h1 className="mt-4 text-4xl font-extrabold leading-[1.05] text-white md:text-6xl">
-              You paid for the treatment.{" "}
-              <span className="text-accent-warm">
-                Six weeks later, they were back.
-              </span>{" "}
-              Here's what actually stops that.
-            </h1>
-            <p className="mt-6 max-w-xl text-base leading-relaxed text-white/85 md:text-lg">
-              The exterminator didn't fail. Standard pest control removes
-              what's there. The problem is what fills in after they leave —
-              and it's not something any standard treatment is designed to
-              stop. Once you see why, the fix is obvious.
-            </p>
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Button asChild size="lg" className="h-12 px-6 text-base">
-                <Link to="/get-started">
-                  Get started <ArrowRight className="h-4 w-4" />
-                </Link>
-              </Button>
-              <Link
-                to="/results"
-                className="text-sm font-medium text-ink-foreground/85 hover:text-ink-foreground"
-              >
-                See the field data →
+        <div className="relative container-site py-16 md:py-24 max-w-3xl">
+          <HeroTrustBadges />
+          <p className="mt-7 text-xs font-semibold uppercase tracking-[0.25em] text-accent-warm">
+            Why it keeps coming back
+          </p>
+          <h1 className="mt-4 text-4xl font-extrabold leading-[1.05] text-white md:text-6xl">
+            You paid for the treatment.{" "}
+            <span className="text-accent-warm">
+              Six weeks later, they were back.
+            </span>{" "}
+            Here's what actually stops that.
+          </h1>
+          <p className="mt-6 max-w-xl text-base leading-relaxed text-white/85 md:text-lg">
+            The exterminator didn't fail. Standard pest control removes
+            what's there. The problem is what fills in after they leave,
+            and it's not something any standard treatment is designed to
+            stop. Once you see why, the fix is obvious.
+          </p>
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <Button asChild size="lg" className="h-12 px-6 text-base">
+              <Link to="/products/starter-kit">
+                Shop the starter kit <ArrowRight className="h-4 w-4" />
               </Link>
-            </div>
-          </div>
-          <div>
-            <LeadForm />
+            </Button>
+            <Link
+              to="/results"
+              className="text-sm font-medium text-ink-foreground/85 hover:text-ink-foreground"
+            >
+              See the field data →
+            </Link>
           </div>
         </div>
       </section>
@@ -263,7 +257,7 @@ function ProblemPage() {
           </div>
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
-              Why NYC and NJ hit harder
+              Why dense cities hit harder
             </p>
             <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-5xl">
               A single city block can sustain hundreds of rats. Treatment at
@@ -272,7 +266,7 @@ function ProblemPage() {
             <div className="mt-6 space-y-4 text-base leading-relaxed text-muted-foreground">
               <p>
                 Dense cities concentrate both the food and the source
-                population. The subway system, underground utility corridors,
+                population. Subway systems, underground utility corridors,
                 and connected building foundations give rats year-round
                 habitat across the entire block. Every building on that block
                 draws from the same surrounding population.
@@ -280,9 +274,9 @@ function ProblemPage() {
               <p>
                 A suburban property dealing with rats has a localized problem
                 that can usually be controlled with treatment. A building in a
-                high-density NYC or NJ neighborhood is competing with the
-                whole block's background population. Clearing one address
-                doesn't reduce that number at all.
+                high-density urban neighborhood is competing with the whole
+                block's background population. Clearing one address doesn't
+                reduce that number at all.
               </p>
             </div>
           </div>
@@ -415,17 +409,16 @@ function ProblemPage() {
         <div className="container-site grid gap-10 py-16 md:grid-cols-[1.2fr_0.8fr] md:items-center md:py-20">
           <div>
             <h2 className="text-3xl font-extrabold leading-tight text-white md:text-5xl">
-              Start the program that breaks the cycle.
+              Add the layer that breaks the cycle.
             </h2>
             <p className="mt-5 max-w-xl text-ink-muted md:text-lg">
-              The 90-day program runs alongside your existing pest control
-              vendor. Tell us about your property and we'll put together the
-              outline.
+              Evolve works alongside your existing exterminator. Order the
+              starter kit and deploy it after the colony clears.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Button asChild size="lg" className="h-12 px-6 text-base">
-                <Link to="/get-started">
-                  Get started <ArrowRight className="h-4 w-4" />
+                <Link to="/products/starter-kit">
+                  Shop the starter kit <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
               <Link
@@ -441,8 +434,8 @@ function ProblemPage() {
               {[
                 "Layered onto your existing pest program",
                 "EPA-designated minimum-risk bait",
-                "Documented monthly reporting",
-                "Month-to-month, no long contracts",
+                "Locking tamper-resistant stations included",
+                "Deployment guide with every order",
               ].map((b) => (
                 <li key={b} className="flex items-start gap-2">
                   <Check className="mt-0.5 h-4 w-4 text-brand" />
