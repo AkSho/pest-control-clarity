@@ -21,7 +21,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { LeadForm } from "@/components/site/LeadForm";
 import { HeroTrustBadges } from "@/components/site/TrustBadges";
 import { PressStrip } from "@/components/site/PressStrip";
 import { AboutSection } from "@/components/site/AboutSection";
@@ -213,44 +212,32 @@ function HomePage() {
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-r from-ink/80 via-ink/70 to-ink/40" />
-        <div className="container-site relative grid gap-10 py-16 md:grid-cols-[1.1fr_0.9fr] md:py-24">
-          <div>
-            <HeroTrustBadges />
+        <div className="container-site relative py-16 md:py-24">
+          <HeroTrustBadges />
 
-            <h1 className="mt-7 text-4xl font-extrabold leading-[1.05] text-white md:text-6xl">
-              Every six weeks, the rodents are back.{" "}
-              <span className="text-accent-warm">Evolve helps break that cycle.</span>
-            </h1>
-            <p className="mt-6 max-w-xl text-base leading-relaxed text-white/85 md:text-lg">
-              Standard treatment clears the rodents you can see. The territory
-              stays open, and nearby colonies move back in. Evolve rodent birth
-              control works on the part standard treatment leaves alone:
-              reproduction. Use it alongside traps, exclusion, or your current
-              pest control so the next group does not rebuild at the same speed.
-            </p>
+          <h1 className="mt-7 text-4xl font-extrabold leading-[1.05] text-white md:text-6xl">
+            Every six weeks, the rodents are back.{" "}
+            <span className="text-accent-warm">Evolve helps break that cycle.</span>
+          </h1>
+          <p className="mt-6 max-w-xl text-base leading-relaxed text-white/85 md:text-lg">
+            Standard treatment clears the rodents you can see. The territory
+            stays open, and nearby colonies move back in. Evolve rodent birth
+            control works on the part standard treatment leaves alone:
+            reproduction. Use it alongside traps, exclusion, or your current
+            pest control so the next group does not rebuild at the same speed.
+          </p>
 
-            <HeroPills />
+          <HeroPills />
 
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Button asChild size="lg" className="h-12 px-6 text-base">
-                <Link to="/products/starter-kit">
-                  Shop Starter Kit <ArrowRight className="h-4 w-4" />
-                </Link>
-              </Button>
-              <Button asChild size="lg" variant="secondary" className="h-12 px-6 text-base">
-                <Link to="/products/refill">Shop Refills</Link>
-              </Button>
-              <a
-                href="#contact"
-                className="text-sm font-semibold text-white underline-offset-4 hover:underline"
-              >
-                Need help choosing?
-              </a>
-            </div>
-          </div>
-
-          <div id="contact">
-            <LeadForm />
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <Button asChild size="lg" className="h-12 px-6 text-base">
+              <Link to="/products/starter-kit">
+                Shop Starter Kit <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+            <Button asChild size="lg" variant="secondary" className="h-12 px-6 text-base">
+              <Link to="/products/refill">Shop Refills</Link>
+            </Button>
           </div>
         </div>
       </section>
