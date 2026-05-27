@@ -91,9 +91,9 @@ function ContraPestPage() {
       <SolutionHero
         eyebrow="ContraPest"
         headline="ContraPest: What NYC's Rat Birth Control Program Uses — And What It Means for Your Building"
-        lede="ContraPest is a liquid rodent contraceptive made by SenesTech. It's the first and only EPA-registered contraceptive for both male and female rats. Unlike poison rodenticides, it does not kill — it reduces reproductive capacity."
+        lede="ContraPest is a liquid rodent contraceptive made by SenesTech. It's the first and only EPA-registered contraceptive for both male and female rats. Unlike poison rodenticides, it does not kill. It reduces reproductive capacity."
         image={heroImg}
-        ctaLabel="Start the program"
+        ctaLabel="Shop Evolve"
       />
 
       {/* WHAT CONTRAPEST IS */}
@@ -283,8 +283,8 @@ function ContraPestPage() {
             {[
               "The city program covers designated zones, not individual properties on request.",
               "ContraPest liquid requires commercial applicator licensing and specialized equipment.",
-              "Most commercial operators are better served by a managed Evolve program.",
-              "Standard Pest Management offers rodent fertility control as a service. So does Cloakd.",
+              "Most commercial operators are better served by a managed Evolve bait station program.",
+              "Cloakd sells Evolve starter kits and refills for rats and mice.",
             ].map((b) => (
               <li
                 key={b}
@@ -307,29 +307,27 @@ function ContraPestPage() {
         </div>
       </section>
 
-      {/* CLOAKD VS STANDARD */}
+      {/* CLOAKD */}
       <section className="bg-surface py-20">
         <div className="container-site">
           <SectionHeader
-            eyebrow="Cloakd's program"
-            title="Cloakd deploys Evolve, not ContraPest liquid."
+            eyebrow="Where to buy Evolve"
+            title="Cloakd sells Evolve, not ContraPest liquid."
             intro={
               <>
                 <p>
-                  The differences that matter for operators: standard bait
-                  stations (no specialized equipment), EPA minimum risk (no
-                  special permits in food-handling spaces), monthly site
-                  visits with track count documentation, and no requirement
-                  to drop your existing exterminator.
+                  Evolve uses standard bait stations, requires no specialized
+                  equipment, and carries EPA 25(b) minimum-risk status with
+                  no special permits needed in food-handling spaces.
                 </p>
                 <p>
-                  Managed monthly program — Cloakd handles deployment and
-                  tracking.{" "}
+                  Starter kits include Evolve soft bait and locking stations.
+                  Refills ship on a 60 or 90-day replenishment plan.{" "}
                   <Link
-                    to="/rodent-fertility-control"
+                    to="/products/starter-kit"
                     className="text-brand underline-offset-2 hover:underline"
                   >
-                    Program details →
+                    Shop the starter kit →
                   </Link>
                 </p>
               </>
@@ -362,9 +360,9 @@ function ContraPestPage() {
       </section>
 
       <ClosingCta
-        title="Get fertility control deployed in your building."
-        body="Cloakd runs a managed Evolve program in NYC, NJ, and the Bay Area. Tell us about your property and we'll put together the deployment outline."
-        primary={{ label: "Start the program", to: "/get-started" }}
+        title="Evolve is the right product for most commercial buildings."
+        body="Cloakd sells Evolve starter kits and refills for rats and mice. Standard bait stations, no special permits, ships with a deployment guide."
+        primary={{ label: "Shop the starter kit", to: "/products/starter-kit" }}
         secondary={{
           label: "ContraPest vs. Evolve",
           to: "/contrapest-vs-evolve",

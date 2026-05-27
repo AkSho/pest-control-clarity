@@ -98,7 +98,7 @@ const QA = [
   },
   {
     q: "Can I buy Evolve myself?",
-    a: "Yes — retail kits are available at Lowe's, Home Depot, and Amazon. Whether you get results depends on deployment structure, not product access.",
+    a: "Yes. Cloakd sells Evolve starter kits and refills with a deployment guide for placement. Whether you get results depends on deployment structure, not product access.",
   },
   {
     q: "How long does Evolve take to work?",
@@ -120,9 +120,9 @@ function EvolvePage() {
       <SolutionHero
         eyebrow="Evolve rat birth control"
         headline="Evolve Rat Birth Control: What It Is, What It Requires, and What the Data Shows"
-        lede="Evolve is a soft bait rodent fertility control product made by SenesTech. The active ingredient is gossypol — a naturally occurring compound from cottonseed. It does not kill rats. It reduces their ability to reproduce."
+        lede="Evolve is a soft bait rodent fertility control product made by SenesTech. The active ingredient is gossypol, a naturally occurring compound from cottonseed. It does not kill rats. It reduces their ability to reproduce."
         image={heroImg}
-        ctaLabel="Start the program"
+        ctaLabel="Shop the starter kit"
       />
 
       {/* WHAT EVOLVE IS */}
@@ -130,7 +130,7 @@ function EvolvePage() {
         <div className="container-site">
           <SectionHeader
             eyebrow="What Evolve is"
-            title="A cottonseed-derived bait that suppresses rat fertility — not a poison."
+            title="A cottonseed-derived bait that suppresses rat fertility. It does not kill."
             intro={
               <p>
                 Evolve doesn't kill rats. It changes how many babies they can
@@ -357,23 +357,23 @@ function EvolvePage() {
       <section className="bg-background py-20">
         <div className="container-site">
           <SectionHeader
-            eyebrow="Who deploys Evolve in NYC, NJ, and the Bay Area"
-            title="Cloakd is a managed rodent fertility control program."
+            eyebrow="Where to buy Evolve"
+            title="Cloakd sells Evolve starter kits and refills."
             intro={
               <>
                 <p>
-                  Cloakd handles deployment and tracking of Evolve as a
-                  managed monthly program. Monthly site visits, bait station
-                  maintenance, and track count documentation. Your existing
-                  exterminator keeps their contract — Cloakd runs the
-                  fertility management layer alongside it.
+                  The starter kit includes Evolve soft bait and locking bait
+                  stations. Refills are available in 6 lb and 12 lb sizes,
+                  with a replenishment plan that ships every 60 or 90 days.
+                  Every order ships with a deployment guide for station
+                  placement.
                 </p>
                 <p>
                   <Link
-                    to="/rodent-fertility-control"
+                    to="/products/starter-kit"
                     className="text-brand underline-offset-2 hover:underline"
                   >
-                    See full program details →
+                    Shop the starter kit →
                   </Link>
                 </p>
               </>
@@ -416,9 +416,9 @@ function EvolvePage() {
       </section>
 
       <ClosingCta
-        title="Deploy Evolve as a managed program."
-        body="Tell us about your property. We'll coordinate with your existing exterminator and run the fertility management layer with monthly station maintenance and track count documentation."
-        primary={{ label: "Start the program", to: "/get-started" }}
+        title="Start with the kit that matches your pressure type."
+        body="Cloakd sells Evolve starter kits for rats and mice, with refills to keep stations stocked through the next feeding cycle."
+        primary={{ label: "Shop the starter kit", to: "/products/starter-kit" }}
         secondary={{
           label: "Compare to ContraPest",
           to: "/contrapest-vs-evolve",

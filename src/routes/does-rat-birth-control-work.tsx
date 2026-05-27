@@ -88,6 +88,7 @@ function BirthControlPage() {
         highlight="Here's why — and what's different."
         lede="The Gothamist headline was accurate: the Bryant Park rat birth control pilot didn't work. The same mechanism deployed in two independent urban buildings over five months produced 79% reduction in rodent track presence. The mechanism isn't what failed. The deployment structure failed. Here's exactly what the difference is."
         image={heroImg}
+        ctaLabel="Shop Evolve"
       />
 
       {/* WHY BRYANT PARK FAILED */}
@@ -352,8 +353,9 @@ function BirthControlPage() {
 
       <ClosingCta
         title="The structure is what makes it work."
-        body="The 90-day integrated pest management program runs Phase 1 knockdown through your existing exterminator, then deploys Evolve with monthly monitoring. Tell us about your property and we'll put together the outline."
-        secondary={{ label: "How it works", to: "/how-it-works" }}
+        body="Cloakd sells Evolve starter kits and refills with a deployment guide for placement. Get the product structured correctly and the biology follows."
+        primary={{ label: "Shop the starter kit", to: "/products/starter-kit" }}
+        secondary={{ label: "How Evolve works", to: "/evolve-rodent-birth-control" }}
       />
     </>
   );

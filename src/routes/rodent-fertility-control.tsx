@@ -9,9 +9,9 @@ import {
 } from "@/components/site/solutions/SolutionPrimitives";
 
 const TITLE =
-  "Rodent Fertility Control: Managed Evolve Deployment in NYC, NJ & the Bay Area | Cloakd";
+  "Rodent Fertility Control: How Evolve Works and Where to Buy It | Cloakd";
 const DESCRIPTION =
-  "Cloakd's managed rodent fertility control program. Monthly Evolve bait station deployment, track count monitoring, and a documented record — layered onto your existing pest control vendor.";
+  "Rodent fertility control suppresses reproduction so the replacement colony can't form at full size. Evolve is the EPA 25(b) minimum-risk soft bait that does this. Cloakd sells starter kits and refills.";
 
 export const Route = createFileRoute("/rodent-fertility-control")({
   head: () => ({
@@ -40,11 +40,11 @@ export const Route = createFileRoute("/rodent-fertility-control")({
 });
 
 const INCLUDED = [
-  "Monthly site visits with bait station checks and replenishment.",
-  "Tracking plates at each station — track counts recorded against a Week 1 baseline.",
-  "Coordination with your existing licensed PCO for Phase 1 knockdown.",
-  "Documented monthly record — the trend line you can hand to an inspector.",
-  "Month-to-month agreement. No long-term contract.",
+  "Evolve soft bait — EPA 25(b) minimum risk, no synthetic chemicals, no secondary kill risk.",
+  "Locking tamper-resistant bait stations — included in the starter kit.",
+  "Rat and mouse formulas — available separately for the animal type causing pressure.",
+  "Deployment guide — covers station placement, travel path identification, and replenishment schedule.",
+  "Refill supply — 6 lb and 12 lb sizes, with a replenishment plan that ships every 60 or 90 days.",
 ];
 
 const QA = [
@@ -53,8 +53,8 @@ const QA = [
     a: "It's a category of rodent management that suppresses reproduction instead of killing existing rats. The point is to stop the replacement colony from forming after a knockdown, so the population doesn't refill the cleared territory at full breeding rate.",
   },
   {
-    q: "Does Cloakd replace my exterminator?",
-    a: "No. Your existing pest control vendor handles Phase 1 knockdown and ongoing treatment. Cloakd runs the fertility management layer alongside that contract.",
+    q: "Does Evolve replace my exterminator?",
+    a: "No. Evolve is designed to work alongside knockdown and exclusion. Your existing pest control vendor handles what's already active. Evolve handles the replacement cycle.",
   },
   {
     q: "What product does the program use?",
@@ -62,7 +62,7 @@ const QA = [
   },
   {
     q: "How long until results show up?",
-    a: "The 90-day program produces a documented trend line. Measurable population reduction typically begins at 4–8 weeks of consistent consumption.",
+    a: "Measurable population reduction typically begins at 4 to 8 weeks of consistent consumption. Field studies showed 79% reduction in track presence over five months.",
   },
 ];
 
@@ -71,10 +71,10 @@ function ProgramPage() {
     <>
       <SolutionHero
         eyebrow="Rodent fertility control"
-        headline="A managed monthly fertility control program — layered onto your existing exterminator."
-        lede="Cloakd handles deployment and tracking of Evolve bait stations across your property. Monthly maintenance, track count monitoring, documented record. Your current pest control vendor keeps their contract."
+        headline="Rodent Fertility Control: What It Is, How Evolve Works, and Where to Buy It"
+        lede="Rodent fertility control suppresses reproduction so the replacement colony can't form at full size after a knockdown. Evolve is the EPA 25(b) minimum-risk soft bait designed for this. Cloakd sells starter kits and refills."
         image={heroImg}
-        ctaLabel="Start the program"
+        ctaLabel="Shop the starter kit"
       />
 
       {/* WHAT IT IS */}
@@ -120,19 +120,20 @@ function ProgramPage() {
       <section className="bg-surface py-20">
         <div className="container-site">
           <SectionHeader
-            eyebrow="Managed vs. DIY"
-            title="Same product. Different structure. Different outcome."
+            eyebrow="What determines results"
+            title="Same product. Deployment structure determines the outcome."
             intro={
               <p>
-                Retail Evolve kits are available at Lowe's, Home Depot, and
-                Amazon. Whether you get results depends on deployment
-                structure — Phase 1 knockdown, station placement on travel
-                paths, monthly replenishment, and track count monitoring.{" "}
+                Whether Evolve produces a measurable population reduction
+                depends on how it's deployed — Phase 1 knockdown first,
+                stations placed on confirmed travel paths, and consistent
+                replenishment. Cloakd ships a deployment guide with every
+                order.{" "}
                 <Link
-                  to="/vs/diy-rat-birth-control"
+                  to="/does-rat-birth-control-work"
                   className="text-brand underline-offset-2 hover:underline"
                 >
-                  DIY vs. managed program →
+                  Why Bryant Park failed and what's different →
                 </Link>
               </p>
             }
@@ -160,7 +161,7 @@ function ProgramPage() {
         <div className="container-site">
           <SectionHeader
             eyebrow="What's included"
-            title="Managed monthly program — deployment and tracking handled."
+            title="Everything in the Cloakd Evolve product lineup."
           />
           <ul className="mt-10 grid gap-3 md:grid-cols-2">
             {INCLUDED.map((b) => (
@@ -199,10 +200,10 @@ function ProgramPage() {
       </section>
 
       <ClosingCta
-        title="The cycle ends when you hit it from both ends."
-        body="Evolve bait station deployment for NYC, NJ, and Bay Area commercial properties. EPA 25(b) minimum-risk product. Documented track count monitoring every cycle."
-        primary={{ label: "Get started", to: "/get-started" }}
-        secondary={{ label: "See how it works", to: "/how-it-works" }}
+        title="The cycle ends when you stop the replacement from forming."
+        body="Cloakd sells Evolve starter kits and refills for rats and mice. Start with the kit that matches your pressure type."
+        primary={{ label: "Shop the starter kit", to: "/products/starter-kit" }}
+        secondary={{ label: "How Evolve works", to: "/evolve-rodent-birth-control" }}
       />
     </>
   );

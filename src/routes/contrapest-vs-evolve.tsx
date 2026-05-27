@@ -80,7 +80,7 @@ const ROWS: { label: string; contrapest: string; evolve: string }[] = [
   {
     label: "Commercial deployment",
     contrapest: "Licensed applicators, Standard Pest",
-    evolve: "Cloakd managed program",
+    evolve: "Available from Cloakd — starter kits and refills",
   },
   {
     label: "Best suited for",
@@ -97,7 +97,7 @@ function ComparePage() {
         headline="ContraPest vs. Evolve: Same Company, Different Products, Different Deployment Contexts"
         lede="Both ContraPest and Evolve are made by SenesTech. Both target rodent fertility. Both have produced documented population reductions in real urban programs. Neither is a poison. The differences that matter are in formulation, EPA status, and where each one fits."
         image={heroImg}
-        ctaLabel="Start the program"
+        ctaLabel="Shop Evolve"
       />
 
       {/* WHAT THEY HAVE IN COMMON */}
@@ -317,8 +317,8 @@ function ComparePage() {
                   spaces.
                 </li>
                 <li>
-                  Available through Cloakd's managed program without a full
-                  licensed commercial pesticide applicator on staff.
+                  Available from Cloakd as a starter kit or refill supply,
+                  with a deployment guide for station placement.
                 </li>
                 <li>
                   The 79% urban field data is specifically from managed
@@ -353,18 +353,18 @@ function ComparePage() {
       <section className="bg-surface py-20">
         <div className="container-site">
           <SectionHeader
-            eyebrow="Cloakd deploys Evolve"
-            title="Managed monthly program — deployment and tracking handled."
+            eyebrow="Where to buy Evolve"
+            title="Cloakd sells Evolve starter kits and refills."
             intro={
               <p>
-                Monthly site visits, station maintenance, track count
-                monitoring, and a documented monthly record. Your existing
-                exterminator stays.{" "}
+                Starter kits include Evolve soft bait and locking bait
+                stations. Refills are available in 6 lb and 12 lb sizes
+                with a replenishment plan that ships every 60 or 90 days.{" "}
                 <Link
-                  to="/rodent-fertility-control"
+                  to="/products/starter-kit"
                   className="text-brand underline-offset-2 hover:underline"
                 >
-                  Program details →
+                  Shop the starter kit →
                 </Link>
               </p>
             }
@@ -373,9 +373,9 @@ function ComparePage() {
       </section>
 
       <ClosingCta
-        title="Pick the deployment context that matches your building."
-        body="Most commercial operators in NYC, NJ, and the Bay Area are better served by a managed Evolve program. Tell us about your property and we'll outline what deployment looks like."
-        primary={{ label: "Start the program", to: "/get-started" }}
+        title="For most commercial buildings, Evolve is the right choice."
+        body="Standard bait stations, no special permits in food-handling spaces, and available from Cloakd as a starter kit or refill supply."
+        primary={{ label: "Shop the starter kit", to: "/products/starter-kit" }}
         secondary={{
           label: "How Evolve works",
           to: "/evolve-rodent-birth-control",

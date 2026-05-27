@@ -12,7 +12,8 @@ export function SolutionHero({
   lede,
   image,
   badge,
-  ctaLabel = "Start the 90-day program",
+  ctaLabel = "Shop the starter kit",
+  ctaTo = "/products/starter-kit",
 }: {
   eyebrow: string;
   headline: string;
@@ -21,6 +22,7 @@ export function SolutionHero({
   image: string;
   badge?: string;
   ctaLabel?: string;
+  ctaTo?: string;
 }) {
   return (
     <section className="relative ink-section overflow-hidden">
@@ -53,7 +55,7 @@ export function SolutionHero({
           )}
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <Button asChild size="lg" className="h-12 px-6 text-base">
-              <Link to="/get-started">
+              <Link to={ctaTo}>
                 {ctaLabel} <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
@@ -228,7 +230,7 @@ export function FieldDataTrio({
 export function ClosingCta({
   title,
   body,
-  primary = { label: "Start the 90-day program", to: "/get-started" },
+  primary = { label: "Shop the starter kit", to: "/products/starter-kit" },
   secondary,
 }: {
   title: string;
@@ -265,10 +267,10 @@ export function ClosingCta({
         <div className="rounded-2xl border border-ink-border bg-white/5 p-6 backdrop-blur">
           <ul className="space-y-3 text-sm text-ink-foreground">
             {[
-              "Layered onto your existing pest program",
-              "EPA-designated minimum-risk bait",
-              "Documented monthly reporting",
-              "Month-to-month, no long contracts",
+              "EPA-designated minimum-risk bait, safe for food-handling environments",
+              "Separate rat and mouse formulas",
+              "Starter kits include bait and locking stations",
+              "Refills available on a 60 or 90-day replenishment plan",
             ].map((b) => (
               <li key={b} className="flex items-start gap-2">
                 <Check className="mt-0.5 h-4 w-4 text-brand" />
