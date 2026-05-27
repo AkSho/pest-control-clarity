@@ -232,6 +232,10 @@ function PlacePage() {
         </section>
 
         <footer className="mt-12 border-t border-white/10 pt-6 text-[0.7rem] text-slate-500">
+          <Link to="/why-it-keeps-coming-back" className="hover:text-cyan-200 hover:underline">Why it keeps coming back</Link>
+          {" · "}
+          <Link to="/evolve-rodent-birth-control" className="hover:text-cyan-200 hover:underline">About Evolve</Link>
+          {" · "}
           <Link to="/rodent-radar/attribution" className="hover:text-cyan-200 hover:underline">Attribution</Link>
           {" · "}
           <Link to="/rodent-radar/terms" className="hover:text-cyan-200 hover:underline">Terms</Link>
