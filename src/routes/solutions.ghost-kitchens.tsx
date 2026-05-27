@@ -155,30 +155,28 @@ function GhostKitchensPage() {
             title="No existing vendor contract required."
             intro={
               <p>
-                If the facility has an existing exterminator, we coordinate
-                with them. If it doesn't, we can connect you with a licensed
-                partner for Phase 1. Either way, the fertility management
-                layer runs at the facility level — independent of which
-                brands are operating.
+                If the facility has an existing exterminator, Evolve deploys
+                on top of their program. If not, arrange knockdown first —
+                the fertility management layer goes in after a clean baseline
+                is established, independent of which brands are operating.
               </p>
             }
           />
           <PhaseCards
             phase1={{
-              tag: "Existing vendor or coordinated partner",
+              tag: "Your existing exterminator",
               title: "Clear the facility baseline",
               body: (
                 <>
                   <p>
                     Initial treatment covers the whole building — not just
-                    individual operator stations. We coordinate with whoever
-                    handles this phase to get a documented clean baseline
-                    before the fertility management starts.
+                    individual operator stations. Your existing exterminator
+                    handles this. Evolve deploys after a clean baseline is
+                    established.
                   </p>
                   <p>
-                    If there's no exterminator currently in place, we can
-                    connect you with a licensed partner. No long-term
-                    contract required.
+                    If there's no exterminator currently in place, arrange
+                    one-time or contract treatment before deploying the kit.
                   </p>
                 </>
               ),
@@ -205,10 +203,10 @@ function GhostKitchensPage() {
             }}
           />
           <p className="mt-8 max-w-3xl text-base leading-relaxed text-muted-foreground">
-            Monthly reports cover the full facility footprint. The track
-            count record stays attached to the facility address as brands
-            come and go. That's the compliance documentation that matters
-            when DOHMH shows up.
+            Evolve bait stations run continuously throughout the facility —
+            independent of which brands are operating inside. EPA 25(b)
+            minimum risk means no special permits for food-handling
+            environments.
           </p>
         </div>
       </section>
@@ -219,7 +217,7 @@ function GhostKitchensPage() {
 
       <ClosingCta
         title="The facility stays compliant. Whatever brands are in it."
-        body="Tell us about the facility — building type, current pest control setup if any, and how many operators are running. We'll put together a program outline covering the full building footprint."
+        body="Evolve starter kits include locking bait stations and a deployment guide covering station placement throughout a facility. Refills ship on a replenishment plan so stations stay stocked."
       />
     </>
   );

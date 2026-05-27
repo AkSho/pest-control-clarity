@@ -175,15 +175,14 @@ function FoodStoragePage() {
               body: (
                 <>
                   <p>
-                    Your current exterminator handles immediate treatment
-                    and generates the compliance documentation federal food
-                    safety law requires. We coordinate with them to get a
-                    documented baseline across the full facility before
-                    Phase 2 starts.
+                    Your current exterminator handles treatment and generates
+                    the compliance documentation federal food safety law
+                    requires. Evolve deploys after a clean baseline is
+                    established across the full facility.
                   </p>
                   <p>
-                    Produces the FDA-required treatment records your
-                    compliance program needs.
+                    Treatment records from your licensed PCO satisfy the
+                    FDA-required pest management documentation.
                   </p>
                 </>
               ),
@@ -210,11 +209,10 @@ function FoodStoragePage() {
             }}
           />
           <p className="mt-8 max-w-3xl text-base leading-relaxed text-muted-foreground">
-            The 90-day monitoring record — track counts per station, monthly
-            comparisons against baseline, documented declining trend —
-            becomes part of your pest management compliance documentation.
-            It shows active, continuous, measured management rather than a
-            reactive response to a finding.
+            Evolve is EPA 25(b) minimum risk — no special permits required
+            for use in or around food storage. No contamination pathway, no
+            secondary kill risk. Safe for continuous deployment in active
+            storage environments.
           </p>
         </div>
       </section>
@@ -224,8 +222,8 @@ function FoodStoragePage() {
       <OtherSolutions current="food-storage" />
 
       <ClosingCta
-        title="Build the compliance record before the inspection."
-        body="Tell us about the facility — what you store, current pest control setup, and any open compliance items. We'll put together a program outline covering the full footprint."
+        title="Add fertility management before the inspection window."
+        body="Evolve starter kits include locking bait stations and a deployment guide covering placement at loading dock perimeters, exterior walls, and interior travel paths."
       />
     </>
   );

@@ -149,9 +149,9 @@ function RestaurantsPage() {
             title="Two layers. Your existing vendor stays in place."
             intro={
               <p>
-                We don't replace your current pest control setup. We add an
-                integrated pest management layer on top of it, addressing
-                what knockdown alone cannot.
+                Your existing pest control handles knockdown. Evolve adds
+                fertility management on top — addressing what knockdown alone
+                cannot.
               </p>
             }
           />
@@ -162,16 +162,16 @@ function RestaurantsPage() {
               body: (
                 <>
                   <p>
-                    Your current pest control vendor handles immediate
-                    knockdown. We coordinate directly with them to establish a
-                    clean baseline before Phase 2 begins. No contract changes,
-                    no displacement.
+                    Your current pest control vendor handles treatment.
+                    Evolve is designed to deploy after the colony clears —
+                    not into an at-density active population. No contract
+                    changes, no displacement.
                   </p>
                   <p>
-                    Produces the visible evidence — dead rodents removed,
-                    harborage conditions addressed, entry points assessed —
-                    that satisfies an inspector and your licensed pest
-                    management professional.
+                    Treatment produces the visible evidence — dead rodents
+                    removed, harborage conditions addressed, entry points
+                    assessed — that satisfies your licensed pest management
+                    professional and inspection requirements.
                   </p>
                 </>
               ),
@@ -199,10 +199,10 @@ function RestaurantsPage() {
             }}
           />
           <p className="mt-8 max-w-3xl text-base leading-relaxed text-muted-foreground">
-            Phase 1 removes the current population while Phase 2 prevents the
-            next colony from forming at full capacity. Over 90 days,
-            documented track counts show the population declining rather than
-            cycling. That documentation goes with you into any inspection.
+            Phase 1 removes the current population. Phase 2 — Evolve bait
+            stations deployed per the deployment guide — prevents the next
+            colony from forming at full capacity. The population declines
+            instead of cycling.
           </p>
         </div>
       </section>
@@ -215,7 +215,7 @@ function RestaurantsPage() {
 
       <ClosingCta
         title="Start before the next inspection."
-        body="The program takes 90 days to produce documented results. The sooner it starts, the more distance you have before the inspector walks in."
+        body="Evolve takes 60 to 120 days to produce measurable results. Deploy it after knockdown and the replacement colony can't form at the same rate."
       />
     </>
   );

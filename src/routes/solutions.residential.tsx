@@ -160,8 +160,8 @@ function ResidentialPage() {
               body: (
                 <p>
                   Your current exterminator handles treatment. If a landlord
-                  doesn't have a vendor in place, we can connect with a
-                  licensed partner. Treatment records from this phase
+                  doesn't have a vendor in place, arrange treatment before
+                  deploying Evolve. Treatment records from this phase
                   address the HPD violation documentation requirement.
                 </p>
               ),
@@ -181,11 +181,10 @@ function ResidentialPage() {
             }}
           />
           <p className="mt-8 max-w-3xl text-base leading-relaxed text-muted-foreground">
-            Monthly monitoring documents declining activity over 90 days.
-            That record shows a building under active, consistent
-            management — useful for HPD certification, housing court, or
-            just giving landlords and tenants confidence the problem is
-            trending the right direction.
+            Evolve is EPA 25(b) minimum risk — no secondary kill risk, safe
+            for occupied residential buildings with children and pets. The
+            replacement colony forms at a reduced rate, and the population
+            declines instead of cycling between treatment visits.
           </p>
         </div>
       </section>
@@ -195,8 +194,8 @@ function ResidentialPage() {
       <OtherSolutions current="residential" />
 
       <ClosingCta
-        title="Start building a 90-day clean record."
-        body="NYC and NJ only. Tell us about the property — building type, current pest control setup, and the complaint history. We'll put together a program outline."
+        title="Add the layer that slows down the cycle."
+        body="Evolve starter kits include locking bait stations and a deployment guide. Deploy after knockdown — rat or mouse formula depending on the pressure."
         secondary={{
           label: "Why it keeps coming back",
           to: "/why-it-keeps-coming-back",

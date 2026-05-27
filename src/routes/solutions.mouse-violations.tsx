@@ -86,19 +86,19 @@ const POINT_MATH = [
 const PROGRAM_STEPS = [
   {
     t: "Phase 1 knockdown — both species",
-    b: "Your existing pest control vendor treats for both rats and mice in Phase 1. Standard treatment methods work for both. The fertility layer goes in after a documented clean baseline is established for both.",
+    b: "Your existing pest control vendor treats for both rats and mice. Standard treatment methods work for both. The fertility layer goes in after a clean baseline is established for both species.",
   },
   {
     t: "Evolve Mouse deployment",
-    b: "Evolve Mouse is a separate SenesTech product using the same gossypol-based mechanism as Evolve Rat. Stations are placed along mouse travel paths — typically at lower heights, along wall edges, and near food storage. Same monthly monitoring and replenishment schedule.",
+    b: "Evolve Mouse is a separate SenesTech product using the same gossypol-based mechanism as Evolve Rat. Stations are placed along mouse travel paths — typically at lower heights, along wall edges, and near food storage. The deployment guide covers station spacing for mice.",
   },
   {
-    t: "Separate track count monitoring",
-    b: "Mouse tracking plates and rat tracking plates are deployed and tracked separately. Each has its own trend line in the monitoring record. This produces documentation specific to each violation code — useful if you're managing an active 04K and an active 04L simultaneously.",
+    t: "Species-specific placement",
+    b: "Mouse stations and rat stations are placed separately — mice travel shorter distances and nest closer to food sources. The deployment guide covers placement for each species so consumption stays consistent.",
   },
   {
-    t: "90-day monitoring record",
-    b: "The final report covers both species: track presence and density data by species, station-by-station breakdown, and a documented trend line you can hand to a DOHMH inspector as evidence of active management of both 04K and 04L conditions.",
+    t: "Consistent replenishment",
+    b: "Fertility control requires consistent consumption over 60 to 120 days. Cloakd's replenishment plan ships refills automatically every 60 or 90 days so stations stay stocked for both formulas.",
   },
 ];
 
@@ -269,8 +269,8 @@ function MouseViolationsPage() {
       <OtherSolutions current="mouse-violations" />
 
       <ClosingCta
-        title="Rats and mice. One program. One monitoring record."
-        body="Tell us whether you're managing an active 04K, an active 04L, or both. We'll outline the station plan for your property and what the 90-day monitoring record will document."
+        title="Rats and mice. Separate formulas. One starter kit each."
+        body="Evolve Rat and Evolve Mouse are separate SenesTech products. Cloakd sells both as starter kits and refills. Order the formula that matches the pressure you're managing."
       />
     </>
   );

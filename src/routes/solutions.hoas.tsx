@@ -12,7 +12,7 @@ import {
 
 const TITLE = "HOAs & Co-ops — Cloakd Removals";
 const DESCRIPTION =
-  "The 90-day monitoring record shows a documented declining trend — which changes what the board says at the next meeting.";
+  "Evolve adds fertility management on top of your current pest control — reducing how fast the replacement colony forms and giving the board something to show residents.";
 
 export const Route = createFileRoute("/solutions/hoas")({
   head: () => ({
@@ -35,7 +35,7 @@ function HoasPage() {
         eyebrow="HOAs & Co-ops"
         headline="Residents keep raising the rat problem at board meetings."
         highlight="The 90-day program gives you something to show them."
-        lede="Standard treatment clears the problem and it comes back. When residents ask again next month, you need more than a service receipt. The 90-day monitoring record shows a documented declining trend — which changes what the board says at the next meeting."
+        lede="Standard treatment clears the problem and it comes back. When residents ask again next month, you need more than a service receipt. Evolve reduces how fast the replacement colony forms — which changes what the board can say at the next meeting."
         image={heroImg}
       />
 
@@ -105,10 +105,10 @@ function HoasPage() {
             title="Your existing exterminator stays. We add what changes the outcome."
             intro={
               <p>
-                The 90-day program runs alongside whatever pest control
-                contract is in place. Phase 1 handles treatment. Phase 2
-                adds Evolve fertility management across common areas, the
-                building perimeter, and known rat travel paths.
+                Evolve runs alongside whatever pest control contract is in
+                place. Phase 1 handles treatment. Phase 2 adds Evolve
+                fertility management across common areas, the building
+                perimeter, and known rat travel paths.
               </p>
             }
           />
@@ -119,10 +119,9 @@ function HoasPage() {
               body: (
                 <p>
                   Your current exterminator handles treatment across common
-                  areas and produces the compliance documentation. We
-                  coordinate with them to get a clean, documented baseline
-                  across the building before Phase 2 starts. No vendor
-                  change required.
+                  areas and produces the compliance documentation. Evolve
+                  deploys after a clean baseline is established across the
+                  building. No vendor change required.
                 </p>
               ),
             }}
@@ -141,11 +140,10 @@ function HoasPage() {
             }}
           />
           <p className="mt-8 max-w-3xl text-base leading-relaxed text-muted-foreground">
-            Monthly reports document activity per station across the
-            building. The 90-day record shows a declining trend the board
-            can present to residents, use for HPD certification, or attach
-            to housing court proceedings. It replaces "we treated it" with
-            actual numbers.
+            Evolve runs continuously in common areas — basement corridors,
+            trash areas, exterior perimeter, utility access. EPA 25(b)
+            minimum risk means no secondary kill risk and no special permits
+            for occupied residential buildings.
           </p>
         </div>
       </section>
@@ -156,7 +154,7 @@ function HoasPage() {
 
       <ClosingCta
         title="Give the board a documented answer."
-        body="Tell us about the building — number of units, common area layout, and current pest control setup. We'll put together a program outline and a 90-day monitoring schedule you can present to residents."
+        body="Evolve starter kits include locking bait stations and a deployment guide covering common area placement. Refills ship on a replenishment plan so stations stay stocked between treatment cycles."
       />
     </>
   );

@@ -144,11 +144,10 @@ function PropertyManagersPage() {
             title="One program across every address. Your existing vendors stay."
             intro={
               <p>
-                We layer fertility management on top of whatever pest control
-                is already running at each building. Your per-building vendor
-                contracts don't change. Every address gets a single
-                coordinating layer that addresses what individual treatments
-                can't.
+                Evolve adds fertility management on top of whatever pest
+                control is already running at each building. Your per-building
+                vendor contracts don't change. Every address gets a fertility
+                layer that addresses what individual treatments can't.
               </p>
             }
           />
@@ -159,14 +158,13 @@ function PropertyManagersPage() {
               body: (
                 <>
                   <p>
-                    Your per-building exterminators handle treatment. We
-                    coordinate with them to get a clean documented baseline
-                    at each address before the fertility management starts.
-                    No contract disruption, no new vendor relationships
-                    required.
+                    Your per-building exterminators handle treatment. Evolve
+                    deploys after a clean baseline is established at each
+                    address. No contract disruption, no new vendor
+                    relationships required.
                   </p>
                   <p>
-                    Produces the treatment records and compliance
+                    Treatment produces the records and compliance
                     documentation for HPD and municipal health requirements.
                   </p>
                 </>
@@ -195,10 +193,9 @@ function PropertyManagersPage() {
             }}
           />
           <p className="mt-8 max-w-3xl text-base leading-relaxed text-muted-foreground">
-            Monthly reports document track count activity per address across
-            every building in the program. That shows a declining trend over
-            90 days — which is the record you want in front of a housing
-            inspector or a tenant attorney.
+            Evolve runs at each address after knockdown. The replacement
+            colony can't form at the same rate — the population declines
+            instead of cycling between treatment visits.
           </p>
         </div>
       </section>
@@ -207,23 +204,15 @@ function PropertyManagersPage() {
       <section className="bg-surface py-20">
         <div className="container-site">
           <SectionHeader
-            eyebrow="The compliance layer"
-            title="Documentation that holds up in an inspection."
+            eyebrow="The compliance context"
+            title="What each regulatory framework cares about."
             intro={
-              <>
-                <p>
-                  Inspectors aren't just looking for the absence of rats.
-                  They want evidence of active management. A 90-day record
-                  showing declining track counts is a different conversation
-                  than "we called the exterminator last month."
-                </p>
-                <p>
-                  Every address gets a monitoring record. If a complaint
-                  comes in, you have a paper trail showing consistent,
-                  proactive management — not a reactive call made after a
-                  311 report.
-                </p>
-              </>
+              <p>
+                NYC HPD, DOHMH, and NJ municipal health departments each
+                track rodent conditions differently — but the underlying
+                requirement is the same: active, consistent management,
+                not just a reactive call after a complaint.
+              </p>
             }
           />
           <div className="mt-10 grid gap-5 md:grid-cols-3">
@@ -261,7 +250,7 @@ function PropertyManagersPage() {
 
       <ClosingCta
         title="Stop managing the complaint rotation."
-        body="Tell us how many buildings you manage and where the active pressure is. We'll put together a program outline covering Phase 1 coordination and a 90-day monitoring schedule."
+        body="Evolve starter kits include locking bait stations and a deployment guide. Order by address — rat or mouse formula, 6 lb starter kit or refill — and run the fertility layer across every building that has active pressure."
       />
     </>
   );
