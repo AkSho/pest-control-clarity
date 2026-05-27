@@ -50,13 +50,13 @@ const FALLS_SHORT = [
 ];
 
 const ROWS = [
-  { label: "Removes individual rodents", a: "Yes", b: "Phase 1 of the program handles this" },
+  { label: "Removes individual rodents", a: "Yes", b: "Handled by your existing knockdown treatment" },
   { label: "Reduces colony reproduction rate", a: "No", b: "Yes — that's the mechanism" },
-  { label: "Scales to established colony size", a: "No", b: "Yes — passive, monthly cadence" },
+  { label: "Scales to established colony size", a: "No", b: "Yes — passive, works between replenishments" },
   { label: "Works passively between visits", a: "No — manual reset required", b: "Yes" },
   { label: "Breaks the replacement cycle", a: "No", b: "Reduces how fast it forms" },
   { label: "Visible dead rodents", a: "Yes", b: "No — fertility, not lethality" },
-  { label: "90-day declining trend documentation", a: "No", b: "Monthly track count plates and written report" },
+  { label: "Population trend over 60 to 120 days", a: "No", b: "Measurable population decline documented in field studies" },
 ];
 
 function SnapTrapsVsPage() {
@@ -67,7 +67,7 @@ function SnapTrapsVsPage() {
         headline="The traps keep catching rats. The population isn't going down."
         lede="Snap traps remove individual rats. They have no effect on how fast the colony makes new ones. In a dense urban block with constant inbound pressure from the surrounding area, catching rats one at a time can't win."
         image={heroImg}
-        ctaLabel="Start the program"
+        ctaLabel="Shop the starter kit"
       />
 
       <section className="bg-background py-20">
@@ -196,8 +196,8 @@ function SnapTrapsVsPage() {
 
       <ClosingCta
         title="Work on the colony, not one rat at a time."
-        body="The 90-day program combines Phase 1 knockdown with continuous fertility management. The population doesn't cycle back. The 90-day trend is documented and declining."
-        primary={{ label: "Start the program", to: "/get-started" }}
+        body="Add Evolve after knockdown and the replacement colony can't form at full size. The population shrinks instead of cycling."
+        primary={{ label: "Shop the starter kit", to: "/products/starter-kit" }}
         secondary={{ label: "How Evolve works", to: "/evolve-rodent-birth-control" }}
       />
     </>

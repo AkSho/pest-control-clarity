@@ -30,11 +30,11 @@ export const Route = createFileRoute("/vs/orkin")({
 
 const ROWS = [
   { label: "Treatment method", a: "Licensed knockdown, exclusion, scheduled visits", b: "Evolve fertility management on top of existing treatment — reduces replacement colony formation" },
-  { label: "Monitoring", a: "Scheduled service reports", b: "Monthly track count plates at every station — 90-day documented trend" },
-  { label: "Replacement cycle", a: "Cleared at treatment, rebuilds 4–8 weeks later", b: "Replacement population forms at reduced rate — density declines over 90 days" },
-  { label: "DOHMH compliance record", a: "Licensed PMP service documentation", b: "Written monthly monitoring reports — 90-day trend line for inspector" },
-  { label: "Re-inspection risk", a: "Dependent on timing of next inspection vs. last treatment", b: "Reduced — documented declining population, not cycling" },
-  { label: "Works with existing vendor", a: "Is your existing vendor", b: "Yes — your exterminator handles Phase 1, Cloakd adds the fertility layer" },
+  { label: "Mechanism", a: "Removes active population", b: "Reduces reproduction rate — replacement colony can't form at full size" },
+  { label: "Replacement cycle", a: "Cleared at treatment, rebuilds 4–8 weeks later", b: "Replacement population forms at reduced rate — density declines between visits" },
+  { label: "EPA status", a: "Licensed pesticide", b: "EPA 25(b) minimum risk — no special permits, safe for food environments" },
+  { label: "Secondary kill risk", a: "Depends on product used", b: "None" },
+  { label: "Works with existing vendor", a: "Is your existing vendor", b: "Yes — your exterminator handles knockdown, Evolve adds fertility management on top" },
 ];
 
 function OrkinVsPage() {
@@ -45,7 +45,7 @@ function OrkinVsPage() {
         headline="Orkin's commercial program clears the active colony. The replacement that follows is a different problem."
         lede="Orkin is one of the longest-operating commercial rodent control providers in the country. Their program — licensed treatment, entry point sealing, preventive protocol — removes what's present. It doesn't change how fast the replacement population forms after the colony is gone. That's not a failure of execution. It's a structural limitation of what standard pest control is designed to address."
         image={heroImg}
-        ctaLabel="Start the program"
+        ctaLabel="Shop the starter kit"
       />
 
       <section className="bg-background py-20">
@@ -90,7 +90,7 @@ function OrkinVsPage() {
         <div className="container-site">
           <SectionHeader
             eyebrow="Side-by-side comparison"
-            title="Orkin's commercial program vs. the Cloakd 90-day fertility layer."
+            title="Orkin's commercial program vs. Evolve fertility management."
           />
           <div className="mt-10 overflow-x-auto rounded-2xl border border-border bg-card shadow-[var(--shadow-card)]">
             <table className="w-full min-w-[640px] border-collapse text-left text-sm md:text-base">
@@ -154,12 +154,12 @@ function OrkinVsPage() {
               </ul>
             </div>
             <div className="rounded-2xl border border-brand/40 bg-brand-soft p-7 shadow-[var(--shadow-card)]">
-              <h3 className="text-lg font-extrabold leading-tight">Add Cloakd if</h3>
+              <h3 className="text-lg font-extrabold leading-tight">Add Evolve if</h3>
               <ul className="mt-4 space-y-3 text-sm leading-relaxed text-muted-foreground md:text-base">
                 <li>You've been cited for 04K or 04L more than once in 24 months</li>
-                <li>You need a documented 90-day trend line for a DOHMH re-inspection</li>
+                <li>The replacement cycle keeps resetting between scheduled treatment visits</li>
                 <li>Your inspection risk is tied to treatment timing — the window problem</li>
-                <li>You need the monitoring record that shows active management, not just a service receipt</li>
+                <li>You want the replacement population to form slower between each knockdown</li>
               </ul>
             </div>
           </div>
@@ -173,8 +173,8 @@ function OrkinVsPage() {
 
       <ClosingCta
         title="Keep your vendor. Add the layer that addresses the replacement cycle."
-        body="Tell us about your property and how long the recurring problem has been running. We'll outline exactly what the 90-day program adds on top of your existing service."
-        primary={{ label: "Start the program", to: "/get-started" }}
+        body="Evolve deploys on top of whatever knockdown program is already running. Add it after the colony clears and the replacement population has nowhere to build."
+        primary={{ label: "Shop the starter kit", to: "/products/starter-kit" }}
         secondary={{ label: "How Evolve works", to: "/evolve-rodent-birth-control" }}
       />
     </>

@@ -30,11 +30,11 @@ export const Route = createFileRoute("/vs/bell-environmental")({
 
 const ROWS = [
   { label: "Treatment method", a: "Perimeter defense + internal mechanical trapping", b: "Evolve fertility management bait stations — reduces replacement colony formation" },
-  { label: "Monitoring", a: "Scheduled visit reports", b: "Monthly track count plates — documented declining trend over 90 days" },
+  { label: "Mechanism", a: "Removes active population", b: "Reduces reproduction rate — replacement colony can't form at full size" },
   { label: "Replacement cycle", a: "Cleared by trapping, rebuilds 4–8 weeks later", b: "Replacement population forms at reduced rate — density declines continuously" },
-  { label: "DOHMH compliance record", a: "Licensed PMP service documentation", b: "Written monthly monitoring reports — 90-day trend line for inspectors" },
-  { label: "Re-inspection risk", a: "Dependent on inspection timing relative to last elimination", b: "Reduced — documented declining population between visits" },
-  { label: "Works with existing vendor", a: "Is your existing vendor", b: "Yes — Bell Environmental stays, Cloakd adds the fertility layer" },
+  { label: "EPA status", a: "Licensed program", b: "EPA 25(b) minimum risk — no special permits, safe for food environments" },
+  { label: "Secondary kill risk", a: "Depends on method used", b: "None" },
+  { label: "Works with existing vendor", a: "Is your existing vendor", b: "Yes — Bell Environmental stays, Evolve adds fertility management on top" },
 ];
 
 function BellVsPage() {
@@ -45,7 +45,7 @@ function BellVsPage() {
         headline="Bell Environmental's program removes the active population. Here's the layer that addresses what comes back."
         lede="Bell Environmental has served NYC metro commercial clients for decades. Their multilayer program — perimeter protection plus internal mechanical trapping — is a sound approach to eliminating active rodent populations. The replacement cycle that refills empty territory after elimination is outside what any mechanical trapping program addresses. That's the gap fertility management closes."
         image={heroImg}
-        ctaLabel="Start the program"
+        ctaLabel="Shop the starter kit"
       />
 
       <section className="bg-background py-20">
@@ -91,7 +91,7 @@ function BellVsPage() {
         <div className="container-site">
           <SectionHeader
             eyebrow="Side-by-side comparison"
-            title="Bell Environmental vs. Cloakd 90-day program."
+            title="Bell Environmental vs. Evolve fertility management."
           />
           <div className="mt-10 overflow-x-auto rounded-2xl border border-border bg-card shadow-[var(--shadow-card)]">
             <table className="w-full min-w-[640px] border-collapse text-left text-sm md:text-base">
@@ -156,12 +156,12 @@ function BellVsPage() {
               </ul>
             </div>
             <div className="rounded-2xl border border-brand/40 bg-brand-soft p-7 shadow-[var(--shadow-card)]">
-              <h3 className="text-lg font-extrabold leading-tight">Add Cloakd if</h3>
+              <h3 className="text-lg font-extrabold leading-tight">Add Evolve if</h3>
               <ul className="mt-4 space-y-3 text-sm leading-relaxed text-muted-foreground md:text-base">
                 <li>You've had repeat 04K or 04L citations despite consistent service</li>
-                <li>You need a documented 90-day population trend for DOHMH re-inspection</li>
                 <li>The replacement cycle keeps resetting between scheduled visits</li>
-                <li>Your inspector wants evidence of active management, not just elimination records</li>
+                <li>Your building has surrounding density pressure that drives fast replacement</li>
+                <li>You want the replacement population to form slower between each elimination</li>
               </ul>
             </div>
           </div>
@@ -174,9 +174,9 @@ function BellVsPage() {
       </section>
 
       <ClosingCta
-        title="Bell Environmental handles elimination. The 90-day program handles what comes back."
-        body="Tell us how long the cycle has been running and who handles your current service. We'll outline what the fertility layer adds on top."
-        primary={{ label: "Start the program", to: "/get-started" }}
+        title="Bell Environmental handles elimination. Evolve handles what comes back."
+        body="Evolve deploys on top of whatever knockdown program is already running. Add it after the colony clears and the replacement population has nowhere to build."
+        primary={{ label: "Shop the starter kit", to: "/products/starter-kit" }}
         secondary={{ label: "How Evolve works", to: "/evolve-rodent-birth-control" }}
       />
     </>

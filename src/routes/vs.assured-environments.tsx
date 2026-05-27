@@ -29,12 +29,12 @@ export const Route = createFileRoute("/vs/assured-environments")({
 });
 
 const ROWS = [
-  { label: "Treatment method", a: "Exclusion, sanitation, licensed knockdown", b: "Fertility management via Evolve bait stations — runs on top of your existing program" },
-  { label: "Monitoring", a: "Service reports per scheduled visit", b: "Monthly track count plates at every station — documented declining trend over 90 days" },
+  { label: "Treatment method", a: "Exclusion, sanitation, licensed knockdown", b: "Evolve fertility management bait stations — runs on top of your existing program" },
+  { label: "Mechanism", a: "Removes active population", b: "Reduces reproduction rate — replacement colony can't form at full size" },
   { label: "Replacement cycle", a: "Cleared at treatment, rebuilds 4–8 weeks later", b: "Reduces how fast the replacement colony forms — population declines between treatment visits" },
-  { label: "DOHMH compliance record", a: "Licensed PMP service documentation", b: "Written monitoring report every 30 days — 90-day trend line to hand an inspector" },
-  { label: "Re-inspection risk", a: "Dependent on inspection timing relative to treatment", b: "Reduced — population density declining continuously, not cycling" },
-  { label: "Works with existing vendor", a: "Is your existing vendor", b: "Yes — Cloakd adds a layer on top of your current contract" },
+  { label: "EPA status", a: "Licensed pesticide", b: "EPA 25(b) minimum risk — no special permits, safe for food environments" },
+  { label: "Secondary kill risk", a: "Depends on product used", b: "None" },
+  { label: "Works with existing vendor", a: "Is your existing vendor", b: "Yes — Evolve deploys on top of your current program" },
 ];
 
 function AssuredVsPage() {
@@ -45,7 +45,7 @@ function AssuredVsPage() {
         headline="Assured Environments runs a long-standing NYC pest program. Here's the one variable it isn't designed to address."
         lede="Assured Environments is one of the largest commercial pest control providers in New York. Their program — exclusion, sanitation, licensed treatment — is executed correctly. The replacement cycle that fills empty territory four to eight weeks after treatment is a biology problem that standard pest control is not designed to solve. That's what the fertility management layer addresses."
         image={heroImg}
-        ctaLabel="Start the program"
+        ctaLabel="Shop the starter kit"
       />
 
       <section className="bg-background py-20">
@@ -88,7 +88,7 @@ function AssuredVsPage() {
         <div className="container-site">
           <SectionHeader
             eyebrow="Side-by-side comparison"
-            title="Assured Environments vs. Cloakd 90-day program."
+            title="Assured Environments vs. Evolve fertility management."
           />
           <div className="mt-10 overflow-x-auto rounded-2xl border border-border bg-card shadow-[var(--shadow-card)]">
             <table className="w-full min-w-[640px] border-collapse text-left text-sm md:text-base">
@@ -153,11 +153,11 @@ function AssuredVsPage() {
               </ul>
             </div>
             <div className="rounded-2xl border border-brand/40 bg-brand-soft p-7 shadow-[var(--shadow-card)]">
-              <h3 className="text-lg font-extrabold leading-tight">Add Cloakd on top if</h3>
+              <h3 className="text-lg font-extrabold leading-tight">Add Evolve on top if</h3>
               <ul className="mt-4 space-y-3 text-sm leading-relaxed text-muted-foreground md:text-base">
                 <li>You have a recurring violation despite consistent treatment — the cycle keeps resetting</li>
-                <li>You need a documented 90-day declining trend to show a DOHMH inspector</li>
-                <li>You've been cited for 04K or 04L and need more than a service receipt for re-inspection</li>
+                <li>You've been cited for 04K or 04L more than once in 24 months</li>
+                <li>The replacement cycle keeps resetting between treatment visits</li>
                 <li>Your current program handles the colony but not the replacement population</li>
               </ul>
             </div>
@@ -167,8 +167,8 @@ function AssuredVsPage() {
 
       <ClosingCta
         title="Your current exterminator stays. The fertility layer goes on top."
-        body="Tell us who handles your current pest control and what the recurring problem looks like. We'll outline what the 90-day program adds and what the monitoring record will document."
-        primary={{ label: "Start the program", to: "/get-started" }}
+        body="Evolve deploys on top of whatever knockdown program is already running. Add it after the colony clears and the replacement population has nowhere to build."
+        primary={{ label: "Shop the starter kit", to: "/products/starter-kit" }}
         secondary={{ label: "DOHMH violations", to: "/dohmh-rodent-violation-nyc" }}
       />
     </>

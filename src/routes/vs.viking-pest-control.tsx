@@ -30,11 +30,11 @@ export const Route = createFileRoute("/vs/viking-pest-control")({
 
 const ROWS = [
   { label: "Treatment method", a: "Licensed treatment + digital monitoring technology", b: "Evolve fertility management — gossypol-based soft bait that reduces reproductive output" },
-  { label: "Monitoring", a: "Digital sensors transmitting activity data continuously", b: "Monthly track count plates — documented declining trend specific to 90-day compliance record" },
+  { label: "Mechanism", a: "Removes active population, tracks activity digitally", b: "Reduces reproduction rate — replacement colony can't form at full size" },
   { label: "Replacement cycle", a: "Cleared at treatment, rebuilds 4–8 weeks later", b: "Replacement population forms at reduced rate — density declines between visits" },
-  { label: "NJ compliance record", a: "Licensed PMP documentation for NJ health department inspections", b: "Written monthly monitoring reports — 90-day trend line for municipal health officer" },
-  { label: "Re-inspection risk", a: "Dependent on timing of next NJ health inspection vs. last treatment", b: "Reduced — documented declining population, not cycling" },
-  { label: "Works with existing vendor", a: "Is your existing NJ vendor", b: "Yes — your vendor handles Phase 1, Cloakd adds the fertility layer" },
+  { label: "EPA status", a: "Licensed pesticide program", b: "EPA 25(b) minimum risk — no special permits, safe for food environments" },
+  { label: "Secondary kill risk", a: "Depends on product used", b: "None" },
+  { label: "Works with existing vendor", a: "Is your existing NJ vendor", b: "Yes — your vendor handles knockdown, Evolve adds fertility management on top" },
 ];
 
 function VikingVsPage() {
@@ -45,7 +45,7 @@ function VikingVsPage() {
         headline="Viking monitors NJ rodent activity around the clock. Here's the layer that reduces how fast it comes back."
         lede="Viking Pest Control is one of the dominant commercial pest operators in New Jersey — state-certified licensed pest management professionals and digital monitoring technology that tracks rodent activity year-round. Their program is well-executed. It doesn't reduce the fertility of the replacement colony that forms after each treatment cycle. That's what the fertility management layer addresses."
         image={heroImg}
-        ctaLabel="Start the program"
+        ctaLabel="Shop the starter kit"
       />
 
       <section className="bg-background py-20">
@@ -93,7 +93,7 @@ function VikingVsPage() {
         <div className="container-site">
           <SectionHeader
             eyebrow="Side-by-side comparison"
-            title="Viking Pest Control vs. Cloakd 90-day program."
+            title="Viking Pest Control vs. Evolve fertility management."
           />
           <div className="mt-10 overflow-x-auto rounded-2xl border border-border bg-card shadow-[var(--shadow-card)]">
             <table className="w-full min-w-[640px] border-collapse text-left text-sm md:text-base">
@@ -158,12 +158,12 @@ function VikingVsPage() {
               </ul>
             </div>
             <div className="rounded-2xl border border-brand/40 bg-brand-soft p-7 shadow-[var(--shadow-card)]">
-              <h3 className="text-lg font-extrabold leading-tight">Add Cloakd if</h3>
+              <h3 className="text-lg font-extrabold leading-tight">Add Evolve if</h3>
               <ul className="mt-4 space-y-3 text-sm leading-relaxed text-muted-foreground md:text-base">
                 <li>You've had recurring NJ rodent violations despite consistent service</li>
-                <li>You need a documented 90-day trend line for a NJ municipal health re-inspection</li>
                 <li>The replacement cycle keeps resetting between treatment visits</li>
-                <li>Your NJ health officer wants evidence of population decline, not just treatment records</li>
+                <li>Your building has surrounding density pressure that drives fast replacement</li>
+                <li>You want the replacement population to form slower between each knockdown</li>
               </ul>
             </div>
           </div>
@@ -175,9 +175,9 @@ function VikingVsPage() {
       </section>
 
       <ClosingCta
-        title="Viking stays. The fertility layer goes on top."
-        body="Tell us about your NJ property and what the recurring problem looks like. We'll outline what the 90-day program adds on top of your current service."
-        primary={{ label: "Start the program", to: "/get-started" }}
+        title="Viking stays. Evolve adds the fertility layer on top."
+        body="Evolve deploys on top of whatever knockdown program is already running. Add it after the colony clears and the replacement population has nowhere to build."
+        primary={{ label: "Shop the starter kit", to: "/products/starter-kit" }}
         secondary={{ label: "How Evolve works", to: "/evolve-rodent-birth-control" }}
       />
     </>

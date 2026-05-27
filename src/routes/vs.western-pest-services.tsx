@@ -31,10 +31,10 @@ export const Route = createFileRoute("/vs/western-pest-services")({
 const ROWS = [
   { label: "Treatment method", a: "IPM — exclusion, harborage elimination, targeted treatment with minimum pesticide use", b: "Evolve fertility management — gossypol-based bait that reduces reproductive output alongside existing IPM" },
   { label: "Expert backing", a: "Board Certified Entomologists", b: "SenesTech field data — 79% reduction in track presence over 5 months in urban building deployments" },
-  { label: "Monitoring", a: "Scheduled visit reports per IPM protocol", b: "Monthly track count plates — documented declining trend for compliance record" },
+  { label: "Mechanism", a: "Removes active population via IPM protocol", b: "Reduces reproduction rate — replacement colony can't form at full size" },
   { label: "Replacement cycle", a: "Cleared at treatment, rebuilds 4–8 weeks later", b: "Replacement population forms at reduced rate — density declines continuously" },
-  { label: "Compliance record", a: "Licensed PMP documentation for NJ and NYC inspections", b: "Written monthly monitoring reports — 90-day trend line for municipal health officer or DOHMH inspector" },
-  { label: "Works with existing vendor", a: "Is your existing vendor", b: "Yes — Western handles the IPM foundation, Cloakd adds fertility management on top" },
+  { label: "EPA status", a: "Licensed PMP program", b: "EPA 25(b) minimum risk — no special permits, safe for food environments" },
+  { label: "Works with existing vendor", a: "Is your existing vendor", b: "Yes — Western handles the IPM foundation, Evolve adds fertility management on top" },
 ];
 
 function WesternVsPage() {
@@ -45,7 +45,7 @@ function WesternVsPage() {
         headline="Western runs an IPM program across NJ and NYC. Here's the one layer integrated pest management doesn't include."
         lede="Western Pest Services — backed by Board Certified Entomologists and operating across NJ, NY, PA, DE, MD, and CT — runs one of the most technically rigorous standard pest management programs in the region. Their integrated pest management approach reduces pesticide use and addresses structural conditions. It doesn't reduce the fertility of the replacement colony that forms after each treatment. Fertility management is what addresses that layer."
         image={heroImg}
-        ctaLabel="Start the program"
+        ctaLabel="Shop the starter kit"
       />
 
       <section className="bg-background py-20">
@@ -94,7 +94,7 @@ function WesternVsPage() {
         <div className="container-site">
           <SectionHeader
             eyebrow="Side-by-side comparison"
-            title="Western Pest Services vs. Cloakd 90-day program."
+            title="Western Pest Services vs. Evolve fertility management."
           />
           <div className="mt-10 overflow-x-auto rounded-2xl border border-border bg-card shadow-[var(--shadow-card)]">
             <table className="w-full min-w-[640px] border-collapse text-left text-sm md:text-base">
@@ -159,12 +159,12 @@ function WesternVsPage() {
               </ul>
             </div>
             <div className="rounded-2xl border border-brand/40 bg-brand-soft p-7 shadow-[var(--shadow-card)]">
-              <h3 className="text-lg font-extrabold leading-tight">Add Cloakd if</h3>
+              <h3 className="text-lg font-extrabold leading-tight">Add Evolve if</h3>
               <ul className="mt-4 space-y-3 text-sm leading-relaxed text-muted-foreground md:text-base">
                 <li>You have recurring rodent violations in NJ or NYC despite consistent service</li>
-                <li>You need a documented 90-day population trend for a health department re-inspection</li>
                 <li>The replacement cycle keeps resetting between scheduled IPM visits</li>
-                <li>Your inspector wants evidence of declining activity, not just IPM compliance records</li>
+                <li>Your building has surrounding density pressure that drives fast replacement</li>
+                <li>You want the replacement population to form slower between each IPM treatment</li>
               </ul>
             </div>
           </div>
@@ -176,9 +176,9 @@ function WesternVsPage() {
       </section>
 
       <ClosingCta
-        title="Western stays. The fertility management layer goes on top."
-        body="Tell us about your NJ or NYC property and what the recurring problem looks like. We'll outline what the 90-day program adds on top of your existing IPM service."
-        primary={{ label: "Start the program", to: "/get-started" }}
+        title="Western stays. Evolve adds the fertility management layer on top."
+        body="Evolve deploys on top of whatever knockdown program is already running. Add it after the colony clears and the replacement population has nowhere to build."
+        primary={{ label: "Shop the starter kit", to: "/products/starter-kit" }}
         secondary={{ label: "How Evolve works", to: "/evolve-rodent-birth-control" }}
       />
     </>
