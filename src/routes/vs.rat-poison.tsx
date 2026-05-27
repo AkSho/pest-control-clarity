@@ -48,7 +48,7 @@ const ROWS = [
   {
     label: "Kills the current colony",
     poison: "Yes",
-    evolve: "Phase 1 of the program handles this with your existing vendor",
+    evolve: "Handled by your existing knockdown treatment",
   },
   {
     label: "Reduces reproduction rate over time",
@@ -71,9 +71,9 @@ const ROWS = [
     evolve: "Yes",
   },
   {
-    label: "90-day declining trend documentation",
+    label: "Population trend over 60 to 120 days",
     poison: "No",
-    evolve: "Monthly track count plates and written report",
+    evolve: "Measurable population decline documented in field studies",
   },
 ];
 
@@ -85,7 +85,7 @@ function RatPoisonVsPage() {
         headline="Poison kills the rats that eat it. It doesn't stop the ones that come next."
         lede="Poison does its job. The problem is what happens four to six weeks after the colony clears. Empty territory in a food-rich urban block fills from the surrounding population — at full breeding rate — before your next scheduled treatment."
         image={heroImg}
-        ctaLabel="Start the program"
+        ctaLabel="Shop the starter kit"
       />
 
       <section className="bg-background py-20">
@@ -213,17 +213,16 @@ function RatPoisonVsPage() {
             caption="Evolve is a contraceptive soft bait — non-lethal, no anticoagulants."
           /> */}
           <p className="mt-6 max-w-3xl text-base leading-relaxed text-muted-foreground md:text-lg">
-            The 90-day program uses both. Phase 1 clears the current
-            colony with whatever treatment is already in place. Phase 2
-            adds Evolve on top to prevent the replacement from forming
-            at the same rate. Together they produce a declining trend.
+            The two layers work together. Standard knockdown clears the
+            current colony. Evolve reduces how fast the replacement
+            colony forms. Together they produce a declining trend.
             Separately, neither does.
           </p>
         </div>
       </section>
 
       <FieldDataTrio
-        intro="What a combined program produces over 90 days."
+        intro="What the field data shows over 60 to 120 days of Evolve deployment."
         footnote={
           <>
             Source:{" "}
@@ -258,8 +257,8 @@ function RatPoisonVsPage() {
 
       <ClosingCta
         title="Keep the poison. Add the layer that stops the cycle."
-        body="The program works with whatever treatment is already running. Your vendor stays. We add the fertility layer on top."
-        primary={{ label: "Start the program", to: "/get-started" }}
+        body="Evolve works alongside whatever knockdown method is already in place. Add it after the colony clears and the replacement population has nowhere to get started."
+        primary={{ label: "Shop the starter kit", to: "/products/starter-kit" }}
         secondary={{ label: "How Evolve works", to: "/evolve-rodent-birth-control" }}
       />
     </>

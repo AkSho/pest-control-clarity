@@ -10,19 +10,23 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WhyItKeepsComingBackRouteImport } from './routes/why-it-keeps-coming-back'
+import { Route as WhereToBuyEvolveRouteImport } from './routes/where-to-buy-evolve'
 import { Route as WhatToExpectRouteImport } from './routes/what-to-expect'
 import { Route as ThankYouRouteImport } from './routes/thank-you'
 import { Route as RodentRadarRouteImport } from './routes/rodent-radar'
 import { Route as RodentFertilityControlRouteImport } from './routes/rodent-fertility-control'
 import { Route as ResultsRouteImport } from './routes/results'
 import { Route as ResourcesRouteImport } from './routes/resources'
+import { Route as RatContraceptiveRouteImport } from './routes/rat-contraceptive'
 import { Route as QuestionsRouteImport } from './routes/questions'
 import { Route as PaymentConfirmedRouteImport } from './routes/payment-confirmed'
 import { Route as NjRodentViolationRouteImport } from './routes/nj-rodent-violation'
+import { Route as MouseContraceptiveRouteImport } from './routes/mouse-contraceptive'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as GetStartedRouteImport } from './routes/get-started'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as EvolveRodentBirthControlRouteImport } from './routes/evolve-rodent-birth-control'
+import { Route as EvolveMouseBirthControlRouteImport } from './routes/evolve-mouse-birth-control'
 import { Route as DohmhRodentViolationNycRouteImport } from './routes/dohmh-rodent-violation-nyc'
 import { Route as DoesRatBirthControlWorkRouteImport } from './routes/does-rat-birth-control-work'
 import { Route as ContrapestVsEvolveRouteImport } from './routes/contrapest-vs-evolve'
@@ -61,6 +65,11 @@ const WhyItKeepsComingBackRoute = WhyItKeepsComingBackRouteImport.update({
   path: '/why-it-keeps-coming-back',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WhereToBuyEvolveRoute = WhereToBuyEvolveRouteImport.update({
+  id: '/where-to-buy-evolve',
+  path: '/where-to-buy-evolve',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WhatToExpectRoute = WhatToExpectRouteImport.update({
   id: '/what-to-expect',
   path: '/what-to-expect',
@@ -91,6 +100,11 @@ const ResourcesRoute = ResourcesRouteImport.update({
   path: '/resources',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RatContraceptiveRoute = RatContraceptiveRouteImport.update({
+  id: '/rat-contraceptive',
+  path: '/rat-contraceptive',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const QuestionsRoute = QuestionsRouteImport.update({
   id: '/questions',
   path: '/questions',
@@ -104,6 +118,11 @@ const PaymentConfirmedRoute = PaymentConfirmedRouteImport.update({
 const NjRodentViolationRoute = NjRodentViolationRouteImport.update({
   id: '/nj-rodent-violation',
   path: '/nj-rodent-violation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MouseContraceptiveRoute = MouseContraceptiveRouteImport.update({
+  id: '/mouse-contraceptive',
+  path: '/mouse-contraceptive',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HowItWorksRoute = HowItWorksRouteImport.update({
@@ -127,6 +146,11 @@ const EvolveRodentBirthControlRoute =
     path: '/evolve-rodent-birth-control',
     getParentRoute: () => rootRouteImport,
   } as any)
+const EvolveMouseBirthControlRoute = EvolveMouseBirthControlRouteImport.update({
+  id: '/evolve-mouse-birth-control',
+  path: '/evolve-mouse-birth-control',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DohmhRodentViolationNycRoute = DohmhRodentViolationNycRouteImport.update({
   id: '/dohmh-rodent-violation-nyc',
   path: '/dohmh-rodent-violation-nyc',
@@ -300,19 +324,23 @@ export interface FileRoutesByFullPath {
   '/contrapest-vs-evolve': typeof ContrapestVsEvolveRoute
   '/does-rat-birth-control-work': typeof DoesRatBirthControlWorkRoute
   '/dohmh-rodent-violation-nyc': typeof DohmhRodentViolationNycRoute
+  '/evolve-mouse-birth-control': typeof EvolveMouseBirthControlRoute
   '/evolve-rodent-birth-control': typeof EvolveRodentBirthControlRoute
   '/faq': typeof FaqRoute
   '/get-started': typeof GetStartedRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/mouse-contraceptive': typeof MouseContraceptiveRoute
   '/nj-rodent-violation': typeof NjRodentViolationRoute
   '/payment-confirmed': typeof PaymentConfirmedRoute
   '/questions': typeof QuestionsRoute
+  '/rat-contraceptive': typeof RatContraceptiveRoute
   '/resources': typeof ResourcesRoute
   '/results': typeof ResultsRoute
   '/rodent-fertility-control': typeof RodentFertilityControlRoute
   '/rodent-radar': typeof RodentRadarRoute
   '/thank-you': typeof ThankYouRoute
   '/what-to-expect': typeof WhatToExpectRoute
+  '/where-to-buy-evolve': typeof WhereToBuyEvolveRoute
   '/why-it-keeps-coming-back': typeof WhyItKeepsComingBackRoute
   '/areas/$areaSlug': typeof AreasAreaSlugRoute
   '/products/refill': typeof ProductsRefillRoute
@@ -348,19 +376,23 @@ export interface FileRoutesByTo {
   '/contrapest-vs-evolve': typeof ContrapestVsEvolveRoute
   '/does-rat-birth-control-work': typeof DoesRatBirthControlWorkRoute
   '/dohmh-rodent-violation-nyc': typeof DohmhRodentViolationNycRoute
+  '/evolve-mouse-birth-control': typeof EvolveMouseBirthControlRoute
   '/evolve-rodent-birth-control': typeof EvolveRodentBirthControlRoute
   '/faq': typeof FaqRoute
   '/get-started': typeof GetStartedRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/mouse-contraceptive': typeof MouseContraceptiveRoute
   '/nj-rodent-violation': typeof NjRodentViolationRoute
   '/payment-confirmed': typeof PaymentConfirmedRoute
   '/questions': typeof QuestionsRoute
+  '/rat-contraceptive': typeof RatContraceptiveRoute
   '/resources': typeof ResourcesRoute
   '/results': typeof ResultsRoute
   '/rodent-fertility-control': typeof RodentFertilityControlRoute
   '/rodent-radar': typeof RodentRadarRoute
   '/thank-you': typeof ThankYouRoute
   '/what-to-expect': typeof WhatToExpectRoute
+  '/where-to-buy-evolve': typeof WhereToBuyEvolveRoute
   '/why-it-keeps-coming-back': typeof WhyItKeepsComingBackRoute
   '/areas/$areaSlug': typeof AreasAreaSlugRoute
   '/products/refill': typeof ProductsRefillRoute
@@ -397,19 +429,23 @@ export interface FileRoutesById {
   '/contrapest-vs-evolve': typeof ContrapestVsEvolveRoute
   '/does-rat-birth-control-work': typeof DoesRatBirthControlWorkRoute
   '/dohmh-rodent-violation-nyc': typeof DohmhRodentViolationNycRoute
+  '/evolve-mouse-birth-control': typeof EvolveMouseBirthControlRoute
   '/evolve-rodent-birth-control': typeof EvolveRodentBirthControlRoute
   '/faq': typeof FaqRoute
   '/get-started': typeof GetStartedRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/mouse-contraceptive': typeof MouseContraceptiveRoute
   '/nj-rodent-violation': typeof NjRodentViolationRoute
   '/payment-confirmed': typeof PaymentConfirmedRoute
   '/questions': typeof QuestionsRoute
+  '/rat-contraceptive': typeof RatContraceptiveRoute
   '/resources': typeof ResourcesRoute
   '/results': typeof ResultsRoute
   '/rodent-fertility-control': typeof RodentFertilityControlRoute
   '/rodent-radar': typeof RodentRadarRoute
   '/thank-you': typeof ThankYouRoute
   '/what-to-expect': typeof WhatToExpectRoute
+  '/where-to-buy-evolve': typeof WhereToBuyEvolveRoute
   '/why-it-keeps-coming-back': typeof WhyItKeepsComingBackRoute
   '/areas/$areaSlug': typeof AreasAreaSlugRoute
   '/products/refill': typeof ProductsRefillRoute
@@ -447,19 +483,23 @@ export interface FileRouteTypes {
     | '/contrapest-vs-evolve'
     | '/does-rat-birth-control-work'
     | '/dohmh-rodent-violation-nyc'
+    | '/evolve-mouse-birth-control'
     | '/evolve-rodent-birth-control'
     | '/faq'
     | '/get-started'
     | '/how-it-works'
+    | '/mouse-contraceptive'
     | '/nj-rodent-violation'
     | '/payment-confirmed'
     | '/questions'
+    | '/rat-contraceptive'
     | '/resources'
     | '/results'
     | '/rodent-fertility-control'
     | '/rodent-radar'
     | '/thank-you'
     | '/what-to-expect'
+    | '/where-to-buy-evolve'
     | '/why-it-keeps-coming-back'
     | '/areas/$areaSlug'
     | '/products/refill'
@@ -495,19 +535,23 @@ export interface FileRouteTypes {
     | '/contrapest-vs-evolve'
     | '/does-rat-birth-control-work'
     | '/dohmh-rodent-violation-nyc'
+    | '/evolve-mouse-birth-control'
     | '/evolve-rodent-birth-control'
     | '/faq'
     | '/get-started'
     | '/how-it-works'
+    | '/mouse-contraceptive'
     | '/nj-rodent-violation'
     | '/payment-confirmed'
     | '/questions'
+    | '/rat-contraceptive'
     | '/resources'
     | '/results'
     | '/rodent-fertility-control'
     | '/rodent-radar'
     | '/thank-you'
     | '/what-to-expect'
+    | '/where-to-buy-evolve'
     | '/why-it-keeps-coming-back'
     | '/areas/$areaSlug'
     | '/products/refill'
@@ -543,19 +587,23 @@ export interface FileRouteTypes {
     | '/contrapest-vs-evolve'
     | '/does-rat-birth-control-work'
     | '/dohmh-rodent-violation-nyc'
+    | '/evolve-mouse-birth-control'
     | '/evolve-rodent-birth-control'
     | '/faq'
     | '/get-started'
     | '/how-it-works'
+    | '/mouse-contraceptive'
     | '/nj-rodent-violation'
     | '/payment-confirmed'
     | '/questions'
+    | '/rat-contraceptive'
     | '/resources'
     | '/results'
     | '/rodent-fertility-control'
     | '/rodent-radar'
     | '/thank-you'
     | '/what-to-expect'
+    | '/where-to-buy-evolve'
     | '/why-it-keeps-coming-back'
     | '/areas/$areaSlug'
     | '/products/refill'
@@ -592,19 +640,23 @@ export interface RootRouteChildren {
   ContrapestVsEvolveRoute: typeof ContrapestVsEvolveRoute
   DoesRatBirthControlWorkRoute: typeof DoesRatBirthControlWorkRoute
   DohmhRodentViolationNycRoute: typeof DohmhRodentViolationNycRoute
+  EvolveMouseBirthControlRoute: typeof EvolveMouseBirthControlRoute
   EvolveRodentBirthControlRoute: typeof EvolveRodentBirthControlRoute
   FaqRoute: typeof FaqRoute
   GetStartedRoute: typeof GetStartedRoute
   HowItWorksRoute: typeof HowItWorksRoute
+  MouseContraceptiveRoute: typeof MouseContraceptiveRoute
   NjRodentViolationRoute: typeof NjRodentViolationRoute
   PaymentConfirmedRoute: typeof PaymentConfirmedRoute
   QuestionsRoute: typeof QuestionsRoute
+  RatContraceptiveRoute: typeof RatContraceptiveRoute
   ResourcesRoute: typeof ResourcesRoute
   ResultsRoute: typeof ResultsRoute
   RodentFertilityControlRoute: typeof RodentFertilityControlRoute
   RodentRadarRoute: typeof RodentRadarRoute
   ThankYouRoute: typeof ThankYouRoute
   WhatToExpectRoute: typeof WhatToExpectRoute
+  WhereToBuyEvolveRoute: typeof WhereToBuyEvolveRoute
   WhyItKeepsComingBackRoute: typeof WhyItKeepsComingBackRoute
   AreasAreaSlugRoute: typeof AreasAreaSlugRoute
   ProductsRefillRoute: typeof ProductsRefillRoute
@@ -642,6 +694,13 @@ declare module '@tanstack/react-router' {
       path: '/why-it-keeps-coming-back'
       fullPath: '/why-it-keeps-coming-back'
       preLoaderRoute: typeof WhyItKeepsComingBackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/where-to-buy-evolve': {
+      id: '/where-to-buy-evolve'
+      path: '/where-to-buy-evolve'
+      fullPath: '/where-to-buy-evolve'
+      preLoaderRoute: typeof WhereToBuyEvolveRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/what-to-expect': {
@@ -686,6 +745,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResourcesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/rat-contraceptive': {
+      id: '/rat-contraceptive'
+      path: '/rat-contraceptive'
+      fullPath: '/rat-contraceptive'
+      preLoaderRoute: typeof RatContraceptiveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/questions': {
       id: '/questions'
       path: '/questions'
@@ -705,6 +771,13 @@ declare module '@tanstack/react-router' {
       path: '/nj-rodent-violation'
       fullPath: '/nj-rodent-violation'
       preLoaderRoute: typeof NjRodentViolationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mouse-contraceptive': {
+      id: '/mouse-contraceptive'
+      path: '/mouse-contraceptive'
+      fullPath: '/mouse-contraceptive'
+      preLoaderRoute: typeof MouseContraceptiveRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/how-it-works': {
@@ -733,6 +806,13 @@ declare module '@tanstack/react-router' {
       path: '/evolve-rodent-birth-control'
       fullPath: '/evolve-rodent-birth-control'
       preLoaderRoute: typeof EvolveRodentBirthControlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/evolve-mouse-birth-control': {
+      id: '/evolve-mouse-birth-control'
+      path: '/evolve-mouse-birth-control'
+      fullPath: '/evolve-mouse-birth-control'
+      preLoaderRoute: typeof EvolveMouseBirthControlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dohmh-rodent-violation-nyc': {
@@ -968,19 +1048,23 @@ const rootRouteChildren: RootRouteChildren = {
   ContrapestVsEvolveRoute: ContrapestVsEvolveRoute,
   DoesRatBirthControlWorkRoute: DoesRatBirthControlWorkRoute,
   DohmhRodentViolationNycRoute: DohmhRodentViolationNycRoute,
+  EvolveMouseBirthControlRoute: EvolveMouseBirthControlRoute,
   EvolveRodentBirthControlRoute: EvolveRodentBirthControlRoute,
   FaqRoute: FaqRoute,
   GetStartedRoute: GetStartedRoute,
   HowItWorksRoute: HowItWorksRoute,
+  MouseContraceptiveRoute: MouseContraceptiveRoute,
   NjRodentViolationRoute: NjRodentViolationRoute,
   PaymentConfirmedRoute: PaymentConfirmedRoute,
   QuestionsRoute: QuestionsRoute,
+  RatContraceptiveRoute: RatContraceptiveRoute,
   ResourcesRoute: ResourcesRoute,
   ResultsRoute: ResultsRoute,
   RodentFertilityControlRoute: RodentFertilityControlRoute,
   RodentRadarRoute: RodentRadarRoute,
   ThankYouRoute: ThankYouRoute,
   WhatToExpectRoute: WhatToExpectRoute,
+  WhereToBuyEvolveRoute: WhereToBuyEvolveRoute,
   WhyItKeepsComingBackRoute: WhyItKeepsComingBackRoute,
   AreasAreaSlugRoute: AreasAreaSlugRoute,
   ProductsRefillRoute: ProductsRefillRoute,
