@@ -203,7 +203,13 @@ function BirthControlPage() {
             Two independent sites producing positive outcomes over the same
             period gives the data more weight than a single result. The
             mechanism isn't site-specific. The biology is consistent across
-            urban environments — what matters is deployment structure.
+            urban environments — what matters is deployment structure.{" "}
+            <Link
+              to="/rodent-radar/rat-pressure-map"
+              className="text-brand underline-offset-2 hover:underline"
+            >
+              See rodent complaint density by neighborhood →
+            </Link>
           </p>
           <p className="mt-3 text-sm text-muted-foreground">
             Source:{" "}

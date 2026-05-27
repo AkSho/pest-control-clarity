@@ -326,6 +326,14 @@ function EvolvePage() {
               </div>
             ))}
           </div>
+          <p className="mt-6 text-sm leading-relaxed text-muted-foreground">
+            <Link
+              to="/rodent-radar/rat-pressure-map"
+              className="font-semibold text-brand underline-offset-2 hover:underline"
+            >
+              See rodent complaint activity across these cities on the rat pressure map →
+            </Link>
+          </p>
         </div>
       </section>
 

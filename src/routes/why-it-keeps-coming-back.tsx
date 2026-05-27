@@ -197,6 +197,14 @@ function ProblemPage() {
               Standard treatment removes the current group but doesn't slow down
               the one filling in after it. The cycle runs on schedule.
             </p>
+            <p>
+              <Link
+                to="/rodent-radar/rat-pressure-map"
+                className="font-semibold text-brand underline-offset-2 hover:underline"
+              >
+                See 311 complaint density by block and ZIP →
+              </Link>
+            </p>
           </div>
         </div>
       </section>
