@@ -87,6 +87,20 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8319aed6-5cd3-4ee3-a27c-b4c7f087125a/id-preview-6341af55--8c4daab4-e926-40a4-86eb-9c688f3ea9f6.lovable.app-1778639307495.png" },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8319aed6-5cd3-4ee3-a27c-b4c7f087125a/id-preview-6341af55--8c4daab4-e926-40a4-86eb-9c688f3ea9f6.lovable.app-1778639307495.png" },
     ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Cloakd Removals",
+          url: "https://cloakd-removals.cloud",
+          logo: "https://cloakd-removals.cloud/favicon.svg",
+          description: "Specialist source for Evolve rodent fertility control — the product that breaks the replacement cycle.",
+          sameAs: [],
+        }),
+      },
+    ],
     links: [
       { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
       { rel: "stylesheet", href: appCss },
