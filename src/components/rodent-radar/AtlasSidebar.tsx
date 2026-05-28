@@ -224,12 +224,6 @@ export function AtlasSidebarBody({
   );
 }
 
-function _unused_close_aside_marker() {
-  // (replaces stray closing tag from refactor)
-}
-// </aside>
-  );
-}
 
 function LegendRow({ swatch, label, meta }: { swatch: ReactNode; label: string; meta: string }) {
   return (
