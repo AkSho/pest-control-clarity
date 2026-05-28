@@ -681,7 +681,7 @@ function RodentRadarAtlasPage() {
     const place = HERO_CITY_SUMMARIES(allReports).find((item) => item.id === placeId);
     if (!place) return;
     setSelectedReportPlaceId(placeId);
-    setDrawerOpen(true);
+    setPulseReports(true);
     setSelectedAhs(null);
     updateSearch({ place: placeId, gap: undefined });
     mapRef.current?.flyTo({ center: [place.lng, place.lat], zoom: place.zoom, duration: 800, essential: true });
