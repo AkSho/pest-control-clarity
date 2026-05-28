@@ -10,9 +10,10 @@ interface AtlasToolbarProps {
   onQueryChange: (q: string) => void;
   shareUrl?: string;
   onOpenReports?: () => void;
+  pulseReports?: boolean;
 }
 
-export function AtlasToolbar({ query, onQueryChange, shareUrl, onOpenReports }: AtlasToolbarProps) {
+export function AtlasToolbar({ query, onQueryChange, shareUrl, onOpenReports, pulseReports = false }: AtlasToolbarProps) {
   const [copied, setCopied] = useState(false);
   const [bookmarkHint, setBookmarkHint] = useState(false);
 
