@@ -15,6 +15,7 @@ import {
   Info,
   Layers3,
   Map,
+  Menu,
   MapPin,
   RefreshCcw,
   Search,
@@ -67,7 +68,8 @@ import {
   type RodentRadarSearch,
 } from "@/lib/rodentRadarSearch";
 import zipToPlaceData from "../../public/rodent-radar/data/zip-to-place.json";
-import { AtlasSidebar, type MetricKey } from "@/components/rodent-radar/AtlasSidebar";
+import { AtlasSidebar, AtlasSidebarBody, type MetricKey } from "@/components/rodent-radar/AtlasSidebar";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { type LayerCardItem } from "@/components/rodent-radar/LayerCard";
 import { AtlasToolbar } from "@/components/rodent-radar/AtlasToolbar";
 import { CinematicToggle } from "@/components/rodent-radar/CinematicToggle";
@@ -406,6 +408,7 @@ function RodentRadarAtlasPage() {
   const [foodPestEvidence, setFoodPestEvidence] = useState<FoodPestEvidence[]>([]);
   const [contextState, setContextState] = useState<AsyncSnapshotState>("idle");
   const [contextError, setContextError] = useState<string | null>(null);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const mapRef = useRef<MapLibreMap | null>(null);
   const contextLoadStartedRef = useRef(false);
   const isMountedRef = useRef(true);
@@ -678,22 +681,26 @@ function RodentRadarAtlasPage() {
         <CuratedViews activeId={activeView} onSelect={handleCuratedView} />
       ) : null}
 
-      {/* Recurring activity toggle — small pill above layer cards */}
+      {/* Mobile top bar: hamburger + search. Desktop uses AtlasToolbar instead. */}
       {!cinematic ? (
-        <div className="pointer-events-auto absolute left-1/2 top-[4.5rem] z-[35] -translate-x-1/2">
+        <div className="pointer-events-auto absolute inset-x-0 top-0 z-[36] flex items-center gap-2 border-b border-white/[0.06] bg-slate-950/85 px-3 py-2 backdrop-blur md:hidden">
           <button
             type="button"
-            onClick={() => setRecurringOnly((v) => !v)}
-            className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[0.65rem] font-medium uppercase tracking-[0.18em] backdrop-blur transition ${
-              recurringOnly
-                ? "border-cyan-300/40 bg-cyan-400/10 text-cyan-100"
-                : "border-white/10 bg-slate-950/70 text-slate-400 hover:text-slate-100"
-            }`}
-            title="Highlight areas with at least 3 reports across at least 6 months"
+            onClick={() => setMobileNavOpen(true)}
+            aria-label="Open layers and filters"
+            className="grid h-9 w-9 shrink-0 place-items-center rounded-md border border-white/10 bg-white/[0.04] text-slate-200 hover:text-cyan-100"
           >
-            <Activity className="h-3 w-3" />
-            {recurringOnly ? "Showing recurring activity" : "Recurring activity only"}
+            <Menu className="h-4 w-4" />
           </button>
+          <label className="flex flex-1 items-center gap-2 rounded-md border border-white/10 bg-white/[0.04] px-2.5 py-1.5">
+            <Search className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search city, ZIP, or region"
+              className="w-full bg-transparent text-[0.8rem] text-slate-100 placeholder-slate-500 focus:outline-none"
+            />
+          </label>
         </div>
       ) : null}
 
@@ -726,6 +733,31 @@ function RodentRadarAtlasPage() {
             recurringGroups={addressGroups.filter((group) => group.isRecurring)}
             verifiedPlaceCounts={verifiedPlaceCounts}
           />
+
+          {/* Mobile drawer: same sidebar body, opened from the hamburger in the mobile top bar */}
+          <Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
+            <SheetContent
+              side="left"
+              className="w-[92vw] max-w-[360px] border-r border-white/[0.06] bg-slate-950/95 p-0 text-slate-200 sm:max-w-[360px] md:hidden"
+            >
+              <div className="flex h-full flex-col">
+                <AtlasSidebarBody
+                  gaps={unavailableRatPressureGeos}
+                  query={query}
+                  onQueryChange={setQuery}
+                  selectedGapId={selectedGap?.id}
+                  showCoverage={showCoverage}
+                  onShowCoverageChange={setShowCoverage}
+                  onSelectGap={(g) => { selectGap(g); setMobileNavOpen(false); }}
+                  onSelectVerifiedPlace={(id) => { handleSelectVerifiedPlace(id); setMobileNavOpen(false); }}
+                  selectedPlaceId={selectedReportPlaceId}
+                  dataMix={dataMix}
+                  recurringGroups={addressGroups.filter((group) => group.isRecurring)}
+                  verifiedPlaceCounts={verifiedPlaceCounts}
+                />
+              </div>
+            </SheetContent>
+          </Sheet>
 
           <AtlasToolbar query={query} onQueryChange={setQuery} onOpenReports={() => setDrawerOpen(true)} />
 
@@ -2964,7 +2996,7 @@ function ExposureSafetyDrawer({ onClose }: { onClose: () => void }) {
 
 function SatelliteChrome() {
   return (
-    <div className="pointer-events-none absolute inset-0 select-none text-[0.55rem] font-medium uppercase tracking-[0.28em] text-slate-400/45">
+    <div className="pointer-events-none absolute inset-0 hidden select-none text-[0.55rem] font-medium uppercase tracking-[0.28em] text-slate-400/45 md:block">
       <div className="absolute left-4 top-4 flex items-center gap-1.5">
         <span className="h-1 w-1 rounded-full bg-cyan-300/70" />
         NOAA-20 · pass 18:42 UTC
