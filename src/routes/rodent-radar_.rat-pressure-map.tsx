@@ -2996,7 +2996,7 @@ function ExposureSafetyDrawer({ onClose }: { onClose: () => void }) {
 
 function SatelliteChrome() {
   return (
-    <div className="pointer-events-none absolute inset-0 select-none text-[0.55rem] font-medium uppercase tracking-[0.28em] text-slate-400/45">
+    <div className="pointer-events-none absolute inset-0 hidden select-none text-[0.55rem] font-medium uppercase tracking-[0.28em] text-slate-400/45 md:block">
       <div className="absolute left-4 top-4 flex items-center gap-1.5">
         <span className="h-1 w-1 rounded-full bg-cyan-300/70" />
         NOAA-20 · pass 18:42 UTC
