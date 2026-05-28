@@ -1774,6 +1774,7 @@ function RecordDrawer({
   reportsError,
 }: {
   open: boolean;
+  pulseClosed?: boolean;
   reports: RodentReport[];
   groups: AddressGroup[];
   gaps: UnavailableRatPressureGeo[];
