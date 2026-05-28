@@ -409,6 +409,8 @@ function RodentRadarAtlasPage() {
   const [contextState, setContextState] = useState<AsyncSnapshotState>("idle");
   const [contextError, setContextError] = useState<string | null>(null);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [pulseReports, setPulseReports] = useState(false);
+  const [pulseHamburger, setPulseHamburger] = useState(false);
   const mapRef = useRef<MapLibreMap | null>(null);
   const contextLoadStartedRef = useRef(false);
   const isMountedRef = useRef(true);
