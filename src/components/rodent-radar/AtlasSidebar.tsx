@@ -220,7 +220,14 @@ export function AtlasSidebarBody({
           <Link to="/rodent-radar" className="text-slate-400 hover:text-slate-200">Back</Link>
         </div>
       </div>
-    </aside>
+    </>
+  );
+}
+
+function _unused_close_aside_marker() {
+  // (replaces stray closing tag from refactor)
+}
+// </aside>
   );
 }
 
