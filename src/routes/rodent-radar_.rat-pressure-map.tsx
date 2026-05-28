@@ -570,7 +570,7 @@ function RodentRadarAtlasPage() {
     (city: UnavailableRatPressureGeo) => {
       setSelectedAhs(null);
       setSelectedReportPlaceId("all");
-      setDrawerOpen(true);
+      setPulseReports(true);
       updateSearch({ gap: city.id });
     },
     [updateSearch],
