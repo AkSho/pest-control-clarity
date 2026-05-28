@@ -73,7 +73,7 @@ export function AtlasSidebarBody({
   dataMix,
   recurringGroups = [],
   verifiedPlaceCounts = {},
-}: AtlasSidebarProps) {
+}: Omit<AtlasSidebarProps, "metric" | "onMetricChange">) {
   const filterQ = query.trim().toLowerCase();
   const matchesQ = (text: string) => !filterQ || text.toLowerCase().includes(filterQ);
   const visibleGaps = showCoverage.gaps ? gaps.filter((c) => matchesQ(`${c.name} ${c.region}`)) : [];
