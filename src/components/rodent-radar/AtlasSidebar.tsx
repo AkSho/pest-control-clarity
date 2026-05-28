@@ -46,7 +46,7 @@ export function AtlasSidebar({
   const visibleCities = HERO_CITIES.filter((city) => city.hasOfficialReports);
 
   return (
-    <aside className="atlas-sidebar absolute left-0 top-0 z-40 flex h-full w-[300px] flex-col border-r border-white/[0.06] bg-slate-950/90 text-slate-200 shadow-2xl shadow-black/40 backdrop-blur-xl">
+    <aside className="atlas-sidebar absolute left-0 top-0 z-40 hidden h-full w-[300px] flex-col border-r border-white/[0.06] bg-slate-950/90 text-slate-200 shadow-2xl shadow-black/40 backdrop-blur-xl md:flex">
       <div className="border-b border-white/[0.06] px-4 py-3.5">
         <Link to="/rodent-radar" className="flex items-baseline gap-2">
           <span className="text-[0.95rem] font-semibold tracking-tight text-slate-100">
