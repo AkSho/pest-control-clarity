@@ -10,9 +10,10 @@ interface AtlasToolbarProps {
   onQueryChange: (q: string) => void;
   shareUrl?: string;
   onOpenReports?: () => void;
+  pulseReports?: boolean;
 }
 
-export function AtlasToolbar({ query, onQueryChange, shareUrl, onOpenReports }: AtlasToolbarProps) {
+export function AtlasToolbar({ query, onQueryChange, shareUrl, onOpenReports, pulseReports = false }: AtlasToolbarProps) {
   const [copied, setCopied] = useState(false);
   const [bookmarkHint, setBookmarkHint] = useState(false);
 
@@ -48,7 +49,11 @@ export function AtlasToolbar({ query, onQueryChange, shareUrl, onOpenReports }: 
       <button
         type="button"
         onClick={onOpenReports}
-        className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.7rem] font-medium text-slate-300 hover:bg-white/[0.05]"
+        className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.7rem] font-medium transition ${
+          pulseReports
+            ? "animate-pulse bg-cyan-300/15 text-cyan-100 shadow-[0_0_0_1px_rgba(34,211,238,0.45),0_0_18px_rgba(34,211,238,0.35)]"
+            : "text-slate-300 hover:bg-white/[0.05]"
+        }`}
       >
         <ListFilter className="h-3 w-3" />
         Reports

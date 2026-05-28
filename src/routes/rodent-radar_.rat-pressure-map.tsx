@@ -409,6 +409,8 @@ function RodentRadarAtlasPage() {
   const [contextState, setContextState] = useState<AsyncSnapshotState>("idle");
   const [contextError, setContextError] = useState<string | null>(null);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [pulseReports, setPulseReports] = useState(false);
+  const [pulseHamburger, setPulseHamburger] = useState(false);
   const mapRef = useRef<MapLibreMap | null>(null);
   const contextLoadStartedRef = useRef(false);
   const isMountedRef = useRef(true);
@@ -439,6 +441,52 @@ function RodentRadarAtlasPage() {
   useEffect(() => {
     return () => {
       isMountedRef.current = false;
+    };
+  }, []);
+
+  // First-load hint: gently pulse the mobile hamburger so users notice it.
+  // Suppress permanently after they open the drawer once (sessionStorage).
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.sessionStorage.getItem("rr.hamburgerSeen") === "1") return;
+    setPulseHamburger(true);
+    const t = window.setTimeout(() => setPulseHamburger(false), 6000);
+    return () => window.clearTimeout(t);
+  }, []);
+
+  // Stop pulsing whenever the user opens the drawer (mobile nav or records).
+  useEffect(() => {
+    if (mobileNavOpen && typeof window !== "undefined") {
+      window.sessionStorage.setItem("rr.hamburgerSeen", "1");
+      setPulseHamburger(false);
+    }
+  }, [mobileNavOpen]);
+
+  // Records-button pulse auto-clears after 5s, or immediately when drawer opens.
+  useEffect(() => {
+    if (!pulseReports) return;
+    const t = window.setTimeout(() => setPulseReports(false), 5000);
+    return () => window.clearTimeout(t);
+  }, [pulseReports]);
+
+  useEffect(() => {
+    if (drawerOpen) setPulseReports(false);
+  }, [drawerOpen]);
+
+  // Route-scoped dark page bg + lock overscroll so iOS bounce can't reveal
+  // the global light body background under the records drawer.
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const prevHtmlBg = document.documentElement.style.backgroundColor;
+    const prevBodyBg = document.body.style.backgroundColor;
+    const prevOverscroll = document.body.style.overscrollBehavior;
+    document.documentElement.style.backgroundColor = "#05080d";
+    document.body.style.backgroundColor = "#05080d";
+    document.body.style.overscrollBehavior = "none";
+    return () => {
+      document.documentElement.style.backgroundColor = prevHtmlBg;
+      document.body.style.backgroundColor = prevBodyBg;
+      document.body.style.overscrollBehavior = prevOverscroll;
     };
   }, []);
 
@@ -522,7 +570,7 @@ function RodentRadarAtlasPage() {
     (city: UnavailableRatPressureGeo) => {
       setSelectedAhs(null);
       setSelectedReportPlaceId("all");
-      setDrawerOpen(true);
+      setPulseReports(true);
       updateSearch({ gap: city.id });
     },
     [updateSearch],
@@ -633,7 +681,7 @@ function RodentRadarAtlasPage() {
     const place = HERO_CITY_SUMMARIES(allReports).find((item) => item.id === placeId);
     if (!place) return;
     setSelectedReportPlaceId(placeId);
-    setDrawerOpen(true);
+    setPulseReports(true);
     setSelectedAhs(null);
     updateSearch({ place: placeId, gap: undefined });
     mapRef.current?.flyTo({ center: [place.lng, place.lat], zoom: place.zoom, duration: 800, essential: true });
@@ -641,7 +689,7 @@ function RodentRadarAtlasPage() {
 
 
   return (
-    <div className={`h-screen overflow-hidden bg-[#05080d] text-slate-100 ${cinematic ? "cinematic-mode" : ""}`}>
+    <div className={`relative h-[100dvh] min-h-[100dvh] w-full overflow-hidden overscroll-none bg-[#05080d] text-slate-100 ${cinematic ? "cinematic-mode" : ""}`}>
       <AtlasMap
         verified={mapVerified}
         unavailable={mapGaps}
@@ -688,9 +736,14 @@ function RodentRadarAtlasPage() {
             type="button"
             onClick={() => setMobileNavOpen(true)}
             aria-label="Open layers and filters"
-            className="grid h-9 w-9 shrink-0 place-items-center rounded-md border border-white/10 bg-white/[0.04] text-slate-200 hover:text-cyan-100"
+            className={`inline-flex h-9 shrink-0 items-center gap-1.5 rounded-md border px-2.5 text-[0.75rem] font-semibold transition ${
+              pulseHamburger
+                ? "animate-pulse border-cyan-300/60 bg-cyan-300/15 text-cyan-100 shadow-[0_0_0_1px_rgba(34,211,238,0.45),0_0_20px_rgba(34,211,238,0.35)]"
+                : "border-cyan-300/40 bg-cyan-300/10 text-cyan-100 shadow-[0_0_0_1px_rgba(34,211,238,0.25),0_0_14px_rgba(34,211,238,0.2)] hover:bg-cyan-300/15"
+            }`}
           >
             <Menu className="h-4 w-4" />
+            <span>Layers</span>
           </button>
           <label className="flex flex-1 items-center gap-2 rounded-md border border-white/10 bg-white/[0.04] px-2.5 py-1.5">
             <Search className="h-3.5 w-3.5 shrink-0 text-slate-400" />
@@ -759,7 +812,7 @@ function RodentRadarAtlasPage() {
             </SheetContent>
           </Sheet>
 
-          <AtlasToolbar query={query} onQueryChange={setQuery} onOpenReports={() => setDrawerOpen(true)} />
+          <AtlasToolbar query={query} onQueryChange={setQuery} onOpenReports={() => setDrawerOpen(true)} pulseReports={pulseReports} />
 
           <BottomMapDock
             activePanel={utilityPanel}
@@ -784,6 +837,7 @@ function RodentRadarAtlasPage() {
 
           <RecordDrawer
             open={drawerOpen}
+            pulseClosed={pulseReports}
             reports={allReports}
             groups={addressGroups}
             gaps={unavailableRatPressureGeos}
@@ -1701,6 +1755,7 @@ function reportAgeDays(iso: string) {
 
 function RecordDrawer({
   open,
+  pulseClosed = false,
   reports,
   groups,
   gaps,
@@ -1719,6 +1774,7 @@ function RecordDrawer({
   reportsError,
 }: {
   open: boolean;
+  pulseClosed?: boolean;
   reports: RodentReport[];
   groups: AddressGroup[];
   gaps: UnavailableRatPressureGeo[];
@@ -1823,7 +1879,11 @@ function RecordDrawer({
         type="button"
         onClick={onOpen}
         style={{ zIndex: Z.drawer }}
-        className="absolute right-4 top-1/2 inline-flex -translate-y-1/2 items-center gap-2 rounded-full border border-white/10 bg-slate-950/80 px-3 py-2 text-[0.7rem] font-medium text-slate-400 shadow-lg backdrop-blur transition hover:border-cyan-300/40 hover:text-cyan-100"
+        className={`absolute right-4 top-1/2 inline-flex -translate-y-1/2 items-center gap-2 rounded-full border px-3 py-2 text-[0.7rem] font-medium backdrop-blur transition ${
+          pulseClosed
+            ? "animate-pulse border-cyan-300/70 bg-cyan-300/15 text-cyan-100 shadow-[0_0_0_1px_rgba(34,211,238,0.45),0_0_22px_rgba(34,211,238,0.45)]"
+            : "border-white/10 bg-slate-950/80 text-slate-400 shadow-lg hover:border-cyan-300/40 hover:text-cyan-100"
+        }`}
       >
         <CircleDot className="h-3.5 w-3.5" /> reports
       </button>
