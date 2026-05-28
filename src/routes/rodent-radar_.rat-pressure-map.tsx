@@ -68,7 +68,8 @@ import {
   type RodentRadarSearch,
 } from "@/lib/rodentRadarSearch";
 import zipToPlaceData from "../../public/rodent-radar/data/zip-to-place.json";
-import { AtlasSidebar, type MetricKey } from "@/components/rodent-radar/AtlasSidebar";
+import { AtlasSidebar, AtlasSidebarBody, type MetricKey } from "@/components/rodent-radar/AtlasSidebar";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { type LayerCardItem } from "@/components/rodent-radar/LayerCard";
 import { AtlasToolbar } from "@/components/rodent-radar/AtlasToolbar";
 import { CinematicToggle } from "@/components/rodent-radar/CinematicToggle";
