@@ -1755,6 +1755,7 @@ function reportAgeDays(iso: string) {
 
 function RecordDrawer({
   open,
+  pulseClosed = false,
   reports,
   groups,
   gaps,
