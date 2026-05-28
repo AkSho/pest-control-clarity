@@ -444,6 +444,52 @@ function RodentRadarAtlasPage() {
     };
   }, []);
 
+  // First-load hint: gently pulse the mobile hamburger so users notice it.
+  // Suppress permanently after they open the drawer once (sessionStorage).
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.sessionStorage.getItem("rr.hamburgerSeen") === "1") return;
+    setPulseHamburger(true);
+    const t = window.setTimeout(() => setPulseHamburger(false), 6000);
+    return () => window.clearTimeout(t);
+  }, []);
+
+  // Stop pulsing whenever the user opens the drawer (mobile nav or records).
+  useEffect(() => {
+    if (mobileNavOpen && typeof window !== "undefined") {
+      window.sessionStorage.setItem("rr.hamburgerSeen", "1");
+      setPulseHamburger(false);
+    }
+  }, [mobileNavOpen]);
+
+  // Records-button pulse auto-clears after 5s, or immediately when drawer opens.
+  useEffect(() => {
+    if (!pulseReports) return;
+    const t = window.setTimeout(() => setPulseReports(false), 5000);
+    return () => window.clearTimeout(t);
+  }, [pulseReports]);
+
+  useEffect(() => {
+    if (drawerOpen) setPulseReports(false);
+  }, [drawerOpen]);
+
+  // Route-scoped dark page bg + lock overscroll so iOS bounce can't reveal
+  // the global light body background under the records drawer.
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const prevHtmlBg = document.documentElement.style.backgroundColor;
+    const prevBodyBg = document.body.style.backgroundColor;
+    const prevOverscroll = document.body.style.overscrollBehavior;
+    document.documentElement.style.backgroundColor = "#05080d";
+    document.body.style.backgroundColor = "#05080d";
+    document.body.style.overscrollBehavior = "none";
+    return () => {
+      document.documentElement.style.backgroundColor = prevHtmlBg;
+      document.body.style.backgroundColor = prevBodyBg;
+      document.body.style.overscrollBehavior = prevOverscroll;
+    };
+  }, []);
+
   useEffect(() => {
     let cancelled = false;
     setReportsState("loading");
