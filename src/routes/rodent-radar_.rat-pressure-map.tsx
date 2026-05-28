@@ -812,7 +812,7 @@ function RodentRadarAtlasPage() {
             </SheetContent>
           </Sheet>
 
-          <AtlasToolbar query={query} onQueryChange={setQuery} onOpenReports={() => setDrawerOpen(true)} />
+          <AtlasToolbar query={query} onQueryChange={setQuery} onOpenReports={() => setDrawerOpen(true)} pulseReports={pulseReports} />
 
           <BottomMapDock
             activePanel={utilityPanel}
