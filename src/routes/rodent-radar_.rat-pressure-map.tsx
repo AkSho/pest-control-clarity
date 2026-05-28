@@ -837,6 +837,7 @@ function RodentRadarAtlasPage() {
 
           <RecordDrawer
             open={drawerOpen}
+            pulseClosed={pulseReports}
             reports={allReports}
             groups={addressGroups}
             gaps={unavailableRatPressureGeos}
