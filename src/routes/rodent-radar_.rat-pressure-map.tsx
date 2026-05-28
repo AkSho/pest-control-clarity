@@ -734,6 +734,31 @@ function RodentRadarAtlasPage() {
             verifiedPlaceCounts={verifiedPlaceCounts}
           />
 
+          {/* Mobile drawer: same sidebar body, opened from the hamburger in the mobile top bar */}
+          <Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
+            <SheetContent
+              side="left"
+              className="w-[92vw] max-w-[360px] border-r border-white/[0.06] bg-slate-950/95 p-0 text-slate-200 sm:max-w-[360px] md:hidden"
+            >
+              <div className="flex h-full flex-col">
+                <AtlasSidebarBody
+                  gaps={unavailableRatPressureGeos}
+                  query={query}
+                  onQueryChange={setQuery}
+                  selectedGapId={selectedGap?.id}
+                  showCoverage={showCoverage}
+                  onShowCoverageChange={setShowCoverage}
+                  onSelectGap={(g) => { selectGap(g); setMobileNavOpen(false); }}
+                  onSelectVerifiedPlace={(id) => { handleSelectVerifiedPlace(id); setMobileNavOpen(false); }}
+                  selectedPlaceId={selectedReportPlaceId}
+                  dataMix={dataMix}
+                  recurringGroups={addressGroups.filter((group) => group.isRecurring)}
+                  verifiedPlaceCounts={verifiedPlaceCounts}
+                />
+              </div>
+            </SheetContent>
+          </Sheet>
+
           <AtlasToolbar query={query} onQueryChange={setQuery} onOpenReports={() => setDrawerOpen(true)} />
 
           <BottomMapDock
