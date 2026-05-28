@@ -736,9 +736,14 @@ function RodentRadarAtlasPage() {
             type="button"
             onClick={() => setMobileNavOpen(true)}
             aria-label="Open layers and filters"
-            className="grid h-9 w-9 shrink-0 place-items-center rounded-md border border-white/10 bg-white/[0.04] text-slate-200 hover:text-cyan-100"
+            className={`inline-flex h-9 shrink-0 items-center gap-1.5 rounded-md border px-2.5 text-[0.75rem] font-semibold transition ${
+              pulseHamburger
+                ? "animate-pulse border-cyan-300/60 bg-cyan-300/15 text-cyan-100 shadow-[0_0_0_1px_rgba(34,211,238,0.45),0_0_20px_rgba(34,211,238,0.35)]"
+                : "border-cyan-300/40 bg-cyan-300/10 text-cyan-100 shadow-[0_0_0_1px_rgba(34,211,238,0.25),0_0_14px_rgba(34,211,238,0.2)] hover:bg-cyan-300/15"
+            }`}
           >
             <Menu className="h-4 w-4" />
+            <span>Layers</span>
           </button>
           <label className="flex flex-1 items-center gap-2 rounded-md border border-white/10 bg-white/[0.04] px-2.5 py-1.5">
             <Search className="h-3.5 w-3.5 shrink-0 text-slate-400" />
