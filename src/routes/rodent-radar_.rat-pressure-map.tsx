@@ -1879,7 +1879,11 @@ function RecordDrawer({
         type="button"
         onClick={onOpen}
         style={{ zIndex: Z.drawer }}
-        className="absolute right-4 top-1/2 inline-flex -translate-y-1/2 items-center gap-2 rounded-full border border-white/10 bg-slate-950/80 px-3 py-2 text-[0.7rem] font-medium text-slate-400 shadow-lg backdrop-blur transition hover:border-cyan-300/40 hover:text-cyan-100"
+        className={`absolute right-4 top-1/2 inline-flex -translate-y-1/2 items-center gap-2 rounded-full border px-3 py-2 text-[0.7rem] font-medium backdrop-blur transition ${
+          pulseClosed
+            ? "animate-pulse border-cyan-300/70 bg-cyan-300/15 text-cyan-100 shadow-[0_0_0_1px_rgba(34,211,238,0.45),0_0_22px_rgba(34,211,238,0.45)]"
+            : "border-white/10 bg-slate-950/80 text-slate-400 shadow-lg hover:border-cyan-300/40 hover:text-cyan-100"
+        }`}
       >
         <CircleDot className="h-3.5 w-3.5" /> reports
       </button>
